@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:oauth="http://www.springframework.org/schema/security/oauth2"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+                           http://www.springframework.org/schema/security/oauth2 http://www.springframework.org/schema/security/spring-security-oauth2-1.0.xsd">
+
+   
+    <!-- ///// OAuth2 Server Configuration ///// -->
+    
+    <!--
+        Authorziation server specifies that the OAuth2 authorization and token endpoints should
+        be created in the application context.
+    -->
+    <oauth:authorization-server client-details-service-ref="clientDetails" token-services-ref="tokenServices"
+                                authorization-endpoint-url="/oauth/authorize" token-endpoint-url="/oauth/token">
+        <oauth:authorization-code/>
+        <oauth:implicit />
+        <oauth:refresh-token />
+        <oauth:client-credentials />
+        <oauth:password disabled="true"/>
+    </oauth:authorization-server>
+    
+    <!-- 
+        Bean that provides the definition of the OAuth clients that are allowed to access this service
+        (that can act on behalf of a user/resource owner).
+    -->
+    <oauth:client-details-service id="clientDetails">
+        <oauth:client client-id="foodlovers" authorized-grant-types="password,authorization_code,refresh_token,implicit"
+                      scope="read,write" authorities="ROLE_CLIENT" secret="testsecret123" />
+    </oauth:client-details-service>
+    
+    <!--  
+        Base implementation for token services using random UUID values for the access token and refresh token
+        values. The main extension point for customizations is the TokenEnhancer which will be called after the
+        access and refresh tokens have been generated but before they are stored. Persistence is delegated to
+        a TokenStore implementation and customization of the access token to a TokenEnhancer.
+    -->
+    <bean id="tokenServices" class="org.springframework.security.oauth2.provider.token.DefaultTokenServices">
+        <property name="tokenStore" ref="tokenStore" />
+        <property name="supportRefreshToken" value="true" />
+    </bean>
+
+    <!-- 
+        In Memory store for OAuth2 tokens
+    -->
+    <bean id="tokenStore" class="org.springframework.security.oauth2.provider.token.InMemoryTokenStore" />
+
+</beans>

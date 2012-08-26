@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+       http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd
+">
+    
+    <!-- Reference: 
+    http://static.springsource.org/spring-security/site/docs/3.0.x/reference/ldap.html 
+    http://www.rlmueller.net/LDAP_Binding.htm
+    -->
+    
+<!--    <security:ldap-server root="dc=cvut,dc=org" ldif="/WEB-INF/test-data-storage/test-users.ldif" port="33389"/>
+     
+    <security:authentication-manager alias="authenticationManager">
+        <security:ldap-authentication-provider
+            group-search-filter="member={0}"
+            group-search-base="ou=groups"
+            user-search-base="ou=people"
+            user-search-filter="uid={0}"
+        >
+            <security:password-compare hash="md5" password-attribute="userPassword" />
+        </security:ldap-authentication-provider>
+    </security:authentication-manager>-->
+
+</beans>

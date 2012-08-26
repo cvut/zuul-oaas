@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context antiJARLocking="true" path="/auth-server-core">
+
+    <Resource name="jdbc/AuthServerDB"
+              auth="Container"
+              type="javax.sql.DataSource"
+              factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
+              driverClassName="org.postgresql.Driver"
+              minIdle="2" maxIdle="5" maxActive="20"
+              initialSize="3"
+              removeAbandonedTimeout="60"
+              removeAbandoned="true"
+              logAbandoned="true"
+              minEvictableIdleTimeMillis="30000"
+              username="dev"
+              url="jdbc:postgresql://localhost:5432/auth_server_dev" />
+
+</Context>

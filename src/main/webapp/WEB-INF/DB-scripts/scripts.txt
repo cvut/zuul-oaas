@@ -1,0 +1,32 @@
+# DB name: auth_server_DB
+# required tables: oauth_client_details, oauth_access_token
+    
+CREATE DATABASE auth_server_DB;
+
+# table required for org.springframework.security.oauth2.provider.JdbcClientDetailsService
+# description of fields can be found in org.springframework.security.core.GrantedAuthority.ClientDetails javadoc
+CREATE TABLE oauth_client_details (
+        client_id           varchar(40),
+        client_secret       varchar(40),
+        resource_ids        varchar(40),
+        scope                   varchar(40),        # The scope to which the client is limited (comma-separated). If scope is undefined or empty (the default) the client is not limited by scope.
+        authorized_grant_types  varchar(40),
+        web_server_redirect_uri     varchar(40),
+        authorities                         varchar(40),        # Authorities that are granted to the client (comma-separated).
+        access_token_validity           varchar(40),
+        refresh_token_validity          varchar(40),
+        additional_information           varchar(40),
+        PRIMARY KEY(client_id)
+);
+
+# table required for org.springframework.security.oauth2.provider.token.JdbcTokenStore
+CREATE TABLE oauth_access_token (
+        token_id		VARCHAR(40), 
+        token		VARCHAR(40), 
+        authentication_id		VARCHAR(40), 
+        user_name		VARCHAR(40), 
+        client_id		VARCHAR(40), 
+        authentication		VARCHAR(40), 
+        refresh_token 		VARCHAR(40),
+        PRIMARY KEY(token_id)
+);
