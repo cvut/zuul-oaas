@@ -42,6 +42,13 @@
             <organization>FEL CVUT</organization>
             <organizationUrl>http://www.fel.cvut.cz</organizationUrl>
         </developer>
+        <developer>
+            <id>jirutjak</id>
+            <name>Jakub Jirutka</name>
+            <email>jirutjak@fit.cvut.cz</email>
+            <organization>CVUT</organization>
+            <organizationUrl>http://www.cvut.cz</organizationUrl>
+        </developer>
     </developers>
 
 
@@ -59,16 +66,16 @@
         </repository>
 
         <repository>
-            <id>spring-milestone</id>
-            <name>Spring Framework Milestone Repository</name>
-            <url>http://maven.springframework.org/milestone</url>
+            <id>springsource-milestone-repository</id>
+            <name>SpringSource Milestone Repository</name>
+            <url>http://repo.springsource.org/milestone/</url>
         </repository>
-        
+
         <repository>
-            <id>spring-release</id>
-            <name>Spring Framework Release Repository</name>
-            <url>http://maven.springframework.org/release</url>
-        </repository>                                                              
+            <id>springsource-release-repository</id>
+            <name>SpringSource Release Repository</name>
+            <url>http://repo.springsource.org/release/</url>
+        </repository>
     </repositories>
 
 

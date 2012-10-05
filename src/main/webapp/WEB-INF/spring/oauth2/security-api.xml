@@ -2,17 +2,17 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:sec="http://www.springframework.org/schema/security"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
-                           http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+       http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+
     
-    <!-- WEB INTERFACE ??? -->
-    <!-- TODO: move this code to resource provider ??? -->
     
     <sec:http pattern="/oauth/token"
+              create-session="stateless"
               entry-point-ref="oauthAuthenticationEntryPoint"
               access-decision-manager-ref="accessDecisionManager"
-              authentication-manager-ref="clientAuthenticationManager"
-              create-session="stateless">
+              authentication-manager-ref="clientAuthenticationManager">
 
         <sec:intercept-url pattern="/oauth/token" access="IS_AUTHENTICATED_FULLY" />
         <sec:anonymous enabled="false" />
@@ -49,12 +49,23 @@
             </list>
         </constructor-arg>
     </bean>
-    
-    <bean id="oauthAuthenticationEntryPoint" class="org.springframework.security.oauth2.provider.error.OAuth2AuthenticationEntryPoint">
-        <property name="realmName" value="oauth-realm" />
+
+    <!--
+        Client authentication with HTTP Basic scheme. This is the recommended way by specification.
+    -->
+    <bean id="oauthAuthenticationEntryPoint" class="org.springframework.security.oauth2.provider.error.OAuth2AuthenticationEntryPoint" />
+
+    <!--
+        Filter that supports client authentication with credentials in request body (parameters client_id and client_secret).
+        Note: This method of authentication is not recommended by OAuth specification (draft-ietf-oauth-v2-31, 16)!
+              Clients shoud use HTTP Basic scheme instead.
+    -->
+    <bean id="clientCredentialsTokenEndpointFilter" class="org.springframework.security.oauth2.provider.client.ClientCredentialsTokenEndpointFilter">
+        <property name="authenticationManager" ref="clientAuthenticationManager" />
     </bean>
     
     <bean id="oauthAccessDeniedHandler" class="org.springframework.security.oauth2.provider.error.OAuth2AccessDeniedHandler" />
+
     
     <sec:authentication-manager id="clientAuthenticationManager">
         <sec:authentication-provider user-service-ref="clientDetailsUserService" />
@@ -63,17 +74,15 @@
     <bean id="clientDetailsUserService" class="org.springframework.security.oauth2.provider.client.ClientDetailsUserDetailsService">
         <constructor-arg ref="clientDetails" />
     </bean>
-    
-    <bean id="clientCredentialsTokenEndpointFilter" class="org.springframework.security.oauth2.provider.client.ClientCredentialsTokenEndpointFilter">
-        <property name="authenticationManager" ref="clientAuthenticationManager" />
-    </bean>
+
 
     <!-- TO DELETE -->
 
     <sec:authentication-manager alias="authenticationManager">
         <sec:authentication-provider>
             <sec:user-service>
-                <user name="tomy" password="best" authorities="ROLE_USER" />
+                <sec:user name="tomy" password="best" authorities="ROLE_USER" />
+                <sec:user name="marissa" password="wombat" authorities="ROLE_USER" />
             </sec:user-service>
         </sec:authentication-provider>
     </sec:authentication-manager>

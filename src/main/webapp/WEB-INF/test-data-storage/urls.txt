@@ -1,1 +1,1 @@
-localhost:8080/auth-server-core/oauth/authorize?client_id=foodlovers&redirect_uri=http%3A%2F%2Fexample.org&response_type=code&scope=read&state=qB4ND7
+localhost:8080/auth/oauth/authorize?client_id=foodlovers&redirect_uri=http%3A%2F%2Fexample.org&response_type=code&scope=read&state=qB4ND7

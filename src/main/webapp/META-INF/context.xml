@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Context antiJARLocking="true" path="/auth-server-core">
+<Context antiJARLocking="true" path="/auth">
 
-    <Resource name="jdbc/AuthServerDB"
+    <Resource name="jdbc/AuthServerDS"
               auth="Container"
               type="javax.sql.DataSource"
               factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
