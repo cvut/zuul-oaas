@@ -7,8 +7,12 @@
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
 
     <!--//// Base configuration of the Root Spring’s Context ////-->
-   
+
+    <context:mbean-export />
+
+    
     <import resource="persistence-jdbc.xml"/>
+    <!--<import resource="persistence-mongo.xml"/>-->
     <import resource="oauth2/server-inMemory.xml"/>
     <import resource="oauth2/security-api.xml"/>
 

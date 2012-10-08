@@ -54,6 +54,9 @@
         <level value="INFO" />
     </logger>
 
+    <logger name="org.springframework.data.document.mongodb">
+        <level value="DEBUG" />
+    </logger>
 
 
     <!--//////////////////// ROOT ////////////////////-->
