@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package cz.cvut.security.oauth2.authservercore;
+package cz.cvut.authserver.oauth2.controllers;
 
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;

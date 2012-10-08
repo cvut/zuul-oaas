@@ -26,7 +26,7 @@
     <!--//////////////////// CATEGORIES ////////////////////-->
    
 
-    <logger name="cz.cvut.security.oauth2">
+    <logger name="cz.cvut.authserver.oauth2">
         <level value="DEBUG" />
     </logger>
 

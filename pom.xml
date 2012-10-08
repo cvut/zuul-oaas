@@ -14,12 +14,12 @@
     
     <!--//////////////////// ARTIFACT DESCRIPTION ////////////////////-->
 
-    <groupId>cz.cvut.security.oauth2</groupId>
-    <artifactId>auth-server-core</artifactId>
+    <groupId>cz.cvut.authserver</groupId>
+    <artifactId>authserver-oauth2</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>war</packaging>
 
-    <name>auth-server-core</name>
+    <name>Authorization Server OAuth2</name>
     <inceptionYear>2012</inceptionYear>
     <url>https://gitlab.fit.cvut.cz/cvut-oauth-server</url>
 

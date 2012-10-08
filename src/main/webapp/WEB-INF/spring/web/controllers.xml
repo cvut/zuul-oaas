@@ -8,7 +8,7 @@
        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd">
 
     <!-- Override the default mappings for approval and error pages -->
-    <bean id="accessConfirmationController" class="cz.cvut.security.oauth2.authservercore.AccessConfirmationController"
+    <bean id="accessConfirmationController" class="cz.cvut.authserver.oauth2.controllers.AccessConfirmationController"
           p:clientDetailsService-ref="clientDetails" />
 
 </beans>
