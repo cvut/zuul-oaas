@@ -11,7 +11,8 @@ public class MongoDbConstants {
     public static class collections {
 
         public static final String
-                CLIENT_DETAILS = "client_details";
+                CLIENT_DETAILS = "client_details",
+                ACCESS_TOKENS = "access_tokens";
 
         private collections() { /* do not initialize */ }
     }
@@ -33,6 +34,47 @@ public class MongoDbConstants {
 
         private client_details() { /* do not initialize */ }
     }
+
+    /** Fields in collection oauth_access_token */
+    public static class access_tokens {
+
+        public static final String
+                TOKEN_ID = "_id",
+                EXPIRATION = "expiration",
+                TOKEN_TYPE = "token_type",
+                REFRESH_TOKEN = "refresh_token",
+                SCOPE = "scope",
+                ADDITIONAL_INFORMATION = "additional_information",
+                CLIENT_ID = "client_id",
+                AUTHENTICATION_KEY = "authentication_key",
+                AUTHORIZATION_REQUEST = "authorization_request",
+                USER_AUTHENTICATION = "user_authentication";
+
+        private access_tokens() { /* do not initialize */ }
+    }
+
+    public static class authz_request {
+
+        public static final String
+                APPROVAL_PARAMS = "approval_parameters",
+                APPROVED = "approved",
+                AUTHORITIES = "authorities",
+                AUTHZ_PARAMS = "authorization_parameters",
+                RESOURCE_IDS = "resource_ids";
+
+        private authz_request() { /* do not initialize */ }
+    }
+
+    public static class user_auth {
+
+        //FIXME incomplete!
+        public static final String
+                USER_NAME = "user_name",
+                AUTHORITIES = "authorities";
+
+        private user_auth() { /* do not initialize */ }
+    }
+    
 
     private MongoDbConstants() { /* do not initialize */ }
 }

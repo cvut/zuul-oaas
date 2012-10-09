@@ -67,11 +67,103 @@ public class Factories {
     }
 
 
+
+    //////// OAuth2AccessToken ////////
+
+    public static OAuth2AccessToken createEmptyAccessToken(String value) {
+        return new DefaultOAuth2AccessToken(value);
+    }
+
+    public static OAuth2AccessToken createEmptyAccessTokenWithRefreshToken(String accessToken, String refreshToken) {
+        DefaultOAuth2AccessToken token = new DefaultOAuth2AccessToken(accessToken);
+        token.setRefreshToken(createRefreshToken(refreshToken));
+
+        return token;
+    }
+
+    public static OAuth2AccessToken createRandomAccessToken(String value) {
+        DefaultOAuth2AccessToken token = new DefaultOAuth2AccessToken(value);
+
+        token.setAdditionalInformation( randomStringsMap(2) );
+        token.setExpiration( randomFutureDate() );
+        token.setRefreshToken(null);
+        token.setScope( new HashSet<>(randomStringList(2)) );
+        token.setTokenType( OAuth2AccessToken.OAUTH2_TYPE );
+
+        return token;
+    }
+
+    public static OAuth2AccessToken createRandomAccessToken() {
+        return createRandomAccessToken( randomString() );
+    }
+
+
+
+    //////// OAuth2RefreshToken ////////
+
+    public static OAuth2RefreshToken createRefreshToken(String value) {
+        return new DefaultOAuth2RefreshToken(value);
+    }
+
+    public static ExpiringOAuth2RefreshToken createExpiringRefreshToken(String value) {
+        return new DefaultExpiringOAuth2RefreshToken(value, randomFutureDate());
+    }
+
+    
+    
+    //////// OAuth2Authentication ////////
+
+    public static OAuth2Authentication createEmptyOAuth2Authentication(String clientId) {
+        return new OAuth2Authentication(createEmptyAuthorizationRequest(clientId), null);
+    }
+
+    public static OAuth2Authentication createRandomOAuth2Authentication(boolean clientOnly) {
+        return new OAuth2Authentication(
+                createRandomAuthorizationRequest(),
+                clientOnly ? null : createUserAuthentication(randomString(), false));
+    }
+
+
+
+    //////// AuthorizationRequest ////////
+
+    public static AuthorizationRequest createEmptyAuthorizationRequest(String clientId) {
+        return new DefaultAuthorizationRequest(clientId, null);
+    }
+    
+    public static AuthorizationRequest createRandomAuthorizationRequest() {
+        DefaultAuthorizationRequest request;
+        
+        request = new DefaultAuthorizationRequest(randomAuthorizationParameters());
+        request.setApprovalParameters( randomStringsMap(2) );
+        request.setApproved( true );
+        request.setAuthorities( randomGrantedAuthorities(2) );
+        request.setResourceIds( new HashSet<>(randomStringList(2)) );
+
+        return request;
+    }
+
+
+
+    //////// UserAuthentication ////////
+
+    public static Authentication createUserAuthentication(String name, boolean authenticated) {
+        return new StubAuthentication(name, authenticated);
+    }
+
+
     
     //////// Support ////////
 
     private static Collection<GrantedAuthority> randomGrantedAuthorities(int size) {
         return AuthorityUtils.createAuthorityList(randomStringArray(size));
+    }
+
+    private static Map<String, String> randomAuthorizationParameters() {
+         return new HashMap<String, String>(4) {{
+            put(AuthorizationRequest.CLIENT_ID, randomString());
+            put(AuthorizationRequest.SCOPE, StringUtils.arrayToCommaDelimitedString(randomStringArray(2)));
+        }};
     }
 
     private static Map randomStringsMap(int size) {
@@ -101,6 +193,48 @@ public class Factories {
 
     private static List<String> randomStringList(int size) {
         return Arrays.asList(randomStringArray(size));
+    }
+
+    private static Date randomFutureDate() {
+        Date now = new Date();
+        int offset = randomInt();
+        return new Date(now.getTime() + offset);
+    }
+
+
+
+    //////// Stubs ////////
+
+    private static class StubAuthentication extends AbstractAuthenticationToken {
+
+        private String principal;
+
+        public StubAuthentication(String name, boolean authenticated) {
+            super(null);
+            setAuthenticated(authenticated);
+            this.principal = name;
+        }
+
+        public Object getCredentials() {
+            return null;
+        }
+
+        public Object getPrincipal() {
+            return principal;
+        }
+
+        @Override
+        public int hashCode() {
+            return new HashCodeBuilder(7, 97).append(principal).toHashCode();
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == null) return false;
+            if (getClass() != obj.getClass()) return false;
+            StubAuthentication other = (StubAuthentication) obj;
+            return new EqualsBuilder().append(this.principal, other.principal).isEquals();
+        }
     }
 
 }
