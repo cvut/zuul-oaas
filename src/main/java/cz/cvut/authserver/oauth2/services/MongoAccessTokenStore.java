@@ -5,6 +5,7 @@ import java.util.Collection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2RefreshToken;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
@@ -60,7 +61,11 @@ public class MongoAccessTokenStore {
     }
  
     public OAuth2AccessToken readAccessToken(String tokenCode) {
-        OAuth2AccessToken token = mongo.findById(tokenCode, ENTITY_CLASS, ACCESS_TOKENS);
+        OAuth2AccessToken token;
+
+        Query query = query(where(TOKEN_ID).is(tokenCode));
+        query.fields().exclude(AUTHENTICATION);  // don't load authentication when we're not gonna use it
+        token = mongo.findOne(query, ENTITY_CLASS, ACCESS_TOKENS);
 
         if (token == null) {
             LOG.debug("Failed to find access token for token {}", tokenCode);
@@ -105,6 +110,9 @@ public class MongoAccessTokenStore {
 
 
     private Collection<OAuth2AccessToken> findTokensBy(String field, Object value) {
-        return (Collection) mongo.find(query(where(field).is(value)), PersistableAccessToken.class, ACCESS_TOKENS);
+        Query query = query(where(field).is(value));
+        query.fields().exclude(AUTHENTICATION);
+
+        return (Collection) mongo.find(query, ENTITY_CLASS, ACCESS_TOKENS);
     }
 }

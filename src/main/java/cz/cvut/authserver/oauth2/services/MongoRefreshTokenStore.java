@@ -4,6 +4,7 @@ import cz.cvut.authserver.oauth2.models.PersistableRefreshToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.security.oauth2.common.OAuth2RefreshToken;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 
@@ -34,7 +35,11 @@ public class MongoRefreshTokenStore {
     }
 
     public OAuth2RefreshToken readRefreshToken(String tokenCode) {
-        PersistableRefreshToken token = mongo.findById(tokenCode, ENTITY_CLASS, REFRESH_TOKENS);
+        PersistableRefreshToken token;
+
+        Query query = query(where(TOKEN_ID).is(tokenCode));
+        query.fields().exclude(AUTHENTICATION);  // don't load authentication when we're not gonna use it
+        token = mongo.findOne(query, ENTITY_CLASS, REFRESH_TOKENS);
 
         if (token == null) {
             LOG.debug("Failed to find refresh token for token {}", tokenCode);
