@@ -13,27 +13,10 @@
     <mongo:db-factory id="mongoDbFactory" dbname="authtest" write-concern="SAFE" />
 
     <mongo:mapping-converter id="mappingConverter">
-        <mongo:custom-converters>
-            <mongo:converter>
-                <bean class="cz.cvut.authserver.oauth2.mongo.ClientDetailsReadConverter" />
-            </mongo:converter>
-            <mongo:converter>
-                <bean class="cz.cvut.authserver.oauth2.mongo.ClientDetailsWriteConverter" />
-            </mongo:converter>
-            <mongo:converter>
-                <bean class="cz.cvut.authserver.oauth2.mongo.PersistableAccessTokenReadConverter" />
-            </mongo:converter>
-            <mongo:converter>
-                <bean class="cz.cvut.authserver.oauth2.mongo.PersistableAccessTokenWriteConverter" />
-            </mongo:converter>
-            <mongo:converter>
-                <bean class="cz.cvut.authserver.oauth2.mongo.PersistableRefreshTokenReadConverter" />
-            </mongo:converter>
-            <mongo:converter>
-                <bean class="cz.cvut.authserver.oauth2.mongo.PersistableRefreshTokenWriteConverter" />
-            </mongo:converter>
-        </mongo:custom-converters>
+        <mongo:custom-converters base-package="cz.cvut.authserver.oauth2.mongo" />
     </mongo:mapping-converter>
+
+    <bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean" />
     
     <bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
         <constructor-arg name="mongoDbFactory" ref="mongoDbFactory" />

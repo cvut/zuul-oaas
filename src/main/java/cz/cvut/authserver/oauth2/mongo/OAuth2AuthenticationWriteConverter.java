@@ -4,11 +4,11 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import cz.cvut.authserver.oauth2.mongo.MongoDbConstants.authz_request;
 import cz.cvut.authserver.oauth2.mongo.MongoDbConstants.user_auth;
-import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.oauth2.provider.AuthorizationRequest;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.stereotype.Component;
 
 import static cz.cvut.authserver.oauth2.mongo.MongoDbConstants.authentication.*;
 
@@ -17,7 +17,8 @@ import static cz.cvut.authserver.oauth2.mongo.MongoDbConstants.authentication.*;
  *
  * @author Jakub Jirutka <jakub@jirutka.cz>
  */
-public class OAuth2AuthenticationWriteConverter implements Converter<OAuth2Authentication, DBObject> {
+@Component
+public class OAuth2AuthenticationWriteConverter extends AutoRegisteredConverter<OAuth2Authentication, DBObject> {
 
     public DBObject convert(OAuth2Authentication source) {
         DBObject target = new BasicDBObject();

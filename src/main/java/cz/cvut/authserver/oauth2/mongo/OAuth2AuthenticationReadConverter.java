@@ -4,7 +4,6 @@ import com.mongodb.DBObject;
 import cz.cvut.authserver.oauth2.mongo.MongoDbConstants.authz_request;
 import cz.cvut.authserver.oauth2.mongo.MongoDbConstants.user_auth;
 import java.util.Collection;
-import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -12,6 +11,7 @@ import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.oauth2.provider.AuthorizationRequest;
 import org.springframework.security.oauth2.provider.DefaultAuthorizationRequest;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.stereotype.Component;
 
 import static cz.cvut.authserver.oauth2.mongo.MongoDbConstants.authentication.*;
 
@@ -20,7 +20,8 @@ import static cz.cvut.authserver.oauth2.mongo.MongoDbConstants.authentication.*;
  *
  * @author Jakub Jirutka <jakub@jirutka.cz>
  */
-public class OAuth2AuthenticationReadConverter implements Converter<DBObject, OAuth2Authentication> {
+@Component
+public class OAuth2AuthenticationReadConverter extends AutoRegisteredConverter<DBObject, OAuth2Authentication> {
 
     public OAuth2Authentication convert(DBObject source) {
         DBObjectWrapper dbo = new DBObjectWrapper(source);

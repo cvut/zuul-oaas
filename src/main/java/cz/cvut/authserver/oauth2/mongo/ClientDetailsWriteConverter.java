@@ -2,9 +2,9 @@ package cz.cvut.authserver.oauth2.mongo;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
-import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.oauth2.provider.ClientDetails;
+import org.springframework.stereotype.Component;
 
 import static cz.cvut.authserver.oauth2.mongo.MongoDbConstants.client_details.*;
 
@@ -13,7 +13,8 @@ import static cz.cvut.authserver.oauth2.mongo.MongoDbConstants.client_details.*;
  *
  * @author Jakub Jirutka <jakub@jirutka.cz>
  */
-public class ClientDetailsWriteConverter implements Converter<ClientDetails, DBObject> {
+@Component
+public class ClientDetailsWriteConverter extends AutoRegisteredConverter<ClientDetails, DBObject> {
 
     public DBObject convert(ClientDetails source) {
         DBObject dbo = new BasicDBObject();

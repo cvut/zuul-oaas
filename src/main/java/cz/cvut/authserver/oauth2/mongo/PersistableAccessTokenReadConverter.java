@@ -2,9 +2,9 @@ package cz.cvut.authserver.oauth2.mongo;
 
 import com.mongodb.DBObject;
 import cz.cvut.authserver.oauth2.models.PersistableAccessToken;
-import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.oauth2.common.DefaultOAuth2RefreshToken;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.stereotype.Component;
 
 import static cz.cvut.authserver.oauth2.mongo.MongoDbConstants.access_tokens.*;
 
@@ -13,11 +13,8 @@ import static cz.cvut.authserver.oauth2.mongo.MongoDbConstants.access_tokens.*;
  *
  * @author Jakub Jirutka <jakub@jirutka.cz>
  */
-public class PersistableAccessTokenReadConverter implements Converter<DBObject, PersistableAccessToken> {
-
-    //TODO inject via Spring
-    private Converter<DBObject, OAuth2Authentication> authenticationConverter = new OAuth2AuthenticationReadConverter();
-
+@Component
+public class PersistableAccessTokenReadConverter extends AutoRegisteredConverter<DBObject, PersistableAccessToken> {
 
     public PersistableAccessToken convert(DBObject source) {
         DBObjectWrapper dbo = new DBObjectWrapper(source);
@@ -37,7 +34,7 @@ public class PersistableAccessTokenReadConverter implements Converter<DBObject, 
 
         DBObject authentication = dbo.getDBObject(AUTHENTICATION);
         if (authentication != null) {
-            target.setAuthentication(authenticationConverter.convert(authentication));
+            target.setAuthentication(getConversionService().convert(authentication, OAuth2Authentication.class));
         }
 
         return target;

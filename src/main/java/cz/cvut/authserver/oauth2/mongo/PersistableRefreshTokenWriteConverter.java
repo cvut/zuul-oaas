@@ -3,7 +3,7 @@ package cz.cvut.authserver.oauth2.mongo;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import cz.cvut.authserver.oauth2.models.PersistableRefreshToken;
-import org.springframework.core.convert.converter.Converter;
+import org.springframework.stereotype.Component;
 
 import static cz.cvut.authserver.oauth2.mongo.MongoDbConstants.refresh_tokens.*;
 
@@ -12,7 +12,8 @@ import static cz.cvut.authserver.oauth2.mongo.MongoDbConstants.refresh_tokens.*;
  *
  * @author Jakub Jirutka <jakub@jirutka.cz>
  */
-public class PersistableRefreshTokenWriteConverter implements Converter<PersistableRefreshToken, DBObject> {
+@Component
+public class PersistableRefreshTokenWriteConverter extends AutoRegisteredConverter<PersistableRefreshToken, DBObject> {
 
     public DBObject convert(PersistableRefreshToken source) {
         DBObject target = new BasicDBObject();
