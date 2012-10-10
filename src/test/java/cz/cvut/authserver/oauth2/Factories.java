@@ -105,8 +105,8 @@ public class Factories {
         return new DefaultOAuth2RefreshToken(value);
     }
 
-    public static ExpiringOAuth2RefreshToken createExpiringRefreshToken(String value) {
-        return new DefaultExpiringOAuth2RefreshToken(value, randomFutureDate());
+    public static ExpiringOAuth2RefreshToken createExpiringRefreshToken(String value, Date expiration) {
+        return new DefaultExpiringOAuth2RefreshToken(value, expiration);
     }
 
     

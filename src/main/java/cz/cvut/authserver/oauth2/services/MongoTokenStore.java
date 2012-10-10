@@ -20,10 +20,12 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 public class MongoTokenStore implements TokenStore {
 
     private final MongoAccessTokenStore accessTokenStore;
+    private final MongoRefreshTokenStore refreshTokenStore;
 
 
     public MongoTokenStore(MongoOperations mongoTemplate) {
         this.accessTokenStore = new MongoAccessTokenStore(mongoTemplate);
+        this.refreshTokenStore = new MongoRefreshTokenStore(mongoTemplate);
     }
 
     
@@ -75,19 +77,19 @@ public class MongoTokenStore implements TokenStore {
     //////// Delegate to refreshTokenStore ////////
 
     public void storeRefreshToken(OAuth2RefreshToken refreshToken, OAuth2Authentication authentication) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        refreshTokenStore.storeRefreshToken(refreshToken, authentication);
     }
 
     public OAuth2RefreshToken readRefreshToken(String tokenValue) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return refreshTokenStore.readRefreshToken(tokenValue);
     }
 
     public void removeRefreshToken(OAuth2RefreshToken token) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        refreshTokenStore.removeRefreshToken(token);
     }
 
     public OAuth2Authentication readAuthenticationForRefreshToken(OAuth2RefreshToken token) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return refreshTokenStore.readAuthenticationForRefreshToken(token);
     }
 
 }

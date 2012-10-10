@@ -26,6 +26,12 @@
             <mongo:converter>
                 <bean class="cz.cvut.authserver.oauth2.mongo.PersistableAccessTokenWriteConverter" />
             </mongo:converter>
+            <mongo:converter>
+                <bean class="cz.cvut.authserver.oauth2.mongo.PersistableRefreshTokenReadConverter" />
+            </mongo:converter>
+            <mongo:converter>
+                <bean class="cz.cvut.authserver.oauth2.mongo.PersistableRefreshTokenWriteConverter" />
+            </mongo:converter>
         </mongo:custom-converters>
     </mongo:mapping-converter>
     

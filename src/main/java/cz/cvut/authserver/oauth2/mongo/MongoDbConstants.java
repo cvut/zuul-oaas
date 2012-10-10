@@ -12,7 +12,8 @@ public class MongoDbConstants {
 
         public static final String
                 CLIENT_DETAILS = "client_details",
-                ACCESS_TOKENS = "access_tokens";
+                ACCESS_TOKENS = "access_tokens",
+                REFRESH_TOKENS = "refresh_tokens";
 
         private collections() { /* do not initialize */ }
     }
@@ -51,6 +52,17 @@ public class MongoDbConstants {
                 USER_NAME = "user_name";
 
         private access_tokens() { /* do not initialize */ }
+    }
+
+    /** Fields in collection oauth_refresh_token */
+    public static class refresh_tokens {
+
+        public static final String
+                TOKEN_ID = "_id",
+                EXPIRATION = "expiration",
+                AUTHENTICATION = "authentication";
+
+        private refresh_tokens() { /* do not initialize */ }
     }
 
     public static class authentication {
