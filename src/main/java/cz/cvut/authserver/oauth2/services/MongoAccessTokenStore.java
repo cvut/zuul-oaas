@@ -5,6 +5,9 @@ import java.util.Collection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.index.Index;
+import org.springframework.data.mongodb.core.index.IndexDefinition;
+import org.springframework.data.mongodb.core.query.Order;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2RefreshToken;
@@ -26,12 +29,21 @@ public class MongoAccessTokenStore {
     private static final Logger LOG = LoggerFactory.getLogger(MongoAccessTokenStore.class);
     private static final Class<PersistableAccessToken> ENTITY_CLASS = PersistableAccessToken.class;
 
+    private static final IndexDefinition[] INDEXES = {
+        new Index().on(AUTHENTICATION_KEY, Order.ASCENDING),
+        new Index().on(REFRESH_TOKEN, Order.ASCENDING),
+        new Index().on(CLIENT_ID, Order.ASCENDING),
+        new Index().on(USER_NAME, Order.ASCENDING)
+    };
+
     private final MongoOperations mongo;
     private AuthenticationKeyGenerator authKeyGenerator = new DefaultAuthenticationKeyGenerator();
 
 
+
     public MongoAccessTokenStore(MongoOperations mongoTemplate) {
         this.mongo = mongoTemplate;
+        ensureIndexes();
     }
 
 
@@ -108,6 +120,12 @@ public class MongoAccessTokenStore {
         this.authKeyGenerator = authenticationKeyGenerator;
     }
 
+
+    private void ensureIndexes() {
+        for (IndexDefinition index : INDEXES) {
+            mongo.indexOps(ACCESS_TOKENS).ensureIndex(index);
+        }
+    }
 
     private Collection<OAuth2AccessToken> findTokensBy(String field, Object value) {
         Query query = query(where(field).is(value));
