@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Context antiJARLocking="true" path="/auth">
 
+    <!-- 
+        Define Spring profile to be activated.
+        Available profiles:
+            - inMemory: store all data in-memory only (for testing)
+            - mongo: use Mongo database
+            - jdbc: use SQL database via JDBC
+    -->
+    <Environment name="spring.profiles.active" value="mongo"
+                 type="java.lang.String" override="false" />
+
     <Resource name="jdbc/AuthServerDS"
               auth="Container"
               type="javax.sql.DataSource"

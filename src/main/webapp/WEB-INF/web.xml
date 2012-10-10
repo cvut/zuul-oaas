@@ -21,6 +21,19 @@
 
     <!--//// Context ////-->
 
+    <!--
+        Default Spring profile used when no active profile is set via JNDI.
+        Active profile is configured in META-INF/context.xml or in Servlet Container.
+        Available profiles:
+            - inMemory: store all data in-memory only (for testing)
+            - mongo: use Mongo database
+            - jdbc: use SQL database via JDBC
+    -->
+    <context-param>
+       <param-name>spring.profiles.default</param-name>
+       <param-value>inMemory</param-value>
+    </context-param>
+
     <!-- Spring’s parameter to identify root path of this webapp.
          This value must be unique per Servlet Container. -->
     <context-param>

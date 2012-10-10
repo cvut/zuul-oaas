@@ -6,14 +6,17 @@
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
 
-    <!--//// Base configuration of the Root Spring’s Context ////-->
 
+    <!--////////// Base configuration of the root Spring’s context //////////-->
+
+
+    <!-- Export MBeans via JMX for monitoring -->
     <context:mbean-export />
 
-    
-    <import resource="persistence-jdbc.xml"/>
-    <!--<import resource="persistence-mongo.xml"/>-->
-    <import resource="oauth2/server-inMemory.xml"/>
+
+    <!-- Load all configuration files -->
+    <import resource="persistence.xml"/>
+    <import resource="oauth2/auth-server.xml"/>
     <import resource="oauth2/security-api.xml"/>
 
 </beans>
