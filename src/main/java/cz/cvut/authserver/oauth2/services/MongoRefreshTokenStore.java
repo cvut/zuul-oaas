@@ -19,6 +19,7 @@ import static org.springframework.data.mongodb.core.query.Query.query;
 public class MongoRefreshTokenStore {
 
     private static final Logger LOG = LoggerFactory.getLogger(MongoRefreshTokenStore.class);
+    private static final Class<PersistableRefreshToken> ENTITY_CLASS = PersistableRefreshToken.class;
 
     private final MongoOperations mongo;
 
@@ -33,7 +34,7 @@ public class MongoRefreshTokenStore {
     }
 
     public OAuth2RefreshToken readRefreshToken(String tokenCode) {
-        PersistableRefreshToken token = mongo.findById(tokenCode, PersistableRefreshToken.class, REFRESH_TOKENS);
+        PersistableRefreshToken token = mongo.findById(tokenCode, ENTITY_CLASS, REFRESH_TOKENS);
 
         if (token == null) {
             LOG.debug("Failed to find refresh token for token {}", tokenCode);
@@ -50,7 +51,7 @@ public class MongoRefreshTokenStore {
     }
 
     public OAuth2Authentication readAuthenticationForRefreshToken(String tokenCode) {
-        PersistableRefreshToken token = mongo.findById(tokenCode, PersistableRefreshToken.class, REFRESH_TOKENS);
+        PersistableRefreshToken token = mongo.findById(tokenCode, ENTITY_CLASS, REFRESH_TOKENS);
 
         if (token == null) {
             LOG.debug("Failed to find authentication for token {}", tokenCode);

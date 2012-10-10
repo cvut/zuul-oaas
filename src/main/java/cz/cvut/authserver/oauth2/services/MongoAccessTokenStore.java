@@ -23,6 +23,7 @@ import static org.springframework.data.mongodb.core.query.Query.query;
 public class MongoAccessTokenStore {
 
     private static final Logger LOG = LoggerFactory.getLogger(MongoAccessTokenStore.class);
+    private static final Class<PersistableAccessToken> ENTITY_CLASS = PersistableAccessToken.class;
 
     private final MongoOperations mongo;
     private AuthenticationKeyGenerator authKeyGenerator = new DefaultAuthenticationKeyGenerator();
@@ -44,7 +45,7 @@ public class MongoAccessTokenStore {
 
         PersistableAccessToken accessToken = mongo.findOne(
                 query(where(AUTHENTICATION_KEY).is(authKey)),
-                PersistableAccessToken.class, ACCESS_TOKENS);
+                ENTITY_CLASS, ACCESS_TOKENS);
 
         if (accessToken == null) {
             LOG.debug("Failed to find access token for authentication {}", authentication);
@@ -59,7 +60,7 @@ public class MongoAccessTokenStore {
     }
  
     public OAuth2AccessToken readAccessToken(String tokenCode) {
-        OAuth2AccessToken token = mongo.findById(tokenCode, PersistableAccessToken.class, ACCESS_TOKENS);
+        OAuth2AccessToken token = mongo.findById(tokenCode, ENTITY_CLASS, ACCESS_TOKENS);
 
         if (token == null) {
             LOG.debug("Failed to find access token for token {}", tokenCode);
@@ -88,7 +89,7 @@ public class MongoAccessTokenStore {
     }
 
     public OAuth2Authentication readAuthentication(String tokenCode) {
-        PersistableAccessToken token = mongo.findById(tokenCode, PersistableAccessToken.class, ACCESS_TOKENS);
+        PersistableAccessToken token = mongo.findById(tokenCode, ENTITY_CLASS, ACCESS_TOKENS);
 
         if (token == null) {
             LOG.debug("Failed to find authentication for token {}", tokenCode);

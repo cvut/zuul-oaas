@@ -30,6 +30,7 @@ import static org.springframework.data.mongodb.core.query.Update.update;
 public class MongoClientDetailsService implements ClientDetailsService, ClientRegistrationService {
 
     private static final Logger LOG = LoggerFactory.getLogger(MongoClientDetailsService.class);
+    private static final Class<ClientDetails> ENTITY_CLASS = ClientDetails.class;
 
     private final MongoOperations mongo;
     private PasswordEncoder passwordEncoder = NoOpPasswordEncoder.getInstance();
@@ -41,7 +42,7 @@ public class MongoClientDetailsService implements ClientDetailsService, ClientRe
 
 
     public ClientDetails loadClientByClientId(String clientId) throws OAuth2Exception {
-        ClientDetails result = mongo.findById(clientId, ClientDetails.class, CLIENT_DETAILS);
+        ClientDetails result = mongo.findById(clientId, ENTITY_CLASS, CLIENT_DETAILS);
         if (result == null) {
             throw new NoSuchClientException("No client found with id = " + clientId);
         }
@@ -85,7 +86,7 @@ public class MongoClientDetailsService implements ClientDetailsService, ClientRe
     }
 
     public List<ClientDetails> listClientDetails() {
-        return mongo.findAll(ClientDetails.class, CLIENT_DETAILS);
+        return mongo.findAll(ENTITY_CLASS, CLIENT_DETAILS);
     }
 
     public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
@@ -95,7 +96,7 @@ public class MongoClientDetailsService implements ClientDetailsService, ClientRe
 
 
     private void assertClientExists(String clientId) {
-        ClientDetails client = mongo.findById(clientId, ClientDetails.class, CLIENT_DETAILS);
+        ClientDetails client = mongo.findById(clientId, ENTITY_CLASS, CLIENT_DETAILS);
 
         if (client == null) {
             throw new NoSuchClientException("No client found with id = " + clientId);
