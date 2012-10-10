@@ -8,7 +8,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2RefreshToken;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
@@ -30,13 +29,12 @@ public class MongoAccessTokenStoreTest {
 
     private @Autowired MongoTemplate template;
     
-    private MongoTokenStore tokenStore;
+    private MongoAccessTokenStore tokenStore;
 
 
     public @Before void initializeDb() {
         assertFalse("Database should be empty", template.collectionExists(ACCESS_TOKENS));
-
-        tokenStore = new MongoTokenStore(template);
+        tokenStore = new MongoAccessTokenStore(template);
     }
 
     public @After void clearDb() {
@@ -85,18 +83,6 @@ public class MongoAccessTokenStoreTest {
         assertEquals(expectedAuth.getCredentials(), actualAuth.getCredentials());
         assertEquals(expectedAuth.getName(), actualAuth.getName());
         assertEquals(expectedAuth.getPrincipal(), actualAuth.getPrincipal());
-    }
-
-    public @Test void refresh_token_should_not_be_stored_during_access_token() {
-
-        DefaultOAuth2AccessToken expectedAccessToken = new DefaultOAuth2AccessToken("testToken");
-        expectedAccessToken.setRefreshToken(createRefreshToken("refreshToken"));
-
-        tokenStore.storeAccessToken(expectedAccessToken, createRandomOAuth2Authentication(true));
-        OAuth2AccessToken actualAccessToken = tokenStore.readAccessToken("testToken");
-
-        assertNotNull(actualAccessToken.getRefreshToken());
-        assertNull(tokenStore.readRefreshToken("refreshToken"));
     }
 
 

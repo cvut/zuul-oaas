@@ -1,6 +1,6 @@
 package cz.cvut.authserver.oauth2.services;
 
-import cz.cvut.authserver.oauth2.models.AuthenticatedAccessToken;
+import cz.cvut.authserver.oauth2.models.PersistableAccessToken;
 import java.util.Collection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +25,7 @@ public class MongoAccessTokenStore {
     private static final Logger LOG = LoggerFactory.getLogger(MongoAccessTokenStore.class);
 
     private final MongoOperations mongo;
-    private AuthenticationKeyGenerator authenticationKeyGenerator = new DefaultAuthenticationKeyGenerator();
+    private AuthenticationKeyGenerator authKeyGenerator = new DefaultAuthenticationKeyGenerator();
 
 
     public MongoAccessTokenStore(MongoOperations mongoTemplate) {
@@ -34,32 +34,37 @@ public class MongoAccessTokenStore {
 
 
     public void storeAccessToken(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
-        mongo.insert(new AuthenticatedAccessToken(accessToken, authentication), ACCESS_TOKENS);
+        String authKey = authKeyGenerator.extractKey(authentication);
+
+        mongo.insert(new PersistableAccessToken(accessToken, authentication, authKey), ACCESS_TOKENS);
     }
 
     public OAuth2AccessToken getAccessToken(OAuth2Authentication authentication) {
-        String key = authenticationKeyGenerator.extractKey(authentication);
+        String authKey = authKeyGenerator.extractKey(authentication);
 
-        OAuth2AccessToken accessToken = mongo.findOne(
-                query(where(AUTHENTICATION_KEY).is(key)),
-                OAuth2AccessToken.class,
-                ACCESS_TOKENS);
+        PersistableAccessToken accessToken = mongo.findOne(
+                query(where(AUTHENTICATION_KEY).is(authKey)),
+                PersistableAccessToken.class, ACCESS_TOKENS);
 
         if (accessToken == null) {
             LOG.debug("Failed to find access token for authentication {}", authentication);
         }
 
-        if (accessToken != null && !authentication.equals(readAuthentication(accessToken.getValue()))) {
+        if (accessToken != null && !authentication.equals(accessToken.getAuthentication())) {
             removeAccessToken(accessToken);
-            // Keep the store consistent (maybe the same user is represented by this authentication but the details have
-            // changed)
+            // keep the store consistent (maybe the same user is represented by this auth. but the details have changed)
             storeAccessToken(accessToken, authentication);
         }
         return accessToken;
     }
  
-    public OAuth2AccessToken readAccessToken(String tokenValue) {
-        return getAuthenticatedAccessToken(tokenValue).getAccessToken();
+    public OAuth2AccessToken readAccessToken(String tokenCode) {
+        OAuth2AccessToken token = mongo.findById(tokenCode, PersistableAccessToken.class, ACCESS_TOKENS);
+
+        if (token == null) {
+            LOG.debug("Failed to find access token for token {}", tokenCode);
+        }
+        return token;
     }
      
     public void removeAccessToken(OAuth2AccessToken token) {
@@ -67,40 +72,38 @@ public class MongoAccessTokenStore {
     }
   
     public void removeAccessTokenUsingRefreshToken(OAuth2RefreshToken refreshToken) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        mongo.remove(query(where(REFRESH_TOKEN).is(refreshToken.getValue())), ACCESS_TOKENS);
     }
 
     public Collection<OAuth2AccessToken> findTokensByClientId(String clientId) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return findTokensBy(CLIENT_ID, clientId);
     }
 
     public Collection<OAuth2AccessToken> findTokensByUserName(String userName) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return findTokensBy(USER_NAME, userName);
     }
 
     public OAuth2Authentication readAuthentication(OAuth2AccessToken token) {
         return readAuthentication(token.getValue());
     }
 
-    public OAuth2Authentication readAuthentication(String token) {
-        return getAuthenticatedAccessToken(token).getAuthentication();
-    }
+    public OAuth2Authentication readAuthentication(String tokenCode) {
+        PersistableAccessToken token = mongo.findById(tokenCode, PersistableAccessToken.class, ACCESS_TOKENS);
 
-
-    public void setAuthenticationKeyGenerator(AuthenticationKeyGenerator authenticationKeyGenerator) {
-        this.authenticationKeyGenerator = authenticationKeyGenerator;
-    }
-
-
-    private AuthenticatedAccessToken getAuthenticatedAccessToken(String tokenId) {
-        AuthenticatedAccessToken result = mongo.findById(tokenId, AuthenticatedAccessToken.class, ACCESS_TOKENS);
-
-        if (result == null) {
-            LOG.debug("Failed to find access token for token {}", tokenId);
-            return new AuthenticatedAccessToken(null, null);
+        if (token == null) {
+            LOG.debug("Failed to find authentication for token {}", tokenCode);
+            return null;
         } else {
-            return result;
+            return token.getAuthentication();
         }
     }
 
+    public void setAuthenticationKeyGenerator(AuthenticationKeyGenerator authenticationKeyGenerator) {
+        this.authKeyGenerator = authenticationKeyGenerator;
+    }
+
+
+    private Collection<OAuth2AccessToken> findTokensBy(String field, Object value) {
+        return (Collection) mongo.find(query(where(field).is(value)), PersistableAccessToken.class, ACCESS_TOKENS);
+    }
 }

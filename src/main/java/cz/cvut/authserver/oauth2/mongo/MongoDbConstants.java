@@ -45,12 +45,21 @@ public class MongoDbConstants {
                 REFRESH_TOKEN = "refresh_token",
                 SCOPE = "scope",
                 ADDITIONAL_INFORMATION = "additional_information",
-                CLIENT_ID = "client_id",
                 AUTHENTICATION_KEY = "authentication_key",
+                AUTHENTICATION = "authentication",
+                CLIENT_ID = "client_id",
+                USER_NAME = "user_name";
+
+        private access_tokens() { /* do not initialize */ }
+    }
+
+    public static class authentication {
+
+        public static final String
                 AUTHORIZATION_REQUEST = "authorization_request",
                 USER_AUTHENTICATION = "user_authentication";
 
-        private access_tokens() { /* do not initialize */ }
+        private authentication() { /* do not initialize */ }
     }
 
     public static class authz_request {
@@ -67,7 +76,7 @@ public class MongoDbConstants {
 
     public static class user_auth {
 
-        //FIXME incomplete!
+        //TODO incomplete!
         public static final String
                 USER_NAME = "user_name",
                 AUTHORITIES = "authorities";

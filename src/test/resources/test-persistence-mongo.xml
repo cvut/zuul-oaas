@@ -21,10 +21,10 @@
                 <bean class="cz.cvut.authserver.oauth2.mongo.ClientDetailsWriteConverter" />
             </mongo:converter>
             <mongo:converter>
-                <bean class="cz.cvut.authserver.oauth2.mongo.AuthenticatedAccessTokenReadConverter" />
+                <bean class="cz.cvut.authserver.oauth2.mongo.PersistableAccessTokenReadConverter" />
             </mongo:converter>
             <mongo:converter>
-                <bean class="cz.cvut.authserver.oauth2.mongo.AuthenticatedAccessTokenWriteConverter" />
+                <bean class="cz.cvut.authserver.oauth2.mongo.PersistableAccessTokenWriteConverter" />
             </mongo:converter>
         </mongo:custom-converters>
     </mongo:mapping-converter>
