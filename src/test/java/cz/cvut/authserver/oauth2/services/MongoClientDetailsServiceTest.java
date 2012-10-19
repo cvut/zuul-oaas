@@ -13,6 +13,7 @@ import org.springframework.security.oauth2.provider.BaseClientDetails;
 import org.springframework.security.oauth2.provider.ClientAlreadyExistsException;
 import org.springframework.security.oauth2.provider.ClientDetails;
 import org.springframework.security.oauth2.provider.NoSuchClientException;
+import org.springframework.test.annotation.IfProfileValue;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -26,6 +27,7 @@ import static org.junit.Assert.*;
  * @author Jakub Jirutka <jakub@jirutka.cz>
  */
 @RunWith(SpringJUnit4ClassRunner.class)
+@IfProfileValue(name="it-profile", values={"all", "mongo"})
 @ContextConfiguration("classpath:/test-persistence-mongo.xml")
 public class MongoClientDetailsServiceTest {
 

@@ -10,6 +10,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.security.oauth2.common.ExpiringOAuth2RefreshToken;
 import org.springframework.security.oauth2.common.OAuth2RefreshToken;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.test.annotation.IfProfileValue;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -23,6 +24,7 @@ import static org.junit.Assert.*;
  * @author Jakub Jirutka <jakub@jirutka.cz>
  */
 @RunWith(SpringJUnit4ClassRunner.class)
+@IfProfileValue(name="it-profile", values={"all", "mongo"})
 @ContextConfiguration ("classpath:/test-persistence-mongo.xml")
 public class MongoRefreshTokenStoreTest {
 
