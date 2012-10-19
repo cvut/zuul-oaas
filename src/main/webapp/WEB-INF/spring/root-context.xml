@@ -7,7 +7,7 @@
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
 
 
-    <!--////////// Base configuration of the root Spring’s context //////////-->
+    <!--////////// Root Context Configuration //////////-->
 
 
     <!-- Export MBeans via JMX for monitoring -->

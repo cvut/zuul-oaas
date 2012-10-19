@@ -7,13 +7,14 @@
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd">
 
-    <import resource="controllers.xml" />
-    
+
+    <!--////////// Web Context Configuration //////////-->
+
+
     <!-- Enables the Spring MVC @Controller programming model -->
     <mvc:annotation-driven />
     <mvc:default-servlet-handler />
 
-    
     <bean id="viewResolver" class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
         <property name="mediaTypes">
             <map>
@@ -32,5 +33,12 @@
                   p:extractValueFromSingleKeyModel="true" />
         </property>
     </bean>
+
+
+    <!--///// Controllers /////-->
+
+    <!-- Override the default mappings for approval and error pages -->
+    <bean id="accessConfirmationController" class="cz.cvut.authserver.oauth2.controllers.AccessConfirmationController"
+          p:clientDetailsService-ref="clientDetails" />
 
 </beans>

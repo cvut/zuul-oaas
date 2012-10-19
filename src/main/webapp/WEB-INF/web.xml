@@ -86,19 +86,35 @@
 
 
     <!--//// Servlets ////-->
-    
+
     <servlet>
-        <servlet-name>dispatcher</servlet-name>
+        <servlet-name>api-dispatcher</servlet-name>
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
         <init-param>
             <param-name>contextConfigLocation</param-name>
-            <param-value>/WEB-INF/spring/web/servlet-context.xml</param-value>
+            <param-value>/WEB-INF/spring/api/api-context.xml</param-value>
         </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
 
+    <servlet>
+        <servlet-name>web-dispatcher</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>/WEB-INF/spring/web/web-context.xml</param-value>
+        </init-param>
+        <load-on-startup>2</load-on-startup>
+    </servlet>
+
+
     <servlet-mapping>
-        <servlet-name>dispatcher</servlet-name>
+        <servlet-name>api-dispatcher</servlet-name>
+        <url-pattern>/api/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>web-dispatcher</servlet-name>
         <url-pattern>/</url-pattern>
     </servlet-mapping>
 
