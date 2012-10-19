@@ -8,7 +8,7 @@
     <parent>
         <groupId>cz.cvut.fit.maven</groupId>
         <artifactId>spring-parent</artifactId>
-        <version>1.0</version>
+        <version>1.1-SNAPSHOT</version>
     </parent>
 
     
@@ -144,16 +144,36 @@
         <!--////////// Test Libraries //////////-->
 
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.8.2</version>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>1.9.0</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
-            <version>${org.springframework.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test-mvc</artifactId>
+            <version>1.0.0.M2</version>
+            <scope>test</scope>
+        </dependency>
+                        
+        <dependency>
+            <groupId>com.jayway.jsonpath</groupId>
+            <artifactId>json-path</artifactId>
+            <version>0.8.1</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- We need some implementation of JSR-303 (javax.validator) to run tests of Controllers -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
             <scope>test</scope>
         </dependency>
         
