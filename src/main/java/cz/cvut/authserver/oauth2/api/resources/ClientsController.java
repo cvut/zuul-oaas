@@ -1,5 +1,6 @@
 package cz.cvut.authserver.oauth2.api.resources;
 
+import cz.cvut.authserver.oauth2.api.models.SecretChangeRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -81,14 +82,14 @@ public class ClientsController {
 
     @ResponseStatus(NO_CONTENT)
     @RequestMapping(value="{clientId}/secret", method=PUT)
-    public void updateClientSecret(@PathVariable String clientId, @RequestBody /* FIXME -> */ Object secretChangeRequest) throws Exception {
+    public void updateClientSecret(@PathVariable String clientId, @RequestBody SecretChangeRequest changeRequest) throws Exception {
 
         ClientDetails clientDetails = clientDetailsService.loadClientByClientId(clientId);
 
-        // TODO it MUST check given old password against what we load
+        // TODO it MUST check given old password against what we load and if the client is authorized to do that
+        // see org.cloudfoundry.identity.uaa.oauth.ClientAdminEndpoints for inspiration
 
-        // TODO -------------------------------------------------v
-        //clientRegistrationService.updateClientSecret(clientId, secretChangeRequest.getNewSecret());
+        clientRegistrationService.updateClientSecret(clientId, changeRequest.getNewSecret());
     }
 
 
