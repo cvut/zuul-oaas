@@ -8,7 +8,7 @@
             - mongo: use Mongo database
             - jdbc: use SQL database via JDBC
     -->
-    <Environment name="spring.profiles.active" value="mongo"
+    <Environment name="spring.profiles.active" value="jdbc"
                  type="java.lang.String" override="false" />
 
     <Resource name="jdbc/AuthServerDS"
@@ -23,6 +23,7 @@
               logAbandoned="true"
               minEvictableIdleTimeMillis="30000"
               username="dev"
+              password="dev"
               url="jdbc:postgresql://localhost:5432/auth_server_dev" />
 
 </Context>

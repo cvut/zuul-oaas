@@ -1,6 +1,7 @@
 package cz.cvut.authserver.oauth2.api.resources;
 
 import cz.cvut.authserver.oauth2.api.models.SecretChangeRequest;
+import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +33,8 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 public class ClientsController {
 
     private static final Logger LOG = LoggerFactory.getLogger(ClientsController.class);
+    
+    private static final String API_VERSION = "v1";
 
     private ClientDetailsService clientDetailsService;
     private ClientRegistrationService clientRegistrationService;
@@ -46,12 +49,14 @@ public class ClientsController {
 
     @ResponseStatus(CREATED)
     @RequestMapping(method=POST)
-    public void createClientDetails(@RequestBody BaseClientDetails client) throws Exception {
+    public void createClientDetails(@RequestBody BaseClientDetails client, HttpServletResponse response) throws Exception {
         // TODO it MUST valide given data before insert!
 
         clientRegistrationService.addClientDetails(client);
 
         // TODO should send redirect to URI of the created client (i.e. api/clients/{clientId}/)
+        response.setHeader("Location", String.format("/%s/clients/%s", API_VERSION,
+                client.getClientId()));
     }
 
     @ResponseStatus(NO_CONTENT)
@@ -91,7 +96,7 @@ public class ClientsController {
 
         clientRegistrationService.updateClientSecret(clientId, changeRequest.getNewSecret());
     }
-
+    
 
     @ExceptionHandler(NoSuchClientException.class)
     public ResponseEntity<Void> handleNoSuchClient(NoSuchClientException ex) {
