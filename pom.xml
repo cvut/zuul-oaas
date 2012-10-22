@@ -169,13 +169,25 @@
             <version>0.8.1</version>
             <scope>test</scope>
         </dependency>
-
-        <!-- We need some implementation of JSR-303 (javax.validator) to run tests of Controllers -->
+        
+        <!-- JSR 303 with Hibernate Validator -->
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <version>1.0.0.GA</version>
+        </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-validator</artifactId>
-            <scope>test</scope>
+            <version>4.1.0.Final</version>
         </dependency>
+
+        <!-- We need some implementation of JSR-303 (javax.validator) to run tests of Controllers -->
+<!--        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <scope>test</scope>
+        </dependency>-->
         
     </dependencies>
 

@@ -1,9 +1,14 @@
 package cz.cvut.authserver.oauth2.api.resources;
 
+import cz.cvut.authserver.oauth2.api.models.JsonExceptionMapping;
 import cz.cvut.authserver.oauth2.api.models.SecretChangeRequest;
+import cz.cvut.authserver.oauth2.api.validators.SecretChangeRequestValidator;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.MessageSource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.provider.BaseClientDetails;
 import org.springframework.security.oauth2.provider.ClientAlreadyExistsException;
@@ -21,6 +26,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import static org.springframework.http.HttpStatus.*;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 /**
@@ -29,26 +38,29 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
  * @author Jakub Jirutka <jakub@jirutka.cz>
  */
 @Controller
-@RequestMapping(value="/v1/clients")
+@RequestMapping(value = "/v1/clients")
 public class ClientsController {
 
     private static final Logger LOG = LoggerFactory.getLogger(ClientsController.class);
-    
     private static final String API_VERSION = "v1";
-
     private ClientDetailsService clientDetailsService;
     private ClientRegistrationService clientRegistrationService;
+    private SecretChangeRequestValidator secretChangeRequestValidator;
+    private MessageSource messageSource;
 
-
+    @InitBinder
+    public void initBinder(WebDataBinder dataBinder) {
+        dataBinder.setValidator(secretChangeRequestValidator);
+    }
 
     @ResponseBody
-    @RequestMapping(value="{clientId}", method=GET)
+    @RequestMapping(value = "{clientId}", method = GET)
     public ClientDetails getClientDetails(@PathVariable String clientId) throws Exception {
         return clientDetailsService.loadClientByClientId(clientId);
     }
 
     @ResponseStatus(CREATED)
-    @RequestMapping(method=POST)
+    @RequestMapping(method = POST)
     public void createClientDetails(@RequestBody BaseClientDetails client, HttpServletResponse response) throws Exception {
         // TODO it MUST valide given data before insert!
 
@@ -60,9 +72,9 @@ public class ClientsController {
     }
 
     @ResponseStatus(NO_CONTENT)
-    @RequestMapping(value="{clientId}", method=PUT)
+    @RequestMapping(value = "{clientId}", method = PUT)
     public void updateClientDetails(@RequestBody BaseClientDetails client,
-                                    @PathVariable String clientId) throws Exception {
+            @PathVariable String clientId) throws Exception {
 
         Assert.state(clientId.equals(client.getClientId()), String.format(
                 "The client_id %s does not match the URL %s", client.getClientId(), clientId));
@@ -79,15 +91,15 @@ public class ClientsController {
     }
 
     @ResponseStatus(NO_CONTENT)
-    @RequestMapping(value="{clientId}", method=DELETE)
+    @RequestMapping(value = "{clientId}", method = DELETE)
     public void removeClientDetails(@PathVariable String clientId) throws Exception {
         // TODO check?
         clientRegistrationService.removeClientDetails(clientId);
     }
 
     @ResponseStatus(NO_CONTENT)
-    @RequestMapping(value="{clientId}/secret", method=PUT)
-    public void updateClientSecret(@PathVariable String clientId, @RequestBody SecretChangeRequest changeRequest) throws Exception {
+    @RequestMapping(value = "{clientId}/secret", method = PUT)
+    public void updateClientSecret(@PathVariable String clientId, @Valid @RequestBody SecretChangeRequest changeRequest) throws Exception {
 
         ClientDetails clientDetails = clientDetailsService.loadClientByClientId(clientId);
 
@@ -96,21 +108,28 @@ public class ClientsController {
 
         clientRegistrationService.updateClientSecret(clientId, changeRequest.getNewSecret());
     }
-    
 
     @ExceptionHandler(NoSuchClientException.class)
     public ResponseEntity<Void> handleNoSuchClient(NoSuchClientException ex) {
-            return new ResponseEntity<>(NOT_FOUND);
+        return new ResponseEntity<>(NOT_FOUND);
     }
 
     @ExceptionHandler(ClientAlreadyExistsException.class)
     public ResponseEntity<Void> handleClientAlreadyExists(ClientAlreadyExistsException ex) {
-            return new ResponseEntity<>(CONFLICT);
+        return new ResponseEntity<>(CONFLICT);
     }
 
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public @ResponseBody
+    JsonExceptionMapping handleMethodArgumentNotValidException(MethodArgumentNotValidException error) {
+        BindingResult bindingResult = error.getBindingResult();
+        //TODO dog tired, fix later..
+        String errorMessage = messageSource.getMessage(bindingResult.getAllErrors().get(0).getCode(), bindingResult.getAllErrors().get(0).getArguments(),null);
+        return new JsonExceptionMapping(bindingResult, HttpStatus.BAD_REQUEST.value(), errorMessage);
+    }
 
     ////////  Getters / Setters  ////////
-
     public void setClientDetailsService(ClientDetailsService clientDetailsService) {
         this.clientDetailsService = clientDetailsService;
     }
@@ -118,6 +137,22 @@ public class ClientsController {
     public void setClientRegistrationService(ClientRegistrationService clientRegistrationService) {
         this.clientRegistrationService = clientRegistrationService;
     }
+
+    public SecretChangeRequestValidator getSecretChangeRequestValidator() {
+        return secretChangeRequestValidator;
+    }
+
+    public void setSecretChangeRequestValidator(SecretChangeRequestValidator secretChangeRequestValidator) {
+        this.secretChangeRequestValidator = secretChangeRequestValidator;
+    }
+
+    public MessageSource getMessageSource() {
+        return messageSource;
+    }
+
+    public void setMessageSource(MessageSource messageSource) {
+        this.messageSource = messageSource;
+    }
+    
     
 }
-
