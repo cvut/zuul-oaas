@@ -1,6 +1,8 @@
 package cz.cvut.authserver.oauth2.api.resources;
 
 import cz.cvut.authserver.oauth2.Factories;
+import cz.cvut.authserver.oauth2.api.models.SecretChangeRequest;
+import java.net.URI;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -16,8 +18,13 @@ import org.springframework.test.web.server.MockMvc;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItems;
+import org.json.JSONObject;
 import static org.mockito.Mockito.*;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import org.springframework.test.web.server.request.MockHttpServletRequestBuilder;
+import org.springframework.test.web.server.request.MockMultipartHttpServletRequestBuilder;
 import static org.springframework.test.web.server.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.server.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.server.setup.MockMvcBuilders.standaloneSetup;
@@ -29,7 +36,8 @@ import static org.springframework.test.web.server.setup.MockMvcBuilders.standalo
 @RunWith(MockitoJUnitRunner.class)
 public class ClientsControllerTest {
 
-    private static final String BASE_URI = "/v1/clients/";
+    private static final String API_VERSION = "v1";
+    private static final String BASE_URI = "/"+API_VERSION+"/clients/";
     private static final String MIME_TYPE_JSON = "application/json;charset=UTF-8";
 
     // JSON attributes
@@ -139,9 +147,14 @@ public class ClientsControllerTest {
     }
 
     @Test
-    @Ignore("Not implemented yet")
+    @Ignore("Not working as expected yet")
     public void update_client_secret_for_non_existing_client_id() throws Exception {
-        // TODO
+        ClientDetails random = Factories.createRandomClientDetails("123");
+        SecretChangeRequest request = new SecretChangeRequest();
+        request.setNewSecret("12345");
+        request.setOldSecret(random.getClientSecret());
+        JSONObject jsonObj = new JSONObject(request);
+        mock.perform(put(BASE_URI + "123/secret").contentType(APPLICATION_JSON).body(jsonObj.toString().getBytes("utf-8"))).andExpect(status().isNotFound());
     }
 
     @Test

@@ -176,18 +176,19 @@
             <artifactId>validation-api</artifactId>
             <version>1.0.0.GA</version>
         </dependency>
+
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-validator</artifactId>
-            <version>4.1.0.Final</version>
         </dependency>
 
-        <!-- We need some implementation of JSR-303 (javax.validator) to run tests of Controllers -->
-<!--        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-validator</artifactId>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20090211</version>
             <scope>test</scope>
-        </dependency>-->
+        </dependency>
+
         
     </dependencies>
 
