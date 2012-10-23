@@ -124,7 +124,7 @@ public class ClientsController {
     public @ResponseBody
     JsonExceptionMapping handleMethodArgumentNotValidException(MethodArgumentNotValidException error) {
         BindingResult bindingResult = error.getBindingResult();
-        //TODO dog tired, fix later..
+        //TODO... tired, fix later..
         String errorMessage = messageSource.getMessage(bindingResult.getAllErrors().get(0).getCode(), bindingResult.getAllErrors().get(0).getArguments(),null);
         return new JsonExceptionMapping(bindingResult, HttpStatus.BAD_REQUEST.value(), errorMessage);
     }
