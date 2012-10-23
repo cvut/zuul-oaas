@@ -3,6 +3,7 @@ package cz.cvut.authserver.oauth2.api.resources;
 import cz.cvut.authserver.oauth2.api.models.JsonExceptionMapping;
 import cz.cvut.authserver.oauth2.api.models.SecretChangeRequest;
 import cz.cvut.authserver.oauth2.api.validators.SecretChangeRequestValidator;
+import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import org.slf4j.Logger;
@@ -26,7 +27,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import static org.springframework.http.HttpStatus.*;
+import org.springframework.security.oauth2.common.exceptions.BadClientCredentialsException;
+import org.springframework.security.oauth2.common.exceptions.ClientAuthenticationException;
+import org.springframework.security.oauth2.common.exceptions.InvalidClientException;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -101,7 +106,18 @@ public class ClientsController {
     @RequestMapping(value = "{clientId}/secret", method = PUT)
     public void updateClientSecret(@PathVariable String clientId, @Valid @RequestBody SecretChangeRequest changeRequest) throws Exception {
 
-        ClientDetails clientDetails = clientDetailsService.loadClientByClientId(clientId);
+        ClientDetails clientDetails;
+        try {
+            clientDetails = clientDetailsService.loadClientByClientId(clientId);
+        } catch (ClientAuthenticationException e) {
+            LOG.warn("Attempt to change client secret for client {0}.", clientId);
+            throw new NoSuchClientException("No such client: " + clientId);
+        }
+
+        if (!clientDetails.getClientSecret().equals(changeRequest.getOldSecret())) {
+            LOG.warn("Client secret change not allowed for {0}. Invalid old client secret provided." + clientId);
+            throw new BadClientCredentialsException();
+        }
 
         // TODO it MUST check given old password against what we load and if the client is authorized to do that
         // see org.cloudfoundry.identity.uaa.oauth.ClientAdminEndpoints for inspiration
@@ -119,14 +135,27 @@ public class ClientsController {
         return new ResponseEntity<>(CONFLICT);
     }
 
+    @ExceptionHandler(BadClientCredentialsException.class)
+    public ResponseEntity<Void> handleBadClientCredentialsException(BadClientCredentialsException ex) {
+        return new ResponseEntity<>(UNAUTHORIZED);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public @ResponseBody
     JsonExceptionMapping handleMethodArgumentNotValidException(MethodArgumentNotValidException error) {
         BindingResult bindingResult = error.getBindingResult();
-        //TODO... tired, fix later..
-        String errorMessage = messageSource.getMessage(bindingResult.getAllErrors().get(0).getCode(), bindingResult.getAllErrors().get(0).getArguments(),null);
+        List<ObjectError> errors = bindingResult.getAllErrors();
+        String errorMessage = constructErrorMessage(errors);
         return new JsonExceptionMapping(bindingResult, HttpStatus.BAD_REQUEST.value(), errorMessage);
+    }
+
+    private String constructErrorMessage(List<ObjectError> errors) {
+        String errorMessage = "";
+        for (ObjectError objectError : errors) {
+            errorMessage = errorMessage.concat(messageSource.getMessage(objectError.getCode(), objectError.getArguments(), null));
+        }
+        return errorMessage;
     }
 
     ////////  Getters / Setters  ////////
@@ -153,6 +182,4 @@ public class ClientsController {
     public void setMessageSource(MessageSource messageSource) {
         this.messageSource = messageSource;
     }
-    
-    
 }
