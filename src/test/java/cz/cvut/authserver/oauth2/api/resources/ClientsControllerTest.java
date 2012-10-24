@@ -23,6 +23,7 @@ import static org.mockito.Mockito.*;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import org.springframework.test.web.server.RequestBuilder;
 import org.springframework.test.web.server.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.server.request.MockMultipartHttpServletRequestBuilder;
 import static org.springframework.test.web.server.request.MockMvcRequestBuilders.*;
@@ -37,39 +38,34 @@ import static org.springframework.test.web.server.setup.MockMvcBuilders.standalo
 public class ClientsControllerTest {
 
     private static final String API_VERSION = "v1";
-    private static final String BASE_URI = "/"+API_VERSION+"/clients/";
+    private static final String BASE_URI = "/" + API_VERSION + "/clients/";
     private static final String MIME_TYPE_JSON = "application/json;charset=UTF-8";
-
     // JSON attributes
-    public static final String
-            CLIENT_ID = "client_id",
+    public static final String CLIENT_ID = "client_id",
             CLIENT_SECRET = "client_secret",
             RESOURCE_IDS = "resource_ids",
             GRANT_TYPES = "authorized_grant_types",
             REDIRECT_URI = "redirect_uri",
             ACCESS_TOKEN_VALIDITY = "access_token_validity",
             REFRESH_TOKEN_VALIDITY = "refresh_token_validity";
-
-    private @Mock ClientRegistrationService clientRegistrationService;
-    private @Mock ClientDetailsService clientDetailsService;
-    private @InjectMocks ClientsController clientsController;
-
+    private @Mock
+    ClientRegistrationService clientRegistrationService;
+    private @Mock
+    ClientDetailsService clientDetailsService;
+    private @InjectMocks
+    ClientsController clientsController;
     private MockMvc mock;
-
 
     @Before
     public void buildMocks() {
         mock = standaloneSetup(clientsController).build();
     }
 
-
     @Test
     public void get_client_details_for_non_existing_client_id() throws Exception {
-        doThrow(NoSuchClientException.class)
-                .when(clientDetailsService).loadClientByClientId("666");
+        doThrow(NoSuchClientException.class).when(clientDetailsService).loadClientByClientId("666");
 
-        mock.perform(get(BASE_URI + 666).accept(APPLICATION_JSON))
-            .andExpect(status().isNotFound());
+        mock.perform(get(BASE_URI + 666).accept(APPLICATION_JSON)).andExpect(status().isNotFound());
     }
 
     @Test
@@ -77,18 +73,8 @@ public class ClientsControllerTest {
         ClientDetails expected = Factories.createRandomClientDetails("42");
         doReturn(expected).when(clientDetailsService).loadClientByClientId("42");
 
-        mock.perform(get(BASE_URI + 42).accept(APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andExpect(content().mimeType(MIME_TYPE_JSON))
-            .andExpect(jsonPath(CLIENT_ID, equalTo("42")))
-            .andExpect(jsonPath(CLIENT_SECRET, equalTo(expected.getClientSecret())))
-            .andExpect(jsonPath(RESOURCE_IDS, hasItems(expected.getResourceIds().toArray())))
-            .andExpect(jsonPath(GRANT_TYPES, hasItems(expected.getAuthorizedGrantTypes().toArray())))
-            .andExpect(jsonPath(REDIRECT_URI, hasItems(expected.getRegisteredRedirectUri().toArray())))
-            .andExpect(jsonPath(ACCESS_TOKEN_VALIDITY, equalTo(expected.getAccessTokenValiditySeconds())))
-            .andExpect(jsonPath(REFRESH_TOKEN_VALIDITY, equalTo(expected.getRefreshTokenValiditySeconds())));
+        mock.perform(get(BASE_URI + 42).accept(APPLICATION_JSON)).andExpect(status().isOk()).andExpect(content().mimeType(MIME_TYPE_JSON)).andExpect(jsonPath(CLIENT_ID, equalTo("42"))).andExpect(jsonPath(CLIENT_SECRET, equalTo(expected.getClientSecret()))).andExpect(jsonPath(RESOURCE_IDS, hasItems(expected.getResourceIds().toArray()))).andExpect(jsonPath(GRANT_TYPES, hasItems(expected.getAuthorizedGrantTypes().toArray()))).andExpect(jsonPath(REDIRECT_URI, hasItems(expected.getRegisteredRedirectUri().toArray()))).andExpect(jsonPath(ACCESS_TOKEN_VALIDITY, equalTo(expected.getAccessTokenValiditySeconds()))).andExpect(jsonPath(REFRESH_TOKEN_VALIDITY, equalTo(expected.getRefreshTokenValiditySeconds())));
     }
-
 
     @Test
     @Ignore("Not implemented yet")
@@ -101,7 +87,6 @@ public class ClientsControllerTest {
     public void create_client_details() throws Exception {
         // TODO
     }
-
 
     @Test
     @Ignore("Not implemented yet")
@@ -121,24 +106,19 @@ public class ClientsControllerTest {
         // TODO
     }
 
-
     @Test
     public void remove_client_details_for_unkown_client_id() throws Exception {
-        doThrow(NoSuchClientException.class)
-                .when(clientRegistrationService).removeClientDetails("666");
+        doThrow(NoSuchClientException.class).when(clientRegistrationService).removeClientDetails("666");
 
-        mock.perform(delete(BASE_URI + 666))
-            .andExpect(status().isNotFound());
+        mock.perform(delete(BASE_URI + 666)).andExpect(status().isNotFound());
     }
 
     @Test
     public void remove_client_details() throws Exception {
-        mock.perform(delete(BASE_URI + 123))
-            .andExpect(status().isNoContent());
+        mock.perform(delete(BASE_URI + 123)).andExpect(status().isNoContent());
 
         verify(clientRegistrationService).removeClientDetails("123");
     }
-
 
     @Test
     @Ignore("Not implemented yet")
@@ -150,11 +130,12 @@ public class ClientsControllerTest {
     @Ignore("Not working as expected yet")
     public void update_client_secret_for_non_existing_client_id() throws Exception {
         ClientDetails random = Factories.createRandomClientDetails("123");
-        SecretChangeRequest request = new SecretChangeRequest();
-        request.setNewSecret("12345");
-        request.setOldSecret(random.getClientSecret());
-        JSONObject jsonObj = new JSONObject(request);
-        mock.perform(put(BASE_URI + "123/secret").contentType(APPLICATION_JSON).body(jsonObj.toString().getBytes("utf-8"))).andExpect(status().isNotFound());
+        SecretChangeRequest request = Factories.createValidSecretChangeRequestForClient(random);
+        JSONObject jsonObj = new JSONObject();
+        jsonObj.put("old_secret", request.getOldSecret());
+        jsonObj.put("new_secret", request.getNewSecret());
+        String uri = BASE_URI+"123/secret";
+        mock.perform(put(uri).contentType(APPLICATION_JSON).body(jsonObj.toString().getBytes("utf-8"))).andExpect(status().isNotFound());
     }
 
     @Test
@@ -168,5 +149,4 @@ public class ClientsControllerTest {
     public void update_client_secret() throws Exception {
         // TODO
     }
-
 }

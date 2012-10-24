@@ -1,5 +1,6 @@
 package cz.cvut.authserver.oauth2;
 
+import cz.cvut.authserver.oauth2.api.models.SecretChangeRequest;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
@@ -33,7 +34,7 @@ import org.springframework.util.StringUtils;
  * @author Jakub Jirutka <jakub@jirutka.cz>
  */
 public class Factories {
-    
+
     private static final int MAX_STRING_LENGTH = 16;
     private static final int DEFAULT_LIST_SIZE = 2;
 
@@ -130,10 +131,10 @@ public class Factories {
     public static AuthorizationRequest createEmptyAuthorizationRequest(String clientId) {
         return new DefaultAuthorizationRequest(clientId, null);
     }
-    
+
     public static AuthorizationRequest createRandomAuthorizationRequest() {
         DefaultAuthorizationRequest request;
-        
+
         request = new DefaultAuthorizationRequest(randomAuthorizationParameters());
         request.setApprovalParameters( randomStringsMap(2) );
         request.setApproved( true );
@@ -151,6 +152,13 @@ public class Factories {
         return new StubAuthentication(name, authenticated);
     }
 
+    //////// SecretChangeRequest //////// 
+    public static SecretChangeRequest createValidSecretChangeRequestForClient(ClientDetails random) {
+        SecretChangeRequest request = new SecretChangeRequest();
+        request.setNewSecret(randomString());
+        request.setOldSecret(random.getClientSecret());
+        return request;
+    }
 
     
     //////// Support ////////
@@ -161,10 +169,10 @@ public class Factories {
 
     private static Map<String, String> randomAuthorizationParameters() {
          return new HashMap<String, String>(4) {{
-            put(AuthorizationRequest.CLIENT_ID, randomString());
-            put(AuthorizationRequest.SCOPE, StringUtils.arrayToCommaDelimitedString(randomStringArray(2)));
+                put(AuthorizationRequest.CLIENT_ID, randomString());
+                put(AuthorizationRequest.SCOPE, StringUtils.arrayToCommaDelimitedString(randomStringArray(2)));
         }};
-    }
+            }
 
     private static Map randomStringsMap(int size) {
         Map<String, String> map = new HashMap<>(size);
