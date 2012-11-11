@@ -124,6 +124,22 @@ public class ClientsController {
 
         clientRegistrationService.updateClientSecret(clientId, changeRequest.getNewSecret());
     }
+    
+    /**
+     * Updates resources that given client can access.
+     * 
+     * @param clientId client id of the client
+     * @param request request containing resources that client wants access with given scope
+     */
+    @ResponseStatus(NO_CONTENT)
+    @RequestMapping(value = "{clientId}/resources", method = PUT)
+    public void updateAccessingResurces(@PathVariable String clientId, @RequestBody Object request){
+        
+        // request shall conaint data enabling update of:
+        //          - 'resourceIds' property in BaseClientDetails
+        //          - 'scope' property in BaseClientDetails
+        
+    }
 
     @ExceptionHandler(NoSuchClientException.class)
     public ResponseEntity<Void> handleNoSuchClient(NoSuchClientException ex) {
