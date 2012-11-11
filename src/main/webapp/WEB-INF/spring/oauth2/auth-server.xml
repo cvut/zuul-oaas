@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:context="http://www.springframework.org/schema/context"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:oauth="http://www.springframework.org/schema/security/oauth2"
        xsi:schemaLocation="
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
-       http://www.springframework.org/schema/security/oauth2 http://www.springframework.org/schema/security/spring-security-oauth2-1.0.xsd">
+       http://www.springframework.org/schema/security/oauth2 http://www.springframework.org/schema/security/spring-security-oauth2-1.0.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
 
    
     <!--////////// OAuth 2.0 Server Configuration //////////-->
+    
+    <!-- Property files -->
+    <context:property-placeholder location="classpath:auth-server.properties"/>
     
     <!--
         Authorziation server specifies that the OAuth2 authorization and token endpoints should
@@ -17,8 +22,8 @@
         ! Change of endpoint URLs doesn't work in 1.0.0.RC2, we must use default ones !
     -->
     <oauth:authorization-server 
-            authorization-endpoint-url="/oauth/authorize"
-            token-endpoint-url="/oauth/token"
+            authorization-endpoint-url="${authorization.endpoint}"
+            token-endpoint-url="${token.endpoint}"
             client-details-service-ref="clientDetails"
             token-services-ref="tokenServices">
 

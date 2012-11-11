@@ -2,10 +2,12 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:p="http://www.springframework.org/schema/p"
        xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
-       http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd">
+       http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
 
 
     <!--////////// API Context Configuration //////////-->
@@ -20,7 +22,8 @@
           p:clientDetailsService-ref="clientDetails"
           p:clientRegistrationService-ref="clientDetails" 
           p:secretChangeRequestValidator-ref="secretChangeRequestValidator"
-          p:messageSource-ref="messageSource"/>
+          p:messageSource-ref="messageSource"
+          p:apiVersion="${api.version}"/>
     
     <!--///// Validators /////-->
     
@@ -30,5 +33,8 @@
     <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
         <property name="basenames" value="validation_errors" />
     </bean>
+    
+    <!-- Property files -->
+    <context:property-placeholder location="classpath:api-context.properties"/>
 
 </beans>

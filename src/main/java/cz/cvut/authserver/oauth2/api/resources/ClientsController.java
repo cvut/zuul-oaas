@@ -47,7 +47,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 public class ClientsController {
 
     private static final Logger LOG = LoggerFactory.getLogger(ClientsController.class);
-    private static final String API_VERSION = "v1";
+    private String apiVersion;
     private ClientDetailsService clientDetailsService;
     private ClientRegistrationService clientRegistrationService;
     private SecretChangeRequestValidator secretChangeRequestValidator;
@@ -72,7 +72,7 @@ public class ClientsController {
         clientRegistrationService.addClientDetails(client);
 
         // TODO should send redirect to URI of the created client (i.e. api/clients/{clientId}/)
-        response.setHeader("Location", String.format("/%s/clients/%s", API_VERSION,
+        response.setHeader("Location", String.format("/%s/clients/%s", apiVersion,
                 client.getClientId()));
     }
 
@@ -182,4 +182,13 @@ public class ClientsController {
     public void setMessageSource(MessageSource messageSource) {
         this.messageSource = messageSource;
     }
+
+    public String getApiVersion() {
+        return apiVersion;
+    }
+
+    public void setApiVersion(String apiVersion) {
+        this.apiVersion = apiVersion;
+    }
+
 }

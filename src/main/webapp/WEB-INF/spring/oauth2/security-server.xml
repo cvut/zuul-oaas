@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:sec="http://www.springframework.org/schema/security"
+       xmlns:oauth="http://www.springframework.org/schema/security/oauth2"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+       http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
+       http://www.springframework.org/schema/security/oauth2 http://www.springframework.org/schema/security/spring-security-oauth2-1.0.xsd">
+
+    <!-- Property files -->
+    <context:property-placeholder location="classpath:auth-server.properties"/>
+    
+    <sec:http pattern="${token.endpoint}"
+              create-session="stateless"
+              entry-point-ref="oauthAuthenticationEntryPoint"
+              access-decision-manager-ref="accessDecisionManager"
+              authentication-manager-ref="clientAuthenticationManager">
+
+        <sec:intercept-url pattern="${token.endpoint}" access="IS_AUTHENTICATED_FULLY" />
+        <sec:anonymous enabled="false" />
+        <sec:http-basic entry-point-ref="oauthAuthenticationEntryPoint" />
+        <!-- include this only if you need to authenticate clients via request parameters -->
+        <sec:custom-filter ref="clientCredentialsTokenEndpointFilter" before="BASIC_AUTH_FILTER" />
+        <sec:access-denied-handler ref="oauthAccessDeniedHandler" />
+    </sec:http>
+    
+    <!-- element je zakomentovany, lebo vacsinu z tych veci moze spring generovat automaticky, co v tomto stadiu postacuje...
+    following section is temporary commented bock, spring generates most of that stuff automatically, which is sufficient at this stage.....
+    -->
+    <sec:http access-denied-page="/login.jsp?authorization_error=true"
+              disable-url-rewriting="true"
+              access-decision-manager-ref="accessDecisionManager">
+
+        <sec:intercept-url pattern="/oauth/**" access="ROLE_USER" />
+        <sec:intercept-url pattern="/**" access="IS_AUTHENTICATED_ANONYMOUSLY" />
+        <sec:form-login login-page="/login.jsp"
+                        login-processing-url="/login.do"
+                        default-target-url="/index.jsp"
+                        authentication-failure-url="/login.jsp?authentication_error=true" />
+        <sec:logout logout-url="/logout.do" logout-success-url="/index.jsp" />
+        <sec:anonymous />
+    </sec:http>
+
+
+    <bean id="accessDecisionManager" class="org.springframework.security.access.vote.UnanimousBased">
+        <constructor-arg>
+            <list>
+                <bean class="org.springframework.security.oauth2.provider.vote.ScopeVoter" />
+                <bean class="org.springframework.security.access.vote.RoleVoter" />
+                <bean class="org.springframework.security.access.vote.AuthenticatedVoter" />
+            </list>
+        </constructor-arg>
+    </bean>
+
+    <!--
+        Client authentication with HTTP Basic scheme. This is the recommended way by specification.
+    -->
+    <bean id="oauthAuthenticationEntryPoint" class="org.springframework.security.oauth2.provider.error.OAuth2AuthenticationEntryPoint" />
+
+    <!--
+        Filter that supports client authentication with credentials in request body (parameters client_id and client_secret).
+        Note: This method of authentication is not recommended by OAuth specification (draft-ietf-oauth-v2-31, 16)!
+              Clients shoud use HTTP Basic scheme instead.
+    -->
+    <bean id="clientCredentialsTokenEndpointFilter" class="org.springframework.security.oauth2.provider.client.ClientCredentialsTokenEndpointFilter">
+        <property name="authenticationManager" ref="clientAuthenticationManager" />
+    </bean>
+    
+    <bean id="oauthAccessDeniedHandler" class="org.springframework.security.oauth2.provider.error.OAuth2AccessDeniedHandler" />
+
+    
+    <sec:authentication-manager id="clientAuthenticationManager">
+        <sec:authentication-provider user-service-ref="clientDetailsUserService" />
+    </sec:authentication-manager>
+    
+    <bean id="clientDetailsUserService" class="org.springframework.security.oauth2.provider.client.ClientDetailsUserDetailsService">
+        <constructor-arg ref="clientDetails" />
+    </bean>
+
+
+    <!-- TO DELETE -->
+
+    <sec:authentication-manager alias="authenticationManager">
+        <sec:authentication-provider>
+            <sec:user-service>
+                <sec:user name="tomy" password="best" authorities="ROLE_USER" />
+                <sec:user name="marissa" password="wombat" authorities="ROLE_USER" />
+            </sec:user-service>
+        </sec:authentication-provider>
+    </sec:authentication-manager>
+    
+</beans>

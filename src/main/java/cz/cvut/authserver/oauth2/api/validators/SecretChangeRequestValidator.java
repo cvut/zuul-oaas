@@ -1,8 +1,6 @@
 package cz.cvut.authserver.oauth2.api.validators;
 
-import com.sun.xml.internal.ws.developer.MemberSubmissionAddressing;
 import cz.cvut.authserver.oauth2.api.models.SecretChangeRequest;
-import cz.cvut.authserver.oauth2.api.resources.ClientsController;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

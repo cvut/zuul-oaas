@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
+
+    <bean id="clientRegistrationService" parent="clientDetails" />
+    
+    <bean id="clientAdminBootstrap" class="cz.cvut.authserver.oauth2.user.AuthorizationServerAuthority">
+        <property name="clientRegistrationService" ref="clientRegistrationService" />
+        <property name="clients">
+            <map>
+                <entry key="vmc">
+                    <map>
+                        <entry key="id" value="appManager" />
+                        <entry key="authorized-grant-types" value="authorization_code,password,refresh_token,client_credentials" />
+                        <entry key="scope" value="tokens.write" />
+                        <entry key="authorities" value="admin" />
+                    </map>
+                </entry>
+            </map>
+        </property>
+    </bean>
+    
+</beans>

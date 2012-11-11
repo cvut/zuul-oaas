@@ -17,6 +17,11 @@
     <!-- Load all configuration files -->
     <import resource="persistence.xml"/>
     <import resource="oauth2/auth-server.xml"/>
-    <import resource="oauth2/security-api.xml"/>
+    <import resource="oauth2/security-server.xml"/>
+    
+    <beans profile="api-security">
+        <import resource="oauth2/oauth-clients.xml"/>
+        <import resource="oauth2/security-api.xml"/>
+    </beans>
 
 </beans>
