@@ -126,7 +126,7 @@ public class ClientsController {
     }
     
     /**
-     * Updates resources that given client can access.
+     * Updates resources that given client can access with given scopes.
      * 
      * @param clientId client id of the client
      * @param request request containing resources that client wants access with given scope
