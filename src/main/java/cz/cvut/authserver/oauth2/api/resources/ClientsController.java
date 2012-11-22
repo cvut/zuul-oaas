@@ -3,6 +3,7 @@ package cz.cvut.authserver.oauth2.api.resources;
 import cz.cvut.authserver.oauth2.api.models.JsonExceptionMapping;
 import cz.cvut.authserver.oauth2.api.models.SecretChangeRequest;
 import cz.cvut.authserver.oauth2.api.validators.SecretChangeRequestValidator;
+import cz.cvut.authserver.oauth2.generators.OAuth2ClientCredentialsGenerator;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -51,6 +52,7 @@ public class ClientsController {
     private ClientDetailsService clientDetailsService;
     private ClientRegistrationService clientRegistrationService;
     private SecretChangeRequestValidator secretChangeRequestValidator;
+    private OAuth2ClientCredentialsGenerator oauth2CredentialsGenerator;
     private MessageSource messageSource;
 
     @InitBinder
@@ -189,6 +191,14 @@ public class ClientsController {
 
     public void setSecretChangeRequestValidator(SecretChangeRequestValidator secretChangeRequestValidator) {
         this.secretChangeRequestValidator = secretChangeRequestValidator;
+    }
+
+    public OAuth2ClientCredentialsGenerator getOauth2CredentialsGenerator() {
+        return oauth2CredentialsGenerator;
+    }
+
+    public void setOauth2CredentialsGenerator(OAuth2ClientCredentialsGenerator oauth2CredentialsGenerator) {
+        this.oauth2CredentialsGenerator = oauth2CredentialsGenerator;
     }
 
     public MessageSource getMessageSource() {
