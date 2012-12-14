@@ -22,10 +22,10 @@
         ! Change of endpoint URLs doesn't work in 1.0.0.RC2, we must use default ones !
     -->
     <oauth:authorization-server 
-            authorization-endpoint-url="${authorization.endpoint}"
-            token-endpoint-url="${token.endpoint}"
-            client-details-service-ref="clientDetails"
-            token-services-ref="tokenServices">
+        authorization-endpoint-url="${authorization.endpoint}"
+        token-endpoint-url="${token.endpoint}"
+        client-details-service-ref="clientDetails"
+        token-services-ref="tokenServices">
 
         <oauth:authorization-code/>
         <oauth:implicit />
@@ -44,8 +44,6 @@
           p:supportRefreshToken="true"
           p:tokenStore-ref="tokenStore"
           p:clientDetailsService-ref="clientDetails" />
-
-
 
     <!--///// MongoDB storage for clients and tokens /////-->
 

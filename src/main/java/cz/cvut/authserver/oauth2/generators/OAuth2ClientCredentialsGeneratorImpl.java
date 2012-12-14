@@ -1,25 +1,29 @@
 package cz.cvut.authserver.oauth2.generators;
 
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.util.logging.Level;
-import org.apache.commons.codec.binary.Hex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.crypto.keygen.BytesKeyGenerator;
-import org.springframework.security.crypto.keygen.KeyGenerators;
+import org.springframework.stereotype.Service;
 
 /**
  *
  * @author Tomas Mano <tomasmano@gmail.com>
  */
+@Service
 public class OAuth2ClientCredentialsGeneratorImpl implements OAuth2ClientCredentialsGenerator {
 
     private static final Logger LOG = LoggerFactory.getLogger(OAuth2ClientCredentialsGeneratorImpl.class);
     private SecureRandom prng;
-    private MessageDigest sha;
-    private static final int KEY_SIZE = 16;
+    private static final int KEY_SIZE = 64;
+    
+    private static char[] alphaNumeric = {
+        'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o',
+        'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+        'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O',
+        'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+        '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
+    };
 
     public OAuth2ClientCredentialsGeneratorImpl() {
         init();
@@ -28,7 +32,6 @@ public class OAuth2ClientCredentialsGeneratorImpl implements OAuth2ClientCredent
     private void init() {
         try {
             prng = SecureRandom.getInstance("SHA1PRNG");
-            sha = MessageDigest.getInstance("SHA-1");
         } catch (NoSuchAlgorithmException ex) {
             LOG.error("Could not instantiate OAuth2CredentialsGeneratorImpl:" + ex.getMessage());
         }
@@ -36,25 +39,21 @@ public class OAuth2ClientCredentialsGeneratorImpl implements OAuth2ClientCredent
 
     @Override
     public String generateClientId() {
-        return generateKey();
+        return generateRandomKey();
     }
 
     @Override
     public String generateClientSecret() {
-        return generateKey();
+        return generateRandomKey();
     }
 
-    private String generateKeyWithSpringSecurityCrypto() {
-        BytesKeyGenerator generator = KeyGenerators.secureRandom(KEY_SIZE);
-        byte[] bytes = generator.generateKey();
-        String encodedHexString = new String(Hex.encodeHex(bytes));
-        return encodedHexString;
-    }
-
-    private String generateKey() {
-        String randomNum = new Integer(prng.nextInt()).toString();
-        byte[] result = sha.digest(randomNum.getBytes());
-        String key = new String(Hex.encodeHex(result));
-        return key;
+    private String generateRandomKey() {
+        StringBuilder builder = new StringBuilder();
+        char c;
+        for (int i = 0; i < KEY_SIZE; i++) {
+            c = alphaNumeric[prng.nextInt(alphaNumeric.length)];
+            builder.append(c);
+        }
+        return builder.toString();
     }
 }
