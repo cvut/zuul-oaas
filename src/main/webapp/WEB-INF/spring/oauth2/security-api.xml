@@ -10,6 +10,11 @@
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
        http://www.springframework.org/schema/security/oauth2 http://www.springframework.org/schema/security/spring-security-oauth2-1.0.xsd">
 
+    <!--//////////////////////////////////////////////////////////////////////////////////////////////////-->
+    <!-- FOLLOWING CONFIGURATION FROM CLOUDFOUNDRY HAS NOT BEEN TESTED(and probably wouldn't work in our evniromement :))! 
+         DISABLED UNTIL FURTHER NOTICE! -->
+    <!--//////////////////////////////////////////////////////////////////////////////////////////////////-->
+    
     <!--Property files--> 
     <context:property-placeholder location="classpath:auth-server.properties"/>
     

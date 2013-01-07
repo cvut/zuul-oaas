@@ -3,6 +3,11 @@
        xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
 
+    <!--//////////////////////////////////////////////////////////////////////////////////////////////////-->
+    <!-- FOLLOWING CONFIGURATION FROM CLOUDFOUNDRY HAS NOT BEEN TESTED(and probably wouldn't work in our evniromement :))! 
+    DISABLED UNTIL FURTHER NOTICE! -->
+    <!--//////////////////////////////////////////////////////////////////////////////////////////////////-->
+    
     <bean id="clientRegistrationService" parent="clientDetails" />
     
     <bean id="clientAdminBootstrap" class="cz.cvut.authserver.oauth2.user.AuthorizationServerAuthority">
