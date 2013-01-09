@@ -36,6 +36,7 @@ import org.springframework.security.oauth2.provider.ClientRegistrationService;
  * @author Dave Syer
  *
  */
+@Deprecated
 public class ClientAdminBootstrap implements InitializingBean {
 
 	private static Logger logger = LoggerFactory.getLogger(ClientAdminBootstrap.class);

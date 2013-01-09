@@ -181,6 +181,13 @@
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-validator</artifactId>
         </dependency>
+        
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.1.2</version>
+            <scope>test</scope>
+        </dependency>
 
         <dependency>
             <groupId>org.json</groupId>

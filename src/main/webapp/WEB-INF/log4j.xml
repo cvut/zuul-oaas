@@ -58,6 +58,10 @@
         <level value="DEBUG" />
     </logger>
 
+    <logger name="org.springframework.web.client.RestTemplate">
+        <level value="DEBUG" />
+    </logger>
+
 
     <!--//////////////////// ROOT ////////////////////-->
 
