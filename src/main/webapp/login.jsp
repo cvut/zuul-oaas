@@ -1,53 +1,10 @@
 <%@page contentType="application/xhtml+xml" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/jspf/taglibs.jspf" %>
 <%@ include file="/WEB-INF/jspf/header.jspf" %>
+<%@ include file="/WEB-INF/jspf/header-css.jspf" %>
 
-<style type="text/css">
-    /* Override some defaults */
-    html, body {
-        background-color: #eee;
-    }
-    body {
-        margin:0;
-        padding:0;
-        height: 100%;
-    }
-    .container > footer p {
-        text-align: center; /* center align it with the container */
-    }
-    .container {
-
-    }
-    #loginHere {
-        min-width: 700px;
-    }
-
-    /* The white background content wrapper */
-    .container > .content {
-        background-color: #fff;
-        /*padding: 20px;*/
-        margin: 0 -20px; /* negative indent the amount of the padding to maintain the grid system */
-        -webkit-border-radius: 0 0 6px 6px;
-        -moz-border-radius: 0 0 6px 6px;
-        border-radius: 0 0 6px 6px;
-        -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.15);
-        -moz-box-shadow: 0 1px 2px rgba(0,0,0,.15);
-        box-shadow: 0 1px 2px rgba(0,0,0,.15);
-    }
-
-    /* Wrapper for page content to push down footer */
-    #wrap {
-        padding-top: 100px;
-        position:relative;
-        padding-left: 10%;
-        min-height: 100%;
-        height: auto !important;
-        height: 100%;
-        /* Negative indent footer by it's height */
-        margin: 0 auto -60px;
-    }
-
-</style>
+<link type="text/css" rel="stylesheet"
+      href="<c:url value='/css/specs/login.css'/>" />
 
 <!-- Le fav and touch icons -->
 <link rel="shortcut icon" href="http://oauth.net/images/oauth-2-sm.png"/>
@@ -79,16 +36,16 @@
 
     <div id="wrap">
         <div class="container">
-            <div class="row">
+            <div class="row" style="margin-bottom: 15px">
                 <div class="span1">
-                    <img src="http://oauth.net/images/oauth-2-sm.png" alt="OAuth logo" style="padding-top: 15px"/> 
+                    <img class="oauth-logo" src="http://oauth.net/images/oauth-2-sm.png" alt="OAuth logo"/> 
                 </div>
-                <div class="span8">
+                <div class="span7">
                     <h1>OAuth 2.0 Autorizačňí server ČVUT</h1>
                 </div>
             </div>
             <div class="row">
-                <div class="span9">
+                <div class="span7">
                     <c:if test="${not empty param.authentication_error}">
                         <div class="alert alert-error">
                             <button type="button" class="close" data-dismiss="alert">&times;</button>
@@ -111,7 +68,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="span8">
+                <div class="span7">
                     <form class="form-horizontal" id="loginHere" method='post' action='<c:url value="/login.do"/>'>
                         <fieldset>
                             <legend>Přihlásení</legend>

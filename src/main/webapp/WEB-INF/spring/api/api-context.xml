@@ -25,7 +25,20 @@
           p:oauth2ClientCredentialsGenerator-ref="oauth2ClientCredentialsGenerator"
           p:messageSource-ref="messageSource"
           p:apiVersion="${api.version}"/>
+
+    <bean id="resourcesController" class="cz.cvut.authserver.oauth2.api.resources.ResourcesController"
+                p:resourceService-ref="resourceService"
+                p:apiVersion="${api.version}"/>
     
+    <!--///// Services /////-->
+
+    <bean id="resourceService" class="cz.cvut.authserver.oauth2.services.ResourceServiceImpl"
+            p:resourceDAO-ref="resourceDAO" />
+
+    <!--///// Services /////-->
+
+    <bean id="resourceDAO" class="cz.cvut.authserver.oauth2.dao.ResourceInMemoryDAO"/>
+
     <!--///// Validators /////-->
     
     <bean id="secretChangeRequestValidator" class="cz.cvut.authserver.oauth2.api.validators.SecretChangeRequestValidator"/>

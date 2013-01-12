@@ -6,6 +6,11 @@
 <%@ include file="/WEB-INF/jspf/taglibs.jspf" %>
 <%@ include file="/WEB-INF/jspf/header.jspf" %>
 
+<link type="text/css" rel="stylesheet"
+      href="<c:url value='/css/cerulean.min.css'/>" />
+<link type="text/css" rel="stylesheet"
+      href="<c:url value='/css/bootstrap-responsive.min.css'/>" />
+
 <style type="text/css">
     /* Override some defaults */
     html, body {
@@ -40,7 +45,6 @@
         padding-top: 7%;
         padding-bottom: 7%;
     }
-
 </style>
 
 <!-- Le fav and touch icons -->
@@ -106,27 +110,34 @@
                         <div class="row">
 
                             <br/>
+                            <div class="span6">
+                                <table>
+                                    <tr>
+                                        <td style="padding-right: 25px">
+                                            <form id="confirmationForm" name="confirmationForm" action="<%=request.getContextPath()%>/oauth/authorize" method="post" >
+                                                <input name="user_oauth_approval" value="true" type="hidden"/>
+                                                <!--<label>-->
+                                                <button name="authorize" type="submit" class="btn btn-large btn-success">
+                                                    <i class="icon-ok icon-white"></i> Ano, souhlasím
+                                                </button>
+                                                <!--</label>-->
+                                            </form>
+                                        </td>
 
-                            <div class="span2">
+                                        <td>  
+                                            <form id="denialForm" name="denialForm" action="<%=request.getContextPath()%>/oauth/authorize" method="post">
+                                                <input name="user_oauth_approval" value="false" type="hidden" />
+                                                <!--<label>-->
+                                                <button name="deny" type="submit" class="btn btn-large btn-danger">
+                                                    <i class="icon-ban-circle icon-white"></i> Ne, nesouhlasím
+                                                </button>
+                                                <!--</label>-->
+                                            </form>
 
-                                <form id="confirmationForm" name="confirmationForm" action="<%=request.getContextPath()%>/oauth/authorize" method="post">
-                                    <input name="user_oauth_approval" value="true" type="hidden"/>
-                                    <label>
-                                        <input name="authorize" value="Ano, souhlasím" type="submit" class="btn btn-large btn-success"/>
-                                    </label>
-                                </form>
+                                        </td>
+                                    </tr>
+                                </table>
                             </div>
-
-                            <div class="span2">
-                                <form id="denialForm" name="denialForm" action="<%=request.getContextPath()%>/oauth/authorize" method="post">
-                                    <input name="user_oauth_approval" value="false" type="hidden" />
-                                    <label>
-                                        <input name="deny" value="Ne, nesouhlasím" type="submit" class="btn btn-large btn-danger" />
-                                    </label>
-                                </form>
-
-                            </div>
-
                         </div>
                     </div>
                 </div>
@@ -135,7 +146,7 @@
     </authz:authorize>
 
 
-    <script src="js/jquery-1.8.3.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
+    <script src="<c:url value='/js/jquery-1.8.3.min.js'/>"></script>
+    <script src="<c:url value='/js/bootstrap.min.js'/>"></script>
 
     <%@ include file="/WEB-INF/jspf/footer.jspf" %>

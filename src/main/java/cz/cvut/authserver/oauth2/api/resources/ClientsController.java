@@ -48,13 +48,20 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 public class ClientsController {
 
     private static final Logger LOG = LoggerFactory.getLogger(ClientsController.class);
+    
     private String apiVersion;
+    
     private ClientDetailsService clientDetailsService;
+    
     private ClientRegistrationService clientRegistrationService;
+    
     private SecretChangeRequestValidator secretChangeRequestValidator;
-    private OAuth2ClientCredentialsGenerator oauth2CredentialsGenerator;
+    
+    private OAuth2ClientCredentialsGenerator oauth2ClientCredentialsGenerator;
+    
     private MessageSource messageSource;
 
+    
     @InitBinder
     public void initBinder(WebDataBinder dataBinder) {
         dataBinder.setValidator(secretChangeRequestValidator);
@@ -193,12 +200,12 @@ public class ClientsController {
         this.secretChangeRequestValidator = secretChangeRequestValidator;
     }
 
-    public OAuth2ClientCredentialsGenerator getOauth2CredentialsGenerator() {
-        return oauth2CredentialsGenerator;
+    public OAuth2ClientCredentialsGenerator getOauth2ClientCredentialsGenerator() {
+        return oauth2ClientCredentialsGenerator;
     }
 
-    public void setOauth2CredentialsGenerator(OAuth2ClientCredentialsGenerator oauth2CredentialsGenerator) {
-        this.oauth2CredentialsGenerator = oauth2CredentialsGenerator;
+    public void setOauth2ClientCredentialsGenerator(OAuth2ClientCredentialsGenerator oauth2ClientCredentialsGenerator) {
+        this.oauth2ClientCredentialsGenerator = oauth2ClientCredentialsGenerator;
     }
 
     public MessageSource getMessageSource() {

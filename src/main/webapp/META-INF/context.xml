@@ -13,7 +13,7 @@
                             - enables check token validation entry point providing 
                               token validation
     -->
-    <Environment name="spring.profiles.active" value="inMemory"
+    <Environment name="spring.profiles.active" value="jdbc"
                  type="java.lang.String" override="false" />
 
     <Resource name="jdbc/AuthServerDS"
