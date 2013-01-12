@@ -2,6 +2,10 @@
 <%@ include file="/WEB-INF/jspf/taglibs.jspf" %>
 <%@ include file="/WEB-INF/jspf/header.jspf" %>
 
+</head>
+
+<body>
+
 <h1>Je nám velice líto, vyskytl se problém ...</h1>
 
 <div id="content">

@@ -2,6 +2,10 @@
 <%@ include file="/WEB-INF/jspf/taglibs.jspf" %>
 <%@ include file="/WEB-INF/jspf/header.jspf" %>
 
+</head>
+
+<body>
+
 <h1>OAuth 2.0 Autorizačňí server ČVUT</h1>
 
 <div id="content">

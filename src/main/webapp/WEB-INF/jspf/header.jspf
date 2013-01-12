@@ -7,9 +7,10 @@
         <meta http-equiv="Content-Language" content="cs" />
         <meta name="robots" content="noindex,nofollow" />
         <link type="text/css" rel="stylesheet"
-              href="<c:url value='/css/style.css'/>" />
+              href="<c:url value='/css/cerulean.min.css'/>" />
+        <link type="text/css" rel="stylesheet"
+              href="<c:url value='/css/bootstrap-responsive.min.css'/>" />
+        <meta name="description" content="Login page"/>
+        <meta name="author" content="Tomas Mano"/>
 
         <title>OAuth2 Autorizační server ČVUT</title>
-    </head>
-
-    <body>
