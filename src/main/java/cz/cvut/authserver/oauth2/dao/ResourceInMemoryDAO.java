@@ -1,15 +1,22 @@
 package cz.cvut.authserver.oauth2.dao;
 
+import cz.cvut.authserver.oauth2.generators.IdentificatorGenerator;
 import cz.cvut.authserver.oauth2.models.resource.Auth;
 import cz.cvut.authserver.oauth2.models.resource.Resource;
 import cz.cvut.authserver.oauth2.models.resource.Scope;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class ResourceInMemoryDAO implements ResourceDAO {
 
     private static List<Resource> resources;
+    
+    @Autowired
+    IdentificatorGenerator identificatorGenerator;
 
     static {
         resources = new ArrayList<Resource>();
@@ -18,6 +25,7 @@ public class ResourceInMemoryDAO implements ResourceDAO {
 
     @Override
     public void createResource(Resource resource) {
+        resource.setId(identificatorGenerator.generateIdentificator());
         resources.add(resource);
     }
 
@@ -57,4 +65,15 @@ public class ResourceInMemoryDAO implements ResourceDAO {
     private static Scope createScope(String name, String description, boolean secured) {
         return new Scope(name, description, secured);
     }
+    
+    //////////  Getters / Setters  //////////
+
+    public IdentificatorGenerator getIdentificatorGenerator() {
+        return identificatorGenerator;
+    }
+
+    public void setIdentificatorGenerator(IdentificatorGenerator identificatorGenerator) {
+        this.identificatorGenerator = identificatorGenerator;
+    }
+    
 }

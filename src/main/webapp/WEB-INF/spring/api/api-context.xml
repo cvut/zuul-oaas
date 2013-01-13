@@ -35,9 +35,10 @@
     <bean id="resourceService" class="cz.cvut.authserver.oauth2.services.ResourceServiceImpl"
             p:resourceDAO-ref="resourceDAO" />
 
-    <!--///// Services /////-->
+    <!--///// DAO /////-->
 
-    <bean id="resourceDAO" class="cz.cvut.authserver.oauth2.dao.ResourceInMemoryDAO"/>
+    <bean id="resourceDAO" class="cz.cvut.authserver.oauth2.dao.ResourceInMemoryDAO"
+        p:identificatorGenerator-ref="identificatorGenerator"/>
 
     <!--///// Validators /////-->
     
@@ -46,6 +47,7 @@
     <!--///// Generators /////-->
     
     <bean id="oauth2ClientCredentialsGenerator" class="cz.cvut.authserver.oauth2.generators.OAuth2ClientCredentialsGeneratorImpl" />
+    <bean id="identificatorGenerator" class="cz.cvut.authserver.oauth2.generators.IdentificatorGeneratorImpl" />
     
     <!-- bind your messages.properties -->
     <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">

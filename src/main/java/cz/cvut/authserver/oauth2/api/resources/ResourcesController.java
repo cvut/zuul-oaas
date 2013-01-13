@@ -1,5 +1,6 @@
 package cz.cvut.authserver.oauth2.api.resources;
 
+import cz.cvut.authserver.oauth2.generators.OAuth2ClientCredentialsGenerator;
 import cz.cvut.authserver.oauth2.models.resource.Resource;
 import cz.cvut.authserver.oauth2.services.ResourceService;
 import java.util.List;
@@ -37,6 +38,7 @@ public class ResourcesController {
     @ResponseStatus(CREATED)
     @RequestMapping(value = "", method = RequestMethod.POST)
     public void createResource(@RequestBody Resource resource) {
+        resource.setId(Long.MIN_VALUE);
         resourceService.createResource(resource);
         LOG.info("Creating new resource [{}]", resource);
     }
