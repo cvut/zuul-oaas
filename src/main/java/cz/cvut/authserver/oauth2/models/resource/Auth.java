@@ -1,6 +1,7 @@
 package cz.cvut.authserver.oauth2.models.resource;
 
 import java.util.List;
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 /**
@@ -9,7 +10,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
  */
 public class Auth {
 
-    @JsonProperty("scope")
+    @JsonProperty("scopes")
     private List<Scope> scopes;
 
     public List<Scope> getScopes() {
@@ -20,6 +21,7 @@ public class Auth {
         this.scopes = scope;
     }
 
+    @JsonIgnore
     public boolean isSecured() {
         if (scopes==null) {
             return false;
