@@ -1,5 +1,6 @@
 package cz.cvut.authserver.oauth2.services;
 
+import cz.cvut.authserver.oauth2.api.resources.exceptions.NoSuchResourceException;
 import cz.cvut.authserver.oauth2.dao.ResourceDAO;
 import cz.cvut.authserver.oauth2.models.resource.Resource;
 import java.util.List;
@@ -23,6 +24,21 @@ public class ResourceServiceImpl implements ResourceService {
     @Override
     public void createResource(Resource resource) {
         resourceDAO.createResource(resource);
+    }
+
+    @Override
+    public void updateResource(Long id, Resource resource) throws NoSuchResourceException{
+        resourceDAO.updateResource(id, resource);
+    }
+
+    @Override
+    public Resource findResourceById(Long id) throws NoSuchResourceException{
+        return resourceDAO.findResourceById(id);
+    }
+
+    @Override
+    public void deleteResourceById(Long id) throws NoSuchResourceException{
+        resourceDAO.deleteResourceById(id);
     }
 
     //////////  Getters / Setters  //////////

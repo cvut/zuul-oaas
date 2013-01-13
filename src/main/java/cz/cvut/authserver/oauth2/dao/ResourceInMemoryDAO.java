@@ -1,5 +1,6 @@
 package cz.cvut.authserver.oauth2.dao;
 
+import cz.cvut.authserver.oauth2.api.resources.exceptions.NoSuchResourceException;
 import cz.cvut.authserver.oauth2.generators.IdentificatorGenerator;
 import cz.cvut.authserver.oauth2.models.resource.Auth;
 import cz.cvut.authserver.oauth2.models.resource.Resource;
@@ -30,8 +31,31 @@ public class ResourceInMemoryDAO implements ResourceDAO {
     }
 
     @Override
+    public void updateResource(Long id, Resource resource) throws NoSuchResourceException{
+        Resource update = findResourceById(id);
+        resources.remove(update);
+        resources.add(resource);
+    }
+
+    @Override
     public List<Resource> getAllResources() {
         return resources;
+    }
+
+    @Override
+    public Resource findResourceById(Long id) throws NoSuchResourceException{
+        for (Resource resource : resources) {
+            if (resource.getId().compareTo(id)==0) {
+                return resource;
+            }
+        }
+        throw new NoSuchResourceException(String.format("No resource exists with given id [%s]", id));
+    }
+    
+    @Override
+    public boolean deleteResourceById(Long id) throws NoSuchResourceException{
+        Resource deleted = findResourceById(id);
+        return resources.remove(deleted);
     }
 
     private static void populateResources() {
