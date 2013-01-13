@@ -23,8 +23,9 @@ public interface ResourceService {
      * Creates new resource.
      * 
      * @param resource resource to be created
+     * @return created resource
      */
-    public void createResource(Resource resource);
+    public Resource createResource(Resource resource);
     
     /**
      * Update resource with the given id.

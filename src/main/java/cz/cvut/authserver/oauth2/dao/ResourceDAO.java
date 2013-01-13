@@ -10,9 +10,9 @@ import java.util.List;
  */
 public interface ResourceDAO {
     
-/**
+    /**
      * Finds resource with the given id.
-     * 
+     *
      * @param id resource's id
      * @return resource if exists
      * @throws NoSuchResourceException when no matching resource was found
@@ -23,8 +23,9 @@ public interface ResourceDAO {
      * Creates new resource.
      * 
      * @param resource resource to be created
+     * @return created Resource
      */
-    public void createResource(Resource resource);
+    public Resource createResource(Resource resource);
     
     /**
      * Update resource with the given id.
@@ -40,8 +41,9 @@ public interface ResourceDAO {
      * 
      * @param id resource§s id
      * @throws NoSuchResourceException when no matching resource was found
+     * @return true if it contained the specified resource
      */
-    public void deleteResourceById(Long id) throws NoSuchResourceException;
+    public boolean deleteResourceById(Long id) throws NoSuchResourceException;
     
     /**
      * Returns all resources.

@@ -25,9 +25,10 @@ public class ResourceInMemoryDAO implements ResourceDAO {
     }
 
     @Override
-    public void createResource(Resource resource) {
+    public Resource createResource(Resource resource) {
         resource.setId(identificatorGenerator.generateIdentificator());
         resources.add(resource);
+        return resource;
     }
 
     @Override

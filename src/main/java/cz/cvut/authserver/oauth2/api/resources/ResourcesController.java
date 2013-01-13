@@ -39,11 +39,13 @@ public class ResourcesController {
     }
     
     @ResponseStatus(CREATED)
+    @ResponseBody
     @RequestMapping(value = "", method = RequestMethod.POST)
-    public void createResource(@RequestBody Resource resource) {
+    public Resource createResource(@RequestBody Resource resource) {
         resource.setId(Long.MIN_VALUE);
-        resourceService.createResource(resource);
+        Resource created = resourceService.createResource(resource);
         LOG.info("Creating new resource [{}]", resource);
+        return created;
     }
     
     @ResponseStatus(NO_CONTENT)
@@ -56,6 +58,12 @@ public class ResourcesController {
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     public void updateResource(@PathVariable Long id, @RequestBody Resource resource) throws Exception{
         resourceService.updateResource(id, resource);
+    }
+  
+    @ResponseBody
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    public Resource getAllResources(@PathVariable Long id) {
+        return resourceService.findResourceById(id);
     }
     
     //////////  Exceptions Handling  //////////
