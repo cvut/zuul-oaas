@@ -18,6 +18,8 @@
     <import resource="persistence.xml"/>
     <import resource="oauth2/auth-server.xml"/>
     <import resource="oauth2/security-server.xml"/>
+    <!--<import resource="api/api-security.xml"/>-->
+    
     
     <beans profile="api-security">
         <import resource="oauth2/oauth-clients.xml"/>

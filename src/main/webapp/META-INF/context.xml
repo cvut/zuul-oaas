@@ -7,7 +7,8 @@
             - inMemory: store all data in-memory only (for testing)
             - mongo: use Mongo database
             - jdbc: use SQL database via JDBC
-            - api-security: - request URL pattern '../oauth/api/v1/clients/**' 
+            - api-security (DO NOT USE): 
+                            - request URL pattern '../oauth/api/v1/clients/**' 
                               will be will be mapped to the Spring security filter 
                               chain
                             - enables check token validation entry point providing 

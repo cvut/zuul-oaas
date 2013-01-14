@@ -47,7 +47,7 @@
     </logger>
 
     <logger name="org.springframework.security">
-        <level value="INFO" />
+        <level value="DEBUG" />
     </logger>
 
     <logger name="org.springframework.security.oauth2">

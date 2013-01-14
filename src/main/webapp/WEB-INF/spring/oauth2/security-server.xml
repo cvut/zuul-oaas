@@ -13,6 +13,10 @@
     <!-- Property files -->
     <context:property-placeholder location="classpath:auth-server.properties"/>
     
+    <oauth:expression-handler id="oauthExpressionHandler" />
+
+    <oauth:web-expression-handler id="oauthWebExpressionHandler" />
+    
     <sec:http pattern="${token.endpoint}"
               create-session="stateless"
               entry-point-ref="oauthAuthenticationEntryPoint"
@@ -26,6 +30,32 @@
         <sec:custom-filter ref="clientCredentialsTokenEndpointFilter" before="BASIC_AUTH_FILTER" />
         <sec:access-denied-handler ref="oauthAccessDeniedHandler" />
     </sec:http>
+    
+    <!-->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> sould be placed in api-security but then it won't work-->
+    
+     <sec:http pattern="/api/v1/resources/**" create-session="stateless"
+              entry-point-ref="oauthAuthenticationEntryPoint" use-expressions="true">
+        <sec:intercept-url pattern="/api/v1/resources/**" 
+                           access="hasRole('ROLE_CLIENT') and #oauth2.hasScope('manager')"
+                           method="PUT" />
+        <sec:intercept-url pattern="/api/v1/resources/**" 
+                           access="hasRole('ROLE_CLIENT') and #oauth2.hasScope('manager')"
+                           method="POST" />
+        <sec:intercept-url pattern="/api/v1/resources/**" 
+                           access="hasRole('ROLE_CLIENT') and #oauth2.hasScope('manager')"
+                           method="DELETE" />
+        <sec:intercept-url pattern="/api/v1/resources/**"
+                           access="permitAll"
+                           method="GET"/>
+        <sec:custom-filter ref="resourceServerFilter" before="PRE_AUTH_FILTER" />
+        <sec:access-denied-handler ref="oauthAccessDeniedHandler" />
+        <sec:expression-handler ref="oauthWebExpressionHandler" />
+    </sec:http>
+    
+    <oauth:resource-server id="resourceServerFilter" token-services-ref="tokenServices" />
+    
+    <!--^^^^^^^^^^^^^^^^^^^^ sould be placed in api-security but then it won't work-->
+    
     
     <!-- element je zakomentovany, lebo vacsinu z tych veci moze spring generovat automaticky, co v tomto stadiu postacuje...
     following section is temporary commented bock, spring generates most of that stuff automatically, which is sufficient at this stage.....
