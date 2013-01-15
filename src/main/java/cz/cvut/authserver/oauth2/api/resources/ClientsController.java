@@ -1,10 +1,8 @@
 package cz.cvut.authserver.oauth2.api.resources;
 
 import cz.cvut.authserver.oauth2.api.models.JsonExceptionMapping;
-import cz.cvut.authserver.oauth2.api.models.SecretChangeRequest;
 import cz.cvut.authserver.oauth2.api.validators.ClientDetailsValidator;
-import cz.cvut.authserver.oauth2.generators.OAuth2ClientCredentialsGenerator;
-import java.util.LinkedHashSet;
+import cz.cvut.authserver.oauth2.services.ClientsService;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -16,11 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.provider.BaseClientDetails;
 import org.springframework.security.oauth2.provider.ClientAlreadyExistsException;
 import org.springframework.security.oauth2.provider.ClientDetails;
-import org.springframework.security.oauth2.provider.ClientDetailsService;
-import org.springframework.security.oauth2.provider.ClientRegistrationService;
 import org.springframework.security.oauth2.provider.NoSuchClientException;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,11 +24,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import static org.springframework.http.HttpStatus.*;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.common.exceptions.BadClientCredentialsException;
-import org.springframework.security.oauth2.common.exceptions.ClientAuthenticationException;
 import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
@@ -50,19 +41,15 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
  */
 @Controller
 @RequestMapping(value = "/v1/clients")
-public class ClientsController {
+public class ClientsController{
 
     private static final Logger LOG = LoggerFactory.getLogger(ClientsController.class);
     
     private String apiVersion;
     
-    private ClientDetailsService clientDetailsService;
-    
-    private ClientRegistrationService clientRegistrationService;
+    private ClientsService clientsService;
     
     private ClientDetailsValidator clientDetailsValidator;
-    
-    private OAuth2ClientCredentialsGenerator oauth2ClientCredentialsGenerator;
     
     private MessageSource messageSource;
 
@@ -77,24 +64,14 @@ public class ClientsController {
     @ResponseBody
     @RequestMapping(value = "{clientId}", method = GET)
     public ClientDetails getClientDetails(@PathVariable String clientId) throws OAuth2Exception {
-        return clientDetailsService.loadClientByClientId(clientId);
+        return clientsService.findClientDetailsById(clientId);
     }
 
     @ResponseStatus(CREATED)
     @RequestMapping(method = POST)
     public void createClientDetails(@Valid @RequestBody BaseClientDetails client, HttpServletResponse response) throws Exception {
 
-        // generate oauth2 client credentials
-        String clientId = oauth2ClientCredentialsGenerator.generateClientId();
-        String clientSecret = oauth2ClientCredentialsGenerator.generateClientSecret();
-        
-        // setting necessary fields
-        client.setClientId(clientId);
-        client.setClientSecret(clientSecret);
-        client.setAuthorities(AuthorityUtils.createAuthorityList("ROLE_CLIENT"));
-        
-        // save
-        clientRegistrationService.addClientDetails(client);
+        clientsService.createClientDetails(client);
 
         // send redirect to URI of the created client (i.e. api/clients/{clientId}/)
         response.setHeader("Location", String.format("/%s/clients/%s", apiVersion,
@@ -104,78 +81,49 @@ public class ClientsController {
     @ResponseStatus(NO_CONTENT)
     @RequestMapping(value = "{clientId}", method = DELETE)
     public void removeClientDetails(@PathVariable String clientId) throws NoSuchClientException {
-        clientRegistrationService.removeClientDetails(clientId);
+        clientsService.removeClientDetails(clientId);
     }
 
     @ResponseStatus(NO_CONTENT)
     @RequestMapping(value = "{clientId}", method = PUT)
     public void resetClientSecret(@PathVariable String clientId) throws NoSuchClientException {
-        String newSecret = oauth2ClientCredentialsGenerator.generateClientSecret();
-        clientRegistrationService.updateClientSecret(clientId, newSecret);
+        clientsService.resetClientSecret(clientId);
     }
     
     @ResponseStatus(NO_CONTENT)
     @RequestMapping(value = "{clientId}/scopes", method = PUT)
-    public void addScopeToClientDetails(@PathVariable String clientId, @RequestBody String scope) throws Exception{
-        ClientDetails clientDetails = clientDetailsService.loadClientByClientId(clientId);
-        //BaseClientDetails collections are always initialized when new BaseClientDetails instance is created
-        BaseClientDetails baseClientDetails = (BaseClientDetails) clientDetails;
-        baseClientDetails.setScope(new LinkedHashSet<String>());
-        baseClientDetails.getScope().add(scope);
-        clientDetails = baseClientDetails;
-        clientRegistrationService.updateClientDetails(clientDetails);
+    public void addScopeToClientDetails(@PathVariable String clientId, @RequestBody String scope) throws Exception {
+        clientsService.addScopeToClientDetails(clientId, scope);
     }
 
     @ResponseStatus(NO_CONTENT)
     @RequestMapping(value = "{clientId}/scopes", method = DELETE)
-    public void removeScopeFromClientDetails(@PathVariable String clientId, String scope) throws Exception{
-        ClientDetails clientDetails = clientDetailsService.loadClientByClientId(clientId);
-        //BaseClientDetails collections are always initialized when new BaseClientDetails instance is created
-        if (clientDetails.getScope().contains(scope)) {
-            clientDetails.getScope().remove(scope);
-            clientRegistrationService.updateClientDetails(clientDetails);
-        }
+    public void removeScopeFromClientDetails(@PathVariable String clientId, String scope) throws Exception {
+        clientsService.removeScopeFromClientDetails(clientId, scope);
     }
 
     @ResponseStatus(NO_CONTENT)
     @RequestMapping(value = "{clientId}/grants", method = PUT)
     public void addGrantToClientDetails(@PathVariable String clientId, String grantType) throws Exception {
-        ClientDetails clientDetails = clientDetailsService.loadClientByClientId(clientId);
-        //BaseClientDetails collections are always initialized when new BaseClientDetails instance is created
-        clientDetails.getScope().add(grantType);
-        clientRegistrationService.updateClientDetails(clientDetails);
+        clientsService.addGrantToClientDetails(clientId, grantType);
     }
 
     @ResponseStatus(NO_CONTENT)
     @RequestMapping(value = "{clientId}/grants", method = DELETE)
-    public void deleteGrantFromClientDetails(@PathVariable String clientId, String grantType) throws Exception{
-        ClientDetails clientDetails = clientDetailsService.loadClientByClientId(clientId);
-        //BaseClientDetails collections are always initialized when new BaseClientDetails instance is created
-        if (clientDetails.getAuthorizedGrantTypes().contains(grantType)) {
-            clientDetails.getAuthorizedGrantTypes().remove(grantType);
-            clientRegistrationService.updateClientDetails(clientDetails);
-        }
+    public void deleteGrantFromClientDetails(@PathVariable String clientId, String grantType) throws Exception {
+        clientsService.deleteGrantFromClientDetails(clientId, grantType);
     }
 
     @ResponseStatus(NO_CONTENT)
     @RequestMapping(value = "{clientId}/roles", method = PUT)
     public void addRoleToClientDetails(@PathVariable String clientId, String role) throws Exception {
-        ClientDetails clientDetails = clientDetailsService.loadClientByClientId(clientId);
-        //BaseClientDetails collections are always initialized when new BaseClientDetails instance is created
-        clientDetails.getAuthorities().addAll(AuthorityUtils.createAuthorityList(role));
-        clientRegistrationService.updateClientDetails(clientDetails);
+        clientsService.addRoleToClientDetails(clientId, role);
     }
 
     @ResponseStatus(NO_CONTENT)
     @RequestMapping(value = "{clientId}/roles", method = DELETE)
-    public void deleteRoleFromClientDetails(@PathVariable String clientId, String role) throws Exception{
-        ClientDetails clientDetails = clientDetailsService.loadClientByClientId(clientId);
-        //BaseClientDetails collections are always initialized when new BaseClientDetails instance is created
-        GrantedAuthority removed = new SimpleGrantedAuthority(role);
-        if (clientDetails.getAuthorities().contains(removed)) {
-            clientDetails.getAuthorities().remove(removed);
-            clientRegistrationService.updateClientDetails(clientDetails);
-        }
+    public void deleteRoleFromClientDetails(@PathVariable String clientId, String role) throws Exception {
+        clientsService.deleteRoleFromClientDetails(clientId, role);
     }
     
     //////////  Depracated Methods  //////////
@@ -200,46 +148,6 @@ public class ClientsController {
 //        clientRegistrationService.updateClientDetails(details);
 //    }
 
-    @Deprecated
-    @ResponseStatus(NO_CONTENT)
-    @RequestMapping(value = "{clientId}/secret", method = PUT)
-    public void updateClientSecret(@PathVariable String clientId, @Valid @RequestBody SecretChangeRequest changeRequest) throws Exception {
-
-        ClientDetails clientDetails;
-        try {
-            clientDetails = clientDetailsService.loadClientByClientId(clientId);
-        } catch (ClientAuthenticationException e) {
-            LOG.warn("Attempt to change client secret for client {0}.", clientId);
-            throw new NoSuchClientException("No such client: " + clientId);
-        }
-
-        if (!clientDetails.getClientSecret().equals(changeRequest.getOldSecret())) {
-            LOG.warn("Client secret change not allowed for {0}. Invalid old client secret provided." + clientId);
-            throw new BadClientCredentialsException();
-        }
-
-        // TODO it MUST check given old password against what we load and if the client is authorized to do that
-        // see org.cloudfoundry.identity.uaa.oauth.ClientAdminEndpoints for inspiration
-
-        clientRegistrationService.updateClientSecret(clientId, changeRequest.getNewSecret());
-    }
-    
-    /**
-     * Updates resources that given client can access with given scopes.
-     * 
-     * @param clientId client id of the client
-     * @param request request containing resources that client wants access with given scope
-     */
-    @Deprecated
-    @ResponseStatus(NO_CONTENT)
-    @RequestMapping(value = "{clientId}/resources", method = PUT)
-    public void updateAccessingResurces(@PathVariable String clientId, @RequestBody Object request){
-        
-        // request shall conaint data enabling update of:
-        //          - 'resourceIds' property in BaseClientDetails
-        //          - 'scope' property in BaseClientDetails
-        
-    }
 
     //////////  Exception Handlers  //////////
     
@@ -277,30 +185,21 @@ public class ClientsController {
     }
 
     ////////  Getters / Setters  ////////
-    
-    
-    public void setClientDetailsService(ClientDetailsService clientDetailsService) {
-        this.clientDetailsService = clientDetailsService;
+
+    public ClientsService getClientsService() {
+        return clientsService;
     }
 
-    public void setClientRegistrationService(ClientRegistrationService clientRegistrationService) {
-        this.clientRegistrationService = clientRegistrationService;
+    public void setClientsService(ClientsService clientsService) {
+        this.clientsService = clientsService;
     }
-
+    
     public ClientDetailsValidator getClientDetailsValidator() {
         return clientDetailsValidator;
     }
 
     public void setClientDetailsValidator(ClientDetailsValidator clientDetailsValidator) {
         this.clientDetailsValidator = clientDetailsValidator;
-    }
-
-    public OAuth2ClientCredentialsGenerator getOauth2ClientCredentialsGenerator() {
-        return oauth2ClientCredentialsGenerator;
-    }
-
-    public void setOauth2ClientCredentialsGenerator(OAuth2ClientCredentialsGenerator oauth2ClientCredentialsGenerator) {
-        this.oauth2ClientCredentialsGenerator = oauth2ClientCredentialsGenerator;
     }
 
     public MessageSource getMessageSource() {
