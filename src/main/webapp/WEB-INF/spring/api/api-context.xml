@@ -19,26 +19,29 @@
     <!--///// Controllers /////-->
 
     <bean id="clientsController" class="cz.cvut.authserver.oauth2.api.resources.ClientsController"
-          p:clientDetailsService-ref="clientDetails"
-          p:clientRegistrationService-ref="clientDetails" 
+          p:clientsService-ref="clientsService"
           p:clientDetailsValidator-ref="clientDetailsValidator"
-          p:oauth2ClientCredentialsGenerator-ref="oauth2ClientCredentialsGenerator"
           p:messageSource-ref="messageSource"
           p:apiVersion="${api.version}"/>
 
     <bean id="resourcesController" class="cz.cvut.authserver.oauth2.api.resources.ResourcesController"
-                p:resourceService-ref="resourceService"
-                p:apiVersion="${api.version}"/>
+          p:resourceService-ref="resourceService"
+          p:apiVersion="${api.version}"/>
     
     <!--///// Services /////-->
 
     <bean id="resourceService" class="cz.cvut.authserver.oauth2.services.ResourceServiceImpl"
-            p:resourceDAO-ref="resourceDAO" />
+          p:resourceDAO-ref="resourceDAO" />
+    
+    <bean id="clientsService" class="cz.cvut.authserver.oauth2.services.ClientsServiceImpl"
+          p:clientDetailsService-ref="clientDetails"
+          p:clientRegistrationService-ref="clientDetails" 
+          p:oauth2ClientCredentialsGenerator-ref="oauth2ClientCredentialsGenerator"/>
 
     <!--///// DAO /////-->
 
     <bean id="resourceDAO" class="cz.cvut.authserver.oauth2.dao.ResourceInMemoryDAO"
-        p:identificatorGenerator-ref="identificatorGenerator"/>
+          p:identificatorGenerator-ref="identificatorGenerator"/>
 
     <!--///// Validators /////-->
     
