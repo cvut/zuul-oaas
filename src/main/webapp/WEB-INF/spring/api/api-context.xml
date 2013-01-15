@@ -20,7 +20,7 @@
 
     <bean id="clientsController" class="cz.cvut.authserver.oauth2.api.resources.ClientsController"
           p:clientsService-ref="clientsService"
-          p:clientDetailsValidator-ref="clientDetailsValidator"
+          p:clientsResourcesCompositeValidator-ref="clientsResourcesCompositeValidator"
           p:messageSource-ref="messageSource"
           p:apiVersion="${api.version}"/>
 
@@ -45,9 +45,20 @@
 
     <!--///// Validators /////-->
     
-    <bean id="secretChangeRequestValidator" class="cz.cvut.authserver.oauth2.api.validators.SecretChangeRequestValidator"/>
+    <!--  Composite validator: clientDetailsValidator + authorizationGrantValidator -->
+    <!--    Order of validator is important, because only one validator can be executed during validation process -->
+    <bean id="clientsResourcesCompositeValidator" class="cz.cvut.authserver.oauth2.api.validators.ClientsResourcesCompositeValidator">
+        <property name="validators">
+            <list>
+                <ref bean="clientDetailsValidator"/>
+                <ref bean="authorizationGrantValidator"/>
+            </list>
+        </property>
+    </bean>
     
     <bean id="clientDetailsValidator" class="cz.cvut.authserver.oauth2.api.validators.ClientDetailsValidator"/>
+    
+    <bean id="authorizationGrantValidator" class="cz.cvut.authserver.oauth2.api.validators.AuthorizationGrantValidator"/>
     
     <!--///// Generators /////-->
     

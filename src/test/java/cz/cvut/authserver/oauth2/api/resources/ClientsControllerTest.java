@@ -88,6 +88,12 @@ public class ClientsControllerTest {
     public void create_client_details() throws Exception {
         // TODO
     }
+    
+    @Test
+    @Ignore("Not implemented yet")
+    public void reset_client_secret() throws Exception {
+        
+    }
 
     @Test
     @Ignore("Not implemented yet")
@@ -121,33 +127,4 @@ public class ClientsControllerTest {
         verify(clientRegistrationService).removeClientDetails("123");
     }
 
-    @Test
-    @Ignore("Not implemented yet")
-    public void update_client_secret_for_invalid_data() throws Exception {
-        // TODO
-    }
-
-    @Test
-    @Ignore("Not working as expected yet")
-    public void update_client_secret_for_non_existing_client_id() throws Exception {
-        ClientDetails random = Factories.createRandomClientDetails("123");
-        SecretChangeRequest request = Factories.createValidSecretChangeRequestForClient(random);
-        JSONObject jsonObj = new JSONObject();
-        jsonObj.put("old_secret", request.getOldSecret());
-        jsonObj.put("new_secret", request.getNewSecret());
-        String uri = BASE_URI+"123/secret";
-        mock.perform(put(uri).contentType(APPLICATION_JSON).body(jsonObj.toString().getBytes("utf-8"))).andExpect(status().isNotFound());
-    }
-
-    @Test
-    @Ignore("Not implemented yet")
-    public void update_client_secret_for_invalid_old_password() throws Exception {
-        // TODO
-    }
-
-    @Test
-    @Ignore("Not implemented yet")
-    public void update_client_secret() throws Exception {
-        // TODO
-    }
 }

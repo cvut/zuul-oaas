@@ -1,8 +1,11 @@
 package cz.cvut.authserver.oauth2.services;
 
 import cz.cvut.authserver.oauth2.generators.OAuth2ClientCredentialsGenerator;
+import java.lang.String;
+import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.LinkedHashSet;
-import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -63,62 +66,79 @@ public class ClientsServiceImpl implements ClientsService {
 
     @Override
     public void addScopeToClientDetails(String clientId, String scope) throws Exception {
-        ClientDetails clientDetails = clientDetailsService.loadClientByClientId(clientId);
-        //BaseClientDetails collections are always initialized when new BaseClientDetails instance is created
-        BaseClientDetails baseClientDetails = (BaseClientDetails) clientDetails;
-        baseClientDetails.setScope(new LinkedHashSet<String>());
-        baseClientDetails.getScope().add(scope);
-        clientDetails = baseClientDetails;
-        clientRegistrationService.updateClientDetails(clientDetails);
+        ClientDetails client = clientDetailsService.loadClientByClientId(clientId);
+        if (client.getScope().isEmpty()) {
+            client = handleEmptyCollection(client, "scope");
+        }
+        client.getScope().add(scope);
+        clientRegistrationService.updateClientDetails(client);
     }
 
     @Override
     public void removeScopeFromClientDetails(String clientId, String scope) throws Exception {
-        ClientDetails clientDetails = clientDetailsService.loadClientByClientId(clientId);
-        //BaseClientDetails collections are always initialized when new BaseClientDetails instance is created
-        if (clientDetails.getScope().contains(scope)) {
-            clientDetails.getScope().remove(scope);
-            clientRegistrationService.updateClientDetails(clientDetails);
+        ClientDetails client = clientDetailsService.loadClientByClientId(clientId);
+        if (client.getScope().contains(scope)) {
+            client.getScope().remove(scope);
+            clientRegistrationService.updateClientDetails(client);
         }
     }
 
     @Override
     public void addGrantToClientDetails(String clientId, String grantType) throws Exception {
-        ClientDetails clientDetails = clientDetailsService.loadClientByClientId(clientId);
-        //BaseClientDetails collections are always initialized when new BaseClientDetails instance is created
-        clientDetails.getScope().add(grantType);
-        clientRegistrationService.updateClientDetails(clientDetails);
+        ClientDetails client = clientDetailsService.loadClientByClientId(clientId);
+        if (client.getAuthorizedGrantTypes().isEmpty()) {
+            client = handleEmptyCollection(client, "authorizedGrantTypes");
+        }
+        client.getAuthorizedGrantTypes().add(grantType);
+        clientRegistrationService.updateClientDetails(client);
     }
 
     @Override
     public void deleteGrantFromClientDetails(String clientId, String grantType) throws Exception {
-        ClientDetails clientDetails = clientDetailsService.loadClientByClientId(clientId);
-        //BaseClientDetails collections are always initialized when new BaseClientDetails instance is created
-        if (clientDetails.getAuthorizedGrantTypes().contains(grantType)) {
-            clientDetails.getAuthorizedGrantTypes().remove(grantType);
-            clientRegistrationService.updateClientDetails(clientDetails);
+        ClientDetails client = clientDetailsService.loadClientByClientId(clientId);
+        if (client.getAuthorizedGrantTypes().contains(grantType)) {
+            client.getAuthorizedGrantTypes().remove(grantType);
+            clientRegistrationService.updateClientDetails(client);
         }
     }
 
     @Override
     public void addRoleToClientDetails(String clientId, String role) throws Exception {
-        ClientDetails clientDetails = clientDetailsService.loadClientByClientId(clientId);
-        //BaseClientDetails collections are always initialized when new BaseClientDetails instance is created
-        clientDetails.getAuthorities().addAll(AuthorityUtils.createAuthorityList(role));
-        clientRegistrationService.updateClientDetails(clientDetails);
+        ClientDetails client = clientDetailsService.loadClientByClientId(clientId);
+        if (client.getAuthorities().isEmpty()) {
+            client = handleEmptyCollection(client, "authorities");
+        }
+        client.getAuthorities().addAll(AuthorityUtils.createAuthorityList(role));
+        clientRegistrationService.updateClientDetails(client);
     }
 
     @Override
     public void deleteRoleFromClientDetails(String clientId, String role) throws Exception {
-        ClientDetails clientDetails = clientDetailsService.loadClientByClientId(clientId);
-        //BaseClientDetails collections are always initialized when new BaseClientDetails instance is created
+        ClientDetails client = clientDetailsService.loadClientByClientId(clientId);
         GrantedAuthority removed = new SimpleGrantedAuthority(role);
-        if (clientDetails.getAuthorities().contains(removed)) {
-            clientDetails.getAuthorities().remove(removed);
-            clientRegistrationService.updateClientDetails(clientDetails);
+        if (client.getAuthorities().contains(removed)) {
+            client.getAuthorities().remove(removed);
+            clientRegistrationService.updateClientDetails(client);
         }
     }
     
+    /**
+     * Helper method for dealing with the immutable Collections of the
+     * BaseClientDetails. Initialize inner collection by the given attribute
+     * with muttable collection.
+     *
+     * @param client which immutable collection will be change for mutable collection
+     * @param attr attribute's name which collection will be initialized
+     * @return ClientDetails with mutable Collection by the given attr
+     */
+    private ClientDetails handleEmptyCollection(ClientDetails client, String attr) throws Exception {
+        BaseClientDetails baseClientDetails = (BaseClientDetails) client;
+        Class clazz = baseClientDetails.getClass();
+        Method setter = clazz.getMethod(String.format("set%s", StringUtils.capitalize(attr)), Collection.class);
+        setter.invoke(baseClientDetails, new LinkedHashSet<String>());
+        client = baseClientDetails;
+        return client;
+    }
     
     //////////  Getters / Setters  //////////
 

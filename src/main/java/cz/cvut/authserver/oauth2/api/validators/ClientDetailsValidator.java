@@ -74,7 +74,7 @@ public class ClientDetailsValidator implements Validator {
         // #3 : validate if it has valid grant type
         String invalidGrant = retriveInvalidGrantType(authorizedGrantTypes);
         if (invalidGrant != null) {
-            errors.rejectValue("authorizedGrantTypes", "invalid.grant.type", new Object[]{}, String.format("Grant type %s is invalid", invalidGrant));
+            errors.rejectValue("authorizedGrantTypes", "invalid.grant.type", new Object[]{invalidGrant}, String.format("Grant type %s is invalid", invalidGrant));
             return;
         }
 

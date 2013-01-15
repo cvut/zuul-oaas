@@ -1,7 +1,9 @@
 package cz.cvut.authserver.oauth2.api.resources;
 
 import cz.cvut.authserver.oauth2.api.models.JsonExceptionMapping;
+import cz.cvut.authserver.oauth2.api.validators.AuthorizationGrantValidator;
 import cz.cvut.authserver.oauth2.api.validators.ClientDetailsValidator;
+import cz.cvut.authserver.oauth2.api.validators.ClientsResourcesCompositeValidator;
 import cz.cvut.authserver.oauth2.services.ClientsService;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
@@ -49,14 +51,14 @@ public class ClientsController{
     
     private ClientsService clientsService;
     
-    private ClientDetailsValidator clientDetailsValidator;
+    private ClientsResourcesCompositeValidator clientsResourcesCompositeValidator;
     
     private MessageSource messageSource;
 
     
     @InitBinder
     public void initBinder(WebDataBinder dataBinder) {
-        dataBinder.setValidator(clientDetailsValidator);
+        dataBinder.setValidator(clientsResourcesCompositeValidator);
     }
     
     //////////  API methods  //////////
@@ -98,31 +100,31 @@ public class ClientsController{
 
     @ResponseStatus(NO_CONTENT)
     @RequestMapping(value = "{clientId}/scopes", method = DELETE)
-    public void removeScopeFromClientDetails(@PathVariable String clientId, String scope) throws Exception {
+    public void removeScopeFromClientDetails(@PathVariable String clientId, @RequestBody String scope) throws Exception {
         clientsService.removeScopeFromClientDetails(clientId, scope);
     }
 
     @ResponseStatus(NO_CONTENT)
     @RequestMapping(value = "{clientId}/grants", method = PUT)
-    public void addGrantToClientDetails(@PathVariable String clientId, String grantType) throws Exception {
+    public void addGrantToClientDetails(@PathVariable String clientId, @Valid @RequestBody String grantType) throws Exception {
         clientsService.addGrantToClientDetails(clientId, grantType);
     }
 
     @ResponseStatus(NO_CONTENT)
     @RequestMapping(value = "{clientId}/grants", method = DELETE)
-    public void deleteGrantFromClientDetails(@PathVariable String clientId, String grantType) throws Exception {
+    public void deleteGrantFromClientDetails(@PathVariable String clientId, @Valid @RequestBody String grantType) throws Exception {
         clientsService.deleteGrantFromClientDetails(clientId, grantType);
     }
 
     @ResponseStatus(NO_CONTENT)
     @RequestMapping(value = "{clientId}/roles", method = PUT)
-    public void addRoleToClientDetails(@PathVariable String clientId, String role) throws Exception {
+    public void addRoleToClientDetails(@PathVariable String clientId, @RequestBody String role) throws Exception {
         clientsService.addRoleToClientDetails(clientId, role);
     }
 
     @ResponseStatus(NO_CONTENT)
     @RequestMapping(value = "{clientId}/roles", method = DELETE)
-    public void deleteRoleFromClientDetails(@PathVariable String clientId, String role) throws Exception {
+    public void deleteRoleFromClientDetails(@PathVariable String clientId, @RequestBody String role) throws Exception {
         clientsService.deleteRoleFromClientDetails(clientId, role);
     }
     
@@ -169,17 +171,23 @@ public class ClientsController{
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public @ResponseBody
-    JsonExceptionMapping handleMethodArgumentNotValidException(MethodArgumentNotValidException error) {
+    JsonExceptionMapping handleMethodArgumentNotValidException(MethodArgumentNotValidException error) throws Exception {
         BindingResult bindingResult = error.getBindingResult();
         List<ObjectError> errors = bindingResult.getAllErrors();
         String errorMessage = constructErrorMessage(errors);
+        
         return new JsonExceptionMapping(bindingResult, HttpStatus.BAD_REQUEST.value(), errorMessage);
     }
 
-    private String constructErrorMessage(List<ObjectError> errors) {
+    private String constructErrorMessage(List<ObjectError> errors) throws Exception {
         String errorMessage = "";
         for (ObjectError objectError : errors) {
-            errorMessage = errorMessage.concat(messageSource.getMessage(objectError.getCode(), objectError.getArguments(), null));
+            try {
+                errorMessage = errorMessage.concat(messageSource.getMessage(objectError.getCode(), objectError.getArguments(), null));
+            } catch (Exception e) {
+                LOG.error("Error during parsing properties file with validation errors: {}", e.getMessage());
+                throw new Exception(e);
+            }
         }
         return errorMessage;
     }
@@ -193,13 +201,13 @@ public class ClientsController{
     public void setClientsService(ClientsService clientsService) {
         this.clientsService = clientsService;
     }
-    
-    public ClientDetailsValidator getClientDetailsValidator() {
-        return clientDetailsValidator;
+
+    public ClientsResourcesCompositeValidator getClientsResourcesCompositeValidator() {
+        return clientsResourcesCompositeValidator;
     }
 
-    public void setClientDetailsValidator(ClientDetailsValidator clientDetailsValidator) {
-        this.clientDetailsValidator = clientDetailsValidator;
+    public void setClientsResourcesCompositeValidator(ClientsResourcesCompositeValidator clientsResourcesCompositeValidator) {
+        this.clientsResourcesCompositeValidator = clientsResourcesCompositeValidator;
     }
 
     public MessageSource getMessageSource() {
