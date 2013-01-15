@@ -4,7 +4,6 @@ import com.google.common.collect.Sets;
 import cz.cvut.authserver.oauth2.Factories;
 import cz.cvut.authserver.oauth2.api.validators.ClientDetailsValidator;
 import java.util.Set;
-import org.apache.commons.lang.RandomStringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.validation.BindingResult;
@@ -169,41 +168,4 @@ public class ClientDetailsValidatorTest {
         assertEquals("Wrong value was rejected.", grants, bindingResult.getFieldError("authorizedGrantTypes").getRejectedValue());
     }
 
-    @Test
-    public void validate_request_with_invalid_characters_in_old_secret() {
-        //given
-        String invalidCharacter = "\n";
-        
-        //when
-        
-        
-        //then
-
-//        clientDetails.setOldSecret("123".concat(invalidCharacter));
-//        clientDetails.setNewSecret("456");
-        validator.validate(clientDetails, bindingResult);
-        assertFalse("There are some global errors during validation", bindingResult.hasGlobalErrors());
-        assertTrue("There aren't field errors during validation", bindingResult.hasFieldErrors());
-        assertEquals("Unexpected field errors count", 1, bindingResult.getFieldErrorCount());
-        assertNull("Error for 'newSecret' field found", bindingResult.getFieldError("newSecret"));
-        assertNotNull("Error for 'oldSecret' field not found", bindingResult.getFieldError("oldSecret"));
-    }
-
-    @Test
-    public void validate_request_with_invalid_characters_in_new_secret() {
-        String invalidCharacter = "\n";
-//        clientDetails.setOldSecret("456");
-//        clientDetails.setNewSecret("123".concat(invalidCharacter));
-        validator.validate(clientDetails, bindingResult);
-        assertFalse("There are some global errors during validation", bindingResult.hasGlobalErrors());
-        assertTrue("There aren't field errors during validation", bindingResult.hasFieldErrors());
-        assertEquals("Unexpected field errors count", 1, bindingResult.getFieldErrorCount());
-        assertNull("Error for 'oldSecret' field found", bindingResult.getFieldError("oldSecret"));
-        assertNotNull("Error for 'newSecret' field not found", bindingResult.getFieldError("newSecret"));
-    }
-
-    // TODO move to cz.cvut.authserver.oauth2.Factories ?
-    private String getAsciiPrintableStringWithSize(int size) {
-        return RandomStringUtils.randomAscii(size);
-    }
 }

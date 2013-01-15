@@ -2,15 +2,15 @@ package cz.cvut.authserver.oauth2.api.resources;
 
 import cz.cvut.authserver.oauth2.api.models.JsonExceptionMapping;
 import cz.cvut.authserver.oauth2.api.models.SecretChangeRequest;
-import cz.cvut.authserver.oauth2.api.validators.SecretChangeRequestValidator;
+import cz.cvut.authserver.oauth2.api.validators.ClientDetailsValidator;
 import cz.cvut.authserver.oauth2.generators.OAuth2ClientCredentialsGenerator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.provider.BaseClientDetails;
@@ -29,9 +29,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import static org.springframework.http.HttpStatus.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.common.exceptions.BadClientCredentialsException;
 import org.springframework.security.oauth2.common.exceptions.ClientAuthenticationException;
-import org.springframework.security.oauth2.common.exceptions.InvalidClientException;
 import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
@@ -58,7 +60,7 @@ public class ClientsController {
     
     private ClientRegistrationService clientRegistrationService;
     
-    private SecretChangeRequestValidator secretChangeRequestValidator;
+    private ClientDetailsValidator clientDetailsValidator;
     
     private OAuth2ClientCredentialsGenerator oauth2ClientCredentialsGenerator;
     
@@ -67,7 +69,7 @@ public class ClientsController {
     
     @InitBinder
     public void initBinder(WebDataBinder dataBinder) {
-        dataBinder.setValidator(secretChangeRequestValidator);
+        dataBinder.setValidator(clientDetailsValidator);
     }
     
     //////////  API methods  //////////
@@ -80,49 +82,123 @@ public class ClientsController {
 
     @ResponseStatus(CREATED)
     @RequestMapping(method = POST)
-    public void createClientDetails(@RequestBody BaseClientDetails client, HttpServletResponse response) throws Exception {
-        // TODO it MUST valide given data before insert!
+    public void createClientDetails(@Valid @RequestBody BaseClientDetails client, HttpServletResponse response) throws Exception {
 
+        // generate oauth2 client credentials
+        String clientId = oauth2ClientCredentialsGenerator.generateClientId();
+        String clientSecret = oauth2ClientCredentialsGenerator.generateClientSecret();
+        
+        // setting necessary fields
+        client.setClientId(clientId);
+        client.setClientSecret(clientSecret);
+        client.setAuthorities(AuthorityUtils.createAuthorityList("ROLE_CLIENT"));
+        
+        // save
         clientRegistrationService.addClientDetails(client);
 
-        // TODO should send redirect to URI of the created client (i.e. api/clients/{clientId}/)
+        // send redirect to URI of the created client (i.e. api/clients/{clientId}/)
         response.setHeader("Location", String.format("/%s/clients/%s", apiVersion,
                 client.getClientId()));
     }
-
-    @ResponseStatus(NO_CONTENT)
-    @RequestMapping(value = "{clientId}", method = PUT)
-    public void updateClientDetails(@RequestBody BaseClientDetails client,
-            @PathVariable String clientId) throws NoSuchClientException {
-
-        Assert.state(clientId.equals(client.getClientId()), String.format(
-                "The client_id %s does not match the URL %s", client.getClientId(), clientId));
-
-        ClientDetails details = client;
-        try {
-            ClientDetails existing = getClientDetails(clientId);
-            // TODO it should sync given client with existing one
-        } catch (Exception ex) {
-            LOG.warn("Couldn't fetch client details for client_id: " + clientId, ex);
-        }
-        // TODO it MUST valide given data before update!
-        clientRegistrationService.updateClientDetails(details);
-    }
-
+    
     @ResponseStatus(NO_CONTENT)
     @RequestMapping(value = "{clientId}", method = DELETE)
     public void removeClientDetails(@PathVariable String clientId) throws NoSuchClientException {
         clientRegistrationService.removeClientDetails(clientId);
     }
-    
+
     @ResponseStatus(NO_CONTENT)
     @RequestMapping(value = "{clientId}", method = PUT)
-    public void resetClientSecret(@PathVariable String clientId) throws NoSuchClientException{
+    public void resetClientSecret(@PathVariable String clientId) throws NoSuchClientException {
         String newSecret = oauth2ClientCredentialsGenerator.generateClientSecret();
         clientRegistrationService.updateClientSecret(clientId, newSecret);
     }
     
+    @ResponseStatus(NO_CONTENT)
+    @RequestMapping(value = "{clientId}/scopes", method = PUT)
+    public void addScopeToClientDetails(@PathVariable String clientId, @RequestBody String scope) throws Exception{
+        ClientDetails clientDetails = clientDetailsService.loadClientByClientId(clientId);
+        //BaseClientDetails collections are always initialized when new BaseClientDetails instance is created
+        BaseClientDetails baseClientDetails = (BaseClientDetails) clientDetails;
+        baseClientDetails.setScope(new LinkedHashSet<String>());
+        baseClientDetails.getScope().add(scope);
+        clientDetails = baseClientDetails;
+        clientRegistrationService.updateClientDetails(clientDetails);
+    }
+
+    @ResponseStatus(NO_CONTENT)
+    @RequestMapping(value = "{clientId}/scopes", method = DELETE)
+    public void removeScopeFromClientDetails(@PathVariable String clientId, String scope) throws Exception{
+        ClientDetails clientDetails = clientDetailsService.loadClientByClientId(clientId);
+        //BaseClientDetails collections are always initialized when new BaseClientDetails instance is created
+        if (clientDetails.getScope().contains(scope)) {
+            clientDetails.getScope().remove(scope);
+            clientRegistrationService.updateClientDetails(clientDetails);
+        }
+    }
+
+    @ResponseStatus(NO_CONTENT)
+    @RequestMapping(value = "{clientId}/grants", method = PUT)
+    public void addGrantToClientDetails(@PathVariable String clientId, String grantType) throws Exception {
+        ClientDetails clientDetails = clientDetailsService.loadClientByClientId(clientId);
+        //BaseClientDetails collections are always initialized when new BaseClientDetails instance is created
+        clientDetails.getScope().add(grantType);
+        clientRegistrationService.updateClientDetails(clientDetails);
+    }
+
+    @ResponseStatus(NO_CONTENT)
+    @RequestMapping(value = "{clientId}/grants", method = DELETE)
+    public void deleteGrantFromClientDetails(@PathVariable String clientId, String grantType) throws Exception{
+        ClientDetails clientDetails = clientDetailsService.loadClientByClientId(clientId);
+        //BaseClientDetails collections are always initialized when new BaseClientDetails instance is created
+        if (clientDetails.getAuthorizedGrantTypes().contains(grantType)) {
+            clientDetails.getAuthorizedGrantTypes().remove(grantType);
+            clientRegistrationService.updateClientDetails(clientDetails);
+        }
+    }
+
+    @ResponseStatus(NO_CONTENT)
+    @RequestMapping(value = "{clientId}/roles", method = PUT)
+    public void addRoleToClientDetails(@PathVariable String clientId, String role) throws Exception {
+        ClientDetails clientDetails = clientDetailsService.loadClientByClientId(clientId);
+        //BaseClientDetails collections are always initialized when new BaseClientDetails instance is created
+        clientDetails.getAuthorities().addAll(AuthorityUtils.createAuthorityList(role));
+        clientRegistrationService.updateClientDetails(clientDetails);
+    }
+
+    @ResponseStatus(NO_CONTENT)
+    @RequestMapping(value = "{clientId}/roles", method = DELETE)
+    public void deleteRoleFromClientDetails(@PathVariable String clientId, String role) throws Exception{
+        ClientDetails clientDetails = clientDetailsService.loadClientByClientId(clientId);
+        //BaseClientDetails collections are always initialized when new BaseClientDetails instance is created
+        GrantedAuthority removed = new SimpleGrantedAuthority(role);
+        if (clientDetails.getAuthorities().contains(removed)) {
+            clientDetails.getAuthorities().remove(removed);
+            clientRegistrationService.updateClientDetails(clientDetails);
+        }
+    }
+    
     //////////  Depracated Methods  //////////
+   
+//    @ResponseStatus(NO_CONTENT)
+//    @RequestMapping(value = "{clientId}", method = PUT)
+//    @Deprecated
+//    public void updateClientDetails(@RequestBody BaseClientDetails client,
+//            @PathVariable String clientId) throws NoSuchClientException {
+//
+//        Assert.state(clientId.equals(client.getClientId()), String.format(
+//                "The client_id %s does not match the URL %s", client.getClientId(), clientId));
+//
+//        ClientDetails details = client;
+//        try {
+//            ClientDetails existing = getClientDetails(clientId);
+//            // TODO it should sync given client with existing one
+//        } catch (Exception ex) {
+//            LOG.warn("Couldn't fetch client details for client_id: " + clientId, ex);
+//        }
+//        // TODO it MUST valide given data before update!
+//        clientRegistrationService.updateClientDetails(details);
+//    }
 
     @Deprecated
     @ResponseStatus(NO_CONTENT)
@@ -211,12 +287,12 @@ public class ClientsController {
         this.clientRegistrationService = clientRegistrationService;
     }
 
-    public SecretChangeRequestValidator getSecretChangeRequestValidator() {
-        return secretChangeRequestValidator;
+    public ClientDetailsValidator getClientDetailsValidator() {
+        return clientDetailsValidator;
     }
 
-    public void setSecretChangeRequestValidator(SecretChangeRequestValidator secretChangeRequestValidator) {
-        this.secretChangeRequestValidator = secretChangeRequestValidator;
+    public void setClientDetailsValidator(ClientDetailsValidator clientDetailsValidator) {
+        this.clientDetailsValidator = clientDetailsValidator;
     }
 
     public OAuth2ClientCredentialsGenerator getOauth2ClientCredentialsGenerator() {

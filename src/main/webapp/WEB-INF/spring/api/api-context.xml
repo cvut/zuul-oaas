@@ -21,7 +21,7 @@
     <bean id="clientsController" class="cz.cvut.authserver.oauth2.api.resources.ClientsController"
           p:clientDetailsService-ref="clientDetails"
           p:clientRegistrationService-ref="clientDetails" 
-          p:secretChangeRequestValidator-ref="secretChangeRequestValidator"
+          p:clientDetailsValidator-ref="clientDetailsValidator"
           p:oauth2ClientCredentialsGenerator-ref="oauth2ClientCredentialsGenerator"
           p:messageSource-ref="messageSource"
           p:apiVersion="${api.version}"/>
@@ -44,12 +44,14 @@
     
     <bean id="secretChangeRequestValidator" class="cz.cvut.authserver.oauth2.api.validators.SecretChangeRequestValidator"/>
     
+    <bean id="clientDetailsValidator" class="cz.cvut.authserver.oauth2.api.validators.ClientDetailsValidator"/>
+    
     <!--///// Generators /////-->
     
     <bean id="oauth2ClientCredentialsGenerator" class="cz.cvut.authserver.oauth2.generators.OAuth2ClientCredentialsGeneratorImpl" />
     <bean id="identificatorGenerator" class="cz.cvut.authserver.oauth2.generators.IdentificatorGeneratorImpl" />
     
-    <!-- bind your messages.properties -->
+    <!-- bind our messages.properties -->
     <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
         <property name="basenames" value="validation_errors" />
     </bean>

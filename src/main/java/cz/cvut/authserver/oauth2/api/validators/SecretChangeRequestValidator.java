@@ -12,6 +12,7 @@ import org.springframework.validation.Validator;
  *
  * @author Tomas Mano <tomasmano@gmail.com>
  */
+@Deprecated
 public class SecretChangeRequestValidator implements Validator {
 
     private static final Logger LOG = LoggerFactory.getLogger(SecretChangeRequestValidator.class);

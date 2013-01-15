@@ -34,6 +34,7 @@ import static org.springframework.test.web.server.setup.MockMvcBuilders.standalo
  *
  * @author Jakub Jirutka <jakub@jirutka.cz>
  */
+@Ignore
 @RunWith(MockitoJUnitRunner.class)
 public class ClientsControllerTest {
 

@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.oauth2.provider.ClientDetails;
 import org.springframework.validation.Errors;
-import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
 /**
@@ -27,7 +26,7 @@ public class ClientDetailsValidator implements Validator {
 
     @Override
     public boolean supports(Class<?> clazz) {
-        return ClientDetails.class.equals(clazz);
+        return ClientDetails.class.isAssignableFrom(clazz);
     }
 
     @Override
