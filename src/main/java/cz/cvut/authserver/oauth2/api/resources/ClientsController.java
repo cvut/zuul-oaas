@@ -10,6 +10,7 @@ import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.provider.BaseClientDetails;
@@ -31,6 +32,7 @@ import static org.springframework.http.HttpStatus.*;
 import org.springframework.security.oauth2.common.exceptions.BadClientCredentialsException;
 import org.springframework.security.oauth2.common.exceptions.ClientAuthenticationException;
 import org.springframework.security.oauth2.common.exceptions.InvalidClientException;
+import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -39,7 +41,8 @@ import org.springframework.web.bind.annotation.InitBinder;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 /**
- *
+ * API for autorization server client's management.
+ * 
  * @author Tomáš Maňo <tomasmano@gmail.com>
  * @author Jakub Jirutka <jakub@jirutka.cz>
  */
@@ -66,10 +69,12 @@ public class ClientsController {
     public void initBinder(WebDataBinder dataBinder) {
         dataBinder.setValidator(secretChangeRequestValidator);
     }
+    
+    //////////  API methods  //////////
 
     @ResponseBody
     @RequestMapping(value = "{clientId}", method = GET)
-    public ClientDetails getClientDetails(@PathVariable String clientId) throws Exception {
+    public ClientDetails getClientDetails(@PathVariable String clientId) throws OAuth2Exception {
         return clientDetailsService.loadClientByClientId(clientId);
     }
 
@@ -88,7 +93,7 @@ public class ClientsController {
     @ResponseStatus(NO_CONTENT)
     @RequestMapping(value = "{clientId}", method = PUT)
     public void updateClientDetails(@RequestBody BaseClientDetails client,
-            @PathVariable String clientId) throws Exception {
+            @PathVariable String clientId) throws NoSuchClientException {
 
         Assert.state(clientId.equals(client.getClientId()), String.format(
                 "The client_id %s does not match the URL %s", client.getClientId(), clientId));
@@ -106,11 +111,20 @@ public class ClientsController {
 
     @ResponseStatus(NO_CONTENT)
     @RequestMapping(value = "{clientId}", method = DELETE)
-    public void removeClientDetails(@PathVariable String clientId) throws Exception {
-        // TODO check?
+    public void removeClientDetails(@PathVariable String clientId) throws NoSuchClientException {
         clientRegistrationService.removeClientDetails(clientId);
     }
+    
+    @ResponseStatus(NO_CONTENT)
+    @RequestMapping(value = "{clientId}", method = PUT)
+    public void resetClientSecret(@PathVariable String clientId) throws NoSuchClientException{
+        String newSecret = oauth2ClientCredentialsGenerator.generateClientSecret();
+        clientRegistrationService.updateClientSecret(clientId, newSecret);
+    }
+    
+    //////////  Depracated Methods  //////////
 
+    @Deprecated
     @ResponseStatus(NO_CONTENT)
     @RequestMapping(value = "{clientId}/secret", method = PUT)
     public void updateClientSecret(@PathVariable String clientId, @Valid @RequestBody SecretChangeRequest changeRequest) throws Exception {
@@ -140,6 +154,7 @@ public class ClientsController {
      * @param clientId client id of the client
      * @param request request containing resources that client wants access with given scope
      */
+    @Deprecated
     @ResponseStatus(NO_CONTENT)
     @RequestMapping(value = "{clientId}/resources", method = PUT)
     public void updateAccessingResurces(@PathVariable String clientId, @RequestBody Object request){
@@ -150,6 +165,8 @@ public class ClientsController {
         
     }
 
+    //////////  Exception Handlers  //////////
+    
     @ExceptionHandler(NoSuchClientException.class)
     public ResponseEntity<Void> handleNoSuchClient(NoSuchClientException ex) {
         return new ResponseEntity<>(NOT_FOUND);
@@ -184,6 +201,8 @@ public class ClientsController {
     }
 
     ////////  Getters / Setters  ////////
+    
+    
     public void setClientDetailsService(ClientDetailsService clientDetailsService) {
         this.clientDetailsService = clientDetailsService;
     }

@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
 /**
+ * API for autorization server resource's management.
  *
  * @author Tomas Mano <tomasmano@gmail.com>
  */

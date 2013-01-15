@@ -1,6 +1,8 @@
 package cz.cvut.authserver.oauth2;
 
+import com.google.common.collect.Sets;
 import cz.cvut.authserver.oauth2.api.models.SecretChangeRequest;
+import cz.cvut.authserver.oauth2.utils.AuthorizationGrants;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
@@ -8,6 +10,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -66,8 +69,24 @@ public class Factories {
     public static ClientDetails createRandomClientDetails() {
         return createRandomClientDetails(randomString());
     }
+    
+    
+    
+    //////////  Authorization Grant  //////////
 
+    public static Set<String> createInvalidAuthorizationGrant(){
+        return Sets.newHashSet("very_bad");
+    }
 
+    public static Set<String> createAuthorizationCodeGrant(){
+        return Sets.newHashSet(AuthorizationGrants.authCode.get());
+    }
+
+    public static Set<String> createImplicitGrant(){
+        return Sets.newHashSet(AuthorizationGrants.implict.get());
+    }
+    
+    
 
     //////// OAuth2AccessToken ////////
 
@@ -153,6 +172,7 @@ public class Factories {
     }
 
     //////// SecretChangeRequest //////// 
+    
     public static SecretChangeRequest createValidSecretChangeRequestForClient(ClientDetails random) {
         SecretChangeRequest request = new SecretChangeRequest();
         request.setNewSecret(randomString());
@@ -162,6 +182,10 @@ public class Factories {
 
     
     //////// Support ////////
+    
+    public static String randomAsciiPrintableStringWithSize(int size){
+         return RandomStringUtils.randomAscii(size);
+    }
 
     private static Collection<GrantedAuthority> randomGrantedAuthorities(int size) {
         return AuthorityUtils.createAuthorityList(randomStringArray(size));
@@ -190,7 +214,7 @@ public class Factories {
         int length = RandomUtils.nextInt(MAX_STRING_LENGTH -1) + 1;
         return RandomStringUtils.randomAlphanumeric(length);
     }
-
+    
     private static String[] randomStringArray(int size) {
         String[] array = new String[size];
         for (int i = 0; i < array.length; i++) {
