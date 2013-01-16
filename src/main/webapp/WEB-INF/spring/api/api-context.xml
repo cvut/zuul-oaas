@@ -61,8 +61,9 @@
     <bean id="authorizationGrantValidator" class="cz.cvut.authserver.oauth2.api.validators.AuthorizationGrantValidator"/>
     
     <!-- Bean to configure a default JSR-303 Validator as a Spring bean -->
-    <bean id="validator"
-          class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"/>
+    <!-- We don't need to include it, because it's implicitly wired when using <mvc:annotation-driven /> annotation -->
+    <!--    <bean id="validator"
+              class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"/>-->
     
     <!--///// Generators /////-->
     
