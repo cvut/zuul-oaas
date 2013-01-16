@@ -1,17 +1,64 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+       http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
 
-<!--    <context:annotation-config />
-    <context:component-scan base-package="cz.cvut" />-->
+    <!--///// Controllers /////-->
+    
+    <!-- ClientsController is tested using mockito -->
 
+    <bean id="resourcesController" class="cz.cvut.authserver.oauth2.api.resources.ResourcesController"
+          p:resourceService-ref="resourceService"
+          p:apiVersion="${api.version}"/>
+    
+    <!--///// Services /////-->
+
+    <bean id="resourceService" class="cz.cvut.authserver.oauth2.services.ResourceServiceImpl"
+          p:resourceDAO-ref="resourceDAO" />
+    
+    <!--///// DAO /////-->
+
+    <bean id="resourceDAO" class="cz.cvut.authserver.oauth2.dao.ResourceInMemoryDAO"
+          p:identificatorGenerator-ref="identificatorGenerator"/>
+
+    <!--///// Validators /////-->
+    
+    <!--  Composite validator: clientDetailsValidator + authorizationGrantValidator -->
+    <!--    Order of validator is important, because only one validator can be executed during validation process -->
+    <bean id="clientsResourcesCompositeValidator" class="cz.cvut.authserver.oauth2.api.validators.ClientsResourcesCompositeValidator">
+        <property name="validators">
+            <list>
+                <ref bean="clientDetailsValidator"/>
+                <ref bean="authorizationGrantValidator"/>
+            </list>
+        </property>
+    </bean>
+    
+    <bean id="clientDetailsValidator" class="cz.cvut.authserver.oauth2.api.validators.ClientDetailsValidator"/>
+    
+    <bean id="authorizationGrantValidator" class="cz.cvut.authserver.oauth2.api.validators.AuthorizationGrantValidator"/>
+    
+    <!-- Bean to configure a default JSR-303 Validator as a Spring bean -->
+    <bean id="validator"
+          class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"/>
+    
     <!--///// Generators /////-->
     
     <bean id="oauth2ClientCredentialsGenerator" class="cz.cvut.authserver.oauth2.generators.OAuth2ClientCredentialsGeneratorImpl" />
-
+    <bean id="identificatorGenerator" class="cz.cvut.authserver.oauth2.generators.IdentificatorGeneratorImpl" />
+    
+    <!-- bind our messages.properties -->
+    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+        <property name="basenames" value="validation_errors" />
+    </bean>
+    
+    <!-- Property files -->
+    <context:property-placeholder location="classpath:api-context.properties"/>
+    
 </beans>

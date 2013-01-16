@@ -1,5 +1,9 @@
 package cz.cvut.authserver.oauth2.models.resource;
 
+import cz.cvut.authserver.oauth2.api.validators.constraint.ValidUrl;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 
@@ -17,18 +21,24 @@ public class Resource {
     @JsonProperty("resourceId")
     private Long id;
 
+    @ValidUrl
+    @Size(max=256)
     @JsonProperty("baserUrl")
     private String baseUrl;
     
+    @Size(max=256)
     @JsonProperty("description")
     private String description;
     
+    @NotNull @Size(max=256)
     @JsonProperty("name")
     private String name;
     
+    @NotNull @Size(max=256)
     @JsonProperty("version")
     private String version;
     
+    @NotNull @Size(max=256)
     @JsonProperty("title")
     private String title;
 

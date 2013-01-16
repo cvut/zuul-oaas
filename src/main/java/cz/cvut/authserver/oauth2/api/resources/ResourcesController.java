@@ -4,6 +4,7 @@ import cz.cvut.authserver.oauth2.api.resources.exceptions.NoSuchResourceExceptio
 import cz.cvut.authserver.oauth2.models.resource.Resource;
 import cz.cvut.authserver.oauth2.services.ResourceService;
 import java.util.List;
+import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import static org.springframework.http.HttpStatus.*;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -42,8 +44,7 @@ public class ResourcesController {
     @ResponseStatus(CREATED)
     @ResponseBody
     @RequestMapping(value = "", method = RequestMethod.POST)
-    public Resource createResource(@RequestBody Resource resource) {
-        resource.setId(Long.MIN_VALUE);
+    public Resource createResource(@Valid @RequestBody Resource resource) {
         Resource created = resourceService.createResource(resource);
         LOG.info("Creating new resource [{}]", resource);
         return created;

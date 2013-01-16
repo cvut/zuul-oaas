@@ -2,6 +2,9 @@ package cz.cvut.authserver.oauth2;
 
 import com.google.common.collect.Sets;
 import cz.cvut.authserver.oauth2.api.models.SecretChangeRequest;
+import cz.cvut.authserver.oauth2.models.resource.Auth;
+import cz.cvut.authserver.oauth2.models.resource.Resource;
+import cz.cvut.authserver.oauth2.models.resource.Scope;
 import cz.cvut.authserver.oauth2.utils.AuthorizationGrants;
 import java.util.Arrays;
 import java.util.Collection;
@@ -267,6 +270,28 @@ public class Factories {
             StubAuthentication other = (StubAuthentication) obj;
             return new EqualsBuilder().append(this.principal, other.principal).isEquals();
         }
+    }
+    
+    //////////  Resources  //////////
+    
+    public static Resource createResources() {
+        Auth auth = createAuth(createScope("https://www.cvutapis.cz/auth/kosapi.readonly", "Read only scope", false));
+        return createResource(auth, null, "https://www.cvutapis.cz/kosapi/v3", "API for access to the data within KOS db.", "kosapi", "v3", "KOS API Basic");
+    }
+
+    private static Resource createResource(Auth auth, Long code, String url, String desc, String name, String version, String title) {
+        Resource resource = new Resource(auth, code, url, desc, name, version, title);
+        return resource;
+    }
+
+    private static Auth createAuth(Scope... scopes) {
+        Auth auth = new Auth();
+        auth.setScope(Arrays.asList(scopes));
+        return auth;
+    }
+
+    private static Scope createScope(String name, String description, boolean secured) {
+        return new Scope(name, description, secured);
     }
 
 }

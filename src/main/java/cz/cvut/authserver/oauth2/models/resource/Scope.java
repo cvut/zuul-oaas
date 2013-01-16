@@ -1,7 +1,7 @@
 package cz.cvut.authserver.oauth2.models.resource;
 
 import java.io.Serializable;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 
@@ -17,10 +17,11 @@ import org.codehaus.jackson.annotate.JsonProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Scope implements Serializable{
 
-    @NotNull
+    @Size(max=256)
     @JsonProperty("name")
     private String name;
     
+    @Size(max=256)
     @JsonProperty("description")
     private String description;
 
