@@ -26,6 +26,7 @@
 
     <bean id="resourcesController" class="cz.cvut.authserver.oauth2.api.resources.ResourcesController"
           p:resourceService-ref="resourceService"
+          p:messageSource-ref="messageSource"
           p:apiVersion="${api.version}"/>
     
     <!--///// Services /////-->

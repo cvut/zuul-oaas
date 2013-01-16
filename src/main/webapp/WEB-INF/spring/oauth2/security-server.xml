@@ -33,7 +33,7 @@
     
     <!-->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> sould be placed in api-security but then it won't work-->
     
-     <sec:http pattern="/api/v1/resources/**" create-session="stateless"
+<!--     <sec:http pattern="/api/v1/resources/**" create-session="stateless"
               entry-point-ref="oauthAuthenticationEntryPoint" use-expressions="true">
         <sec:intercept-url pattern="/api/v1/resources/**" 
                            access="hasRole('ROLE_CLIENT') and #oauth2.hasScope('manager')"
@@ -52,7 +52,7 @@
         <sec:expression-handler ref="oauthWebExpressionHandler" />
     </sec:http>
     
-    <oauth:resource-server id="resourceServerFilter" token-services-ref="tokenServices" />
+    <oauth:resource-server id="resourceServerFilter" token-services-ref="tokenServices" />-->
     
     <!--^^^^^^^^^^^^^^^^^^^^ sould be placed in api-security but then it won't work-->
     
