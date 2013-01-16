@@ -34,7 +34,7 @@ public class Resource {
     @JsonProperty("name")
     private String name;
     
-    @NotNull(message="{required.version}") @Size(max=256)
+    @NotNull() @Size(max=256)
     @JsonProperty("version")
     private String version;
     
