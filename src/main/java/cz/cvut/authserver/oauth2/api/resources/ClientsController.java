@@ -127,6 +127,19 @@ public class ClientsController{
     public void deleteRoleFromClientDetails(@PathVariable String clientId, @RequestBody String role) throws Exception {
         clientsService.deleteRoleFromClientDetails(clientId, role);
     }
+
+    @ResponseStatus(NO_CONTENT)
+    @RequestMapping(value = "{clientId}/redirect-url", method = PUT)
+    public void addRedirectUriToClientDetails(@PathVariable String clientId, @RequestBody String redirectUri) throws Exception {
+        clientsService.addRedirectUriToClientDetails(clientId, redirectUri);
+    }
+
+    @Deprecated
+    @ResponseStatus(NO_CONTENT)
+    @RequestMapping(value = "{clientId}/redirect-url", method = DELETE)
+    public void deleteRedirectUriFromClientDetails(@PathVariable String clientId, @RequestBody String redirectUri) throws Exception {
+        clientsService.deleteRoleFromClientDetails(clientId, redirectUri);
+    }
     
     //////////  Depracated Methods  //////////
    

@@ -20,10 +20,11 @@
             <h4>Chcete to skusit?</h4>
             - Na vyskusanie mozme zadat do prehliadaca:<br/>
             <a href="oauth/authorize?client_id=foodlovers&amp;redirect_uri=http%3A%2F%2Fexample.org&amp;response_type=code&amp;scope=read&amp;state=qB4ND7">priklad 1</a>
+            <a href="http://localhost:8081/auth/oauth/authorize?client_id=92y75NqNqyO1eo3euGQcZY2qKjyVoq8T3aahuMTnzj4CxQBmir61pjkg504BIwm4&amp;redirect_uri=http://en.wikipedia.org/wiki/Broccoli&amp;response_type=code&amp;scope=read&amp;state=qB4ND7">priklad 2</a>
             <br />
 
             - Zadanie takehto url do prehliadaca bude viest k chybe, pretoze client z id "veryverybadclient" neexistuje:<br/>
-            <a href="oauth/authorize?client_id=veryverybadclient&amp;redirect_uri=http%3A%2F%2Fexample.org&amp;response_type=code&amp;scope=read&amp;state=qB4ND7">priklad 2</a>
+            <a href="oauth/authorize?client_id=veryverybadclient&amp;redirect_uri=http%3A%2F%2Fexample.org&amp;response_type=code&amp;scope=read&amp;state=qB4ND7">priklad 3</a>
             <br />
         </div>
 

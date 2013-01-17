@@ -5,6 +5,7 @@ import java.lang.String;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.LinkedHashSet;
+import java.util.Set;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -121,6 +122,29 @@ public class ClientsServiceImpl implements ClientsService {
             clientRegistrationService.updateClientDetails(client);
         }
     }
+
+    @Override
+    public void addRedirectUriToClientDetails(String clientId, String redirectUri) throws Exception {
+        ClientDetails client = clientDetailsService.loadClientByClientId(clientId);
+        if (client.getRegisteredRedirectUri() == null) {
+            client = handleEmptyCollection(client, "registeredRedirectUri", Set.class);
+        }
+        // we are only enabling one registered uri
+        client.getRegisteredRedirectUri().clear();
+        client.getRegisteredRedirectUri().add(redirectUri);
+        clientRegistrationService.updateClientDetails(client);
+    }
+
+    @Deprecated
+    @Override
+    public void deleteRedirectUriFromClientDetails(String clientId, String redirectUri) throws Exception {
+        ClientDetails client = clientDetailsService.loadClientByClientId(clientId);
+        if (client.getRegisteredRedirectUri().contains(redirectUri)) {
+            client.getRegisteredRedirectUri().remove(redirectUri);
+            clientRegistrationService.updateClientDetails(client);
+        }
+    }
+    
     
     /**
      * Helper method for dealing with the immutable Collections of the
@@ -135,6 +159,24 @@ public class ClientsServiceImpl implements ClientsService {
         BaseClientDetails baseClientDetails = (BaseClientDetails) client;
         Class clazz = baseClientDetails.getClass();
         Method setter = clazz.getMethod(String.format("set%s", StringUtils.capitalize(attr)), Collection.class);
+        setter.invoke(baseClientDetails, new LinkedHashSet<String>());
+        client = baseClientDetails;
+        return client;
+    }
+
+    /**
+     * Helper method for dealing with the immutable Collections of the
+     * BaseClientDetails. Initialize inner collection by the given attribute
+     * with muttable collection.
+     *
+     * @param client which immutable collection will be change for mutable collection
+     * @param attr attribute's name which collection will be initialized
+     * @return ClientDetails with mutable Collection by the given attr
+     */
+    private <COLLECTION extends Collection> ClientDetails handleEmptyCollection(ClientDetails client, String attr, Class<COLLECTION> collectionClazz) throws Exception {
+        BaseClientDetails baseClientDetails = (BaseClientDetails) client;
+        Class clazz = baseClientDetails.getClass();
+        Method setter = clazz.getMethod(String.format("set%s", StringUtils.capitalize(attr)), collectionClazz);
         setter.invoke(baseClientDetails, new LinkedHashSet<String>());
         client = baseClientDetails;
         return client;

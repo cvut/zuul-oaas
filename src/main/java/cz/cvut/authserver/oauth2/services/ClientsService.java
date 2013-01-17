@@ -34,4 +34,8 @@ public interface ClientsService {
 
     public void deleteRoleFromClientDetails(String clientId, String role) throws Exception;
 
+    public void addRedirectUriToClientDetails(String clientId, String redirectUri) throws Exception;
+
+    public void deleteRedirectUriFromClientDetails(String clientId, String redirectUri) throws Exception;
+
 }

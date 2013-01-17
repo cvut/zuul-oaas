@@ -7,7 +7,7 @@
 <%@ include file="/WEB-INF/jspf/header.jspf" %>
 
 <link type="text/css" rel="stylesheet"
-      href="<c:url value='/css/cerulean.min.css'/>" />
+      href="<c:url value='/css/bootstrap.min.css'/>" />
 <link type="text/css" rel="stylesheet"
       href="<c:url value='/css/bootstrap-responsive.min.css'/>" />
 

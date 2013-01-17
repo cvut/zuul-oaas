@@ -1,12 +1,13 @@
-package cz.cvut.authserver.oauth2.api.validators;
+package cz.cvut.authserver.oauth2.api.validators.constraint;
 
-import cz.cvut.authserver.oauth2.api.validators.constraint.ValidUrl;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.validator.routines.UrlValidator;
 
 /**
+ * Custom constraint validator implementation for JSR-303 validation constraint
+ * 'ValidUrl'.
  *
  * @author Tomas Mano <tomasmano@gmail.com>
  */
