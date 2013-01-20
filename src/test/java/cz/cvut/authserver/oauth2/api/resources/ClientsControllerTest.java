@@ -1,8 +1,6 @@
 package cz.cvut.authserver.oauth2.api.resources;
 
 import cz.cvut.authserver.oauth2.Factories;
-import cz.cvut.authserver.oauth2.api.models.SecretChangeRequest;
-import java.net.URI;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -18,14 +16,8 @@ import org.springframework.test.web.server.MockMvc;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItems;
-import org.json.JSONObject;
 import static org.mockito.Mockito.*;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import org.springframework.test.web.server.RequestBuilder;
-import org.springframework.test.web.server.request.MockHttpServletRequestBuilder;
-import org.springframework.test.web.server.request.MockMultipartHttpServletRequestBuilder;
 import static org.springframework.test.web.server.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.server.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.server.setup.MockMvcBuilders.standaloneSetup;
@@ -74,7 +66,17 @@ public class ClientsControllerTest {
         ClientDetails expected = Factories.createRandomClientDetails("42");
         doReturn(expected).when(clientDetailsService).loadClientByClientId("42");
 
-        mock.perform(get(BASE_URI + 42).accept(APPLICATION_JSON)).andExpect(status().isOk()).andExpect(content().mimeType(MIME_TYPE_JSON)).andExpect(jsonPath(CLIENT_ID, equalTo("42"))).andExpect(jsonPath(CLIENT_SECRET, equalTo(expected.getClientSecret()))).andExpect(jsonPath(RESOURCE_IDS, hasItems(expected.getResourceIds().toArray()))).andExpect(jsonPath(GRANT_TYPES, hasItems(expected.getAuthorizedGrantTypes().toArray()))).andExpect(jsonPath(REDIRECT_URI, hasItems(expected.getRegisteredRedirectUri().toArray()))).andExpect(jsonPath(ACCESS_TOKEN_VALIDITY, equalTo(expected.getAccessTokenValiditySeconds()))).andExpect(jsonPath(REFRESH_TOKEN_VALIDITY, equalTo(expected.getRefreshTokenValiditySeconds())));
+        mock.perform(get(BASE_URI + 42)
+                .accept(APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().mimeType(MIME_TYPE_JSON))
+                .andExpect(jsonPath(CLIENT_ID, equalTo("42")))
+                .andExpect(jsonPath(CLIENT_SECRET, equalTo(expected.getClientSecret())))
+                .andExpect(jsonPath(RESOURCE_IDS, hasItems(expected.getResourceIds().toArray())))
+                .andExpect(jsonPath(GRANT_TYPES, hasItems(expected.getAuthorizedGrantTypes().toArray())))
+                .andExpect(jsonPath(REDIRECT_URI, hasItems(expected.getRegisteredRedirectUri().toArray())))
+                .andExpect(jsonPath(ACCESS_TOKEN_VALIDITY, equalTo(expected.getAccessTokenValiditySeconds())))
+                .andExpect(jsonPath(REFRESH_TOKEN_VALIDITY, equalTo(expected.getRefreshTokenValiditySeconds())));
     }
 
     @Test

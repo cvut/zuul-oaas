@@ -22,7 +22,7 @@ public class ClientsResourcesCompositeValidator implements Validator {
     public boolean supports(final Class clazz) {
         for (Validator v : validators) {
             if (v.supports(clazz)) {
-                LOG.debug("Validation for class [{}] is supported", clazz);
+                LOG.debug("Validation for class [{}] is supported by [{}]", clazz, v);
                 return true;
             }
         }
@@ -35,17 +35,18 @@ public class ClientsResourcesCompositeValidator implements Validator {
      */
     @Override
     public void validate(final Object obj, final Errors errors) {
-
+        
         for (Validator v : validators) {
             if (v.supports(obj.getClass())) {
                 v.validate(obj, errors);
-                LOG.debug("Exiting validation exection with validator [{}] for class [{}] with errors", new Object[]{v, obj.getClass(), errors});
-                return;
+                LOG.debug("Exiting validation exection with validator [{}] for class [{}] with errors: {}", new Object[]{v, obj.getClass(), errors});
+//                return;
             }
         }
     }
 
     public void setValidators(Validator[] validators) {
+        LOG.debug("Setting validators: {}", validators);
         this.validators = validators;
     }
 

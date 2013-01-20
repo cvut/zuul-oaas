@@ -65,7 +65,7 @@ public class ClientsController{
 
     @ResponseBody
     @RequestMapping(value = "{clientId}", method = GET)
-    public ClientDetails getClientDetails(@PathVariable String clientId) throws OAuth2Exception {
+    public ClientDetails getClientDetails(@PathVariable String clientId) throws NoSuchClientException {
         return clientsService.findClientDetailsById(clientId);
     }
 
@@ -94,7 +94,7 @@ public class ClientsController{
     
     @ResponseStatus(NO_CONTENT)
     @RequestMapping(value = "{clientId}/scopes", method = PUT)
-    public void addScopeToClientDetails(@PathVariable String clientId, @RequestBody String scope) throws Exception {
+    public void addScopeToClientDetails(@PathVariable String clientId, @Valid @RequestBody String scope) throws Exception {
         clientsService.addScopeToClientDetails(clientId, scope);
     }
 
@@ -140,7 +140,13 @@ public class ClientsController{
     public void deleteRedirectUriFromClientDetails(@PathVariable String clientId, @RequestBody String redirectUri) throws Exception {
         clientsService.deleteRoleFromClientDetails(clientId, redirectUri);
     }
-    
+   
+    @ResponseStatus(NO_CONTENT)
+    @RequestMapping(value = "{clientId}/product-name", method = PUT)
+    public void addBrandingInformationToClientDetails(@PathVariable String clientId, @RequestBody String brand) throws Exception {
+        clientsService.addBrandingInformationToClientDetails(clientId, brand);
+    }
+
     //////////  Depracated Methods  //////////
    
 //    @ResponseStatus(NO_CONTENT)

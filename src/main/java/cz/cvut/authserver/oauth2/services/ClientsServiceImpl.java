@@ -4,6 +4,7 @@ import cz.cvut.authserver.oauth2.generators.OAuth2ClientCredentialsGenerator;
 import java.lang.String;
 import java.lang.reflect.Method;
 import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import org.apache.commons.lang.StringUtils;
@@ -34,8 +35,20 @@ public class ClientsServiceImpl implements ClientsService {
     //////////  Business methods  //////////
 
     @Override
-    public ClientDetails findClientDetailsById(String clientId) throws OAuth2Exception {
-        return clientDetailsService.loadClientByClientId(clientId);
+    public ClientDetails findClientDetailsById(String clientId) throws NoSuchClientException {
+        ClientDetails retrieved = null;
+        
+            // little hack, loadClientByClientId throws OAuth2Exception when no client exists 
+            // with the given id, resulting in 401 Unauthorized Status code which doesn't fit our purposes at all....
+        
+            try {
+                retrieved = clientDetailsService.loadClientByClientId(clientId);
+            } catch (Exception e) {
+                // now we are throwing proper 404 Not Found Error
+                throw new NoSuchClientException(String.format("Client with id [%s] doesn't exists.", clientId));
+            }
+            
+        return retrieved;
     }
 
     @Override
@@ -144,7 +157,14 @@ public class ClientsServiceImpl implements ClientsService {
             clientRegistrationService.updateClientDetails(client);
         }
     }
-    
+
+    @Override
+    public void addBrandingInformationToClientDetails(String clientId, String brand) throws Exception {
+        ClientDetails client = clientDetailsService.loadClientByClientId(clientId);
+        BaseClientDetails baseClientDetails = (BaseClientDetails) client;
+        baseClientDetails.addAdditionalInformation("product-name", brand);
+        clientRegistrationService.updateClientDetails(client);
+    }
     
     /**
      * Helper method for dealing with the immutable Collections of the

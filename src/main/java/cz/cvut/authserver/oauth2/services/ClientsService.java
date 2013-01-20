@@ -37,5 +37,7 @@ public interface ClientsService {
     public void addRedirectUriToClientDetails(String clientId, String redirectUri) throws Exception;
 
     public void deleteRedirectUriFromClientDetails(String clientId, String redirectUri) throws Exception;
+    
+    public void addBrandingInformationToClientDetails(String clientId, String brand) throws Exception;
 
 }

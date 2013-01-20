@@ -53,6 +53,7 @@
             <list>
                 <ref bean="clientDetailsValidator"/>
                 <ref bean="authorizationGrantValidator"/>
+                <ref bean="scopesValidator"/>
             </list>
         </property>
     </bean>
@@ -60,6 +61,8 @@
     <bean id="clientDetailsValidator" class="cz.cvut.authserver.oauth2.api.validators.ClientDetailsValidator"/>
     
     <bean id="authorizationGrantValidator" class="cz.cvut.authserver.oauth2.api.validators.AuthorizationGrantValidator"/>
+    
+    <bean id="scopesValidator" class="cz.cvut.authserver.oauth2.api.validators.ScopesValidator"/>
     
     <!-- Bean to configure a default JSR-303 Validator as a Spring bean -->
     <!-- We don't need to include it, because it's implicitly wired when using <mvc:annotation-driven /> annotation -->
