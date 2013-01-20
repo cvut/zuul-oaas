@@ -39,7 +39,7 @@ public class DefaultTokenConverter implements AccessTokenConverter {
         response.putAll(token.getAdditionalInformation());
 
         if (clientToken.getResourceIds() != null && !clientToken.getResourceIds().isEmpty()) {
-            response.put("aud", clientToken.getResourceIds());
+            response.put("resources", clientToken.getResourceIds());
         }
         return response;
     }
