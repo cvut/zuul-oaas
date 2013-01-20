@@ -22,6 +22,10 @@ public interface ClientsService {
     
     public void resetClientSecret(String clientId) throws NoSuchClientException;
     
+    public void addResourceToClientDetails(String clientId, @RequestBody String resourceId) throws Exception;
+    
+    public void removeResourceFromClientDetails(String clientId, String resourceId) throws Exception;
+    
     public void addGrantToClientDetails(String clientId, String grantType) throws Exception;
 
     public void deleteGrantFromClientDetails(String clientId, String grantType) throws Exception;

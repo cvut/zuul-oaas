@@ -95,13 +95,17 @@
                           scope="read,write"
                           authorities="ROLE_CLIENT" />
             <oauth:client client-id="my-client-with-registered-redirect" authorized-grant-types="authorization_code,client_credentials"
-			authorities="ROLE_CLIENT" redirect-uri="http://anywhere?key=value" scope="read,trust" />
+                          authorities="ROLE_CLIENT" redirect-uri="http://anywhere?key=value" scope="read,trust" />
+            <oauth:client client-id="my-less-trusted-client" authorized-grant-types="authorization_code,implicit"
+                          authorities="ROLE_CLIENT" />
+            <oauth:client client-id="my-less-trusted-autoapprove-client" authorized-grant-types="implicit"
+                          authorities="ROLE_CLIENT" />
             <oauth:client client-id="apps-manager" secret="supersecret" authorized-grant-types="client_credentials"
-			authorities="ROLE_CLIENT" scope="manager" />
+                          authorities="ROLE_CLIENT" scope="manager" />
             <oauth:client client-id="client-credentials-without-secret" authorized-grant-types="client_credentials"
-			authorities="ROLE_CLIENT" scope="manager" />
+                          authorities="ROLE_CLIENT" scope="manager" />
             <oauth:client client-id="my-client-with-secret" authorized-grant-types="client_credentials" authorities="ROLE_CLIENT"
-			scope="read" secret="secret" />
+                          scope="read" secret="secret" />
         </oauth:client-details-service>
 
         <bean id="tokenStore" class="org.springframework.security.oauth2.provider.token.InMemoryTokenStore" />

@@ -98,6 +98,25 @@ public class ClientsServiceImpl implements ClientsService {
     }
 
     @Override
+    public void addResourceToClientDetails(String clientId, String resourceId) throws Exception {
+        ClientDetails client = clientDetailsService.loadClientByClientId(clientId);
+        if (client.getResourceIds().isEmpty()) {
+            client = handleEmptyCollection(client, "resourceIds");
+        }
+        client.getResourceIds().add(resourceId);
+        clientRegistrationService.updateClientDetails(client);
+    }
+
+    @Override
+    public void removeResourceFromClientDetails(String clientId, String resourceId) throws Exception {
+        ClientDetails client = clientDetailsService.loadClientByClientId(clientId);
+        if (client.getResourceIds().contains(resourceId)) {
+            client.getResourceIds().remove(resourceId);
+            clientRegistrationService.updateClientDetails(client);
+        }
+    }
+
+    @Override
     public void addGrantToClientDetails(String clientId, String grantType) throws Exception {
         ClientDetails client = clientDetailsService.loadClientByClientId(clientId);
         if (client.getAuthorizedGrantTypes().isEmpty()) {

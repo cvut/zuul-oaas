@@ -93,6 +93,18 @@ public class ClientsController{
     }
     
     @ResponseStatus(NO_CONTENT)
+    @RequestMapping(value = "{clientId}/resources", method = PUT)
+    public void addResourceToClientDetails(@PathVariable String clientId, @RequestBody String resourceId) throws Exception {
+        clientsService.addResourceToClientDetails(clientId, resourceId);
+    }
+
+    @ResponseStatus(NO_CONTENT)
+    @RequestMapping(value = "{clientId}/resources", method = DELETE)
+    public void removeResourceFromClientDetails(@PathVariable String clientId, @RequestBody String resourceId) throws Exception {
+        clientsService.addResourceToClientDetails(clientId, resourceId);
+    }
+
+    @ResponseStatus(NO_CONTENT)
     @RequestMapping(value = "{clientId}/scopes", method = PUT)
     public void addScopeToClientDetails(@PathVariable String clientId, @Valid @RequestBody String scope) throws Exception {
         clientsService.addScopeToClientDetails(clientId, scope);

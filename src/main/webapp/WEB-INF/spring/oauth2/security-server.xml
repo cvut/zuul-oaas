@@ -45,9 +45,9 @@
                            access="hasRole('ROLE_BIG_BOSS') and #oauth2.hasScope('manager')"
                            method="DELETE" />
         <sec:intercept-url pattern="/api/v1/resources/**"
-                           access="hasRole('ROLE_BIG_BOSS') and #oauth2.hasScope('manager')"
+                           access="permitAll"
                            method="GET"/>
-        <sec:custom-filter ref="resourceServerFilter" before="PRE_AUTH_FILTER" />
+        <sec:custom-filter ref="resourceServerFilterResourcesApi" before="PRE_AUTH_FILTER" />
         <sec:access-denied-handler ref="oauthAccessDeniedHandler" />
         <sec:expression-handler ref="oauthWebExpressionHandler" />
     </sec:http>
@@ -66,12 +66,14 @@
         <sec:intercept-url pattern="/api/v1/clients/**"
                            access="hasRole('ROLE_BIG_BOSS') and #oauth2.hasScope('manager')"
                            method="GET"/>
-        <sec:custom-filter ref="resourceServerFilter" before="PRE_AUTH_FILTER" />
+        <sec:custom-filter ref="resourceServerFilterClientsApi" before="PRE_AUTH_FILTER" />
         <sec:access-denied-handler ref="oauthAccessDeniedHandler" />
         <sec:expression-handler ref="oauthWebExpressionHandler" />
     </sec:http>
     
-    <oauth:resource-server id="resourceServerFilter" token-services-ref="tokenServices" />
+    <oauth:resource-server id="resourceServerFilterResourcesApi" token-services-ref="tokenServices" resource-id="auth-server-resources-api" />
+    
+    <oauth:resource-server id="resourceServerFilterClientsApi" token-services-ref="tokenServices" resource-id="auth-server-clients-api" />
     
     <!--^^^^^^^^^^^^^^^^^^^^ sould be placed in api-security but then it won't work-->
     

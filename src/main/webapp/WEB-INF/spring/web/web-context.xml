@@ -40,5 +40,9 @@
     <!-- Override the default mappings for approval and error pages -->
     <bean id="accessConfirmationController" class="cz.cvut.authserver.oauth2.controllers.AccessConfirmationController"
           p:clientDetailsService-ref="clientDetails" />
+    
+    <!-- Check Token Enpoint for Resource Servers -->
+    <bean id="checkTokenEndpoint" class="cz.cvut.authserver.oauth2.controllers.CheckTokenEndpoint"
+          p:tokenServices-ref="tokenServices"/>
 
 </beans>

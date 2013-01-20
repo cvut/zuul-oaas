@@ -23,6 +23,13 @@ public class JsonExceptionMapping {
         this.moreInfo = "not-provided";
     }
 
+    public JsonExceptionMapping(BindingResult bindingResult, int status, String message, String moreInfo){
+        this.bindingResult = bindingResult;
+        this.status = status;
+        this.message = message;
+        this.moreInfo = moreInfo;
+    }
+
     @JsonProperty("status")
     public int getStatus() {
         return status;
