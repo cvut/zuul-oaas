@@ -5,6 +5,8 @@ import cz.cvut.authserver.oauth2.generators.IdentificatorGenerator;
 import cz.cvut.authserver.oauth2.models.resource.Auth;
 import cz.cvut.authserver.oauth2.models.resource.Resource;
 import cz.cvut.authserver.oauth2.models.resource.Scope;
+import cz.cvut.authserver.oauth2.utils.IdUtils;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -24,6 +26,16 @@ public class ResourceInMemoryDAO implements ResourceDAO {
         populateResources();
     }
 
+    @Override
+    public boolean isRegisteredResource(Serializable id) {
+        for (Resource resource : resources) {
+            if (resource.getName().equals(id)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
     @Override
     public Resource createResource(Resource resource) {
         resource.setId(identificatorGenerator.generateIdentificator());
@@ -77,7 +89,7 @@ public class ResourceInMemoryDAO implements ResourceDAO {
     }
 
     private static Resource createResource(Auth auth, Long code, String url, String desc, String name, String version, String title) {
-        Resource resource = new Resource(auth, code, url, desc, name, version, title);
+        Resource resource = new Resource(auth, code, url, desc, name, version, title, true);
         return resource;
     }
 

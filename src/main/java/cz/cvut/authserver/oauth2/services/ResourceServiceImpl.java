@@ -3,6 +3,7 @@ package cz.cvut.authserver.oauth2.services;
 import cz.cvut.authserver.oauth2.api.resources.exceptions.NoSuchResourceException;
 import cz.cvut.authserver.oauth2.dao.ResourceDAO;
 import cz.cvut.authserver.oauth2.models.resource.Resource;
+import java.io.Serializable;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -15,6 +16,11 @@ public class ResourceServiceImpl implements ResourceService {
 
     @Autowired
     private ResourceDAO resourceDAO;
+
+    @Override
+    public boolean isRegisteredResource(Serializable id) {
+        return resourceDAO.isRegisteredResource(id);
+    }
 
     @Override
     public List<Resource> getAllResources() {

@@ -2,6 +2,7 @@ package cz.cvut.authserver.oauth2.dao;
 
 import cz.cvut.authserver.oauth2.api.resources.exceptions.NoSuchResourceException;
 import cz.cvut.authserver.oauth2.models.resource.Resource;
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -9,6 +10,14 @@ import java.util.List;
  * @author Tomas Mano <tomasmano@gmail.com>
  */
 public interface ResourceDAO {
+    
+    /**
+     * Checks if the given resource is registered resource.
+     *
+     * @param id resource's id to be checked
+     * @return if the given resource is registered resource
+     */
+    public boolean isRegisteredResource(Serializable id);
     
     /**
      * Finds resource with the given id.

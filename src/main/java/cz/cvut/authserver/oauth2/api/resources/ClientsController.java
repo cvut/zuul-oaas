@@ -1,8 +1,6 @@
 package cz.cvut.authserver.oauth2.api.resources;
 
 import cz.cvut.authserver.oauth2.api.models.JsonExceptionMapping;
-import cz.cvut.authserver.oauth2.api.validators.AuthorizationGrantValidator;
-import cz.cvut.authserver.oauth2.api.validators.ClientDetailsValidator;
 import cz.cvut.authserver.oauth2.api.validators.ClientsResourcesCompositeValidator;
 import cz.cvut.authserver.oauth2.services.ClientsService;
 import java.util.List;
@@ -27,7 +25,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import static org.springframework.http.HttpStatus.*;
 import org.springframework.security.oauth2.common.exceptions.BadClientCredentialsException;
-import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -94,7 +91,7 @@ public class ClientsController{
     
     @ResponseStatus(NO_CONTENT)
     @RequestMapping(value = "{clientId}/resources", method = PUT)
-    public void addResourceToClientDetails(@PathVariable String clientId, @RequestBody String resourceId) throws Exception {
+    public void addResourceToClientDetails(@PathVariable String clientId, @Valid @RequestBody String resourceId) throws Exception {
         clientsService.addResourceToClientDetails(clientId, resourceId);
     }
 

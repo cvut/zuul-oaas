@@ -41,11 +41,15 @@ public class Resource {
     @NotNull @Size(max=256)
     @JsonProperty("title")
     private String title;
+    
+    @NotNull
+    @JsonProperty("title")
+    private boolean isPublic = true;
 
     public Resource() {
     }
 
-    public Resource(Auth auth, Long id, String baseUrl, String description, String name, String version, String title) {
+    public Resource(Auth auth, Long id, String baseUrl, String description, String name, String version, String title, boolean isPublic) {
         this.auth = auth;
         this.id = id;
         this.baseUrl = baseUrl;
@@ -53,6 +57,7 @@ public class Resource {
         this.name = name;
         this.version = version;
         this.title = title;
+        this.isPublic = isPublic;
     }
 
     public Auth getAuth() {
@@ -109,6 +114,14 @@ public class Resource {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public boolean isIsPublic() {
+        return isPublic;
+    }
+
+    public void setIsPublic(boolean isPublic) {
+        this.isPublic = isPublic;
     }
 
     @Override

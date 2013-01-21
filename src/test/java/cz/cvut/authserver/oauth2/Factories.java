@@ -280,7 +280,7 @@ public class Factories {
     }
 
     private static Resource createResource(Auth auth, Long code, String url, String desc, String name, String version, String title) {
-        Resource resource = new Resource(auth, code, url, desc, name, version, title);
+        Resource resource = new Resource(auth, code, url, desc, name, version, title, true);
         return resource;
     }
 

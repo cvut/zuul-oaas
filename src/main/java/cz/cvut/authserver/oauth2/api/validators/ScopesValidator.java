@@ -10,8 +10,8 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 /**
- * Validator for Authorization Grant type. Validating if it's not null or empty,
- * attribute's lentgh and that attribute is supported authorization grant type.
+ * Validator for Scopes. Validating if it's not null or empty,
+ * attribute's lentgh.
  *
  * @author Tomas Mano <tomasmano@gmail.com>
  */
