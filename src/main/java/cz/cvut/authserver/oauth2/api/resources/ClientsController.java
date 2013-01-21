@@ -84,7 +84,7 @@ public class ClientsController{
     }
 
     @ResponseStatus(NO_CONTENT)
-    @RequestMapping(value = "{clientId}", method = PUT)
+    @RequestMapping(value = "{clientId}/secret", method = PUT)
     public void resetClientSecret(@PathVariable String clientId) throws NoSuchClientException {
         clientsService.resetClientSecret(clientId);
     }

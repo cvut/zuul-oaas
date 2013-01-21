@@ -26,7 +26,7 @@ public interface ResourceService {
      * @return resource if exists
      * @throws NoSuchResourceException when no matching resource was found
      */
-    public Resource findResourceById(Long id) throws NoSuchResourceException;
+    public Resource findResourceById(String id) throws NoSuchResourceException;
     
     /**
      * Creates new resource.
@@ -43,7 +43,7 @@ public interface ResourceService {
      * @param resource resource's content to be updated with
      * @throws NoSuchResourceException when no matching resource was found
      */
-    public void updateResource(Long id, Resource resource) throws NoSuchResourceException;
+    public void updateResource(String id, Resource resource) throws NoSuchResourceException;
 
     /**
      * Delete resource with the given id.
@@ -51,7 +51,7 @@ public interface ResourceService {
      * @param id resource§s id
      * @throws NoSuchResourceException when no matching resource was found
      */
-    public void deleteResourceById(Long id) throws NoSuchResourceException;
+    public void deleteResourceById(String id) throws NoSuchResourceException;
     
     /**
      * Returns all resources.
@@ -59,4 +59,11 @@ public interface ResourceService {
      * @return all resources
      */
     public List<Resource> getAllResources();
+
+    /**
+     * Returns all public resources.
+     *
+     * @return all resources
+     */
+    public List<Resource> getAllPublicResources();
 }

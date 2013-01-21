@@ -37,7 +37,7 @@ public class IdUtils {
         Long idLong2 = (Long) id2;
         return idLong1.compareTo(idLong2) == 0;
     }
-
+    
     /**
      * Extract identifier from http location response header in URI.
      * 

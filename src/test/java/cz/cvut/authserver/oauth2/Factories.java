@@ -5,6 +5,7 @@ import cz.cvut.authserver.oauth2.api.models.SecretChangeRequest;
 import cz.cvut.authserver.oauth2.models.resource.Auth;
 import cz.cvut.authserver.oauth2.models.resource.Resource;
 import cz.cvut.authserver.oauth2.models.resource.Scope;
+import cz.cvut.authserver.oauth2.models.resource.enums.ResourceVisibility;
 import cz.cvut.authserver.oauth2.utils.AuthorizationGrants;
 import java.util.Arrays;
 import java.util.Collection;
@@ -279,8 +280,8 @@ public class Factories {
         return createResource(auth, null, "https://www.cvutapis.cz/kosapi/v3", "API for access to the data within KOS db.", "kosapi", "v3", "KOS API Basic");
     }
 
-    private static Resource createResource(Auth auth, Long code, String url, String desc, String name, String version, String title) {
-        Resource resource = new Resource(auth, code, url, desc, name, version, title, true);
+    private static Resource createResource(Auth auth, String code, String url, String desc, String name, String version, String title) {
+        Resource resource = new Resource(auth, code, url, desc, name, version, title, ResourceVisibility.PUBLIC.get());
         return resource;
     }
 

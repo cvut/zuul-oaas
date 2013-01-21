@@ -1,11 +1,14 @@
 package cz.cvut.authserver.oauth2.models.resource;
 
 import cz.cvut.authserver.oauth2.api.validators.constraint.ValidUrl;
-import javax.validation.constraints.Max;
+import cz.cvut.authserver.oauth2.api.validators.constraint.ValidVisibility;
+import cz.cvut.authserver.oauth2.models.resource.enums.ResourceVisibility;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.codehaus.jackson.map.ser.std.ToStringSerializer;
 
 /**
  * Represents resources in the CTU OAuth 2.0 authorization server.
@@ -19,7 +22,7 @@ public class Resource {
     private Auth auth;
 
     @JsonProperty("resourceId")
-    private Long id;
+    private String id;
 
     @ValidUrl
     @Size(max=256)
@@ -42,14 +45,15 @@ public class Resource {
     @JsonProperty("title")
     private String title;
     
-    @NotNull
-    @JsonProperty("title")
-    private boolean isPublic = true;
+    @NotNull @Size(max=256)
+    @ValidVisibility
+    @JsonProperty("visibility")
+    private String visibility = ResourceVisibility.PUBLIC.get();
 
     public Resource() {
     }
 
-    public Resource(Auth auth, Long id, String baseUrl, String description, String name, String version, String title, boolean isPublic) {
+    public Resource(Auth auth, String id, String baseUrl, String description, String name, String version, String title, String visibility) {
         this.auth = auth;
         this.id = id;
         this.baseUrl = baseUrl;
@@ -57,18 +61,18 @@ public class Resource {
         this.name = name;
         this.version = version;
         this.title = title;
-        this.isPublic = isPublic;
+        this.visibility = visibility;
     }
 
     public Auth getAuth() {
         return auth;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -116,12 +120,12 @@ public class Resource {
         this.title = title;
     }
 
-    public boolean isIsPublic() {
-        return isPublic;
+    public String getVisibility() {
+        return visibility;
     }
 
-    public void setIsPublic(boolean isPublic) {
-        this.isPublic = isPublic;
+    public void setVisibility(String visibility) {
+        this.visibility = visibility;
     }
 
     @Override
@@ -152,7 +156,7 @@ public class Resource {
 
     @Override
     public String toString() {
-        return "Resource{" + "id=" + id + ", baseUrl=" + baseUrl + ", name=" + name + ", version=" + version + '}';
+        return "Resource{" + "id=" + id + ", name=" + name + ", version=" + version + ", visibility=" + visibility + '}';
     }
     
 }

@@ -28,22 +28,27 @@ public class ResourceServiceImpl implements ResourceService {
     }
 
     @Override
+    public List<Resource> getAllPublicResources() {
+        return resourceDAO.getAllPublicResources();
+    }
+
+    @Override
     public Resource createResource(Resource resource) {
         return resourceDAO.createResource(resource);
     }
 
     @Override
-    public void updateResource(Long id, Resource resource) throws NoSuchResourceException{
+    public void updateResource(String id, Resource resource) throws NoSuchResourceException{
         resourceDAO.updateResource(id, resource);
     }
 
     @Override
-    public Resource findResourceById(Long id) throws NoSuchResourceException{
+    public Resource findResourceById(String id) throws NoSuchResourceException{
         return resourceDAO.findResourceById(id);
     }
 
     @Override
-    public void deleteResourceById(Long id) throws NoSuchResourceException{
+    public void deleteResourceById(String id) throws NoSuchResourceException{
         resourceDAO.deleteResourceById(id);
     }
 

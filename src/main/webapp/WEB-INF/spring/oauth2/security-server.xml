@@ -33,6 +33,8 @@
     
     <!-->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> sould be placed in api-security but then it won't work-->
     
+    <!-- http://static.springsource.org/spring-security/site/docs/3.0.x/reference/el-access.html -->
+    
     <!-- Resources API Security -->
     
      <sec:http pattern="/api/v1/resources/**" create-session="stateless"
@@ -56,7 +58,7 @@
     
     <!-- Clients API Security -->
 
-<!--    <sec:http pattern="/api/v1/clients/**" create-session="stateless"
+    <sec:http pattern="/api/v1/clients/**" create-session="stateless"
               entry-point-ref="oauthAuthenticationEntryPoint" use-expressions="true">
         <sec:intercept-url pattern="/api/v1/clients/**" 
                            access="hasRole('ROLE_BIG_BOSS') and #oauth2.hasScope('manager')"
@@ -73,11 +75,11 @@
         <sec:custom-filter ref="resourceServerFilterClientsApi" before="PRE_AUTH_FILTER" />
         <sec:access-denied-handler ref="oauthAccessDeniedHandler" />
         <sec:expression-handler ref="oauthWebExpressionHandler" />
-    </sec:http>-->
+    </sec:http>
     
-    <!-- Clients API Security -->
+    <!-- Check Token Endpoint Security -->
     
-<!--    <sec:http pattern="/**" create-session="stateless"
+    <sec:http pattern="/check_token/**" create-session="stateless"
                   entry-point-ref="oauthAuthenticationEntryPoint" use-expressions="true">
         <sec:intercept-url pattern="/check_token/**" 
                            access="hasAnyRole('ROLE_BIG_BOSS','ROLE_RESOURCE_SERVER') and #oauth2.hasScope('token-check')"
@@ -86,7 +88,7 @@
         <sec:access-denied-handler ref="oauthAccessDeniedHandler" />
         <sec:expression-handler ref="oauthWebExpressionHandler" />
     </sec:http>
-    -->
+    
     <oauth:resource-server id="resourceServerFilterResourcesApi" token-services-ref="tokenServices" resource-id="auth-server-resources-api" />
     
     <oauth:resource-server id="resourceServerFilterClientsApi" token-services-ref="tokenServices" resource-id="auth-server-clients-api" />

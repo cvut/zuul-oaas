@@ -45,6 +45,12 @@ public class ResourcesController {
     public List<Resource> getAllResources() {
         return resourceService.getAllResources();
     }
+
+    @ResponseBody
+    @RequestMapping(value = "/public", method = RequestMethod.GET)
+    public List<Resource> getAllPublicResources() {
+        return resourceService.getAllPublicResources();
+    }
     
     @ResponseStatus(CREATED)
     @ResponseBody
@@ -57,19 +63,19 @@ public class ResourcesController {
     
     @ResponseStatus(NO_CONTENT)
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public void deleteResource(@PathVariable Long id) throws Exception{
+    public void deleteResource(@PathVariable String id) throws Exception{
         resourceService.deleteResourceById(id);
     }
     
     @ResponseStatus(NO_CONTENT)
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public void updateResource(@PathVariable Long id, @Valid @RequestBody Resource resource) throws Exception{
+    public void updateResource(@PathVariable String id, @Valid @RequestBody Resource resource) throws Exception{
         resourceService.updateResource(id, resource);
     }
   
     @ResponseBody
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public Resource getAllResources(@PathVariable Long id) {
+    public Resource findResourceById(@PathVariable String id) {
         return resourceService.findResourceById(id);
     }
     

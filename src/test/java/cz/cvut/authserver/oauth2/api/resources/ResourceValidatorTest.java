@@ -37,11 +37,13 @@ public class ResourceValidatorTest {
         //given
         //when
         PropertyDescriptor baseUrlDescriptor = validator.getConstraintsForClass(Resource.class).getConstraintsForProperty("baseUrl");
+        PropertyDescriptor visibilityDescriptor = validator.getConstraintsForClass(Resource.class).getConstraintsForProperty("visibility");
         
         //then
         assertTrue("No validation is involved.", validator.getConstraintsForClass(Resource.class).isBeanConstrained());
         assertFalse("No constrained properties for Resource.class", validator.getConstraintsForClass(Resource.class).getConstrainedProperties().isEmpty());
         assertNotNull("No constraints for property 'baseUrl'", baseUrlDescriptor);
+        assertNotNull("No constraints for property 'visibility'", visibilityDescriptor);
 
         // uncomment to display connstraint annotation for the given field
         //        for (ConstraintDescriptor cd : validator.getConstraintsForClass(Resource.class).getConstraintsForProperty("baseUrl").getConstraintDescriptors()){
@@ -58,7 +60,20 @@ public class ResourceValidatorTest {
         //            System.out.println("invalid val: " + constraintViolation.getInvalidValue());
         //            System.out.println("mess: " + constraintViolation.getMessage());
         //        }
-        assertFalse("No violatons registered.", violations.isEmpty());
+        assertFalse("No violations registered.", violations.isEmpty());
+    }
+
+    @Test
+    public void validate_missing_visibility() {
+        Resource toCreate = Factories.createResources();
+        toCreate.setVisibility(null);
+        Set<ConstraintViolation<Resource>> violations = validator.validate(toCreate, javax.validation.groups.Default.class);
+        // uncomment to display invalid values with validations messages
+        //        for (ConstraintViolation<Resource> constraintViolation : violations) {
+        //            System.out.println("invalid val: " + constraintViolation.getInvalidValue());
+        //            System.out.println("mess: " + constraintViolation.getMessage());
+        //        }
+        assertFalse("No violations registered.", violations.isEmpty());
     }
 
     @Test
@@ -69,6 +84,14 @@ public class ResourceValidatorTest {
         assertFalse("No violatons registered.", violations.isEmpty());
     }
 
+    @Test
+    public void validate_invalid_visibility() {
+        Resource toCreate = Factories.createResources();
+        toCreate.setVisibility("BAAANG");
+        Set<ConstraintViolation<Resource>> violations = validator.validate(toCreate, javax.validation.groups.Default.class);
+        assertFalse("No violatons registered.", violations.isEmpty());
+    }
+    
     @Test
     public void validate_valid_resource() {
         Resource toCreate = Factories.createResources();

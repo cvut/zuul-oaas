@@ -26,7 +26,7 @@ public interface ResourceDAO {
      * @return resource if exists
      * @throws NoSuchResourceException when no matching resource was found
      */
-    public Resource findResourceById(Long id) throws NoSuchResourceException;
+    public Resource findResourceById(String id) throws NoSuchResourceException;
     
     /**
      * Creates new resource.
@@ -43,7 +43,7 @@ public interface ResourceDAO {
      * @param resource resource's content to be updated with
      * @throws NoSuchResourceException when no matching resource was found
      */
-    public void updateResource(Long id, Resource resource) throws NoSuchResourceException;
+    public void updateResource(String id, Resource resource) throws NoSuchResourceException;
 
     /**
      * Delete resource with the given id.
@@ -52,7 +52,7 @@ public interface ResourceDAO {
      * @throws NoSuchResourceException when no matching resource was found
      * @return true if it contained the specified resource
      */
-    public boolean deleteResourceById(Long id) throws NoSuchResourceException;
+    public boolean deleteResourceById(String id) throws NoSuchResourceException;
     
     /**
      * Returns all resources.
@@ -60,4 +60,11 @@ public interface ResourceDAO {
      * @return all resources
      */
     public List<Resource> getAllResources();
+
+    /**
+     * Returns all public resources.
+     * 
+     * @return all resources
+     */
+    public List<Resource> getAllPublicResources();
 }

@@ -18,7 +18,7 @@
     
     <!-- http://static.springsource.org/spring-security/site/docs/3.0.x/reference/el-access.html -->
     
-    <sec:http pattern="/auth/api/v1/resources/**" create-session="stateless"
+<!--    <sec:http pattern="/auth/api/v1/resources/**" create-session="stateless"
               entry-point-ref="oauthAuthenticationEntryPoint" use-expressions="true">
         <sec:intercept-url pattern="/auth/api/v1/resources/**" 
                            access="hasRole('ROLE_CLIENT') and #oauth2.hasScope('manager')"
@@ -30,12 +30,15 @@
                            access="hasRole('ROLE_CLIENT') and #oauth2.hasScope('manager')"
                            method="DELETE" />
         <sec:intercept-url pattern="/auth/api/v1/resources/**"
+                           access="hasRole('ROLE_CLIENT') and #oauth2.hasScope('manager')"
+                           method="GET"/>
+        <sec:intercept-url pattern="/auth/api/v1/resources/public"
                            access="permitAll"
                            method="GET"/>
         <sec:custom-filter ref="resourceServerFilter" before="PRE_AUTH_FILTER" />
         <sec:access-denied-handler ref="oauthAccessDeniedHandler" />
         <sec:expression-handler ref="oauthWebExpressionHandler" />
-    </sec:http>
+    </sec:http>-->
     
     <oauth:resource-server id="resourceServerFilter" token-services-ref="tokenServices" />
    
