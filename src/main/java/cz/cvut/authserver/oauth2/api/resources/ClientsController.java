@@ -98,7 +98,7 @@ public class ClientsController{
     @ResponseStatus(NO_CONTENT)
     @RequestMapping(value = "{clientId}/resources", method = DELETE)
     public void removeResourceFromClientDetails(@PathVariable String clientId, @RequestBody String resourceId) throws Exception {
-        clientsService.addResourceToClientDetails(clientId, resourceId);
+        clientsService.removeResourceFromClientDetails(clientId, resourceId);
     }
 
     @ResponseStatus(NO_CONTENT)
