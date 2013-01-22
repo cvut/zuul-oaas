@@ -71,6 +71,7 @@ public class ClientsController{
     public void createClientDetails(@Valid @RequestBody BaseClientDetails client, HttpServletResponse response) throws Exception {
 
         clientsService.createClientDetails(client);
+        LOG.info("New client was created: [{}]", client);
 
         // send redirect to URI of the created client (i.e. api/clients/{clientId}/)
         response.setHeader("Location", String.format("/%s/clients/%s", apiVersion,
@@ -81,12 +82,14 @@ public class ClientsController{
     @RequestMapping(value = "{clientId}", method = DELETE)
     public void removeClientDetails(@PathVariable String clientId) throws NoSuchClientException {
         clientsService.removeClientDetails(clientId);
+        LOG.info("Client with id [{}] was removed", clientId);
     }
 
     @ResponseStatus(NO_CONTENT)
     @RequestMapping(value = "{clientId}/secret", method = PUT)
     public void resetClientSecret(@PathVariable String clientId) throws NoSuchClientException {
         clientsService.resetClientSecret(clientId);
+        LOG.info("Client secret for client id [{}] was reseted", clientId);
     }
     
     @ResponseStatus(NO_CONTENT)
@@ -97,7 +100,7 @@ public class ClientsController{
 
     @ResponseStatus(NO_CONTENT)
     @RequestMapping(value = "{clientId}/resources", method = DELETE)
-    public void removeResourceFromClientDetails(@PathVariable String clientId, @RequestBody String resourceId) throws Exception {
+    public void deleteResourceFromClientDetails(@PathVariable String clientId, @RequestBody String resourceId) throws Exception {
         clientsService.removeResourceFromClientDetails(clientId, resourceId);
     }
 
@@ -109,7 +112,7 @@ public class ClientsController{
 
     @ResponseStatus(NO_CONTENT)
     @RequestMapping(value = "{clientId}/scopes", method = DELETE)
-    public void removeScopeFromClientDetails(@PathVariable String clientId, @RequestBody String scope) throws Exception {
+    public void deleteScopeFromClientDetails(@PathVariable String clientId, @RequestBody String scope) throws Exception {
         clientsService.removeScopeFromClientDetails(clientId, scope);
     }
 
@@ -156,29 +159,7 @@ public class ClientsController{
         clientsService.addBrandingInformationToClientDetails(clientId, brand);
     }
 
-    //////////  Depracated Methods  //////////
-   
-//    @ResponseStatus(NO_CONTENT)
-//    @RequestMapping(value = "{clientId}", method = PUT)
-//    @Deprecated
-//    public void updateClientDetails(@RequestBody BaseClientDetails client,
-//            @PathVariable String clientId) throws NoSuchClientException {
-//
-//        Assert.state(clientId.equals(client.getClientId()), String.format(
-//                "The client_id %s does not match the URL %s", client.getClientId(), clientId));
-//
-//        ClientDetails details = client;
-//        try {
-//            ClientDetails existing = getClientDetails(clientId);
-//            // TODO it should sync given client with existing one
-//        } catch (Exception ex) {
-//            LOG.warn("Couldn't fetch client details for client_id: " + clientId, ex);
-//        }
-//        // TODO it MUST valide given data before update!
-//        clientRegistrationService.updateClientDetails(details);
-//    }
-
-
+    
     //////////  Exception Handlers  //////////
     
     @ExceptionHandler(NoSuchClientException.class)

@@ -85,5 +85,8 @@
     
     <!-- Property files -->
     <context:property-placeholder location="classpath:api-context.properties"/>
+    
+    <!-- Import additional configuration files -->
+    <import resource="aspects.xml"/>
 
 </beans>

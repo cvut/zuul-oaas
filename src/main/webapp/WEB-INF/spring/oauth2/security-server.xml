@@ -58,7 +58,7 @@
     
     <!-- Clients API Security -->
 
-    <sec:http pattern="/api/v1/clients/**" create-session="stateless"
+<!--    <sec:http pattern="/api/v1/clients/**" create-session="stateless"
               entry-point-ref="oauthAuthenticationEntryPoint" use-expressions="true">
         <sec:intercept-url pattern="/api/v1/clients/**" 
                            access="hasRole('ROLE_BIG_BOSS') and #oauth2.hasScope('manager')"
@@ -75,7 +75,7 @@
         <sec:custom-filter ref="resourceServerFilterClientsApi" before="PRE_AUTH_FILTER" />
         <sec:access-denied-handler ref="oauthAccessDeniedHandler" />
         <sec:expression-handler ref="oauthWebExpressionHandler" />
-    </sec:http>
+    </sec:http>-->
     
     <!-- Check Token Endpoint Security -->
     
