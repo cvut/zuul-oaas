@@ -13,6 +13,19 @@
 <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png"/>
 </head>
 
+<!--For testing fonts-->
+<!--<style>
+    body,
+    input,
+    button,
+    select,
+    textarea,
+    .navbar-search .search-query {
+        font-family: sans-serif;
+        font-weight: 100;
+    }
+</style>-->
+
 <body>
 
     <div class="navbar navbar-fixed-top">
@@ -35,85 +48,85 @@
     </div>
 
     <div id="wrap">
-        <div class="container">
-            <div class="row" style="margin-bottom: 15px">
-                <div class="span1">
-                    <img class="oauth-logo" src="http://oauth.net/images/oauth-2-sm.png" alt="OAuth logo"/> 
+        <!--<div class="container">-->
+        <div class="row" style="margin-bottom: 15px">
+            <!--<div class="span2">-->
+            <img class="oauth-logo" src="http://oauth.net/images/oauth-2-sm.png" alt="OAuth logo" height="70" width="70" style="float: left; padding-right: 15px"/> 
+            <!--</div>-->
+            <!--<div class="span6">-->
+            <h1>OAuth 2.0 Autorizačňí server ČVUT</h1>
+            <!--</div>-->
+        </div>
+        <div class="row">
+            <!--<div class="span7">-->
+            <c:if test="${not empty param.authentication_error}">
+                <div class="alert alert-error">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <h4>Uuups!</h4>
+                    Zadané uživatelské jméno nebo heslo nejsou správně.
                 </div>
-                <div class="span7">
-                    <h1>OAuth 2.0 Autorizačňí server ČVUT</h1>
+            </c:if>
+            <c:if test="${not empty param.authorization_error}">
+                <div class="alert alert-error">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <h4>Woops!</h4>
+                    Nejste oprávněn k přístupu ku tomuto zdroji.
                 </div>
+            </c:if>
+            <div class="alert alert-info">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                We've got a grand total of 1 user: <strong>tomy</strong>. Go ahead
+                and log in. tomy's password is <strong>best</strong>.
             </div>
-            <div class="row">
-                <div class="span7">
-                    <c:if test="${not empty param.authentication_error}">
-                        <div class="alert alert-error">
-                            <button type="button" class="close" data-dismiss="alert">&times;</button>
-                            <h4>Uuups!</h4>
-                            Zadané uživatelské jméno nebo heslo nejsou správně.
+            <!--</div>-->
+        </div>
+        <div class="row">
+            <!--<div class="span7">-->
+            <form class="form-horizontal" id="loginHere" method='post' action='<c:url value="/login.do"/>'>
+                <fieldset>
+                    <legend>Přihlásení</legend>
+                    <div class="control-group">
+                        <label class="control-label" for="input01">Jméno</label>
+                        <div class="controls">
+                            <input type="text" class="input-xlarge" id="user_name" name="j_username" rel="popover" data-content="Enter your first and last name." data-original-title="Full Name"/>
+
                         </div>
-                    </c:if>
-                    <c:if test="${not empty param.authorization_error}">
-                        <div class="alert alert-error">
-                            <button type="button" class="close" data-dismiss="alert">&times;</button>
-                            <h4>Woops!</h4>
-                            Nejste oprávněn k přístupu ku tomuto zdroji.
-                        </div>
-                    </c:if>
-                    <div class="alert alert-info">
-                        <button type="button" class="close" data-dismiss="alert">&times;</button>
-                        We've got a grand total of 1 user: <strong>tomy</strong>. Go ahead
-                        and log in. tomy's password is <strong>best</strong>.
                     </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="span7">
-                    <form class="form-horizontal" id="loginHere" method='post' action='<c:url value="/login.do"/>'>
-                        <fieldset>
-                            <legend>Přihlásení</legend>
-                            <div class="control-group">
-                                <label class="control-label" for="input01">Jméno</label>
-                                <div class="controls">
-                                    <input type="text" class="input-xlarge" id="user_name" name="j_username" rel="popover" data-content="Enter your first and last name." data-original-title="Full Name"/>
 
-                                </div>
-                            </div>
+                    <!--                            <div class="control-group">
+                                                    <label class="control-label" for="input01">Email</label>
+                                                    <div class="controls">
+                                                        <input type="text" class="input-xlarge" id="user_email" name="user_email" rel="popover" data-content="What’s your email address?" data-original-title="Email"/>
+                    
+                                                    </div>
+                                                </div>-->
 
-                            <!--                            <div class="control-group">
-                                                            <label class="control-label" for="input01">Email</label>
-                                                            <div class="controls">
-                                                                <input type="text" class="input-xlarge" id="user_email" name="user_email" rel="popover" data-content="What’s your email address?" data-original-title="Email"/>
-                            
-                                                            </div>
-                                                        </div>-->
+                    <div class="control-group">
+                        <label class="control-label" for="input01">Heslo</label>
+                        <div class="controls">
+                            <input type="password" class="input-xlarge" id="pwd" name="j_password" rel="popover" data-content="6 characters or more! Be tricky" data-original-title="Password" />
 
-                            <div class="control-group">
-                                <label class="control-label" for="input01">Heslo</label>
-                                <div class="controls">
-                                    <input type="password" class="input-xlarge" id="pwd" name="j_password" rel="popover" data-content="6 characters or more! Be tricky" data-original-title="Password" />
+                        </div>
+                    </div>
 
-                                </div>
-                            </div>
+                    <div class="control-group">
+                        <label class="control-label" for="input01"></label>
+                        <div class="controls">
+                            <button type="submit" class="btn btn-large btn-success" rel="tooltip" title="first tooltip">Přihlásit se</button>
 
-                            <div class="control-group">
-                                <label class="control-label" for="input01"></label>
-                                <div class="controls">
-                                    <button type="submit" class="btn btn-large btn-success" rel="tooltip" title="first tooltip">Přihlásit se</button>
+                        </div>
 
-                                </div>
+                    </div>
 
-                            </div>
+                </fieldset>
+            </form>
 
-                        </fieldset>
-                    </form>
-
-                </div>
-            </div>
+            <!--</div>-->
+            <!--</div>-->
         </div>
 
     </div>
-
+    <img src="http://static.simpledesktops.com/uploads/desktops/2011/06/13/dandelion.png" alt="Image Description" style="opacity: 0.5; position: absolute; bottom: 0px; width:100%;height: auto; z-index: -1"/>
     <script src="js/jquery-1.8.3.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script type="text/javascript" src="http://jzaefferer.github.com/jquery-validation/jquery.validate.js"></script>

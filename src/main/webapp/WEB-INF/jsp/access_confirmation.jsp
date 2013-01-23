@@ -17,33 +17,41 @@
 
     }
     body {
-        margin:0;
-        padding:0;
-        height: 100%;
+
     }
-    .container > footer p {
-        text-align: center; /* center align it with the container */
-    }
-    .container {
-        /*width: 770px;*/
-    }
-    /*            #registerHere {
-                    min-width: 700px;
-                }*/
+
     .well {
-        padding-right: 20px;
+        /*padding-right: 20px;*/
     }
 
     #container-main{
-        padding-top: 120px;
-        min-width: 900px;
+        z-index: 100;
+        padding-top: 6%;
+        /*min-width: 900px;*/
     }
     #form-approve{
         /*width: 70%;*/
-        min-width: 510px;
-        padding-left: 40px;
+        /*min-width: 510px;*/
+        /*padding-left: 40px;*/
         padding-top: 7%;
-        padding-bottom: 7%;
+        /*padding-bottom: 7%;*/
+    }
+</style>
+<style>
+    .emphasis{
+        font-family: sans-serif; font-weight: normal;
+    }
+    body,
+    input,
+    select,
+    textarea,
+    .navbar-search .search-query {
+        font-family: sans-serif;
+        font-weight: 100;
+    }
+    h2{
+        font-family: sans-serif;
+        font-weight: 100;
     }
 </style>
 
@@ -67,7 +75,7 @@
                 <a class="brand" href="/auth">OAuth 2.0 Autorizačňí server ČVUT</a>
                 <div class="nav-collapse collapse">
                     <ul class="nav">
-                        <li><a href="#about">Chci vědet více</a></li>
+                        <li><a href="#about">Chci vědet více <i class="icon-question-sign"/></a></li>
                         <li><a href="#contact">Kontakt</a></li>
                     </ul>
                 </div><!--/.nav-collapse -->
@@ -87,23 +95,25 @@
         <authz:authorize ifAllGranted="ROLE_USER">
             <div class="row">
                 <div class="span4">
+
                     <img src="http://oauth.net/images/oauth-2-sm.png" alt="OAuth logo" style="padding-left: 30%; padding-bottom: 10%"/> 
                     <!--<h3>Proč jsem se tady ocitnul?</h3>-->
-                    <ul class="muted">
-                        <li><strong>Autorizace pomocí nového protokolu <span class="badge badge-info">OAuth 2.0</span></strong> umožňuje uživatelům sdílet data, texty, fotografie a videa uložená na jednom zařízením, s jiným zařízením, <strong>aniž by ste museli vyzradit svoje přístupové údaje.</strong></li>
+                    <ul class="muted" style="font-family: sans-serif; font-weight: 100">
+                        <li><strong class="emphasis">Autorizace pomocí nového protokolu <span class="badge badge-info">OAuth 2.0</span></strong> umožňuje uživatelům sdílet data, texty, fotografie a videa uložená na jednom zařízením, s jiným zařízením, <strong class="emphasis">aniž by ste museli vyzradit svoje přístupové údaje.</strong></li>
                         <br/>
-                        <li>Protokol <span class="badge badge-info">OAuth 2.0</span> úspěšne používají společnosti jako je <strong>Google, Facebook, Twitter, Yahoo a další.</strong></li>
+                        <li>Protokol <span class="badge badge-info">OAuth 2.0</span> úspěšne používají společnosti jako je <strong class="emphasis">Google, Facebook, Twitter, Yahoo a další.</strong></li>
                         <br/>
                     </ul>
                 </div>
-                <div class="span8">
-                    <div id="form-approve" class="well well-large">
+                <div class="span1"></div>
+                <div class="span7">
+                    <div id="form-approve">
                         <!--<h2>OAuth 2.0 Autorizačňí server ČVUT</h2>-->
                         <div class="row">
                             <div class="span7">
                                 <h2>Milý uživateli, prosím potvrďte</h2>
-                                    <br/>
-                                <p class="lead">jestli souhlasíte, aby bylo umožneno aplikaci <strong>"<c:out value="${client.getAdditionalInformation()['product-name']}"/>"</strong> přistoupit k nekerým Vašim <strong>chráneným zdrojům.</strong></p>
+                                <br/>
+                                <p class="lead">jestli souhlasíte, aby bylo umožneno aplikaci <strong class="emphasis">"<c:out value="${client.getAdditionalInformation()['product-name']}"/>"</strong> přistoupit k nekerým Vašim <strong class="emphasis">chráneným zdrojům.</strong></p>
                             </div>
 
                         </div>
@@ -143,6 +153,22 @@
                 </div>
             </div>
         </div>
+        <!--<img src="http://static.simpledesktops.com/uploads/desktops/2012/11/20/Bubbles.png" alt="Image Description" style="opacity: 0.15; position: absolute; bottom: 0px; width:100%;height: auto; z-index: -1"/>-->
+        <!--<img src="http://www.dottotrains.com/_img/footer/footer3.png" alt="Image Description" style="opacity: 0.28; position: absolute; bottom: 0px; width:100%;height: auto; z-index: -1"/>-->
+        <!--<img src="http://www.icanbecreative.com/res/freeweb/2011/04/fly-with-me.png" alt="Image Description" style="opacity: 0.2; position: absolute; bottom: 0px; width:100%;height: auto; z-index: -1"/>-->
+        <!--<img src="http://static.simpledesktops.com/uploads/desktops/2011/06/13/dandelion.png" alt="Image Description" style="opacity: 0.5; position: absolute; bottom: 0px; width:100%;height: auto; z-index: -1"/>-->
+        <img src="http://static.simpledesktops.com/uploads/desktops/2011/04/12/Franklin.png" alt="Image Description" style="opacity: 0.5; position: absolute; bottom: 0px; width:100%;height: auto; z-index: -1"/>
+        <!--<img src="http://www.icanbecreative.com/res/freeweb/2011/04/take-note.png" alt="Image Description" style="opacity: 0.2; position: absolute; bottom: 0px; width:100%;height: auto; z-index: -1"/>-->
+        <!--<img src="http://www.icanbecreative.com/res/freeweb/2011/04/fibonacci.png" alt="Image Description" style="opacity: 0.3; position: absolute; bottom: 0px; width:100%;height: auto; z-index: -1"/>-->
+        <!--<img src="http://static.simpledesktops.com/uploads/desktops/2011/12/05/Wallpaper1.png" alt="Image Description" style="opacity: 0.3; position: absolute; bottom: 0px; width:100%;height: auto; z-index: -1"/>-->
+        <!--<img src="http://static.simpledesktops.com/uploads/desktops/2010/11/30/Split.png" alt="Image Description" style="opacity: 0.1; position: absolute; bottom: 0px; width:100%;height: auto; z-index: -1"/>-->
+        <!--<img src="http://static.simpledesktops.com/uploads/desktops/2011/06/03/Black_Bokeh.png" alt="Image Description" style="opacity: 0.2; position: absolute; bottom: 0px; width:100%;height: auto; z-index: -1"/>-->
+        <!--<img src="http://static.simpledesktops.com/uploads/desktops/2011/06/02/mono.png" alt="Image Description" style="opacity: 0.2; position: absolute; bottom: 0px; width:100%;height: auto; z-index: -1"/>-->
+        <!--<img src="http://static.simpledesktops.com/uploads/desktops/2011/03/10/tornado.png" alt="Image Description" style="opacity: 0.2; position: absolute; bottom: 0px; width:100%;height: auto; z-index: -1"/>-->
+        <!--<img src="http://static.simpledesktops.com/uploads/desktops/2010/12/08/watergrass.png" alt="Image Description" style="opacity: 0.5; position: absolute; bottom: 0px; width:100%;height: auto; z-index: -1"/>-->
+        <!--<img src="http://static.simpledesktops.com/uploads/desktops/2011/04/12/Edison.png" alt="Image Description" style="opacity: 0.5; position: absolute; bottom: 0px; width:100%;height: auto; z-index: -1"/>-->
+
+
     </authz:authorize>
 
 
