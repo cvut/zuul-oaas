@@ -14,8 +14,8 @@
 </head>
 
 <!--For testing fonts-->
-<!--<style>
-    body,
+<style>
+/*    body,
     input,
     button,
     select,
@@ -24,7 +24,15 @@
         font-family: sans-serif;
         font-weight: 100;
     }
-</style>-->
+    .emphasis{
+        font-family: sans-serif; font-weight: normal;
+    }*/
+    h1{
+        font-family: sans-serif;
+        font-weight: 100;
+    }
+
+</style>
 
 <body>
 
@@ -51,7 +59,7 @@
         <!--<div class="container">-->
         <div class="row" style="margin-bottom: 15px">
             <!--<div class="span2">-->
-            <img class="oauth-logo" src="http://oauth.net/images/oauth-2-sm.png" alt="OAuth logo" height="70" width="70" style="float: left; padding-right: 15px"/> 
+            <img class="oauth-logo" src="http://oauth.net/images/oauth-2-sm.png" alt="OAuth logo" height="70" width="70" style="opacity: 0.5;float: left; padding-right: 15px; "/> 
             <!--</div>-->
             <!--<div class="span6">-->
             <h1>OAuth 2.0 Autorizačňí server ČVUT</h1>
@@ -75,8 +83,8 @@
             </c:if>
             <div class="alert alert-info">
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
-                We've got a grand total of 1 user: <strong>tomy</strong>. Go ahead
-                and log in. tomy's password is <strong>best</strong>.
+                We've got a grand total of 1 user: <strong class="emphasis">tomy</strong>. Go ahead
+                and log in. tomy's password is <strong class="emphasis">best</strong>.
             </div>
             <!--</div>-->
         </div>

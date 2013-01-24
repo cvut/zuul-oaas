@@ -96,7 +96,7 @@
             <div class="row">
                 <div class="span4">
 
-                    <img src="http://oauth.net/images/oauth-2-sm.png" alt="OAuth logo" style="padding-left: 30%; padding-bottom: 10%"/> 
+                    <img src="http://oauth.net/images/oauth-2-sm.png" alt="OAuth logo" style="padding-left: 30%; padding-bottom: 10%;"/> 
                     <!--<h3>Proč jsem se tady ocitnul?</h3>-->
                     <ul class="muted" style="font-family: sans-serif; font-weight: 100">
                         <li><strong class="emphasis">Autorizace pomocí nového protokolu <span class="badge badge-info">OAuth 2.0</span></strong> umožňuje uživatelům sdílet data, texty, fotografie a videa uložená na jednom zařízením, s jiným zařízením, <strong class="emphasis">aniž by ste museli vyzradit svoje přístupové údaje.</strong></li>

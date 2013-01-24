@@ -30,7 +30,7 @@
         <level value="DEBUG" />
     </logger>
 
-    <logger name="org.springframework.core">
+<!--    <logger name="org.springframework.core">
         <level value="INFO" />
     </logger>
 
@@ -48,19 +48,19 @@
 
     <logger name="org.springframework.security">
         <level value="DEBUG" />
-    </logger>
+    </logger>-->
 
     <logger name="org.springframework.security.oauth2">
         <level value="INFO" />
     </logger>
 
-    <logger name="org.springframework.data.document.mongodb">
+<!--    <logger name="org.springframework.data.document.mongodb">
         <level value="DEBUG" />
-    </logger>
+    </logger>-->
 
-    <logger name="org.springframework.web.client.RestTemplate">
+<!--    <logger name="org.springframework.web.client.RestTemplate">
         <level value="DEBUG" />
-    </logger>
+    </logger>-->
 
 
     <!--//////////////////// ROOT ////////////////////-->

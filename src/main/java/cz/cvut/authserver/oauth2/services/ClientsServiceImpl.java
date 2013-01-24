@@ -89,6 +89,9 @@ public class ClientsServiceImpl implements ClientsService {
     @Override
     public void removeScopeFromClientDetails(String clientId, String scope) throws Exception {
         ClientDetails client = clientDetailsService.loadClientByClientId(clientId);
+        System.out.println(">>>>>>>>>>> client.getScope()"+client.getScope());
+        System.out.println(">>>>>>>>>>> client.getScope().contains(scope)"+client.getScope().contains(scope));
+        System.out.println(">>>>>>>>>>>>>>>>>>> this scope"+scope);
         if (client.getScope().contains(scope)) {
             client.getScope().remove(scope);
             clientRegistrationService.updateClientDetails(client);

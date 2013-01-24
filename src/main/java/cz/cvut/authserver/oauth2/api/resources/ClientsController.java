@@ -4,6 +4,7 @@ import cz.cvut.authserver.oauth2.api.models.JsonExceptionMapping;
 import cz.cvut.authserver.oauth2.api.validators.ClientsResourcesCompositeValidator;
 import cz.cvut.authserver.oauth2.services.ClientsService;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import org.slf4j.Logger;
@@ -99,8 +100,8 @@ public class ClientsController{
     }
 
     @ResponseStatus(NO_CONTENT)
-    @RequestMapping(value = "{clientId}/resources", method = DELETE)
-    public void deleteResourceFromClientDetails(@PathVariable String clientId, @RequestBody String resourceId) throws Exception {
+    @RequestMapping(value = "{clientId}/resources/{resourceId}", method = DELETE)
+    public void deleteResourceFromClientDetails(@PathVariable String clientId, @PathVariable String resourceId) throws Exception {
         clientsService.removeResourceFromClientDetails(clientId, resourceId);
     }
 
@@ -111,8 +112,10 @@ public class ClientsController{
     }
 
     @ResponseStatus(NO_CONTENT)
-    @RequestMapping(value = "{clientId}/scopes", method = DELETE)
-    public void deleteScopeFromClientDetails(@PathVariable String clientId, @RequestBody String scope) throws Exception {
+    @RequestMapping(value = "{clientId}/scopes/{scope}", method = DELETE)
+    public void deleteScopeFromClientDetails(@PathVariable String clientId, @PathVariable String scope) throws Exception {
+        // STUPID hack to deal with inability to support DELETE method with request body.....
+        scope = "https://www.cvutapis.cz/auth/"+scope.replace('-', '.');
         clientsService.removeScopeFromClientDetails(clientId, scope);
     }
 
@@ -123,8 +126,8 @@ public class ClientsController{
     }
 
     @ResponseStatus(NO_CONTENT)
-    @RequestMapping(value = "{clientId}/grants", method = DELETE)
-    public void deleteGrantFromClientDetails(@PathVariable String clientId, @Valid @RequestBody String grantType) throws Exception {
+    @RequestMapping(value = "{clientId}/grants/{grantType}", method = DELETE)
+    public void deleteGrantFromClientDetails(@PathVariable String clientId, @Valid @PathVariable String grantType) throws Exception {
         clientsService.deleteGrantFromClientDetails(clientId, grantType);
     }
 
@@ -135,8 +138,8 @@ public class ClientsController{
     }
 
     @ResponseStatus(NO_CONTENT)
-    @RequestMapping(value = "{clientId}/roles", method = DELETE)
-    public void deleteRoleFromClientDetails(@PathVariable String clientId, @RequestBody String role) throws Exception {
+    @RequestMapping(value = "{clientId}/roles/{role}", method = DELETE)
+    public void deleteRoleFromClientDetails(@PathVariable String clientId, @PathVariable String role) throws Exception {
         clientsService.deleteRoleFromClientDetails(clientId, role);
     }
 
