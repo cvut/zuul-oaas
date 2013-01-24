@@ -4,9 +4,9 @@ import cz.cvut.authserver.oauth2.api.models.JsonExceptionMapping;
 import cz.cvut.authserver.oauth2.api.validators.ClientsResourcesCompositeValidator;
 import cz.cvut.authserver.oauth2.services.ClientsService;
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import org.apache.commons.httpclient.util.URIUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
@@ -115,7 +115,7 @@ public class ClientsController{
     @RequestMapping(value = "{clientId}/scopes/{scope}", method = DELETE)
     public void deleteScopeFromClientDetails(@PathVariable String clientId, @PathVariable String scope) throws Exception {
         // STUPID hack to deal with inability to support DELETE method with request body.....
-        scope = "https://www.cvutapis.cz/auth/"+scope.replace('-', '.');
+        scope = URIUtil.decode(scope);
         clientsService.removeScopeFromClientDetails(clientId, scope);
     }
 

@@ -55,11 +55,15 @@ public class ClientsServiceImpl implements ClientsService {
         // generate oauth2 client credentials
         String clientId = oauth2ClientCredentialsGenerator.generateClientId();
         String clientSecret = oauth2ClientCredentialsGenerator.generateClientSecret();
-
+        
         // setting necessary fields
         client.setClientId(clientId);
         client.setClientSecret(clientSecret);
-        client.setAuthorities(AuthorityUtils.createAuthorityList("ROLE_CLIENT"));
+        if (client.getAuthorities() == null || client.getAuthorities().isEmpty()) {
+            client.setAuthorities(AuthorityUtils.createAuthorityList("ROLE_CLIENT"));
+        } else {
+            client.setAuthorities(client.getAuthorities());
+        }
 
         // save
         clientRegistrationService.addClientDetails(client);
