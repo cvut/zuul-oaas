@@ -58,7 +58,7 @@
     
     <!-- Clients API Security -->
 
-<!--    <sec:http pattern="/api/v1/clients/**" create-session="stateless"
+    <sec:http pattern="/api/v1/clients/**" create-session="stateless"
               entry-point-ref="oauthAuthenticationEntryPoint" use-expressions="true">
         <sec:intercept-url pattern="/api/v1/clients/**" 
                            access="hasRole('ROLE_BIG_BOSS') and #oauth2.hasScope('manager')"
@@ -75,7 +75,7 @@
         <sec:custom-filter ref="resourceServerFilterClientsApi" before="PRE_AUTH_FILTER" />
         <sec:access-denied-handler ref="oauthAccessDeniedHandler" />
         <sec:expression-handler ref="oauthWebExpressionHandler" />
-    </sec:http>-->
+    </sec:http>
     
     <!-- Check Token Endpoint Security -->
     
@@ -84,7 +84,7 @@
         <sec:intercept-url pattern="/check_token/**" 
                            access="hasAnyRole('ROLE_BIG_BOSS','ROLE_RESOURCE_SERVER') and #oauth2.hasScope('token-check')"
                            method="GET" />
-        <sec:custom-filter ref="resourceServerFilterClientsApi" before="PRE_AUTH_FILTER" />
+        <sec:custom-filter ref="resourceServerFilterCheckTokenEndpoint" before="PRE_AUTH_FILTER" />
         <sec:access-denied-handler ref="oauthAccessDeniedHandler" />
         <sec:expression-handler ref="oauthWebExpressionHandler" />
     </sec:http>
@@ -92,6 +92,8 @@
     <oauth:resource-server id="resourceServerFilterResourcesApi" token-services-ref="tokenServices" resource-id="auth-server-resources-api" />
     
     <oauth:resource-server id="resourceServerFilterClientsApi" token-services-ref="tokenServices" resource-id="auth-server-clients-api" />
+    
+    <oauth:resource-server id="resourceServerFilterCheckTokenEndpoint" token-services-ref="tokenServices" resource-id="auth-server-check-token-endpoint" />
     
     <!--^^^^^^^^^^^^^^^^^^^^ sould be placed in api-security but then it won't work-->
     

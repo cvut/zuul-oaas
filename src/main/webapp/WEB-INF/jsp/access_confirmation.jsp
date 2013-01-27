@@ -155,9 +155,9 @@
         </div>
         <!--<img src="http://static.simpledesktops.com/uploads/desktops/2012/11/20/Bubbles.png" alt="Image Description" style="opacity: 0.15; position: absolute; bottom: 0px; width:100%;height: auto; z-index: -1"/>-->
         <!--<img src="http://www.dottotrains.com/_img/footer/footer3.png" alt="Image Description" style="opacity: 0.28; position: absolute; bottom: 0px; width:100%;height: auto; z-index: -1"/>-->
-        <!--<img src="http://www.icanbecreative.com/res/freeweb/2011/04/fly-with-me.png" alt="Image Description" style="opacity: 0.2; position: absolute; bottom: 0px; width:100%;height: auto; z-index: -1"/>-->
+        <img src="http://www.icanbecreative.com/res/freeweb/2011/04/fly-with-me.png" alt="Image Description" style="opacity: 0.3; position: absolute; bottom: 0px; width:100%;height: auto; z-index: -1"/>
         <!--<img src="http://static.simpledesktops.com/uploads/desktops/2011/06/13/dandelion.png" alt="Image Description" style="opacity: 0.5; position: absolute; bottom: 0px; width:100%;height: auto; z-index: -1"/>-->
-        <img src="http://static.simpledesktops.com/uploads/desktops/2011/04/12/Franklin.png" alt="Image Description" style="opacity: 0.5; position: absolute; bottom: 0px; width:100%;height: auto; z-index: -1"/>
+        <!--<img src="http://static.simpledesktops.com/uploads/desktops/2011/04/12/Franklin.png" alt="Image Description" style="opacity: 0.5; position: absolute; bottom: 0px; width:100%;height: auto; z-index: -1"/>-->
         <!--<img src="http://www.icanbecreative.com/res/freeweb/2011/04/take-note.png" alt="Image Description" style="opacity: 0.2; position: absolute; bottom: 0px; width:100%;height: auto; z-index: -1"/>-->
         <!--<img src="http://www.icanbecreative.com/res/freeweb/2011/04/fibonacci.png" alt="Image Description" style="opacity: 0.3; position: absolute; bottom: 0px; width:100%;height: auto; z-index: -1"/>-->
         <!--<img src="http://static.simpledesktops.com/uploads/desktops/2011/12/05/Wallpaper1.png" alt="Image Description" style="opacity: 0.3; position: absolute; bottom: 0px; width:100%;height: auto; z-index: -1"/>-->

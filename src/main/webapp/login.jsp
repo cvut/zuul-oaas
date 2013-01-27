@@ -15,18 +15,18 @@
 
 <!--For testing fonts-->
 <style>
-/*    body,
-    input,
-    button,
-    select,
-    textarea,
-    .navbar-search .search-query {
-        font-family: sans-serif;
-        font-weight: 100;
-    }
-    .emphasis{
-        font-family: sans-serif; font-weight: normal;
-    }*/
+    /*    body,
+        input,
+        button,
+        select,
+        textarea,
+        .navbar-search .search-query {
+            font-family: sans-serif;
+            font-weight: 100;
+        }
+        .emphasis{
+            font-family: sans-serif; font-weight: normal;
+        }*/
     h1{
         font-family: sans-serif;
         font-weight: 100;
@@ -134,7 +134,8 @@
         </div>
 
     </div>
-    <img src="http://static.simpledesktops.com/uploads/desktops/2011/06/13/dandelion.png" alt="Image Description" style="opacity: 0.5; position: absolute; bottom: 0px; width:100%;height: auto; z-index: -1"/>
+    <img src="http://static.simpledesktops.com/uploads/desktops/2011/04/12/Franklin.png" alt="Image Description" style="opacity: 0.5; position: absolute; bottom: 0px; width:100%;height: auto; z-index: -1"/>
+    <!--    <img src="http://static.simpledesktops.com/uploads/desktops/2011/06/13/dandelion.png" alt="Image Description" style="opacity: 0.5; position: absolute; bottom: 0px; width:100%;height: auto; z-index: -1"/>-->
     <script src="js/jquery-1.8.3.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script type="text/javascript" src="http://jzaefferer.github.com/jquery-validation/jquery.validate.js"></script>
