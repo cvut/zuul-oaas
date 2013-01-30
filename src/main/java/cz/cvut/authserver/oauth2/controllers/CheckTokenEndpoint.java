@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import static org.springframework.http.HttpStatus.*;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 /**
  * Controller which decodes access tokens for clients who are not able to do so
@@ -57,7 +58,7 @@ public class CheckTokenEndpoint implements InitializingBean {
         Assert.notNull(resourceServerTokenServices, "tokenServices must be set");
     }
 
-    @RequestMapping(value = "/check_token")
+    @RequestMapping(value = "/check-token")
     @ResponseBody
     public Map<String, ?> checkToken(@RequestParam("token") String value) {
         
@@ -83,6 +84,7 @@ public class CheckTokenEndpoint implements InitializingBean {
     //////////  Exceptions Handling  //////////
  
     @ExceptionHandler(InvalidTokenException.class)
+    @ResponseStatus(value = HttpStatus.CONFLICT)
     @ResponseBody
     public JsonExceptionMapping handleTokenProblem(InvalidTokenException ex) {
         // TODO Should we really return 409 CONFLICT ? Status message from exception is 401

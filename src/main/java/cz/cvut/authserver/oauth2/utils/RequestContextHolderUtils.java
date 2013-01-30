@@ -8,7 +8,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
  *
  * @author Tomas Mano <tomasmano@gmail.com>
  */
-public class RequestContextHolerUtils {
+public class RequestContextHolderUtils {
 
     public static HttpServletRequest getHttpRequest() {
         HttpServletRequest currentRequest =

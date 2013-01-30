@@ -5,6 +5,7 @@ import java.util.Map;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.AuthorizationRequest;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.util.StringUtils;
 
 /**
  * @author Dave Syer
@@ -25,6 +26,8 @@ public class DefaultTokenConverter implements AccessTokenConverter {
         }
 
         response.put("client_id", clientToken.getClientId());
+        response.put("client-authorities", StringUtils.collectionToCommaDelimitedString(clientToken.getAuthorities()));
+        response.put("client-locked", clientToken.isDenied());
         response.put(OAuth2AccessToken.SCOPE, token.getScope());
         response.put(OAuth2AccessToken.TOKEN_TYPE, token.getTokenType());
         

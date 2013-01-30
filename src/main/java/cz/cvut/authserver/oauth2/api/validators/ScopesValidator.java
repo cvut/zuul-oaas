@@ -1,7 +1,7 @@
 package cz.cvut.authserver.oauth2.api.validators;
 
 import cz.cvut.authserver.oauth2.utils.AuthorizationGrants;
-import cz.cvut.authserver.oauth2.utils.RequestContextHolerUtils;
+import cz.cvut.authserver.oauth2.utils.RequestContextHolderUtils;
 import java.util.Set;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -33,7 +33,7 @@ public class ScopesValidator implements Validator {
         
         // Small hack:
         // SKIP this validation if it is unadequate (this step is determined by the current request URI)
-        String requestURI = RequestContextHolerUtils.getRequestURI();
+        String requestURI = RequestContextHolderUtils.getRequestURI();
         if (!requestURI.endsWith("/scopes")) {
             LOG.debug("Skipping Scope Validation because validation is not required according the request URI: [{}]", requestURI);
             return;
