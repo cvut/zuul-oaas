@@ -7,8 +7,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.codehaus.jackson.map.ser.std.ToStringSerializer;
 
 /**
  * Represents resources in the CTU OAuth 2.0 authorization server.
