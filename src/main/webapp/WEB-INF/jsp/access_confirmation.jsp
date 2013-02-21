@@ -7,9 +7,11 @@
 <%@ include file="/WEB-INF/jspf/header.jspf" %>
 
 <link type="text/css" rel="stylesheet"
-      href="<c:url value='/css/bootstrap.min.css'/>" />
+      href="<c:url value='/css/bootstrap-cosmo.css'/>" />
 <link type="text/css" rel="stylesheet"
       href="<c:url value='/css/bootstrap-responsive.min.css'/>" />
+<link type="text/css" rel="stylesheet"
+      href="<c:url value='/css/specs/bootstrap-classic-navbar.css'/>" />
 
 <style type="text/css">
     /* Override some defaults */
@@ -94,16 +96,18 @@
         <c:remove scope="session" var="SPRING_SECURITY_LAST_EXCEPTION"/>
         <authz:authorize ifAllGranted="ROLE_USER">
             <div class="row">
-                <div class="span4">
-
-                    <img src="http://oauth.net/images/oauth-2-sm.png" alt="OAuth logo" style="padding-left: 30%; padding-bottom: 10%;"/> 
+                <div class="span4" style="padding-top: 5%">
+                    <!--<img src="http://oauth.net/images/oauth-2-sm.png" alt="OAuth logo" style="padding-left: 30%; padding-bottom: 10%; opacity: 0.5"/>--> 
                     <!--<h3>Proč jsem se tady ocitnul?</h3>-->
-                    <ul class="muted" style="font-family: sans-serif; font-weight: 100">
-                        <li><strong class="emphasis">Autorizace pomocí nového protokolu <span class="badge badge-info">OAuth 2.0</span></strong> umožňuje uživatelům sdílet data, texty, fotografie a videa uložená na jednom zařízením, s jiným zařízením, <strong class="emphasis">aniž by ste museli vyzradit svoje přístupové údaje.</strong></li>
-                        <br/>
-                        <li>Protokol <span class="badge badge-info">OAuth 2.0</span> úspěšne používají společnosti jako je <strong class="emphasis">Google, Facebook, Twitter, Yahoo a další.</strong></li>
-                        <br/>
-                    </ul>
+
+                    <div class="well" style="background-color: #eeeeee;">
+                        <ul  style="font-family: sans-serif; font-weight: 100">
+                            <li><strong class="emphasis">Autorizace pomocí nového protokolu <span class="badge badge-info">OAuth 2.0</span></strong> umožňuje uživatelům sdílet data, texty, fotografie a videa uložená na jednom zařízením, s jiným zařízením, <strong class="emphasis">aniž by ste museli vyzradit svoje přístupové údaje.</strong></li>
+                            <br/>
+                            <li>Protokol <span class="badge badge-info">OAuth 2.0</span> úspěšne používají společnosti jako je <strong class="emphasis">Google, Facebook, Twitter, Yahoo a další.</strong></li>
+                            <br/>
+                        </ul>
+                    </div>
                 </div>
                 <div class="span1"></div>
                 <div class="span7">
@@ -155,9 +159,9 @@
         </div>
         <!--<img src="http://static.simpledesktops.com/uploads/desktops/2012/11/20/Bubbles.png" alt="Image Description" style="opacity: 0.15; position: absolute; bottom: 0px; width:100%;height: auto; z-index: -1"/>-->
         <!--<img src="http://www.dottotrains.com/_img/footer/footer3.png" alt="Image Description" style="opacity: 0.28; position: absolute; bottom: 0px; width:100%;height: auto; z-index: -1"/>-->
-        <img src="http://www.icanbecreative.com/res/freeweb/2011/04/fly-with-me.png" alt="Image Description" style="opacity: 0.3; position: absolute; bottom: 0px; width:100%;height: auto; z-index: -1"/>
+        <!--<img src="http://www.icanbecreative.com/res/freeweb/2011/04/fly-with-me.png" alt="Image Description" style="opacity: 0.3; position: absolute; bottom: 0px; width:100%;height: auto; z-index: -1"/>-->
         <!--<img src="http://static.simpledesktops.com/uploads/desktops/2011/06/13/dandelion.png" alt="Image Description" style="opacity: 0.5; position: absolute; bottom: 0px; width:100%;height: auto; z-index: -1"/>-->
-        <!--<img src="http://static.simpledesktops.com/uploads/desktops/2011/04/12/Franklin.png" alt="Image Description" style="opacity: 0.5; position: absolute; bottom: 0px; width:100%;height: auto; z-index: -1"/>-->
+        <img src="http://static.simpledesktops.com/uploads/desktops/2011/04/12/Franklin.png" alt="Image Description" style="opacity: 0.5; position: absolute; bottom: 0px; width:100%;height: auto; z-index: -1"/>
         <!--<img src="http://www.icanbecreative.com/res/freeweb/2011/04/take-note.png" alt="Image Description" style="opacity: 0.2; position: absolute; bottom: 0px; width:100%;height: auto; z-index: -1"/>-->
         <!--<img src="http://www.icanbecreative.com/res/freeweb/2011/04/fibonacci.png" alt="Image Description" style="opacity: 0.3; position: absolute; bottom: 0px; width:100%;height: auto; z-index: -1"/>-->
         <!--<img src="http://static.simpledesktops.com/uploads/desktops/2011/12/05/Wallpaper1.png" alt="Image Description" style="opacity: 0.3; position: absolute; bottom: 0px; width:100%;height: auto; z-index: -1"/>-->

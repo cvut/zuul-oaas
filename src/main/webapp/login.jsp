@@ -5,6 +5,8 @@
 
 <link type="text/css" rel="stylesheet"
       href="<c:url value='/css/specs/login.css'/>" />
+<link type="text/css" rel="stylesheet"
+      href="<c:url value='/css/specs/bootstrap-classic-navbar.css'/>" />
 
 <!-- Le fav and touch icons -->
 <link rel="shortcut icon" href="http://oauth.net/images/oauth-2-sm.png"/>

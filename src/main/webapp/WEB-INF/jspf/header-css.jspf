@@ -1,5 +1,5 @@
 <link type="text/css" rel="stylesheet"
-      href="<c:url value='/css/bootstrap.min.css'/>" />
+      href="<c:url value='/css/bootstrap-cosmo.css'/>" />
 <link type="text/css" rel="stylesheet"
       href="<c:url value='/css/bootstrap-responsive.min.css'/>" />
 
