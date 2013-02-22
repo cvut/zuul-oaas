@@ -1,6 +1,5 @@
 package cz.cvut.authserver.oauth2.models;
 
-import com.google.common.collect.Sets;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
