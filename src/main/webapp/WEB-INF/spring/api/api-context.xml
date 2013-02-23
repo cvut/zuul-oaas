@@ -21,8 +21,7 @@
     <bean id="clientsController" class="cz.cvut.authserver.oauth2.api.resources.ClientsController"
           p:clientsService-ref="clientsService"
           p:clientsResourcesCompositeValidator-ref="clientsResourcesCompositeValidator"
-          p:messageSource-ref="messageSource"
-          p:apiVersion="${api.version}"/>
+          p:messageSource-ref="messageSource" />
 
     <bean id="resourcesController" class="cz.cvut.authserver.oauth2.api.resources.ResourcesController"
           p:resourceService-ref="resourceService"

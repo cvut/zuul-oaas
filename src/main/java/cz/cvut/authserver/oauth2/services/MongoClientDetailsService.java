@@ -44,7 +44,7 @@ public class MongoClientDetailsService implements ClientDetailsService, ClientRe
     public ClientDetails loadClientByClientId(String clientId) throws OAuth2Exception {
         ClientDetails result = mongo.findById(clientId, ENTITY_CLASS, CLIENT_DETAILS);
         if (result == null) {
-            throw new NoSuchClientException("No client found with id = " + clientId);
+            throw OAuth2Exception.create(OAuth2Exception.INVALID_CLIENT, "No client found with id = " + clientId);
         }
         return result;
     }

@@ -3,10 +3,6 @@ package cz.cvut.authserver.oauth2.api.resources;
 import cz.cvut.authserver.oauth2.api.models.JsonExceptionMapping;
 import cz.cvut.authserver.oauth2.api.validators.ClientsResourcesCompositeValidator;
 import cz.cvut.authserver.oauth2.services.ClientsService;
-import java.util.List;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-
 import org.apache.commons.httpclient.URIException;
 import org.apache.commons.httpclient.util.URIUtil;
 import org.slf4j.Logger;
@@ -14,26 +10,25 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.oauth2.common.exceptions.BadClientCredentialsException;
 import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 import org.springframework.security.oauth2.provider.BaseClientDetails;
 import org.springframework.security.oauth2.provider.ClientAlreadyExistsException;
 import org.springframework.security.oauth2.provider.ClientDetails;
 import org.springframework.security.oauth2.provider.NoSuchClientException;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-
-import static org.springframework.http.HttpStatus.*;
-import org.springframework.security.oauth2.common.exceptions.BadClientCredentialsException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+import java.util.List;
+
+import static org.springframework.http.HttpStatus.*;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 /**
@@ -47,8 +42,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 public class ClientsController{
 
     private static final Logger LOG = LoggerFactory.getLogger(ClientsController.class);
-    
-    private String apiVersion;
+    private static final String SELF_URI = "/v1/clients/";
     
     private ClientsService clientsService;
     
@@ -78,8 +72,7 @@ public class ClientsController{
         LOG.info("New client was created: [{}]", client);
 
         // send redirect to URI of the created client (i.e. api/clients/{clientId}/)
-        response.setHeader("Location", String.format("/%s/clients/%s", apiVersion,
-                client.getClientId()));
+        response.setHeader("Location", SELF_URI + client.getClientId());
     }
     
     @ResponseStatus(NO_CONTENT)
@@ -98,83 +91,113 @@ public class ClientsController{
     
     @ResponseStatus(NO_CONTENT)
     @RequestMapping(value = "{clientId}/resources", method = PUT)
-    public void addResourceToClientDetails(@PathVariable String clientId, @Valid @RequestBody String resourceId) throws Exception {
-        clientsService.addResourceToClientDetails(clientId, resourceId);
+    public void addResourceToClientDetails(@PathVariable String clientId, @Valid @RequestBody String resourceId) {
+        ClientDetails client = getMutableClientDetails(clientId);
+
+        if (client.getResourceIds().add(resourceId)) {
+            clientsService.updateClientDetails(client);
+        }
     }
 
     @ResponseStatus(NO_CONTENT)
     @RequestMapping(value = "{clientId}/resources/{resourceId}", method = DELETE)
-    public void deleteResourceFromClientDetails(@PathVariable String clientId, @PathVariable String resourceId) throws OAuth2Exception, NoSuchClientException {
-        clientsService.removeResourceFromClientDetails(clientId, resourceId);
+    public void deleteResourceFromClientDetails(@PathVariable String clientId, @PathVariable String resourceId) {
+        ClientDetails client = getMutableClientDetails(clientId);
+
+        if (client.getResourceIds().remove(resourceId)) {
+            clientsService.updateClientDetails(client);
+        }
     }
 
     @ResponseStatus(NO_CONTENT)
     @RequestMapping(value = "{clientId}/scopes", method = PUT)
-    public void addScopeToClientDetails(@PathVariable String clientId, @Valid @RequestBody String scope) throws Exception {
-        clientsService.addScopeToClientDetails(clientId, scope);
+    public void addScopeToClientDetails(@PathVariable String clientId, @Valid @RequestBody String scope) {
+        ClientDetails client = getMutableClientDetails(clientId);
+
+        if (client.getScope().add(scope)) {
+            clientsService.updateClientDetails(client);
+        }
     }
 
     @ResponseStatus(NO_CONTENT)
     @RequestMapping(value = "{clientId}/scopes/{scope}", method = DELETE)
-    public void deleteScopeFromClientDetails(@PathVariable String clientId, @PathVariable String scope) throws OAuth2Exception, NoSuchClientException, URIException {
-        // STUPID hack to deal with inability to support DELETE method with request body.....
-        scope = URIUtil.decode(scope);
-        clientsService.removeScopeFromClientDetails(clientId, scope);
+    public void deleteScopeFromClientDetails(@PathVariable String clientId, @PathVariable String scope) throws URIException {
+        ClientDetails client = getMutableClientDetails(clientId);
+
+        if (client.getScope().remove(URIUtil.decode(scope))) {
+            clientsService.updateClientDetails(client);
+        }
     }
 
     @ResponseStatus(NO_CONTENT)
     @RequestMapping(value = "{clientId}/grants", method = PUT)
-    public void addGrantToClientDetails(@PathVariable String clientId, @Valid @RequestBody String grantType) throws Exception {
-        clientsService.addGrantToClientDetails(clientId, grantType);
+    public void addGrantToClientDetails(@PathVariable String clientId, @Valid @RequestBody String grantType) {
+        ClientDetails client = getMutableClientDetails(clientId);
+
+        if (client.getAuthorizedGrantTypes().add(grantType)) {
+            clientsService.updateClientDetails(client);
+        }
     }
 
     @ResponseStatus(NO_CONTENT)
     @RequestMapping(value = "{clientId}/grants/{grantType}", method = DELETE)
-    public void deleteGrantFromClientDetails(@PathVariable String clientId, @Valid @PathVariable String grantType) throws OAuth2Exception, NoSuchClientException {
-        clientsService.deleteGrantFromClientDetails(clientId, grantType);
+    public void deleteGrantFromClientDetails(@PathVariable String clientId, @Valid @PathVariable String grantType) {
+        ClientDetails client = getMutableClientDetails(clientId);
+
+        if (client.getAuthorizedGrantTypes().remove(grantType)) {
+            clientsService.updateClientDetails(client);
+        }
     }
 
     @ResponseStatus(NO_CONTENT)
     @RequestMapping(value = "{clientId}/roles", method = PUT)
-    public void addRoleToClientDetails(@PathVariable String clientId, @RequestBody String role) throws Exception {
-        clientsService.addRoleToClientDetails(clientId, role);
+    public void addRoleToClientDetails(@PathVariable String clientId, @RequestBody String role) {
+        ClientDetails client = getMutableClientDetails(clientId);
+
+        if (client.getAuthorities().add(new SimpleGrantedAuthority(role))) {
+            clientsService.updateClientDetails(client);
+        }
     }
 
     @ResponseStatus(NO_CONTENT)
     @RequestMapping(value = "{clientId}/roles/{role}", method = DELETE)
-    public void deleteRoleFromClientDetails(@PathVariable String clientId, @PathVariable String role) throws OAuth2Exception, NoSuchClientException {
-        clientsService.deleteRoleFromClientDetails(clientId, role);
+    public void deleteRoleFromClientDetails(@PathVariable String clientId, @PathVariable String role) {
+        ClientDetails client = getMutableClientDetails(clientId);
+
+        if (client.getAuthorities().remove(new SimpleGrantedAuthority(role))) {
+            clientsService.updateClientDetails(client);
+        }
     }
 
     @ResponseStatus(NO_CONTENT)
     @RequestMapping(value = "{clientId}/redirect-url", method = PUT)
-    public void addRedirectUriToClientDetails(@PathVariable String clientId, @RequestBody String redirectUri) throws Exception {
-        clientsService.addRedirectUriToClientDetails(clientId, redirectUri);
-    }
+    public void setRedirectUriToClientDetails(@PathVariable String clientId, @RequestBody String redirectUri) {
+        ClientDetails client = getMutableClientDetails(clientId);
 
-    @Deprecated
-    @ResponseStatus(NO_CONTENT)
-    @RequestMapping(value = "{clientId}/redirect-url", method = DELETE)
-    public void deleteRedirectUriFromClientDetails(@PathVariable String clientId, @RequestBody String redirectUri) throws OAuth2Exception, NoSuchClientException {
-        clientsService.deleteRoleFromClientDetails(clientId, redirectUri);
+        client.getRegisteredRedirectUri().clear();
+        client.getRegisteredRedirectUri().add(redirectUri);
+        clientsService.updateClientDetails(client);
     }
    
     @ResponseStatus(NO_CONTENT)
     @RequestMapping(value = "{clientId}/product-name", method = PUT)
-    public void addBrandingInformationToClientDetails(@PathVariable String clientId, @RequestBody String brand) throws OAuth2Exception, NoSuchClientException {
-        clientsService.addBrandingInformationToClientDetails(clientId, brand);
+    public void setBrandingInformationToClientDetails(@PathVariable String clientId, @RequestBody String brand) throws OAuth2Exception, NoSuchClientException {
+        BaseClientDetails client = getMutableClientDetails(clientId);
+
+        client.addAdditionalInformation("product-name", brand);
+        clientsService.updateClientDetails(client);
     }
 
 
     //////////  Exception Handlers  //////////
     
     @ExceptionHandler(NoSuchClientException.class)
-    public ResponseEntity<Void> handleNoSuchClient(NoSuchClientException ex) {
+    public ResponseEntity<Void> handleNoSuchClientException(NoSuchClientException ex) {
         return new ResponseEntity<>(NOT_FOUND);
     }
 
     @ExceptionHandler(ClientAlreadyExistsException.class)
-    public ResponseEntity<Void> handleClientAlreadyExists(ClientAlreadyExistsException ex) {
+    public ResponseEntity<Void> handleClientAlreadyExistsException(ClientAlreadyExistsException ex) {
         return new ResponseEntity<>(CONFLICT);
     }
 
@@ -185,8 +208,7 @@ public class ClientsController{
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    public @ResponseBody
-    JsonExceptionMapping handleMethodArgumentNotValidException(MethodArgumentNotValidException error) throws Exception {
+    public @ResponseBody JsonExceptionMapping handleMethodArgumentNotValidException(MethodArgumentNotValidException error) throws Exception {
         BindingResult bindingResult = error.getBindingResult();
         List<ObjectError> errors = bindingResult.getAllErrors();
         String errorMessage = constructErrorMessage(errors);
@@ -194,18 +216,35 @@ public class ClientsController{
         return new JsonExceptionMapping(HttpStatus.BAD_REQUEST.value(), errorMessage);
     }
 
+
+    //////////  Helpers //////////
+
+    private BaseClientDetails getMutableClientDetails(String clientId) {
+        ClientDetails original = clientsService.findClientDetailsById(clientId);
+        BaseClientDetails copy = new BaseClientDetails(original);
+
+        copy.setScope(original.getScope());
+        copy.setResourceIds(original.getResourceIds());
+        copy.setAuthorizedGrantTypes(original.getAuthorizedGrantTypes());
+        copy.setRegisteredRedirectUri(original.getRegisteredRedirectUri());
+        copy.setAuthorities(original.getAuthorities());
+
+        return copy;
+    }
+
     private String constructErrorMessage(List<ObjectError> errors) throws Exception {
-        String errorMessage = "";
+        StringBuilder errorMessage = new StringBuilder();
         for (ObjectError objectError : errors) {
             try {
-                errorMessage = errorMessage.concat(messageSource.getMessage(objectError.getCode(), objectError.getArguments(), null));
+                errorMessage = errorMessage.append(messageSource.getMessage(objectError.getCode(), objectError.getArguments(), null));
             } catch (Exception e) {
                 LOG.error("Error during parsing properties file with validation errors: {}", e.getMessage());
                 throw new Exception(e);
             }
         }
-        return errorMessage;
+        return errorMessage.toString();
     }
+
 
     ////////  Getters / Setters  ////////
 
@@ -231,14 +270,6 @@ public class ClientsController{
 
     public void setMessageSource(MessageSource messageSource) {
         this.messageSource = messageSource;
-    }
-
-    public String getApiVersion() {
-        return apiVersion;
-    }
-
-    public void setApiVersion(String apiVersion) {
-        this.apiVersion = apiVersion;
     }
 
 }
