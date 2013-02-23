@@ -1,7 +1,7 @@
 package cz.cvut.authserver.oauth2.dao;
 
 import cz.cvut.authserver.oauth2.api.resources.exceptions.NoSuchResourceException;
-import cz.cvut.authserver.oauth2.generators.IdentificatorGenerator;
+import cz.cvut.authserver.oauth2.generators.IdentifierGenerator;
 import cz.cvut.authserver.oauth2.models.resource.Auth;
 import cz.cvut.authserver.oauth2.models.resource.Resource;
 import cz.cvut.authserver.oauth2.models.resource.Scope;
@@ -10,10 +10,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 @Service
 public class ResourceInMemoryDAO implements ResourceDAO {
@@ -21,7 +20,7 @@ public class ResourceInMemoryDAO implements ResourceDAO {
     private static List<Resource> resources;
     
     @Autowired
-    IdentificatorGenerator identificatorGenerator;
+    IdentifierGenerator identifierGenerator;
 
     static {
         resources = new ArrayList<Resource>();
@@ -40,7 +39,7 @@ public class ResourceInMemoryDAO implements ResourceDAO {
     
     @Override
     public Resource createResource(Resource resource) {
-        resource.setId(identificatorGenerator.generateArgBasedIdentificator(resource.getTitle()));
+        resource.setId(identifierGenerator.generateArgBasedIdentifier(resource.getTitle()));
         resources.add(resource);
         return resource;
     }
@@ -118,12 +117,12 @@ public class ResourceInMemoryDAO implements ResourceDAO {
     
     //////////  Getters / Setters  //////////
 
-    public IdentificatorGenerator getIdentificatorGenerator() {
-        return identificatorGenerator;
+    public IdentifierGenerator getIdentifierGenerator() {
+        return identifierGenerator;
     }
 
-    public void setIdentificatorGenerator(IdentificatorGenerator identificatorGenerator) {
-        this.identificatorGenerator = identificatorGenerator;
+    public void setIdentifierGenerator(IdentifierGenerator identifierGenerator) {
+        this.identifierGenerator = identifierGenerator;
     }
     
     
