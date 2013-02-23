@@ -63,19 +63,19 @@ public class ResourcesController {
     
     @ResponseStatus(NO_CONTENT)
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public void deleteResource(@PathVariable String id) throws Exception{
+    public void deleteResource(@PathVariable String id) throws NoSuchResourceException {
         resourceService.deleteResourceById(id);
     }
     
     @ResponseStatus(NO_CONTENT)
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public void updateResource(@PathVariable String id, @Valid @RequestBody Resource resource) throws Exception{
+    public void updateResource(@PathVariable String id, @Valid @RequestBody Resource resource) throws NoSuchResourceException {
         resourceService.updateResource(id, resource);
     }
   
     @ResponseBody
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public Resource findResourceById(@PathVariable String id) {
+    public Resource findResourceById(@PathVariable String id) throws NoSuchResourceException {
         return resourceService.findResourceById(id);
     }
     
@@ -94,7 +94,7 @@ public class ResourcesController {
         List<ObjectError> errors = bindingResult.getAllErrors();
         String errorMessage = constructErrorMessage(errors);
 
-        return new JsonExceptionMapping(bindingResult, HttpStatus.BAD_REQUEST.value(), errorMessage);
+        return new JsonExceptionMapping(HttpStatus.BAD_REQUEST.value(), errorMessage);
     }
 
     private String constructErrorMessage(List<ObjectError> errors) throws Exception {

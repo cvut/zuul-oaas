@@ -6,12 +6,15 @@ import cz.cvut.authserver.oauth2.services.ClientsService;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+
+import org.apache.commons.httpclient.URIException;
 import org.apache.commons.httpclient.util.URIUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 import org.springframework.security.oauth2.provider.BaseClientDetails;
 import org.springframework.security.oauth2.provider.ClientAlreadyExistsException;
 import org.springframework.security.oauth2.provider.ClientDetails;
@@ -34,7 +37,7 @@ import org.springframework.web.bind.annotation.InitBinder;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 /**
- * API for autorization server client's management.
+ * API for authorization server client's management.
  * 
  * @author Tomáš Maňo <tomasmano@gmail.com>
  * @author Jakub Jirutka <jakub@jirutka.cz>
@@ -69,7 +72,7 @@ public class ClientsController{
 
     @ResponseStatus(CREATED)
     @RequestMapping(method = POST)
-    public void createClientDetails(@Valid @RequestBody BaseClientDetails client, HttpServletResponse response) throws Exception {
+    public void createClientDetails(@Valid @RequestBody BaseClientDetails client, HttpServletResponse response) throws ClientAlreadyExistsException {
 
         clientsService.createClientDetails(client);
         LOG.info("New client was created: [{}]", client);
@@ -101,7 +104,7 @@ public class ClientsController{
 
     @ResponseStatus(NO_CONTENT)
     @RequestMapping(value = "{clientId}/resources/{resourceId}", method = DELETE)
-    public void deleteResourceFromClientDetails(@PathVariable String clientId, @PathVariable String resourceId) throws Exception {
+    public void deleteResourceFromClientDetails(@PathVariable String clientId, @PathVariable String resourceId) throws OAuth2Exception, NoSuchClientException {
         clientsService.removeResourceFromClientDetails(clientId, resourceId);
     }
 
@@ -113,7 +116,7 @@ public class ClientsController{
 
     @ResponseStatus(NO_CONTENT)
     @RequestMapping(value = "{clientId}/scopes/{scope}", method = DELETE)
-    public void deleteScopeFromClientDetails(@PathVariable String clientId, @PathVariable String scope) throws Exception {
+    public void deleteScopeFromClientDetails(@PathVariable String clientId, @PathVariable String scope) throws OAuth2Exception, NoSuchClientException, URIException {
         // STUPID hack to deal with inability to support DELETE method with request body.....
         scope = URIUtil.decode(scope);
         clientsService.removeScopeFromClientDetails(clientId, scope);
@@ -127,7 +130,7 @@ public class ClientsController{
 
     @ResponseStatus(NO_CONTENT)
     @RequestMapping(value = "{clientId}/grants/{grantType}", method = DELETE)
-    public void deleteGrantFromClientDetails(@PathVariable String clientId, @Valid @PathVariable String grantType) throws Exception {
+    public void deleteGrantFromClientDetails(@PathVariable String clientId, @Valid @PathVariable String grantType) throws OAuth2Exception, NoSuchClientException {
         clientsService.deleteGrantFromClientDetails(clientId, grantType);
     }
 
@@ -139,7 +142,7 @@ public class ClientsController{
 
     @ResponseStatus(NO_CONTENT)
     @RequestMapping(value = "{clientId}/roles/{role}", method = DELETE)
-    public void deleteRoleFromClientDetails(@PathVariable String clientId, @PathVariable String role) throws Exception {
+    public void deleteRoleFromClientDetails(@PathVariable String clientId, @PathVariable String role) throws OAuth2Exception, NoSuchClientException {
         clientsService.deleteRoleFromClientDetails(clientId, role);
     }
 
@@ -152,17 +155,17 @@ public class ClientsController{
     @Deprecated
     @ResponseStatus(NO_CONTENT)
     @RequestMapping(value = "{clientId}/redirect-url", method = DELETE)
-    public void deleteRedirectUriFromClientDetails(@PathVariable String clientId, @RequestBody String redirectUri) throws Exception {
+    public void deleteRedirectUriFromClientDetails(@PathVariable String clientId, @RequestBody String redirectUri) throws OAuth2Exception, NoSuchClientException {
         clientsService.deleteRoleFromClientDetails(clientId, redirectUri);
     }
    
     @ResponseStatus(NO_CONTENT)
     @RequestMapping(value = "{clientId}/product-name", method = PUT)
-    public void addBrandingInformationToClientDetails(@PathVariable String clientId, @RequestBody String brand) throws Exception {
+    public void addBrandingInformationToClientDetails(@PathVariable String clientId, @RequestBody String brand) throws OAuth2Exception, NoSuchClientException {
         clientsService.addBrandingInformationToClientDetails(clientId, brand);
     }
 
-    
+
     //////////  Exception Handlers  //////////
     
     @ExceptionHandler(NoSuchClientException.class)
@@ -188,7 +191,7 @@ public class ClientsController{
         List<ObjectError> errors = bindingResult.getAllErrors();
         String errorMessage = constructErrorMessage(errors);
         
-        return new JsonExceptionMapping(bindingResult, HttpStatus.BAD_REQUEST.value(), errorMessage);
+        return new JsonExceptionMapping(HttpStatus.BAD_REQUEST.value(), errorMessage);
     }
 
     private String constructErrorMessage(List<ObjectError> errors) throws Exception {

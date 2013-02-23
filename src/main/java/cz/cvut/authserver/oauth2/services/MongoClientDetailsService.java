@@ -55,7 +55,7 @@ public class MongoClientDetailsService implements ClientDetailsService, ClientRe
             mongo.insert(encodeClientSecret(clientDetails), CLIENT_DETAILS);
 
         } catch (DuplicateKeyException ex) {
-            throw new ClientAlreadyExistsException("Client already exists: " + clientDetails.getClientId());
+            throw new ClientAlreadyExistsException("Client already exists: " + clientDetails.getClientId(), ex);
         }
     }
 

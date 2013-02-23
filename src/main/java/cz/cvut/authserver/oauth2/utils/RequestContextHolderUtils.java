@@ -8,7 +8,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
  *
  * @author Tomas Mano <tomasmano@gmail.com>
  */
-public class RequestContextHolderUtils {
+public final class RequestContextHolderUtils {
 
     public static HttpServletRequest getHttpRequest() {
         HttpServletRequest currentRequest =
@@ -23,4 +23,6 @@ public class RequestContextHolderUtils {
                 .getRequest();
         return currentRequest.getRequestURI();
     }
+
+    private RequestContextHolderUtils() { }
 }

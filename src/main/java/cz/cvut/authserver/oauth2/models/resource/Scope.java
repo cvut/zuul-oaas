@@ -15,7 +15,9 @@ import org.codehaus.jackson.annotate.JsonProperty;
  * @author Tomas Mano <tomasmano@gmail.com>
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Scope implements Serializable{
+public class Scope implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Size(max=256)
     @JsonProperty("name")

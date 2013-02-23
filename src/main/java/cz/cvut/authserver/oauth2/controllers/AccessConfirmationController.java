@@ -6,6 +6,7 @@ package cz.cvut.authserver.oauth2.controllers;
 
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 import org.springframework.security.oauth2.provider.AuthorizationRequest;
 import org.springframework.security.oauth2.provider.ClientDetails;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
@@ -26,7 +27,7 @@ public class AccessConfirmationController {
 	private ClientDetailsService clientDetailsService;
 
 	@RequestMapping("/oauth/confirm_access")
-	public ModelAndView getAccessConfirmation(Map<String, Object> model) throws Exception {
+	public ModelAndView getAccessConfirmation(Map<String, Object> model) throws OAuth2Exception {
 		AuthorizationRequest clientAuth = (AuthorizationRequest) model.remove("authorizationRequest");
 		ClientDetails client = clientDetailsService.loadClientByClientId(clientAuth.getClientId());
 		model.put("auth_request", clientAuth);
@@ -35,7 +36,7 @@ public class AccessConfirmationController {
 	}
 
 	@RequestMapping("/oauth/error")
-	public String handleError(Map<String,Object> model) throws Exception {
+	public String handleError(Map<String,Object> model) {
 		// We can add more stuff to the model here for JSP rendering.  If the client was a machine then
 		// the JSON will already have been rendered.
 		model.put("message", "Nastala chyba v protokole OAuth 2.0.");

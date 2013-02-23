@@ -2,7 +2,6 @@ package cz.cvut.authserver.oauth2.api.models;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.springframework.validation.BindingResult;
 
 /**
  *
@@ -11,20 +10,17 @@ import org.springframework.validation.BindingResult;
 @JsonSerialize(include = JsonSerialize.Inclusion.ALWAYS)
 public class JsonExceptionMapping {
 
-    private final BindingResult bindingResult;
     private int status;
     private String message;
     private String moreInfo;
     
-    public JsonExceptionMapping(BindingResult bindingResult, int status, String message){
-        this.bindingResult = bindingResult;
+    public JsonExceptionMapping(int status, String message){
         this.status = status;
         this.message = message;
         this.moreInfo = "not-provided";
     }
 
-    public JsonExceptionMapping(BindingResult bindingResult, int status, String message, String moreInfo){
-        this.bindingResult = bindingResult;
+    public JsonExceptionMapping(int status, String message, String moreInfo){
         this.status = status;
         this.message = message;
         this.moreInfo = moreInfo;

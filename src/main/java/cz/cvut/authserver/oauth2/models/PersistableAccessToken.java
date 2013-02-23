@@ -10,6 +10,8 @@ import org.springframework.security.oauth2.provider.OAuth2Authentication;
  */
 public class PersistableAccessToken extends DefaultOAuth2AccessToken {
 
+    private static final long serialVersionUID = 1L;
+
     private String authenticationKey;
     private OAuth2Authentication authentication;
 

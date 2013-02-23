@@ -53,7 +53,7 @@ public class DBObjectWrapper implements DBObject {
 
     public String[] getStringArray(String key) {
         List list = getList(key);
-        return list != null ? StringUtils.toStringArray(list) : null;
+        return list != null ? StringUtils.toStringArray(list) : new String[0];
     }
 
     public List getList(String key) {

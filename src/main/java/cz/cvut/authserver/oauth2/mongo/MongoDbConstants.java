@@ -5,10 +5,10 @@ package cz.cvut.authserver.oauth2.mongo;
  *
  * @author Jakub Jirutka <jakub@jirutka.cz>
  */
-public class MongoDbConstants {
+public final class MongoDbConstants {
 
     /** Collections in database. */
-    public static class collections {
+    public static final class collections {
 
         public static final String
                 CLIENT_DETAILS = "client_details",
@@ -19,7 +19,7 @@ public class MongoDbConstants {
     }
 
     /** Fields in collection client_details. */
-    public static class client_details {
+    public static final class client_details {
 
         public static final String
                 CLIENT_ID = "_id",
@@ -37,7 +37,7 @@ public class MongoDbConstants {
     }
 
     /** Fields in collection oauth_access_token */
-    public static class access_tokens {
+    public static final class access_tokens {
 
         public static final String
                 TOKEN_ID = "_id",
@@ -55,7 +55,7 @@ public class MongoDbConstants {
     }
 
     /** Fields in collection oauth_refresh_token */
-    public static class refresh_tokens {
+    public static final class refresh_tokens {
 
         public static final String
                 TOKEN_ID = "_id",
@@ -65,7 +65,7 @@ public class MongoDbConstants {
         private refresh_tokens() { /* do not initialize */ }
     }
 
-    public static class authentication {
+    public static final class authentication {
 
         public static final String
                 AUTHORIZATION_REQUEST = "authorization_request",
@@ -74,7 +74,7 @@ public class MongoDbConstants {
         private authentication() { /* do not initialize */ }
     }
 
-    public static class authz_request {
+    public static final class authz_request {
 
         public static final String
                 APPROVAL_PARAMS = "approval_parameters",
@@ -86,7 +86,7 @@ public class MongoDbConstants {
         private authz_request() { /* do not initialize */ }
     }
 
-    public static class user_auth {
+    public static final class user_auth {
 
         //TODO incomplete!
         public static final String

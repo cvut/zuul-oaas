@@ -20,7 +20,7 @@ public class ResourceInMemoryDAO implements ResourceDAO {
     private static List<Resource> resources;
     
     @Autowired
-    IdentifierGenerator identifierGenerator;
+    private IdentifierGenerator identifierGenerator;
 
     static {
         resources = new ArrayList<Resource>();
@@ -101,8 +101,7 @@ public class ResourceInMemoryDAO implements ResourceDAO {
     }
 
     private static Resource createResource(Auth auth, String code, String url, String desc, String name, String version, String title) {
-        Resource resource = new Resource(auth, code, url, desc, name, version, title, ResourceVisibility.PUBLIC.get());
-        return resource;
+        return new Resource(auth, code, url, desc, name, version, title, ResourceVisibility.PUBLIC.get());
     }
 
     private static Auth createAuth(Scope... scopes) {

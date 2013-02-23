@@ -10,17 +10,15 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.oauth2.provider.BaseClientDetails;
-import org.springframework.security.oauth2.provider.ClientDetails;
-import org.springframework.security.oauth2.provider.ClientDetailsService;
-import org.springframework.security.oauth2.provider.ClientRegistrationService;
-import org.springframework.security.oauth2.provider.NoSuchClientException;
+import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
+import org.springframework.security.oauth2.provider.*;
 
 /**
  *
  *
  * @author Tomas Mano <tomasmano@gmail.com>
  */
+//TODO need heavy refactoring
 public class ClientsServiceImpl implements ClientsService {
 
     private ClientDetailsService clientDetailsService;
@@ -34,23 +32,18 @@ public class ClientsServiceImpl implements ClientsService {
 
     @Override
     public ClientDetails findClientDetailsById(String clientId) throws NoSuchClientException {
-        ClientDetails retrieved = null;
-        
-            // little hack, loadClientByClientId throws OAuth2Exception when no client exists 
-            // with the given id, resulting in 401 Unauthorized Status code which doesn't fit our purposes at all....
-        
-            try {
-                retrieved = clientDetailsService.loadClientByClientId(clientId);
-            } catch (Exception e) {
-                // now we are throwing proper 404 Not Found Error
-                throw new NoSuchClientException(String.format("Client with id [%s] doesn't exists.", clientId));
-            }
-            
-        return retrieved;
+        // little hack, loadClientByClientId throws OAuth2Exception when no client exists
+        // with the given id, resulting in 401 Unauthorized Status code which doesn't fit our purposes at all....
+        try {
+            return clientDetailsService.loadClientByClientId(clientId);
+        } catch (OAuth2Exception ex) {
+            // now we are throwing proper 404 Not Found Error
+            throw new NoSuchClientException(String.format("Client with id [%s] doesn't exists.", clientId), ex);
+        }
     }
 
     @Override
-    public void createClientDetails(BaseClientDetails client) throws Exception {
+    public void createClientDetails(BaseClientDetails client) throws ClientAlreadyExistsException {
        
         // generate oauth2 client credentials
         String clientId = oauth2ClientCredentialsGenerator.generateClientId();
@@ -91,7 +84,7 @@ public class ClientsServiceImpl implements ClientsService {
     }
 
     @Override
-    public void removeScopeFromClientDetails(String clientId, String scope) throws Exception {
+    public void removeScopeFromClientDetails(String clientId, String scope) throws OAuth2Exception, NoSuchClientException {
         ClientDetails client = clientDetailsService.loadClientByClientId(clientId);
         if (client.getScope().contains(scope)) {
             client.getScope().remove(scope);
@@ -110,7 +103,7 @@ public class ClientsServiceImpl implements ClientsService {
     }
 
     @Override
-    public void removeResourceFromClientDetails(String clientId, String resourceId) throws Exception {
+    public void removeResourceFromClientDetails(String clientId, String resourceId) throws OAuth2Exception, NoSuchClientException {
         ClientDetails client = clientDetailsService.loadClientByClientId(clientId);
         if (client.getResourceIds().contains(resourceId)) {
             client.getResourceIds().remove(resourceId);
@@ -129,7 +122,7 @@ public class ClientsServiceImpl implements ClientsService {
     }
 
     @Override
-    public void deleteGrantFromClientDetails(String clientId, String grantType) throws Exception {
+    public void deleteGrantFromClientDetails(String clientId, String grantType) throws OAuth2Exception, NoSuchClientException {
         ClientDetails client = clientDetailsService.loadClientByClientId(clientId);
         if (client.getAuthorizedGrantTypes().contains(grantType)) {
             client.getAuthorizedGrantTypes().remove(grantType);
@@ -148,7 +141,7 @@ public class ClientsServiceImpl implements ClientsService {
     }
 
     @Override
-    public void deleteRoleFromClientDetails(String clientId, String role) throws Exception {
+    public void deleteRoleFromClientDetails(String clientId, String role) throws OAuth2Exception, NoSuchClientException {
         ClientDetails client = clientDetailsService.loadClientByClientId(clientId);
         GrantedAuthority removed = new SimpleGrantedAuthority(role);
         if (client.getAuthorities().contains(removed)) {
@@ -171,7 +164,7 @@ public class ClientsServiceImpl implements ClientsService {
 
     @Deprecated
     @Override
-    public void deleteRedirectUriFromClientDetails(String clientId, String redirectUri) throws Exception {
+    public void deleteRedirectUriFromClientDetails(String clientId, String redirectUri) throws OAuth2Exception, NoSuchClientException {
         ClientDetails client = clientDetailsService.loadClientByClientId(clientId);
         if (client.getRegisteredRedirectUri().contains(redirectUri)) {
             client.getRegisteredRedirectUri().remove(redirectUri);
@@ -180,7 +173,7 @@ public class ClientsServiceImpl implements ClientsService {
     }
 
     @Override
-    public void addBrandingInformationToClientDetails(String clientId, String brand) throws Exception {
+    public void addBrandingInformationToClientDetails(String clientId, String brand) throws OAuth2Exception, NoSuchClientException {
         ClientDetails client = clientDetailsService.loadClientByClientId(clientId);
         BaseClientDetails baseClientDetails = (BaseClientDetails) client;
         baseClientDetails.addAdditionalInformation("product-name", brand);
@@ -190,7 +183,7 @@ public class ClientsServiceImpl implements ClientsService {
     /**
      * Helper method for dealing with the immutable Collections of the
      * BaseClientDetails. Initialize inner collection by the given attribute
-     * with muttable collection.
+     * with mutable collection.
      *
      * @param client which immutable collection will be change for mutable collection
      * @param attr attribute's name which collection will be initialized

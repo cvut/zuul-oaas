@@ -10,9 +10,11 @@ import org.springframework.security.oauth2.provider.ClientDetails;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
+import static org.springframework.util.CollectionUtils.isEmpty;
+
 /**
  * Validator for spring oauth2 ClientDetails. Validating required attributes,
- * attribute's lentgh and that attributes contains only the ascii printable
+ * attribute's length and that attributes contains only the ascii printable
  * characters.
  *
  * @author Tomas Mano <tomasmano@gmail.com>
@@ -22,7 +24,7 @@ public class ClientDetailsValidator implements Validator {
     public static final Logger LOG = LoggerFactory.getLogger(ClientDetailsValidator.class);
     private static final int MAX_VALUE_LENGTH = 256;
     
-    UrlValidator urlValidator = new UrlValidator();
+    private UrlValidator urlValidator = new UrlValidator();
 
     @Override
     public boolean supports(Class<?> clazz) {
@@ -38,7 +40,7 @@ public class ClientDetailsValidator implements Validator {
         Set<String> authorizedGrantTypes = clientDetails.getAuthorizedGrantTypes();
         
         // #1 : validate required fields
-        if (isEmptyOrNull(authorizedGrantTypes)) {
+        if (isEmpty(authorizedGrantTypes)) {
             errors.rejectValue("authorizedGrantTypes", "argument.required", new Object[]{"authorized_grant_types"}, "Argument 'authorized_grant_types' is required");
             return;
         }
@@ -46,7 +48,7 @@ public class ClientDetailsValidator implements Validator {
         boolean urlValidationRequired = isRedirectURIsValidationNecessary(authorizedGrantTypes);
 
         
-        if (urlValidationRequired && isEmptyOrNull(registeredRedirectUri)) {
+        if (urlValidationRequired && isEmpty(registeredRedirectUri)) {
             errors.rejectValue("registeredRedirectUri", "argument.required", new Object[]{"redirect_uri"}, "Argument 'redirect_uri' is required");
             return;
         }
@@ -72,7 +74,7 @@ public class ClientDetailsValidator implements Validator {
 //        }
         
         // #3 : validate if it has valid grant type
-        String invalidGrant = retriveInvalidGrantType(authorizedGrantTypes);
+        String invalidGrant = retrieveInvalidGrantType(authorizedGrantTypes);
         if (invalidGrant != null) {
             errors.rejectValue("authorizedGrantTypes", "invalid.grant.type", new Object[]{invalidGrant}, String.format("Grant type %s is invalid", invalidGrant));
             return;
@@ -85,40 +87,21 @@ public class ClientDetailsValidator implements Validator {
         }
         
     }
-    
-    private boolean isEmptyOrNull(String arg){
-        return !StringUtils.isNotEmpty(arg);
-    }
-    
-    private boolean isEmptyOrNull(Set<String> args) {
-        if (args == null) {
-            return true;
-        }
-        if (args.isEmpty()) {
-            return true;
-        }
-        for (String string : args) {
-            if (isEmptyOrNull(string)) {
-                return true;
-            }
-        }
-        return false;
-    }
-    
+
     
     private boolean isRedirectURIsValidationNecessary(Set<String> args){
-        if (isEmptyOrNull(args)) {
+        if (isEmpty(args)) {
             return false;
         }
         for (String string : args) {
-            if (string.equals(AuthorizationGrants.authCode.get())) {
+            if (AuthorizationGrants.authCode.get().equals(string)) {
                 return true;
             }
         }
         return false;
     }
     
-    private String retriveInvalidGrantType(String arg) {
+    private String retrieveInvalidGrantType(String arg) {
         if (arg.equals(AuthorizationGrants.authCode.get())) {
             return null;
         }
@@ -134,9 +117,9 @@ public class ClientDetailsValidator implements Validator {
         return arg;
     }
     
-    private String retriveInvalidGrantType(Set<String> args) {
+    private String retrieveInvalidGrantType(Set<String> args) {
         for (String string : args) {
-            if (retriveInvalidGrantType(string)!=null) {
+            if (retrieveInvalidGrantType(string)!=null) {
                 return string;
             }
         }
@@ -159,7 +142,7 @@ public class ClientDetailsValidator implements Validator {
     private boolean containsInvalidCharacters(String arg) {
         return !StringUtils.isAsciiPrintable(arg);
     }
-    
+
     private boolean containsInvalidCharacters(Set<String> args){
         for (String string : args) {
             if (containsInvalidCharacters(string)) {
@@ -168,14 +151,10 @@ public class ClientDetailsValidator implements Validator {
         }
         return false;
     }
-    
-    private boolean isValidUrl(String url){
-        return urlValidator.isValid(url);
-    }
 
     private boolean isValidUrl(Set<String> urls){
         for (String string : urls) {
-            if (!isValidUrl(string)) {
+            if (!urlValidator.isValid(string)) {
                 return false;
             }
         }

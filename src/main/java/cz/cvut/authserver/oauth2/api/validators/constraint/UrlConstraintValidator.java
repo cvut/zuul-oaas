@@ -13,7 +13,7 @@ import org.apache.commons.validator.routines.UrlValidator;
  */
 public class UrlConstraintValidator implements ConstraintValidator<ValidUrl, String>{
 
-    UrlValidator urlValidator = new UrlValidator();
+    private UrlValidator urlValidator = new UrlValidator();
     
     @Override
     public void initialize(ValidUrl constraintAnnotation) {
