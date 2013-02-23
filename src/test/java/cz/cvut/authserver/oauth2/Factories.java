@@ -1,20 +1,11 @@
 package cz.cvut.authserver.oauth2;
 
 import com.google.common.collect.Sets;
-import cz.cvut.authserver.oauth2.api.models.SecretChangeRequest;
 import cz.cvut.authserver.oauth2.models.resource.Auth;
 import cz.cvut.authserver.oauth2.models.resource.Resource;
 import cz.cvut.authserver.oauth2.models.resource.Scope;
 import cz.cvut.authserver.oauth2.models.resource.enums.ResourceVisibility;
 import cz.cvut.authserver.oauth2.utils.AuthorizationGrants;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -23,18 +14,11 @@ import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.oauth2.common.DefaultExpiringOAuth2RefreshToken;
-import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
-import org.springframework.security.oauth2.common.DefaultOAuth2RefreshToken;
-import org.springframework.security.oauth2.common.ExpiringOAuth2RefreshToken;
-import org.springframework.security.oauth2.common.OAuth2AccessToken;
-import org.springframework.security.oauth2.common.OAuth2RefreshToken;
-import org.springframework.security.oauth2.provider.AuthorizationRequest;
-import org.springframework.security.oauth2.provider.BaseClientDetails;
-import org.springframework.security.oauth2.provider.ClientDetails;
-import org.springframework.security.oauth2.provider.DefaultAuthorizationRequest;
-import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.security.oauth2.common.*;
+import org.springframework.security.oauth2.provider.*;
 import org.springframework.util.StringUtils;
+
+import java.util.*;
 
 /**
  *
@@ -173,15 +157,6 @@ public class Factories {
 
     public static Authentication createUserAuthentication(String name, boolean authenticated) {
         return new StubAuthentication(name, authenticated);
-    }
-
-    //////// SecretChangeRequest //////// 
-    
-    public static SecretChangeRequest createValidSecretChangeRequestForClient(ClientDetails random) {
-        SecretChangeRequest request = new SecretChangeRequest();
-        request.setNewSecret(randomString());
-        request.setOldSecret(random.getClientSecret());
-        return request;
     }
 
     
