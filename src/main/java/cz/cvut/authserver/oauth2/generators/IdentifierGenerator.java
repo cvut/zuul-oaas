@@ -11,7 +11,7 @@ public interface IdentifierGenerator {
      * 
      * @return generated identifier
      */
-    public Long generateBasicIdentifier();
+    Long generateBasicIdentifier();
     
     /**
      * Generates random identifier with included arg value in readable form.
@@ -19,6 +19,6 @@ public interface IdentifierGenerator {
      * @param arg value to be included in identifier value (some characters might be omitted)
      * @return generated identifier
      */
-    public String generateArgBasedIdentifier(String arg);
+    String generateArgBasedIdentifier(String arg);
 
 }

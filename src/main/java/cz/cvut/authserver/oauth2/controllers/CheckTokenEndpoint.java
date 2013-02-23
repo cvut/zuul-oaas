@@ -88,6 +88,6 @@ public class CheckTokenEndpoint implements InitializingBean {
     @ResponseBody
     public JsonExceptionMapping handleTokenProblem(InvalidTokenException ex) {
         // TODO Should we really return 409 CONFLICT ? Status message from exception is 401
-        return new JsonExceptionMapping(CONFLICT.value(), ex.getOAuth2ErrorCode().toString(), ex.getMessage());
+        return new JsonExceptionMapping(CONFLICT.value(), ex.getOAuth2ErrorCode(), ex.getMessage());
     }
 }

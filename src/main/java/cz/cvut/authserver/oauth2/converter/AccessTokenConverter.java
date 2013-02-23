@@ -22,7 +22,7 @@ import org.springframework.security.oauth2.provider.OAuth2Authentication;
  * @author Dave Syer
  *
  */
-    public interface AccessTokenConverter {
+public interface AccessTokenConverter {
 
 	/**
 	 * @param token an access token
@@ -31,6 +31,6 @@ import org.springframework.security.oauth2.provider.OAuth2Authentication;
 	 * @return a map representation of the token suitable for a JSON response
 	 * 
 	 */
-	public abstract Map<String, ?> convertAccessToken(OAuth2AccessToken token, OAuth2Authentication authentication);
+	Map<String, ?> convertAccessToken(OAuth2AccessToken token, OAuth2Authentication authentication);
 
 }

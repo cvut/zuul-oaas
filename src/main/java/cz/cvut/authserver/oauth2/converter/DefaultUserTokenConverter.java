@@ -3,7 +3,6 @@ package cz.cvut.authserver.oauth2.converter;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.util.StringUtils;
 

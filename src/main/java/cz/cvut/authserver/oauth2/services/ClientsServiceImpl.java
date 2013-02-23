@@ -1,7 +1,6 @@
 package cz.cvut.authserver.oauth2.services;
 
 import cz.cvut.authserver.oauth2.generators.OAuth2ClientCredentialsGenerator;
-import java.lang.String;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.LinkedHashSet;

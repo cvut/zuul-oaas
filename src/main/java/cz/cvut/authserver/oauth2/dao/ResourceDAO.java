@@ -17,7 +17,7 @@ public interface ResourceDAO {
      * @param id resource's id to be checked
      * @return if the given resource is registered resource
      */
-    public boolean isRegisteredResource(Serializable id);
+    boolean isRegisteredResource(Serializable id);
     
     /**
      * Finds resource with the given id.
@@ -26,7 +26,7 @@ public interface ResourceDAO {
      * @return resource if exists
      * @throws NoSuchResourceException when no matching resource was found
      */
-    public Resource findResourceById(String id) throws NoSuchResourceException;
+    Resource findResourceById(String id) throws NoSuchResourceException;
     
     /**
      * Creates new resource.
@@ -34,7 +34,7 @@ public interface ResourceDAO {
      * @param resource resource to be created
      * @return created Resource
      */
-    public Resource createResource(Resource resource);
+    Resource createResource(Resource resource);
     
     /**
      * Update resource with the given id.
@@ -43,7 +43,7 @@ public interface ResourceDAO {
      * @param resource resource's content to be updated with
      * @throws NoSuchResourceException when no matching resource was found
      */
-    public void updateResource(String id, Resource resource) throws NoSuchResourceException;
+    void updateResource(String id, Resource resource) throws NoSuchResourceException;
 
     /**
      * Delete resource with the given id.
@@ -52,19 +52,19 @@ public interface ResourceDAO {
      * @throws NoSuchResourceException when no matching resource was found
      * @return true if it contained the specified resource
      */
-    public boolean deleteResourceById(String id) throws NoSuchResourceException;
+    boolean deleteResourceById(String id) throws NoSuchResourceException;
     
     /**
      * Returns all resources.
      * 
      * @return all resources
      */
-    public List<Resource> getAllResources();
+    List<Resource> getAllResources();
 
     /**
-     * Returns all public resources.
+     * Returns all resources.
      * 
      * @return all resources
      */
-    public List<Resource> getAllPublicResources();
+    List<Resource> getAllPublicResources();
 }

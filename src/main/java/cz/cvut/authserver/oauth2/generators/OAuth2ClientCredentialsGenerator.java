@@ -6,7 +6,7 @@ package cz.cvut.authserver.oauth2.generators;
  */
 public interface OAuth2ClientCredentialsGenerator {
 
-    public String generateClientId();
+    String generateClientId();
 
-    public String generateClientSecret();
+    String generateClientSecret();
 }
