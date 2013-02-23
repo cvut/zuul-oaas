@@ -1,14 +1,13 @@
 package cz.cvut.authserver.oauth2.api.validators;
 
 import cz.cvut.authserver.oauth2.services.ResourceService;
-import cz.cvut.authserver.oauth2.utils.AuthorizationGrants;
 import cz.cvut.authserver.oauth2.utils.RequestContextHolderUtils;
-import java.util.Set;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
+
+import static org.apache.commons.lang.StringUtils.isEmpty;
 
 /**
  * Validator for Resources. Validating if it's not null or empty,
@@ -42,7 +41,7 @@ public class ResourcesValidator implements Validator {
         }
         
         // #1 : validate required fields
-        if (isEmptyOrNull(resource)) {
+        if (isEmpty(resource)) {
             errors.reject("argument.required", new Object[]{"resource_id"}, "Argument 'resource_id' is required");
             return;
         }
@@ -54,7 +53,7 @@ public class ResourcesValidator implements Validator {
         }
         
         // #3 : validate if it has valid grant type
-        String invalidResource = retriveInvalidResource(resource);
+        String invalidResource = retrieveInvalidResource(resource);
         if (invalidResource != null) {
             errors.reject("invalid.resource.id", new Object[]{invalidResource}, String.format("Resrource id %s is invalid", invalidResource));
             return;
@@ -62,42 +61,16 @@ public class ResourcesValidator implements Validator {
         
     }
     
-    private boolean isEmptyOrNull(String arg){
-        return !StringUtils.isNotEmpty(arg);
-    }
     
-    private boolean isEmptyOrNull(Set<String> args) {
-        if (args == null) {
-            return true;
-        }
-        if (args.isEmpty()) {
-            return true;
-        }
-        for (String string : args) {
-            if (isEmptyOrNull(string)) {
-                return true;
-            }
-        }
-        return false;
-    }
-    
-    private String retriveInvalidResource(String arg) {
+    private String retrieveInvalidResource(String arg) {
         return resourceService.isRegisteredResource(arg) ? null : arg;
-    }
-    
-    private String retriveInvalidResource(Set<String> args) {
-        for (String string : args) {
-            if (retriveInvalidResource(string)!=null) {
-                return string;
-            }
-        }
-        return null;
     }
 
     private boolean isValueTooLong(String arg) {
         return arg.length() > MAX_VALUE_LENGTH;
     }
 
+    
     //////////  Getters / Setters  //////////
 
     public ResourceService getResourceService() {

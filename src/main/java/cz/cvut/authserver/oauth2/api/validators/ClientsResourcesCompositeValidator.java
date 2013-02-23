@@ -47,7 +47,7 @@ public class ClientsResourcesCompositeValidator implements Validator {
 
     public void setValidators(Validator[] validators) {
         LOG.debug("Setting validators: {}", validators);
-        this.validators = validators;
+        this.validators = validators.clone();
     }
 
 }

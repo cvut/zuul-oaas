@@ -143,14 +143,7 @@ public class ClientDetailsValidator implements Validator {
         return null;
     }
 
-    private boolean isValueTooLong(String arg) {
-        return arg.length() > MAX_VALUE_LENGTH;
-    }
-
     private boolean isValueTooLong(Set<String> args) {
-        if (args==null ) {
-            
-        }
         int total = 0;
         for (String string : args) {
             total = total + string.length();

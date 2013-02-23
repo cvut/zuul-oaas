@@ -1,13 +1,12 @@
 package cz.cvut.authserver.oauth2.api.validators;
 
-import cz.cvut.authserver.oauth2.utils.AuthorizationGrants;
 import cz.cvut.authserver.oauth2.utils.RequestContextHolderUtils;
-import java.util.Set;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
+
+import static org.apache.commons.lang.StringUtils.isEmpty;
 
 /**
  * Validator for Scopes. Validating if it's not null or empty,
@@ -40,7 +39,7 @@ public class ScopesValidator implements Validator {
         }
         
         // #1 : validate required fields
-        if (isEmptyOrNull(scopes)) {
+        if (isEmpty(scopes)) {
             errors.reject("argument.required", new Object[]{"scopes"}, "Argument 'scopes' is required");
             return;
         }
@@ -52,28 +51,8 @@ public class ScopesValidator implements Validator {
         }
         
     }
-    
-    private boolean isEmptyOrNull(String arg){
-        return !StringUtils.isNotEmpty(arg);
-    }
-    
-    private boolean isEmptyOrNull(Set<String> args) {
-        if (args == null) {
-            return true;
-        }
-        if (args.isEmpty()) {
-            return true;
-        }
-        for (String string : args) {
-            if (isEmptyOrNull(string)) {
-                return true;
-            }
-        }
-        return false;
-    }
 
     private boolean isValueTooLong(String arg) {
         return arg.length() > MAX_VALUE_LENGTH;
     }
-
 }

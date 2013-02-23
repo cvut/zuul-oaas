@@ -11,18 +11,15 @@ import org.apache.commons.math.random.RandomDataImpl;
 public class IdentificatorGeneratorImpl implements IdentificatorGenerator {
     
     private RandomData randomData;
-    
+
+
     public IdentificatorGeneratorImpl(){
-        init();
-    }
-    
-    private void init(){
-        randomData = new RandomDataImpl(); 
+        randomData = new RandomDataImpl();
     }
 
     @Override
     public Long generateBasicIdentificator() {
-        return new Long(randomData.nextSecureLong(10000000L, 999999999L));
+        return randomData.nextSecureLong(10000000L, 999999999L);
     }
 
     @Override
@@ -34,9 +31,7 @@ public class IdentificatorGeneratorImpl implements IdentificatorGenerator {
         String replaced = whitespacesReplaced.replaceAll("[.!?<>/:\"\'&*()_+={}@~|]", "").toLowerCase();
         
         // Concat with random 4-digit number
-        String generated = replaced.concat("-"+ new Integer(randomData.nextInt(100000, 999999)));
-        
-        return generated;
+        return replaced.concat("-"+ randomData.nextInt(100000, 999999));
     }
     
 }
