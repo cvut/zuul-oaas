@@ -156,6 +156,7 @@
         <dependency>
             <groupId>org.springframework.security.oauth</groupId>
             <artifactId>spring-security-oauth2</artifactId>
+            <version>1.0.0.RC2</version>
         </dependency>
 
 
@@ -267,9 +268,5 @@
             </plugin>
         </plugins>
     </build>
-    
-    <properties>
-        <netbeans.hint.deploy.server>Tomcat</netbeans.hint.deploy.server>
-    </properties>
     
 </project>
