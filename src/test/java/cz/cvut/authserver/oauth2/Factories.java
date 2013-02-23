@@ -5,7 +5,7 @@ import cz.cvut.authserver.oauth2.models.resource.Auth;
 import cz.cvut.authserver.oauth2.models.resource.Resource;
 import cz.cvut.authserver.oauth2.models.resource.Scope;
 import cz.cvut.authserver.oauth2.models.resource.enums.ResourceVisibility;
-import cz.cvut.authserver.oauth2.utils.AuthorizationGrants;
+import cz.cvut.authserver.oauth2.models.AuthorizationGrants;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -67,11 +67,11 @@ public class Factories {
     }
 
     public static Set<String> createAuthorizationCodeGrant(){
-        return Sets.newHashSet(AuthorizationGrants.authCode.get());
+        return Sets.newHashSet(AuthorizationGrants.auth_code.toString());
     }
 
     public static Set<String> createImplicitGrant(){
-        return Sets.newHashSet(AuthorizationGrants.implict.get());
+        return Sets.newHashSet(AuthorizationGrants.implicit.toString());
     }
     
     

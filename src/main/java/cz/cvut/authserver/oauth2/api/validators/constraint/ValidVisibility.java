@@ -20,7 +20,7 @@ import javax.validation.Payload;
 @Documented
 public @interface ValidVisibility {
     
-    String message() default "{validator.invalid.visibilty.value}";
+    String message() default "{validator.invalid.visibility.value}";
 
     Class<?>[] groups() default {};
 

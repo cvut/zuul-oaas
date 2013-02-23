@@ -1,6 +1,6 @@
 package cz.cvut.authserver.oauth2.api.validators;
 
-import cz.cvut.authserver.oauth2.utils.AuthorizationGrants;
+import cz.cvut.authserver.oauth2.models.AuthorizationGrants;
 import java.util.Set;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.validator.routines.UrlValidator;
@@ -18,10 +18,11 @@ import static org.springframework.util.CollectionUtils.isEmpty;
  * characters.
  *
  * @author Tomas Mano <tomasmano@gmail.com>
+ * @author Jakub Jirutka <jakub@jirutka.cz>
  */
 public class ClientDetailsValidator implements Validator {
 
-    public static final Logger LOG = LoggerFactory.getLogger(ClientDetailsValidator.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ClientDetailsValidator.class);
     private static final int MAX_VALUE_LENGTH = 256;
     
     private UrlValidator urlValidator = new UrlValidator();
@@ -33,7 +34,6 @@ public class ClientDetailsValidator implements Validator {
 
     @Override
     public void validate(Object target, Errors errors) {
-        // first convert target to ClientDetails
         ClientDetails clientDetails = (ClientDetails) target;
 
         Set<String> registeredRedirectUri = clientDetails.getRegisteredRedirectUri();
@@ -56,10 +56,6 @@ public class ClientDetailsValidator implements Validator {
         // #2: check parameters length, otherwise will cause the internal server error: org.postgresql.util.PSQLException: ERROR: value too long for type character varying(256)
         if (urlValidationRequired && isValueTooLong(registeredRedirectUri)) {
             errors.rejectValue("registeredRedirectUri", "argument.value.too.long", new Object[]{"redirect_uri", MAX_VALUE_LENGTH}, "Argument value too long");
-            return;
-        }
-        if (isValueTooLong(authorizedGrantTypes)) {
-            errors.rejectValue("authorizedGrantTypes", "argument.value.too.long", new Object[]{"authorized_grant_types", MAX_VALUE_LENGTH}, "Argument value too long");
             return;
         }
 
@@ -94,32 +90,17 @@ public class ClientDetailsValidator implements Validator {
             return false;
         }
         for (String string : args) {
-            if (AuthorizationGrants.authCode.get().equals(string)) {
+            if (AuthorizationGrants.auth_code.toString().equals(string)) {
                 return true;
             }
         }
         return false;
     }
-    
-    private String retrieveInvalidGrantType(String arg) {
-        if (arg.equals(AuthorizationGrants.authCode.get())) {
-            return null;
-        }
-        if (arg.equals(AuthorizationGrants.implict.get())) {
-            return null;
-        }
-        if (arg.equals(AuthorizationGrants.clientCredentials.get())) {
-            return null;
-        }
-        if (arg.equals(AuthorizationGrants.clientCredentials.get())) {
-            return null;
-        }
-        return arg;
-    }
+
     
     private String retrieveInvalidGrantType(Set<String> args) {
         for (String string : args) {
-            if (retrieveInvalidGrantType(string)!=null) {
+            if (! AuthorizationGrants.contains(string)) {
                 return string;
             }
         }
@@ -136,7 +117,7 @@ public class ClientDetailsValidator implements Validator {
 
     /**
      * Condition required by
-     * {@link http://tools.ietf.org/html/draft-ietf-oauth-v2-31#appendix-A.2}.
+     * {@see http://tools.ietf.org/html/draft-ietf-oauth-v2-31#appendix-A.2}.
      *
      */
     private boolean containsInvalidCharacters(String arg) {
