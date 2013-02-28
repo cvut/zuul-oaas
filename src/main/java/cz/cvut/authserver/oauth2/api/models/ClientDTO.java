@@ -36,6 +36,7 @@ import java.util.*;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ClientDTO implements ClientDetails {
 
+    private static final long serialVersionUID = 1L;
     private static final String EXT_PRODUCT_NAME = "product-name";
 
 	@JsonProperty("client_id")
