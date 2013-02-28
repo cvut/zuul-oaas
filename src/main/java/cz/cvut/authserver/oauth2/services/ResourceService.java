@@ -2,6 +2,9 @@ package cz.cvut.authserver.oauth2.services;
 
 import cz.cvut.authserver.oauth2.api.resources.exceptions.NoSuchResourceException;
 import cz.cvut.authserver.oauth2.models.resource.Resource;
+import org.springframework.validation.annotation.Validated;
+
+import javax.validation.Valid;
 import java.io.Serializable;
 import java.util.List;
 
@@ -9,6 +12,7 @@ import java.util.List;
  *
  * @author Tomas Mano <tomasmano@gmail.com>
  */
+@Validated
 public interface ResourceService {
     
     /**
@@ -34,7 +38,7 @@ public interface ResourceService {
      * @param resource resource to be created
      * @return created resource
      */
-    Resource createResource(Resource resource);
+    Resource createResource(@Valid Resource resource);
     
     /**
      * Update resource with the given id.
@@ -43,7 +47,7 @@ public interface ResourceService {
      * @param resource resource's content to be updated with
      * @throws NoSuchResourceException when no matching resource was found
      */
-    void updateResource(String id, Resource resource) throws NoSuchResourceException;
+    void updateResource(String id, @Valid Resource resource) throws NoSuchResourceException;
 
     /**
      * Delete resource with the given id.

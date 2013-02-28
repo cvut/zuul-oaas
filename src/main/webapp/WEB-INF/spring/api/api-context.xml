@@ -56,12 +56,6 @@
     <bean id="resourceDAO" class="cz.cvut.authserver.oauth2.dao.ResourceInMemoryDAO"
           p:identifierGenerator-ref="identifierGenerator"/>
 
-
-    <!--///// Validators /////-->
-    
-<!--    <bean id="resourcesValidator" class="cz.cvut.authserver.oauth2.api.validators.ResourcesValidator"
-          p:resourceService-ref="resourceService"/>-->
-
     
     <!--///// Generators /////-->
     
