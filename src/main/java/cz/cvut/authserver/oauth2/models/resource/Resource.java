@@ -1,12 +1,13 @@
 package cz.cvut.authserver.oauth2.models.resource;
 
+import cz.cvut.authserver.oauth2.api.validators.EnumValue;
 import cz.cvut.authserver.oauth2.api.validators.ValidUrl;
-import cz.cvut.authserver.oauth2.api.validators.ValidVisibility;
 import cz.cvut.authserver.oauth2.models.resource.enums.ResourceVisibility;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
+
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  * Represents resources in the CTU OAuth 2.0 authorization server.
@@ -43,8 +44,8 @@ public class Resource {
     @JsonProperty("title")
     private String title;
     
-    @NotNull @Size(max=256)
-    @ValidVisibility
+    @NotNull
+    @EnumValue(ResourceVisibility.class)
     @JsonProperty("visibility")
     private String visibility = ResourceVisibility.PUBLIC.get();
 
