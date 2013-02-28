@@ -1,7 +1,9 @@
 package cz.cvut.authserver.oauth2.services;
 
-import cz.cvut.authserver.oauth2.generators.OAuth2ClientCredentialsGenerator;
 import cz.cvut.authserver.oauth2.api.models.ClientDTO;
+import cz.cvut.authserver.oauth2.generators.OAuth2ClientCredentialsGenerator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
@@ -21,6 +23,7 @@ import static org.springframework.util.CollectionUtils.isEmpty;
  */
 public class ClientsServiceImpl implements ClientsService {
 
+    private static final Logger LOG = LoggerFactory.getLogger(ClientsServiceImpl.class);
     private static final List<GrantedAuthority> DEFAULT_AUTHORITIES =  AuthorityUtils.createAuthorityList("ROLE_CLIENT");
 
     private ClientDetailsService clientDetailsService;
@@ -50,6 +53,8 @@ public class ClientsServiceImpl implements ClientsService {
 
     @Override
     public String createClientDetails(ClientDTO client) throws ClientAlreadyExistsException {
+        LOG.info("Creating new client: [{}]", client);
+
         // generate oauth2 client credentials
         String clientId = oauth2ClientCredentialsGenerator.generateClientId();
         String clientSecret = oauth2ClientCredentialsGenerator.generateClientSecret();
@@ -70,16 +75,20 @@ public class ClientsServiceImpl implements ClientsService {
 
     @Override
     public void updateClientDetails(ClientDTO client) throws NoSuchClientException {
+        LOG.info("Updating client: [{}]", client);
         clientRegistrationService.updateClientDetails(client);
     }
 
     @Override
     public void removeClientDetails(String clientId) throws NoSuchClientException {
+        LOG.info("Removing client: [{}]", clientId);
         clientRegistrationService.removeClientDetails(clientId);
     }
 
     @Override
     public void resetClientSecret(String clientId) throws NoSuchClientException {
+        LOG.info("Reseting secret for client: [{}]", clientId);
+
         String newSecret = oauth2ClientCredentialsGenerator.generateClientSecret();
         clientRegistrationService.updateClientSecret(clientId, newSecret);
     }

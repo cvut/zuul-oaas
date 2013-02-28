@@ -3,16 +3,23 @@ package cz.cvut.authserver.oauth2.services;
 import cz.cvut.authserver.oauth2.api.resources.exceptions.NoSuchResourceException;
 import cz.cvut.authserver.oauth2.dao.ResourceDAO;
 import cz.cvut.authserver.oauth2.models.resource.Resource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import java.io.Serializable;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
  * @author Tomas Mano <tomasmano@gmail.com>
  */
-@org.springframework.stereotype.Service
+@Service
 public class ResourceServiceImpl implements ResourceService {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ResourceServiceImpl.class);
+
 
     @Autowired
     private ResourceDAO resourceDAO;
@@ -34,11 +41,13 @@ public class ResourceServiceImpl implements ResourceService {
 
     @Override
     public Resource createResource(Resource resource) {
+        LOG.info("Creating new resource [{}]", resource);
         return resourceDAO.createResource(resource);
     }
 
     @Override
     public void updateResource(String id, Resource resource) throws NoSuchResourceException{
+        LOG.info("Updating resource [{}]", resource);
         resourceDAO.updateResource(id, resource);
     }
 

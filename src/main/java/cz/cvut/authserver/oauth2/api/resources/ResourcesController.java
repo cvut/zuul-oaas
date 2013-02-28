@@ -5,8 +5,6 @@ import cz.cvut.authserver.oauth2.api.resources.exceptions.NoSuchResourceExceptio
 import cz.cvut.authserver.oauth2.models.resource.Resource;
 import cz.cvut.authserver.oauth2.services.ResourceService;
 import org.hibernate.validator.method.MethodConstraintViolationException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +24,6 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 @RequestMapping("/v1/resources")
 public class ResourcesController {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ResourcesController.class);
     private static final String SELF_URI = "/v1/resources";
 
     private ResourceService resourceService;
@@ -52,7 +49,6 @@ public class ResourcesController {
     @RequestMapping(method = POST)
     public void createResource(@RequestBody Resource resource, HttpServletResponse response) {
         Resource created = resourceService.createResource(resource);
-        LOG.info("Creating new resource [{}]", resource);
 
         // send redirect to URI of the created resource (i.e. api/resources/{id}/)
         response.setHeader("Location", SELF_URI + created.getId());

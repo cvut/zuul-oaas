@@ -4,8 +4,6 @@ import cz.cvut.authserver.oauth2.api.models.ClientDTO;
 import cz.cvut.authserver.oauth2.api.models.ErrorResponse;
 import cz.cvut.authserver.oauth2.services.ClientsService;
 import org.hibernate.validator.method.MethodConstraintViolationException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.common.exceptions.BadClientCredentialsException;
@@ -28,9 +26,8 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
  */
 @Controller
 @RequestMapping("/v1/clients")
-public class ClientsController{
+public class ClientsController {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ClientsController.class);
     private static final String SELF_URI = "/v1/clients/";
     
     private ClientsService clientsService;
@@ -48,7 +45,6 @@ public class ClientsController{
     @RequestMapping(method = POST)
     public void createClientDetails(@RequestBody ClientDTO client, HttpServletResponse response) {
         String clientId = clientsService.createClientDetails(client);
-        LOG.info("New client was created: [{}]", client);
 
         // send redirect to URI of the created client (i.e. api/clients/{clientId}/)
         response.setHeader("Location", SELF_URI + clientId);
@@ -58,14 +54,12 @@ public class ClientsController{
     @RequestMapping(value = "{clientId}", method = DELETE)
     public void removeClientDetails(@PathVariable String clientId) {
         clientsService.removeClientDetails(clientId);
-        LOG.info("Client with id [{}] was removed", clientId);
     }
 
     @ResponseStatus(NO_CONTENT)
     @RequestMapping(value = "{clientId}/secret", method = PUT)
     public void resetClientSecret(@PathVariable String clientId) {
         clientsService.resetClientSecret(clientId);
-        LOG.info("Client secret for client id [{}] was reseted", clientId);
     }
     
     @ResponseStatus(NO_CONTENT)
