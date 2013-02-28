@@ -1,4 +1,4 @@
-package cz.cvut.authserver.oauth2.api.validators.constraint;
+package cz.cvut.authserver.oauth2.api.validators;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

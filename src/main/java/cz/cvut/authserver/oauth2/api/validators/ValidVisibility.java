@@ -1,4 +1,4 @@
-package cz.cvut.authserver.oauth2.api.validators.constraint;
+package cz.cvut.authserver.oauth2.api.validators;
 
 import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.*;
@@ -10,20 +10,21 @@ import javax.validation.Constraint;
 import javax.validation.Payload;
 
 /**
- * Custom JSR-303 validation constraint for valid urls.
+ * Custom JSR-303 validation constraint for valid visibility values.
  * 
  * @author Tomas Mano <tomasmano@gmail.com>
  */
 @Target( { METHOD, FIELD, ANNOTATION_TYPE })
 @Retention(RUNTIME)
-@Constraint(validatedBy = UrlConstraintValidator.class)
+@Constraint(validatedBy = VisibilityConstraintValidator.class)
 @Documented
-public @interface ValidUrl {
-
-    String message() default "{validator.invalid.url}";
+public @interface ValidVisibility {
+    
+    String message() default "{validator.invalid.visibility.value}";
 
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
 
+    
 }

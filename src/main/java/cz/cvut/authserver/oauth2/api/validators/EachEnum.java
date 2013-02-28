@@ -1,4 +1,4 @@
-package cz.cvut.authserver.oauth2.api.validators.constraint;
+package cz.cvut.authserver.oauth2.api.validators;
 
 import cz.jirutka.validator.collection.CommonEachValidator;
 

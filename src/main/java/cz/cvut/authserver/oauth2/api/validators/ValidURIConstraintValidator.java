@@ -1,4 +1,4 @@
-package cz.cvut.authserver.oauth2.api.validators.constraint;
+package cz.cvut.authserver.oauth2.api.validators;
 
 import org.apache.commons.httpclient.URI;
 import org.apache.commons.httpclient.URIException;

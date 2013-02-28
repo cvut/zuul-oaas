@@ -1,4 +1,4 @@
-package cz.cvut.authserver.oauth2.api.validators.constraint;
+package cz.cvut.authserver.oauth2.api.validators;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -10,32 +10,33 @@ import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * JSR-303 constraint for URI validation.
+ * JSR-303 constraint for String validation against given enumeration class.
  * 
  * @author Jakub Jirutka <jakub@jirutka.cz>
  */
 @Documented
 @Retention(RUNTIME)
 @Target({METHOD, FIELD, PARAMETER, ANNOTATION_TYPE})
-@Constraint(validatedBy = ValidURIConstraintValidator.class)
-public @interface ValidURI {
+@Constraint(validatedBy = EnumValueConstraintValidator.class)
+public @interface EnumValue {
 
-    String message() default "{validator.ValidURI.message}";
+    String message() default "{validator.ValidEnum.message}";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 
-    /**
-     * May URI be relative?
-     */
-    boolean relative() default true;
 
     /**
-     * May URI contain query string?
+     * Enumeration class to validate values against.
      */
-    boolean query() default true;
+    Class<? extends java.lang.Enum<?>> value();
 
     /**
-     * May URI contain fragment?
+     * Consider <tt>null</tt> as valid value? [default false]
      */
-    boolean fragment() default true;
+    boolean nullable() default false;
+
+    /**
+     * Case-sensitive comparison? [default true]
+     */
+    boolean caseSensitive() default true;
 }

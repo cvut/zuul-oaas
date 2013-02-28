@@ -1,9 +1,9 @@
 package cz.cvut.authserver.oauth2.api.models;
 
-import cz.cvut.authserver.oauth2.api.validators.constraint.EachEnum;
-import cz.cvut.authserver.oauth2.api.validators.constraint.EachURI;
-import cz.cvut.authserver.oauth2.api.validators.constraint.EnumValue;
-import cz.cvut.authserver.oauth2.api.validators.constraint.ValidURI;
+import cz.cvut.authserver.oauth2.api.validators.EachEnum;
+import cz.cvut.authserver.oauth2.api.validators.EachURI;
+import cz.cvut.authserver.oauth2.api.validators.EnumValue;
+import cz.cvut.authserver.oauth2.api.validators.ValidURI;
 import cz.cvut.authserver.oauth2.models.AuthorizationGrant;
 import cz.jirutka.validator.collection.constraints.EachPattern;
 import cz.jirutka.validator.collection.constraints.EachSize;

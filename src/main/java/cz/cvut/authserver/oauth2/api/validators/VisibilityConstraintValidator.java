@@ -1,4 +1,4 @@
-package cz.cvut.authserver.oauth2.api.validators.constraint;
+package cz.cvut.authserver.oauth2.api.validators;
 
 import cz.cvut.authserver.oauth2.models.resource.enums.ResourceVisibility;
 import java.util.EnumSet;

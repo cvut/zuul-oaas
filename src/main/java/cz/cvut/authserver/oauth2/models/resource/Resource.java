@@ -1,7 +1,7 @@
 package cz.cvut.authserver.oauth2.models.resource;
 
-import cz.cvut.authserver.oauth2.api.validators.constraint.ValidUrl;
-import cz.cvut.authserver.oauth2.api.validators.constraint.ValidVisibility;
+import cz.cvut.authserver.oauth2.api.validators.ValidUrl;
+import cz.cvut.authserver.oauth2.api.validators.ValidVisibility;
 import cz.cvut.authserver.oauth2.models.resource.enums.ResourceVisibility;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
