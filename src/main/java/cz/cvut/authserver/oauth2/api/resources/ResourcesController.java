@@ -11,9 +11,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.*;
+import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 /**
  * API for authorization server resource's management.
@@ -21,52 +23,53 @@ import static org.springframework.http.HttpStatus.*;
  * @author Tomas Mano <tomasmano@gmail.com>
  */
 @Controller
-@RequestMapping(value = "/v1/resources")
+@RequestMapping("/v1/resources")
 public class ResourcesController {
 
     private static final Logger LOG = LoggerFactory.getLogger(ResourcesController.class);
-    private String apiVersion;
-    
+    private static final String SELF_URI = "/v1/resources";
+
     private ResourceService resourceService;
 
-    @ResponseBody
-    @RequestMapping(value = "", method = RequestMethod.GET)
-    public List<Resource> getAllResources() {
+
+    @RequestMapping(method = GET)
+    public @ResponseBody List<Resource> getAllResources() {
         return resourceService.getAllResources();
     }
 
-    @ResponseBody
-    @RequestMapping(value = "/public", method = RequestMethod.GET)
-    public List<Resource> getAllPublicResources() {
+    @RequestMapping(value = "/public", method = GET)
+    public @ResponseBody List<Resource> getAllPublicResources() {
         return resourceService.getAllPublicResources();
     }
-    
-    @ResponseStatus(CREATED)
+
     @ResponseBody
-    @RequestMapping(value = "", method = RequestMethod.POST)
-    public Resource createResource(@RequestBody Resource resource) {
-        Resource created = resourceService.createResource(resource);
-        LOG.info("Creating new resource [{}]", resource);
-        return created;
-    }
-    
-    @ResponseStatus(NO_CONTENT)
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public void deleteResource(@PathVariable String id) throws NoSuchResourceException {
-        resourceService.deleteResourceById(id);
-    }
-    
-    @ResponseStatus(NO_CONTENT)
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public void updateResource(@PathVariable String id, @RequestBody Resource resource) throws NoSuchResourceException {
-        resourceService.updateResource(id, resource);
-    }
-  
-    @ResponseBody
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public Resource findResourceById(@PathVariable String id) throws NoSuchResourceException {
+    @RequestMapping(value = "/{id}", method = GET)
+    public Resource getResource(@PathVariable String id) {
         return resourceService.findResourceById(id);
     }
+
+    @ResponseStatus(CREATED)
+    @RequestMapping(method = POST)
+    public void createResource(@RequestBody Resource resource, HttpServletResponse response) {
+        Resource created = resourceService.createResource(resource);
+        LOG.info("Creating new resource [{}]", resource);
+
+        // send redirect to URI of the created resource (i.e. api/resources/{id}/)
+        response.setHeader("Location", SELF_URI + created.getId());
+    }
+
+    @ResponseStatus(NO_CONTENT)
+    @RequestMapping(value = "/{id}", method = PUT)
+    public void updateResource(@PathVariable String id, @RequestBody Resource resource) {
+        resourceService.updateResource(id, resource);
+    }
+
+    @ResponseStatus(NO_CONTENT)
+    @RequestMapping(value = "/{id}", method = DELETE)
+    public void deleteResource(@PathVariable String id) {
+        resourceService.deleteResourceById(id);
+    }
+
 
     //////////  Exceptions Handling  //////////
     
@@ -91,14 +94,6 @@ public class ResourcesController {
 
     public void setResourceService(ResourceService resourceService) {
         this.resourceService = resourceService;
-    }
-
-    public String getApiVersion() {
-        return apiVersion;
-    }
-
-    public void setApiVersion(String apiVersion) {
-        this.apiVersion = apiVersion;
     }
     
 }
