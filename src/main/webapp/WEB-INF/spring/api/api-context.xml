@@ -11,23 +11,35 @@
 
 
     <!--////////// API Context Configuration //////////-->
-    
-    <!-- Enables the Spring MVC @Controller programming model -->
-    <mvc:annotation-driven />
+
+    <context:property-placeholder location="classpath:api-context.properties"/>
+
+    <!-- Enable the Spring MVC @Controller programming model -->
+    <mvc:annotation-driven validator="validator" />
+
+    <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"
+          p:validationMessageSource-ref="messageSource" />
+
+    <!-- Enable method-level validation on annotated methods via JSR-303 -->
+    <bean class="org.springframework.validation.beanvalidation.MethodValidationPostProcessor"
+          p:validatorFactory-ref="validator" />
+
+    <!-- Bind our validation_errors.properties -->
+    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource"
+          p:basename="validation_errors" />
 
 
     <!--///// Controllers /////-->
 
     <bean id="clientsController" class="cz.cvut.authserver.oauth2.api.resources.ClientsController"
-          p:clientsService-ref="clientsService"
-          p:clientsResourcesCompositeValidator-ref="clientsResourcesCompositeValidator"
-          p:messageSource-ref="messageSource" />
+          p:clientsService-ref="clientsService" />
 
     <bean id="resourcesController" class="cz.cvut.authserver.oauth2.api.resources.ResourcesController"
           p:resourceService-ref="resourceService"
           p:messageSource-ref="messageSource"
           p:apiVersion="${api.version}"/>
-    
+
+
     <!--///// Services /////-->
 
     <bean id="resourceService" class="cz.cvut.authserver.oauth2.services.ResourceServiceImpl"
@@ -38,52 +50,24 @@
           p:clientRegistrationService-ref="clientDetails" 
           p:oauth2ClientCredentialsGenerator-ref="oauth2ClientCredentialsGenerator"/>
 
+
     <!--///// DAO /////-->
 
     <bean id="resourceDAO" class="cz.cvut.authserver.oauth2.dao.ResourceInMemoryDAO"
           p:identifierGenerator-ref="identifierGenerator"/>
 
+
     <!--///// Validators /////-->
     
-    <!--  Composite validator: clientDetailsValidator + authorizationGrantValidator -->
-    <!--    Order of validator is important, because only one validator can be executed during validation process -->
-    <bean id="clientsResourcesCompositeValidator" class="cz.cvut.authserver.oauth2.api.validators.ClientsResourcesCompositeValidator">
-        <property name="validators">
-            <list>
-                <ref bean="clientDetailsValidator"/>
-                <ref bean="authorizationGrantValidator"/>
-                <ref bean="scopesValidator"/>
-                <ref bean="resourcesValidator"/>
-            </list>
-        </property>
-    </bean>
-    
-    <bean id="clientDetailsValidator" class="cz.cvut.authserver.oauth2.api.validators.ClientDetailsValidator"/>
-    
-    <bean id="authorizationGrantValidator" class="cz.cvut.authserver.oauth2.api.validators.AuthorizationGrantValidator"/>
-    
-    <bean id="scopesValidator" class="cz.cvut.authserver.oauth2.api.validators.ScopesValidator"/>
-    
-    <bean id="resourcesValidator" class="cz.cvut.authserver.oauth2.api.validators.ResourcesValidator"
-          p:resourceService-ref="resourceService"/>
-    
-    <!-- Bean to configure a default JSR-303 Validator as a Spring bean -->
-    <!-- We don't need to include it, because it's implicitly wired when using <mvc:annotation-driven /> annotation -->
-    <!--    <bean id="validator"
-              class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"/>-->
+<!--    <bean id="resourcesValidator" class="cz.cvut.authserver.oauth2.api.validators.ResourcesValidator"
+          p:resourceService-ref="resourceService"/>-->
+
     
     <!--///// Generators /////-->
     
     <bean id="oauth2ClientCredentialsGenerator" class="cz.cvut.authserver.oauth2.generators.OAuth2ClientCredentialsGeneratorImpl" />
     <bean id="identifierGenerator" class="cz.cvut.authserver.oauth2.generators.IdentifierGeneratorImpl" />
-    
-    <!-- bind our messages.properties -->
-    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
-        <property name="basenames" value="validation_errors" />
-    </bean>
-    
-    <!-- Property files -->
-    <context:property-placeholder location="classpath:api-context.properties"/>
+
     
     <!-- Import additional configuration files -->
     <import resource="aspects.xml"/>

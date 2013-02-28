@@ -7,6 +7,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
  *
  * @author Tomas Mano <tomasmano@gmail.com>
  */
+@Deprecated
 @JsonSerialize(include = JsonSerialize.Inclusion.ALWAYS)
 public class JsonExceptionMapping {
 

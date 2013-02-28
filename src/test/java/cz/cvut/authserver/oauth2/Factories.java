@@ -1,11 +1,13 @@
 package cz.cvut.authserver.oauth2;
 
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import cz.cvut.authserver.oauth2.models.AuthorizationGrant;
 import cz.cvut.authserver.oauth2.models.resource.Auth;
 import cz.cvut.authserver.oauth2.models.resource.Resource;
 import cz.cvut.authserver.oauth2.models.resource.Scope;
 import cz.cvut.authserver.oauth2.models.resource.enums.ResourceVisibility;
-import cz.cvut.authserver.oauth2.models.AuthorizationGrants;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -19,6 +21,8 @@ import org.springframework.security.oauth2.provider.*;
 import org.springframework.util.StringUtils;
 
 import java.util.*;
+
+import static java.util.Arrays.asList;
 
 /**
  *
@@ -62,16 +66,24 @@ public class Factories {
     
     //////////  Authorization Grant  //////////
 
-    public static Set<String> createInvalidAuthorizationGrant(){
-        return Sets.newHashSet("very_bad");
+    public static Set<String> createInvalidAuthorizationGrants(){
+        return Sets.newHashSet("very_bad", "evil_grant");
     }
 
     public static Set<String> createAuthorizationCodeGrant(){
-        return Sets.newHashSet(AuthorizationGrants.auth_code.toString());
+        return Sets.newHashSet(AuthorizationGrant.AUTH_CODE.toString());
     }
 
     public static Set<String> createImplicitGrant(){
-        return Sets.newHashSet(AuthorizationGrants.implicit.toString());
+        return Sets.newHashSet(AuthorizationGrant.IMPLICIT.toString());
+    }
+
+    public static Collection<String> createAllAuthorizationGrants() {
+        return Lists.transform(asList(AuthorizationGrant.values()), new Function<AuthorizationGrant, String>() {
+            public String apply(AuthorizationGrant input) {
+                return input.toString();
+            }
+        });
     }
     
     

@@ -1,23 +1,26 @@
 package cz.cvut.authserver.oauth2.services;
 
+import cz.cvut.authserver.oauth2.api.models.ClientDTO;
 import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
-import org.springframework.security.oauth2.provider.BaseClientDetails;
 import org.springframework.security.oauth2.provider.ClientAlreadyExistsException;
-import org.springframework.security.oauth2.provider.ClientDetails;
 import org.springframework.security.oauth2.provider.NoSuchClientException;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.validation.annotation.Validated;
+
+import javax.validation.Valid;
 
 /**
  *
  * @author Tomas Mano <tomasmano@gmail.com>
+ * @author Jakub Jirutka <jakub@jirutka.cz>
  */
+@Validated
 public interface ClientsService {
     
-    ClientDetails findClientDetailsById(@PathVariable String clientId) throws OAuth2Exception;
+    ClientDTO findClientDetailsById(String clientId) throws OAuth2Exception;
 
-    void createClientDetails(BaseClientDetails client) throws ClientAlreadyExistsException;
+    String createClientDetails(@Valid ClientDTO client) throws ClientAlreadyExistsException;
 
-    void updateClientDetails(ClientDetails client) throws NoSuchClientException;
+    void updateClientDetails(@Valid ClientDTO client) throws NoSuchClientException;
     
     void removeClientDetails(String clientId) throws NoSuchClientException;
     

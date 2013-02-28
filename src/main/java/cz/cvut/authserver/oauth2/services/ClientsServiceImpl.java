@@ -1,10 +1,14 @@
 package cz.cvut.authserver.oauth2.services;
 
 import cz.cvut.authserver.oauth2.generators.OAuth2ClientCredentialsGenerator;
+import cz.cvut.authserver.oauth2.api.models.ClientDTO;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
-import org.springframework.security.oauth2.provider.*;
+import org.springframework.security.oauth2.provider.ClientAlreadyExistsException;
+import org.springframework.security.oauth2.provider.ClientDetailsService;
+import org.springframework.security.oauth2.provider.ClientRegistrationService;
+import org.springframework.security.oauth2.provider.NoSuchClientException;
 
 import java.util.List;
 
@@ -29,9 +33,9 @@ public class ClientsServiceImpl implements ClientsService {
     //////////  Business methods  //////////
 
     @Override
-    public ClientDetails findClientDetailsById(String clientId) throws NoSuchClientException, OAuth2Exception {
+    public ClientDTO findClientDetailsById(String clientId) throws NoSuchClientException, OAuth2Exception {
         try {
-            return clientDetailsService.loadClientByClientId(clientId);
+            return new ClientDTO(clientDetailsService.loadClientByClientId(clientId));
 
         } catch (OAuth2Exception ex) {
             // loadClientByClientId throws OAuth2Exception "invalid_client" when no client exists with the given id,
@@ -45,27 +49,27 @@ public class ClientsServiceImpl implements ClientsService {
     }
 
     @Override
-    public void createClientDetails(BaseClientDetails client) throws ClientAlreadyExistsException {
-
+    public String createClientDetails(ClientDTO client) throws ClientAlreadyExistsException {
         // generate oauth2 client credentials
         String clientId = oauth2ClientCredentialsGenerator.generateClientId();
         String clientSecret = oauth2ClientCredentialsGenerator.generateClientSecret();
         
-        // setting necessary fields
+        // set necessary fields
         client.setClientId(clientId);
         client.setClientSecret(clientSecret);
+
         if (isEmpty(client.getAuthorities())) {
             client.setAuthorities(DEFAULT_AUTHORITIES);
         } else {
             client.setAuthorities(client.getAuthorities());
         }
+        clientRegistrationService.addClientDetails(client);  //save
 
-        // save
-        clientRegistrationService.addClientDetails(client);
+        return clientId;
     }
 
     @Override
-    public void updateClientDetails(ClientDetails client) throws NoSuchClientException {
+    public void updateClientDetails(ClientDTO client) throws NoSuchClientException {
         clientRegistrationService.updateClientDetails(client);
     }
 

@@ -180,6 +180,12 @@
             <version>1.4.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>11.0.2</version>
+        </dependency>
+
 
         <!--////////// Others //////////-->
 
@@ -189,8 +195,22 @@
             <artifactId>hibernate-validator</artifactId>
         </dependency>
 
+        <!-- Collection validators for JSR-303 -->
+        <dependency>
+            <groupId>cz.jirutka.validator</groupId>
+            <artifactId>validator-collection</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
 
-        <!--////////// Test Libraries //////////-->        
+        <!-- Spring EL powered validator for JSR-303 -->
+        <dependency>
+            <groupId>cz.jirutka.validator</groupId>
+            <artifactId>validator-spring</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+
+        <!--////////// Test Libraries //////////-->
 
         <dependency>
             <groupId>org.mockito</groupId>
@@ -230,13 +250,6 @@
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
             <version>4.1.2</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>10.0</version>
             <scope>test</scope>
         </dependency>
 

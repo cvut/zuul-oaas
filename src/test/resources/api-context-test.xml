@@ -28,25 +28,9 @@
           p:identifierGenerator-ref="identifierGenerator"/>
 
     <!--///// Validators /////-->
-    
-    <!--  Composite validator: clientDetailsValidator + authorizationGrantValidator -->
-    <!--    Order of validator is important, because only one validator can be executed during validation process -->
-    <bean id="clientsResourcesCompositeValidator" class="cz.cvut.authserver.oauth2.api.validators.ClientsResourcesCompositeValidator">
-        <property name="validators">
-            <list>
-                <ref bean="clientDetailsValidator"/>
-                <ref bean="authorizationGrantValidator"/>
-            </list>
-        </property>
-    </bean>
-    
-    <bean id="clientDetailsValidator" class="cz.cvut.authserver.oauth2.api.validators.ClientDetailsValidator"/>
-    
-    <bean id="authorizationGrantValidator" class="cz.cvut.authserver.oauth2.api.validators.AuthorizationGrantValidator"/>
-    
+
     <!-- Bean to configure a default JSR-303 Validator as a Spring bean -->
-    <bean id="validator"
-          class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"/>
+    <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"/>
     
     <!--///// Generators /////-->
     
