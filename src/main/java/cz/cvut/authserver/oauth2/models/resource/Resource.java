@@ -2,12 +2,17 @@ package cz.cvut.authserver.oauth2.models.resource;
 
 import cz.cvut.authserver.oauth2.api.validators.EnumValue;
 import cz.cvut.authserver.oauth2.api.validators.ValidUrl;
-import cz.cvut.authserver.oauth2.models.resource.enums.ResourceVisibility;
+import cz.cvut.authserver.oauth2.models.resource.enums.Visibility;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.commons.lang.builder.ToStringBuilder;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
+import java.net.URI;
 
 /**
  * Represents resources in the CTU OAuth 2.0 authorization server.
@@ -15,12 +20,14 @@ import javax.validation.constraints.Size;
  * @author Tomas Mano <tomasmano@gmail.com>
  */
 @JsonIgnoreProperties(ignoreUnknown=true)
-public class Resource {
+public class Resource implements Serializable {
+
+    private static final long serialVersionUID = 1L;
     
     @JsonProperty("auth")
     private Auth auth;
 
-    @JsonProperty("resourceId")
+    @JsonProperty("resource_id")
     private String id;
 
     @ValidUrl
@@ -36,7 +43,7 @@ public class Resource {
     @JsonProperty("name")
     private String name;
     
-    @NotNull() @Size(max=256)
+    @NotNull @Size(max=256)
     @JsonProperty("version")
     private String version;
     
@@ -45,23 +52,26 @@ public class Resource {
     private String title;
     
     @NotNull
-    @EnumValue(ResourceVisibility.class)
+    @EnumValue(Visibility.class)
     @JsonProperty("visibility")
-    private String visibility = ResourceVisibility.PUBLIC.get();
+    private String visibility = Visibility.PUBLIC.toString();
+
+
 
     public Resource() {
     }
 
-    public Resource(Auth auth, String id, String baseUrl, String description, String name, String version, String title, String visibility) {
+    public Resource(Auth auth, String id, URI baseUrl, String description, String name, String version, String title, Visibility visibility) {
         this.auth = auth;
         this.id = id;
-        this.baseUrl = baseUrl;
+        this.baseUrl = baseUrl.toString();
         this.description = description;
         this.name = name;
         this.version = version;
         this.title = title;
-        this.visibility = visibility;
+        this.visibility = visibility.toString();
     }
+
 
     public Auth getAuth() {
         return auth;
@@ -127,35 +137,29 @@ public class Resource {
         this.visibility = visibility;
     }
 
+
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 31 * hash + (this.id != null ? this.id.hashCode() : 0);
-        hash = 31 * hash + (this.baseUrl != null ? this.baseUrl.hashCode() : 0);
-        hash = 31 * hash + (this.name != null ? this.name.hashCode() : 0);
-        hash = 31 * hash + (this.version != null ? this.version.hashCode() : 0);
-        hash = 31 * hash + (this.title != null ? this.title.hashCode() : 0);
-        return hash;
+        return new HashCodeBuilder(7, 31).append(id).append(name).append(version).toHashCode();
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Resource other = (Resource) obj;
-        if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (getClass() != obj.getClass()) return false;
+
+        Resource other = (Resource) obj;
+        return new EqualsBuilder().append(id, other.id).append(name, other.name)
+                .append(version, other.version)
+                .isEquals();
     }
 
     @Override
     public String toString() {
-        return "Resource{" + "id=" + id + ", name=" + name + ", version=" + version + ", visibility=" + visibility + '}';
+        return new ToStringBuilder(this).append("id", id).append("name", name)
+                .append("version", version).append("visibility", visibility)
+                .toString();
     }
     
 }

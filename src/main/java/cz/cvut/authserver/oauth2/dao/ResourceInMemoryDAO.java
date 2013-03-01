@@ -5,8 +5,9 @@ import cz.cvut.authserver.oauth2.generators.IdentifierGenerator;
 import cz.cvut.authserver.oauth2.models.resource.Auth;
 import cz.cvut.authserver.oauth2.models.resource.Resource;
 import cz.cvut.authserver.oauth2.models.resource.Scope;
-import cz.cvut.authserver.oauth2.models.resource.enums.ResourceVisibility;
+import cz.cvut.authserver.oauth2.models.resource.enums.Visibility;
 import java.io.Serializable;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -55,7 +56,7 @@ public class ResourceInMemoryDAO implements ResourceDAO {
     public List<Resource> getAllPublicResources() {
         List<Resource> publicResources = new ArrayList<Resource>();
         for (Resource resource : resources) {
-            if (resource.getVisibility().equals(ResourceVisibility.PUBLIC.get())) {
+            if (resource.getVisibility().equals(Visibility.PUBLIC.toString())) {
                 publicResources.add(resource);
             }
         }
@@ -101,7 +102,7 @@ public class ResourceInMemoryDAO implements ResourceDAO {
     }
 
     private static Resource createResource(Auth auth, String code, String url, String desc, String name, String version, String title) {
-        return new Resource(auth, code, url, desc, name, version, title, ResourceVisibility.PUBLIC.get());
+        return new Resource(auth, code, URI.create(url), desc, name, version, title, Visibility.PUBLIC);
     }
 
     private static Auth createAuth(Scope... scopes) {

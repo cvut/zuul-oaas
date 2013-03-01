@@ -7,7 +7,7 @@ import cz.cvut.authserver.oauth2.models.AuthorizationGrant;
 import cz.cvut.authserver.oauth2.models.resource.Auth;
 import cz.cvut.authserver.oauth2.models.resource.Resource;
 import cz.cvut.authserver.oauth2.models.resource.Scope;
-import cz.cvut.authserver.oauth2.models.resource.enums.ResourceVisibility;
+import cz.cvut.authserver.oauth2.models.resource.enums.Visibility;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -20,6 +20,7 @@ import org.springframework.security.oauth2.common.*;
 import org.springframework.security.oauth2.provider.*;
 import org.springframework.util.StringUtils;
 
+import java.net.URI;
 import java.util.*;
 
 import static java.util.Arrays.asList;
@@ -268,7 +269,7 @@ public class Factories {
     }
 
     private static Resource createResource(Auth auth, String code, String url, String desc, String name, String version, String title) {
-        Resource resource = new Resource(auth, code, url, desc, name, version, title, ResourceVisibility.PUBLIC.get());
+        Resource resource = new Resource(auth, code, URI.create(url), desc, name, version, title, Visibility.PUBLIC);
         return resource;
     }
 

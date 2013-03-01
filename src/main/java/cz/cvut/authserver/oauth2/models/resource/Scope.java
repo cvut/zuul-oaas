@@ -1,9 +1,13 @@
 package cz.cvut.authserver.oauth2.models.resource;
 
-import java.io.Serializable;
-import javax.validation.constraints.Size;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.commons.lang.builder.ToStringBuilder;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
+
+import javax.validation.constraints.Size;
+import java.io.Serializable;
 
 /**
  * Represents a scope of the access token issued by authorization server in
@@ -28,8 +32,9 @@ public class Scope implements Serializable {
     private String description;
 
     @JsonProperty("secured")
-    private boolean secured;
-    
+    private boolean secured = false;
+
+
     public Scope() {
     }
 
@@ -38,6 +43,7 @@ public class Scope implements Serializable {
         this.description = description;
         this.secured = secured;
     }
+
 
     public String getName() {
         return name;
@@ -63,33 +69,27 @@ public class Scope implements Serializable {
         this.secured = secured;
     }
 
+
     @Override
     public int hashCode() {
-        int hash = 3;
-        hash = 59 * hash + (this.name != null ? this.name.hashCode() : 0);
-        hash = 59 * hash + (this.description != null ? this.description.hashCode() : 0);
-        hash = 59 * hash + (this.secured ? 1 : 0);
-        return hash;
+        return new HashCodeBuilder(3, 59).append(name).append(description).append(secured).toHashCode();
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Scope other = (Scope) obj;
-        if ((this.name == null) ? (other.name != null) : !this.name.equals(other.name)) {
-            return false;
-        }
-        return true;
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (getClass() != obj.getClass()) return false;
+
+        Scope other = (Scope) obj;
+        return new EqualsBuilder().append(name, other.name)
+                .append(description, other.description).append(secured, other.secured)
+                .isEquals();
     }
     
     @Override
     public String toString() {
-        return "Scope{" + "name=" + name + ", description=" + description + '}';
+        return new ToStringBuilder(this).append("name", name).append("secured", secured).toString();
     }
     
 }
