@@ -1,7 +1,7 @@
 package cz.cvut.authserver.oauth2.models.resource;
 
 import cz.cvut.authserver.oauth2.api.validators.EnumValue;
-import cz.cvut.authserver.oauth2.api.validators.ValidUrl;
+import cz.cvut.authserver.oauth2.api.validators.ValidURI;
 import cz.cvut.authserver.oauth2.models.resource.enums.Visibility;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -30,9 +30,9 @@ public class Resource implements Serializable {
     @JsonProperty("resource_id")
     private String id;
 
-    @ValidUrl
-    @Size(max=256)
-    @JsonProperty("baserUrl")
+    @NotNull @Size(max=256)
+    @ValidURI(scheme ={"https", "http"})
+    @JsonProperty("baser_url")
     private String baseUrl;
     
     @Size(max=256)
