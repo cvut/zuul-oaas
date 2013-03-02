@@ -127,7 +127,7 @@ public class ClientsController {
     public void addRoleToClientDetails(@PathVariable String clientId, @RequestBody String role) {
         ClientDTO client = clientsService.findClientDetailsById(clientId);
 
-        if (client.getAuthorities().add(new SimpleGrantedAuthority(role))) {
+        if (client.getAuthorities().add(role)) {
             clientsService.updateClientDetails(client);
         }
     }

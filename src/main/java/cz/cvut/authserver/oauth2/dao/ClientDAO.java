@@ -1,9 +1,9 @@
 package cz.cvut.authserver.oauth2.dao;
 
+import cz.cvut.authserver.oauth2.models.Client;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.oauth2.provider.ClientDetails;
-import org.springframework.security.oauth2.provider.NoSuchClientException;
 
 import java.util.List;
 
@@ -12,13 +12,13 @@ import java.util.List;
  */
 public interface ClientDAO {
 
-    List<ClientDetails> findAll();
+    List<Client> findAll();
 
-    ClientDetails findOne(String clientId);
+    Client findOne(String clientId);
 
-    void save(ClientDetails clientDetails) throws DuplicateKeyException;
+    void save(Client client) throws DuplicateKeyException;
 
-    void update(ClientDetails clientDetails) throws EmptyResultDataAccessException;
+    void update(Client client) throws EmptyResultDataAccessException;
 
     void updateClientSecret(String clientId, String secret) throws EmptyResultDataAccessException;
 

@@ -1,9 +1,7 @@
 package cz.cvut.authserver.oauth2.services;
 
-import java.util.Arrays;
-import java.util.HashSet;
-
 import cz.cvut.authserver.oauth2.dao.mongo.MongoClientDAO;
+import cz.cvut.authserver.oauth2.models.Client;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,8 +18,11 @@ import org.springframework.test.annotation.IfProfileValue;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import static cz.cvut.authserver.oauth2.Factories.*;
-import static cz.cvut.authserver.oauth2.mongo.MongoDbConstants.collections.CLIENT_DETAILS;
+import java.util.Arrays;
+import java.util.HashSet;
+
+import static cz.cvut.authserver.oauth2.Factories.createEmptyClientDetails;
+import static cz.cvut.authserver.oauth2.Factories.createRandomClientDetails;
 import static org.junit.Assert.*;
 
 /**
@@ -40,13 +41,13 @@ public class MongoClientDetailsServiceTest {
 
 
     public @Before void initializeDb() {
-        assertFalse("Database should be empty", template.collectionExists(CLIENT_DETAILS));
+        assertFalse("Database should be empty", template.collectionExists(Client.class));
         service = new PersistentClientDetailsService();
         service.setClientDAO(new MongoClientDAO(template));
     }
 
     public @After void clearDb() {
-        template.dropCollection(CLIENT_DETAILS);
+        template.dropCollection(Client.class);
     }
 
 
@@ -70,7 +71,7 @@ public class MongoClientDetailsServiceTest {
         assertFalse(actual.isScoped());
         assertEquals(0, actual.getScope().size());
         assertEquals(2, actual.getAuthorizedGrantTypes().size());
-        assertNull(actual.getRegisteredRedirectUri());
+        assertEquals(0, actual.getRegisteredRedirectUri().size());
         assertEquals(0, actual.getAuthorities().size());
         assertEquals(null, actual.getAccessTokenValiditySeconds());
         assertEquals(null, actual.getAccessTokenValiditySeconds());

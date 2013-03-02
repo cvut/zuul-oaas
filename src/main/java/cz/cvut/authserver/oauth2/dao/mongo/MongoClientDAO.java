@@ -2,17 +2,14 @@ package cz.cvut.authserver.oauth2.dao.mongo;
 
 import com.mongodb.WriteResult;
 import cz.cvut.authserver.oauth2.dao.ClientDAO;
+import cz.cvut.authserver.oauth2.models.Client;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Update;
-import org.springframework.security.oauth2.provider.ClientDetails;
 
 import java.util.List;
 
-import static cz.cvut.authserver.oauth2.mongo.MongoDbConstants.client_details.CLIENT_ID;
-import static cz.cvut.authserver.oauth2.mongo.MongoDbConstants.client_details.CLIENT_SECRET;
-import static cz.cvut.authserver.oauth2.mongo.MongoDbConstants.collections.CLIENT_DETAILS;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.query.Query.query;
 
@@ -22,7 +19,7 @@ import static org.springframework.data.mongodb.core.query.Query.query;
  */
 public class MongoClientDAO implements ClientDAO {
 
-    private static final Class<ClientDetails> ENTITY_CLASS = ClientDetails.class;
+    private static final Class<Client> ENTITY_CLASS = Client.class;
 
     private final MongoOperations mongo;
 
@@ -32,30 +29,30 @@ public class MongoClientDAO implements ClientDAO {
     }
 
 
-    public List<ClientDetails> findAll() {
-        return mongo.findAll(ENTITY_CLASS, CLIENT_DETAILS);
+    public List<Client> findAll() {
+        return mongo.findAll(ENTITY_CLASS);
     }
 
-    public ClientDetails findOne(String clientId) {
-        return mongo.findById(clientId, ENTITY_CLASS, CLIENT_DETAILS);
+    public Client findOne(String clientId) {
+        return mongo.findById(clientId, ENTITY_CLASS);
     }
 
-    public void save(ClientDetails clientDetails) throws DuplicateKeyException {
-        mongo.insert(clientDetails, CLIENT_DETAILS);
+    public void save(Client client) throws DuplicateKeyException {
+        mongo.insert(client);
     }
 
-    public void update(ClientDetails clientDetails) throws EmptyResultDataAccessException {
-        if (! exists(clientDetails.getClientId())) {
-            throw new EmptyResultDataAccessException("No such client with clientId = " + clientDetails.getClientId(), 1);
+    public void update(Client client) throws EmptyResultDataAccessException {
+        if (! exists(client.getClientId())) {
+            throw new EmptyResultDataAccessException("No such client with clientId = " + client.getClientId(), 1);
         }
-        mongo.save(clientDetails, CLIENT_DETAILS);
+        mongo.save(client);
     }
 
     public void updateClientSecret(String clientId, String secret) throws EmptyResultDataAccessException {
         WriteResult result = mongo.updateFirst(
-                query(where(CLIENT_ID).is(clientId)),
-                Update.update(CLIENT_SECRET, secret),
-                CLIENT_DETAILS);
+                query(where("_id").is(clientId)),
+                Update.update("clientSecret", secret),
+                ENTITY_CLASS);
 
         if (result.getN() == 0) {
             throw new EmptyResultDataAccessException("No such client with clientId = " + clientId, 1);
@@ -63,11 +60,11 @@ public class MongoClientDAO implements ClientDAO {
     }
 
     public void delete(String clientId) {
-        mongo.remove(query(where(CLIENT_ID).is(clientId)), CLIENT_DETAILS);
+        mongo.remove(query(where("_id").is(clientId)), ENTITY_CLASS);
     }
 
     public boolean exists(String clientId) {
-        return mongo.findById(clientId, ENTITY_CLASS, CLIENT_DETAILS) != null;
+        return mongo.findById(clientId, ENTITY_CLASS) != null;
     }
 
 }

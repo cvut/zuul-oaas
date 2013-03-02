@@ -1,15 +1,17 @@
 package cz.cvut.authserver.oauth2.services;
 
 import cz.cvut.authserver.oauth2.api.models.ClientDTO;
+import cz.cvut.authserver.oauth2.dao.ClientDAO;
 import cz.cvut.authserver.oauth2.generators.OAuth2ClientCredentialsGenerator;
+import cz.cvut.authserver.oauth2.models.Client;
+import ma.glasnost.orika.MapperFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 import org.springframework.security.oauth2.provider.ClientAlreadyExistsException;
-import org.springframework.security.oauth2.provider.ClientDetailsService;
-import org.springframework.security.oauth2.provider.ClientRegistrationService;
 import org.springframework.security.oauth2.provider.NoSuchClientException;
 
 import java.util.List;
@@ -26,9 +28,9 @@ public class ClientsServiceImpl implements ClientsService {
     private static final Logger LOG = LoggerFactory.getLogger(ClientsServiceImpl.class);
     private static final List<GrantedAuthority> DEFAULT_AUTHORITIES =  AuthorityUtils.createAuthorityList("ROLE_CLIENT");
 
-    private ClientDetailsService clientDetailsService;
+    private ClientDAO clientDAO;
 
-    private ClientRegistrationService clientRegistrationService;
+    private MapperFacade mapper;
     
     private OAuth2ClientCredentialsGenerator oauth2ClientCredentialsGenerator;
     
@@ -37,23 +39,19 @@ public class ClientsServiceImpl implements ClientsService {
 
     @Override
     public ClientDTO findClientDetailsById(String clientId) throws NoSuchClientException, OAuth2Exception {
-        try {
-            return new ClientDTO(clientDetailsService.loadClientByClientId(clientId));
+        Client client = clientDAO.findOne(clientId);
 
-        } catch (OAuth2Exception ex) {
-            // loadClientByClientId throws OAuth2Exception "invalid_client" when no client exists with the given id,
-            // resulting in 401 Unauthorized Status code which doesn't fit our purposes at all ...
-            if (OAuth2Exception.INVALID_CLIENT.equals(ex.getOAuth2ErrorCode())) {
-                // this will result in 404 Not Found
-                throw new NoSuchClientException(String.format("Client with id [%s] doesn't exists.", clientId), ex);
-            }
-            throw ex;
+        if (client == null) {
+            throw new NoSuchClientException(String.format("Client with id [%s] doesn't exists.", clientId));
         }
+        return mapper.map(client, ClientDTO.class);
     }
 
     @Override
-    public String createClientDetails(ClientDTO client) throws ClientAlreadyExistsException {
-        LOG.info("Creating new client: [{}]", client);
+    public String createClientDetails(ClientDTO clientDTO) throws ClientAlreadyExistsException {
+        LOG.info("Creating new client: [{}]", clientDTO);
+
+        Client client = mapper.map(clientDTO, Client.class);
 
         // generate oauth2 client credentials
         String clientId = oauth2ClientCredentialsGenerator.generateClientId();
@@ -68,21 +66,28 @@ public class ClientsServiceImpl implements ClientsService {
         } else {
             client.setAuthorities(client.getAuthorities());
         }
-        clientRegistrationService.addClientDetails(client);  //save
+        clientDAO.save(client);
 
         return clientId;
     }
 
     @Override
-    public void updateClientDetails(ClientDTO client) throws NoSuchClientException {
-        LOG.info("Updating client: [{}]", client);
-        clientRegistrationService.updateClientDetails(client);
+    public void updateClientDetails(ClientDTO clientDTO) throws NoSuchClientException {
+        LOG.info("Updating client: [{}]", clientDTO);
+        try {
+            clientDAO.update(mapper.map(clientDTO, Client.class));
+
+        } catch (EmptyResultDataAccessException ex) {
+            throw new NoSuchClientException(ex.getMessage(), ex);
+        }
     }
 
     @Override
     public void removeClientDetails(String clientId) throws NoSuchClientException {
         LOG.info("Removing client: [{}]", clientId);
-        clientRegistrationService.removeClientDetails(clientId);
+        assertClientExists(clientId);
+
+        clientDAO.delete(clientId);
     }
 
     @Override
@@ -90,33 +95,27 @@ public class ClientsServiceImpl implements ClientsService {
         LOG.info("Reseting secret for client: [{}]", clientId);
 
         String newSecret = oauth2ClientCredentialsGenerator.generateClientSecret();
-        clientRegistrationService.updateClientSecret(clientId, newSecret);
+        clientDAO.updateClientSecret(clientId, newSecret);
+    }
+
+    private void assertClientExists(String clientId) {
+        if (! clientDAO.exists(clientId)) {
+            throw new NoSuchClientException("No such client with id = " + clientId);
+        }
     }
 
     
     //////////  Getters / Setters  //////////
 
-    public ClientDetailsService getClientDetailsService() {
-        return clientDetailsService;
-    }
-
-    public void setClientDetailsService(ClientDetailsService clientDetailsService) {
-        this.clientDetailsService = clientDetailsService;
-    }
-
-    public ClientRegistrationService getClientRegistrationService() {
-        return clientRegistrationService;
-    }
-
-    public void setClientRegistrationService(ClientRegistrationService clientRegistrationService) {
-        this.clientRegistrationService = clientRegistrationService;
-    }
-
-    public OAuth2ClientCredentialsGenerator getOauth2ClientCredentialsGenerator() {
-        return oauth2ClientCredentialsGenerator;
+    public void setClientDAO(ClientDAO clientDAO) {
+        this.clientDAO = clientDAO;
     }
 
     public void setOauth2ClientCredentialsGenerator(OAuth2ClientCredentialsGenerator oauth2ClientCredentialsGenerator) {
         this.oauth2ClientCredentialsGenerator = oauth2ClientCredentialsGenerator;
+    }
+
+    public void setMapper(MapperFacade mapper) {
+        this.mapper = mapper;
     }
 }

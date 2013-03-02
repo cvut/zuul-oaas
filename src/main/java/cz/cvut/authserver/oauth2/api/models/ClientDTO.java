@@ -8,21 +8,22 @@ import cz.cvut.authserver.oauth2.models.AuthorizationGrant;
 import cz.jirutka.validator.collection.constraints.EachPattern;
 import cz.jirutka.validator.collection.constraints.EachSize;
 import cz.jirutka.validator.spring.SpELAssert;
-import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.codehaus.jackson.annotate.*;
+import org.codehaus.jackson.annotate.JsonAutoDetect;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.codehaus.jackson.annotate.JsonMethod;
+import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 import org.hibernate.validator.constraints.NotEmpty;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.oauth2.provider.BaseClientDetails.ArrayOrStringDeserializer;
 import org.springframework.security.oauth2.provider.ClientDetails;
-import org.springframework.util.CollectionUtils;
 
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-import java.util.*;
+import java.io.Serializable;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * DTO for {@link ClientDetails}.
@@ -34,10 +35,9 @@ import java.util.*;
 @JsonAutoDetect(JsonMethod.NONE)
 @JsonSerialize(include = Inclusion.NON_DEFAULT)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ClientDTO implements ClientDetails {
+public class ClientDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    private static final String EXT_PRODUCT_NAME = "product-name";
 
 	@JsonProperty("client_id")
 	private String clientId;
@@ -50,27 +50,29 @@ public class ClientDTO implements ClientDetails {
     @EachPattern( @Pattern(regexp = "[a-zA-Z0-9\\-_\\.]+") )
     @JsonProperty("scope")
 	@JsonDeserialize(using = ArrayOrStringDeserializer.class)
-	private Set<String> scope = new LinkedHashSet<>(0);
+	private Collection<String> scope;
 
     //TODO
 	@JsonProperty("resource_ids")
 	@JsonDeserialize(using = ArrayOrStringDeserializer.class)
-	private Set<String> resourceIds = new LinkedHashSet<>(0);
+	private Collection<String> resourceIds;
 
     @NotEmpty
     @EachEnum( @EnumValue(value = AuthorizationGrant.class,
         message = "{validator.invalid_grant_type}"))
 	@JsonProperty("authorized_grant_types")
 	@JsonDeserialize(using = ArrayOrStringDeserializer.class)
-	private Set<String> authorizedGrantTypes = new LinkedHashSet<>(0);
+	private Collection<String> authorizedGrantTypes;
 
     @EachSize( @Size(min = 5, max = 255) )
     @EachURI( @ValidURI(relative = false, fragment = false) )
 	@JsonProperty("redirect_uri")
 	@JsonDeserialize(using = ArrayOrStringDeserializer.class)
-	private Set<String> registeredRedirectUris = new LinkedHashSet<>(0);
+	private Collection<String> registeredRedirectUri;
 
-	private List<GrantedAuthority> authorities = new ArrayList<>(0);
+    @JsonProperty("authorities")
+    @JsonDeserialize(using = ArrayOrStringDeserializer.class)
+	private List<String> authorities;
 
     //TODO
 	@JsonProperty("access_token_validity")
@@ -80,178 +82,86 @@ public class ClientDTO implements ClientDetails {
 	@JsonProperty("refresh_token_validity")
 	private Integer refreshTokenValiditySeconds;
 
-	private Map<String, Object> additionalInformation = new LinkedHashMap<>();
+    @JsonProperty("product_name")
+	private String productName;
 
 
 
-	public ClientDTO() {
-	}
+    public String getClientId() {
+        return clientId;
+    }
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
+    }
 
-	public ClientDTO(ClientDetails prototype) {
-		this();
-		setAccessTokenValiditySeconds(prototype.getAccessTokenValiditySeconds());
-		setRefreshTokenValiditySeconds(prototype.getRefreshTokenValiditySeconds());
-		setAuthorities(prototype.getAuthorities());
-		setAuthorizedGrantTypes(prototype.getAuthorizedGrantTypes());
-		setClientId(prototype.getClientId());
-		setClientSecret(prototype.getClientSecret());
-		setRegisteredRedirectUri(prototype.getRegisteredRedirectUri());
-		setScope(prototype.getScope());
-		setResourceIds(prototype.getResourceIds());
-	}
+    public String getClientSecret() {
+        return clientSecret;
+    }
+    public void setClientSecret(String clientSecret) {
+        this.clientSecret = clientSecret;
+    }
 
+    public Collection<String> getScope() {
+        return scope;
+    }
+    public void setScope(Collection<String> scope) {
+        this.scope = scope;
+    }
 
-	public String getClientId() {
-		return clientId;
-	}
+    public Collection<String> getResourceIds() {
+        return resourceIds;
+    }
+    public void setResourceIds(Collection<String> resourceIds) {
+        this.resourceIds = resourceIds;
+    }
 
-	public void setClientId(String clientId) {
-		this.clientId = clientId;
-	}
+    public Collection<String> getAuthorizedGrantTypes() {
+        return authorizedGrantTypes;
+    }
+    public void setAuthorizedGrantTypes(Collection<String> authorizedGrantTypes) {
+        this.authorizedGrantTypes = authorizedGrantTypes;
+    }
 
+    public Collection<String> getRegisteredRedirectUri() {
+        return registeredRedirectUri;
+    }
+    public void setRegisteredRedirectUri(Collection<String> registeredRedirectUri) {
+        this.registeredRedirectUri = registeredRedirectUri;
+    }
 
-	public boolean isSecretRequired() {
-		return this.clientSecret != null;
-	}
+    public List<String> getAuthorities() {
+        return authorities;
+    }
+    public void setAuthorities(List<String> authorities) {
+        this.authorities = authorities;
+    }
 
-	public String getClientSecret() {
-		return clientSecret;
-	}
+    public Integer getAccessTokenValiditySeconds() {
+        return accessTokenValiditySeconds;
+    }
+    public void setAccessTokenValiditySeconds(Integer accessTokenValiditySeconds) {
+        this.accessTokenValiditySeconds = accessTokenValiditySeconds;
+    }
 
-	public void setClientSecret(String clientSecret) {
-		this.clientSecret = clientSecret;
-	}
+    public Integer getRefreshTokenValiditySeconds() {
+        return refreshTokenValiditySeconds;
+    }
+    public void setRefreshTokenValiditySeconds(Integer refreshTokenValiditySeconds) {
+        this.refreshTokenValiditySeconds = refreshTokenValiditySeconds;
+    }
 
-
-	public boolean isScoped() {
-		return !CollectionUtils.isEmpty(scope);
-	}
-
-	public Set<String> getScope() {
-		return scope;
-	}
-
-	public void setScope(Collection<String> scope) {
-		this.scope = scope != null ? new LinkedHashSet<>(scope) : new LinkedHashSet<String>(0);
-	}
-
-
-	public Set<String> getResourceIds() {
-		return resourceIds;
-	}
-
-	public void setResourceIds(Collection<String> resourceIds) {
-		this.resourceIds = resourceIds != null
-                ? new LinkedHashSet<>(resourceIds)
-                : new LinkedHashSet<String>(0);
-	}
-
-
-	public Set<String> getAuthorizedGrantTypes() {
-		return authorizedGrantTypes;
-	}
-
-	public void setAuthorizedGrantTypes(Collection<String> authorizedGrantTypes) {
-		this.authorizedGrantTypes = new LinkedHashSet<>(authorizedGrantTypes);
-	}
-
-
-	public Set<String> getRegisteredRedirectUri() {
-		return registeredRedirectUris;
-	}
-
-	public void setRegisteredRedirectUri(Set<String> registeredRedirectUris) {
-		this.registeredRedirectUris = registeredRedirectUris != null
-                ? new LinkedHashSet<>(registeredRedirectUris)
-                : new LinkedHashSet<String>(0);
-	}
+    public String getProductName() {
+        return productName;
+    }
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
 
     @SuppressWarnings("UnusedDeclaration")
     public boolean hasRedirectUri() {
-        return !registeredRedirectUris.isEmpty();
+        return !registeredRedirectUri.isEmpty();
     }
 
-
-    public Collection<GrantedAuthority> getAuthorities() {
-        return authorities;
-    }
-
-
-    public void setAuthorities(Collection<? extends GrantedAuthority> authorities) {
-        this.authorities = new ArrayList<>(authorities);
-    }
-
-	public Integer getAccessTokenValiditySeconds() {
-		return accessTokenValiditySeconds;
-	}
-
-
-	public void setAccessTokenValiditySeconds(Integer accessTokenValiditySeconds) {
-		this.accessTokenValiditySeconds = accessTokenValiditySeconds;
-	}
-
-	public Integer getRefreshTokenValiditySeconds() {
-		return refreshTokenValiditySeconds;
-	}
-
-
-	public void setRefreshTokenValiditySeconds(Integer refreshTokenValiditySeconds) {
-		this.refreshTokenValiditySeconds = refreshTokenValiditySeconds;
-	}
-
-    @JsonAnyGetter
-    public Map<String, Object> getAdditionalInformation() {
-        return Collections.unmodifiableMap(this.additionalInformation);
-    }
-
-	public void setAdditionalInformation(Map<String, ?> additionalInformation) {
-		this.additionalInformation = new LinkedHashMap<>(additionalInformation);
-	}
-
-
-	@JsonAnySetter
-	public void addAdditionalInformation(String key, Object value) {
-		additionalInformation.put(key, value);
-	}
-
-    public String getProductName() {
-        return (String) additionalInformation.get(EXT_PRODUCT_NAME);
-    }
-
-
-    public void setProductName(String productName) {
-        additionalInformation.put(EXT_PRODUCT_NAME, productName);
-    }
-
-
-    @JsonProperty("authorities")
-    protected List<String> getAuthoritiesAsStrings() {
-        return new ArrayList<>(AuthorityUtils.authorityListToSet(authorities));
-    }
-
-    @JsonProperty("authorities")
-    @JsonDeserialize(using = ArrayOrStringDeserializer.class)
-    protected void setAuthoritiesAsStrings(Set<String> values) {
-        setAuthorities(AuthorityUtils.createAuthorityList(values.toArray(new String[values.size()])));
-    }
-
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null) return false;
-        if (getClass() != obj.getClass()) return false;
-
-        ClientDTO other = (ClientDTO) obj;
-        if (!clientId.equals(other.clientId)) return false;
-
-        return true;
-    }
-
-	@Override
-	public int hashCode() {
-        return new HashCodeBuilder(33, 1).append(clientId).toHashCode();
-	}
 
 	@Override
 	public String toString() {

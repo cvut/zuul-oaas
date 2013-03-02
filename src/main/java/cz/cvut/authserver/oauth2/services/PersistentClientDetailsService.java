@@ -1,6 +1,7 @@
 package cz.cvut.authserver.oauth2.services;
 
 import cz.cvut.authserver.oauth2.dao.ClientDAO;
+import cz.cvut.authserver.oauth2.models.Client;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DuplicateKeyException;
@@ -38,7 +39,7 @@ public class PersistentClientDetailsService implements ClientDetailsService, Cli
     public void addClientDetails(ClientDetails clientDetails) throws ClientAlreadyExistsException {
         try {
             LOG.debug("Adding client: {}", clientDetails.getClientId());
-            clientDao.save(encodeClientSecret(clientDetails));
+            clientDao.save(new Client(encodeClientSecret(clientDetails)));
 
         } catch (DuplicateKeyException ex) {
             throw new ClientAlreadyExistsException("Client already exists: " + clientDetails.getClientId(), ex);
@@ -48,7 +49,7 @@ public class PersistentClientDetailsService implements ClientDetailsService, Cli
     public void updateClientDetails(ClientDetails clientDetails) throws NoSuchClientException {
         LOG.debug("Updating client: {}", clientDetails.getClientId());
         try {
-            clientDao.update(clientDetails);
+            clientDao.update(new Client(clientDetails));
 
         } catch (EmptyResultDataAccessException ex) {
             throw new NoSuchClientException(ex.getMessage(), ex);
@@ -73,7 +74,7 @@ public class PersistentClientDetailsService implements ClientDetailsService, Cli
     }
 
     public List<ClientDetails> listClientDetails() {
-        return clientDao.findAll();
+        return (List) clientDao.findAll();
     }
 
 
