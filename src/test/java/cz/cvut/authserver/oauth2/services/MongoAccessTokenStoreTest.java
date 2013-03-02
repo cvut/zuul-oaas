@@ -1,6 +1,7 @@
 package cz.cvut.authserver.oauth2.services;
 
 import cz.cvut.authserver.oauth2.dao.mongo.MongoAccessTokenDAO;
+import cz.cvut.authserver.oauth2.services.internal.TokenStoreImpl;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,13 +34,13 @@ public class MongoAccessTokenStoreTest {
 
     private @Autowired MongoTemplate template;
     
-    private PersistentTokenStore tokenStore;
+    private TokenStoreImpl tokenStore;
 
 
     public @Before void initializeDb() {
         assertFalse("Database should be empty", template.collectionExists(ACCESS_TOKENS));
 
-        tokenStore = new PersistentTokenStore();
+        tokenStore = new TokenStoreImpl();
         tokenStore.setAccessTokenDAO(new MongoAccessTokenDAO(template));
     }
 

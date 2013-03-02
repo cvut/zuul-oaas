@@ -1,4 +1,4 @@
-package cz.cvut.authserver.oauth2.services;
+package cz.cvut.authserver.oauth2.services.internal;
 
 import cz.cvut.authserver.oauth2.dao.AccessTokenDAO;
 import cz.cvut.authserver.oauth2.dao.RefreshTokenDAO;
@@ -20,9 +20,9 @@ import java.util.Collection;
  *
  * @author Jakub Jirutka <jakub@jirutka.cz>
  */
-public class PersistentTokenStore implements TokenStore {
+public class TokenStoreImpl implements TokenStore {
 
-    private static final Logger LOG = LoggerFactory.getLogger(PersistentTokenStore.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TokenStoreImpl.class);
 
     private AccessTokenDAO accessTokenDAO;
     private RefreshTokenDAO refreshTokenDAO;

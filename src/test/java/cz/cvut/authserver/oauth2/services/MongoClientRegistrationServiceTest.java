@@ -2,6 +2,7 @@ package cz.cvut.authserver.oauth2.services;
 
 import cz.cvut.authserver.oauth2.dao.mongo.MongoClientDAO;
 import cz.cvut.authserver.oauth2.models.Client;
+import cz.cvut.authserver.oauth2.services.internal.ClientRegistrationServiceImpl;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,23 +27,23 @@ import static cz.cvut.authserver.oauth2.Factories.createRandomClientDetails;
 import static org.junit.Assert.*;
 
 /**
- * Integration tests for {@link PersistentClientDetailsService}.
+ * Integration tests for {@link ClientRegistrationServiceImpl}.
  *
  * @author Jakub Jirutka <jakub@jirutka.cz>
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @IfProfileValue(name="it-profile", values={"all", "mongo"})
 @ContextConfiguration("classpath:/test-persistence-mongo.xml")
-public class MongoClientDetailsServiceTest {
+public class MongoClientRegistrationServiceTest {
 
     private @Autowired MongoTemplate template;
 
-    private PersistentClientDetailsService service;
+    private ClientRegistrationServiceImpl service;
 
 
     public @Before void initializeDb() {
         assertFalse("Database should be empty", template.collectionExists(Client.class));
-        service = new PersistentClientDetailsService();
+        service = new ClientRegistrationServiceImpl();
         service.setClientDAO(new MongoClientDAO(template));
     }
 

@@ -92,7 +92,7 @@ public class ClientsServiceImpl implements ClientsService {
 
     @Override
     public void resetClientSecret(String clientId) throws NoSuchClientException {
-        LOG.info("Reseting secret for client: [{}]", clientId);
+        LOG.info("Resetting secret for client: [{}]", clientId);
 
         String newSecret = oauth2ClientCredentialsGenerator.generateClientSecret();
         clientDAO.updateClientSecret(clientId, newSecret);
@@ -115,7 +115,7 @@ public class ClientsServiceImpl implements ClientsService {
         this.oauth2ClientCredentialsGenerator = oauth2ClientCredentialsGenerator;
     }
 
-    public void setMapper(MapperFacade mapper) {
+    public void setMapperFacade(MapperFacade mapper) {
         this.mapper = mapper;
     }
 }

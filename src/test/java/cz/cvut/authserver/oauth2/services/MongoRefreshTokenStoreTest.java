@@ -1,6 +1,7 @@
 package cz.cvut.authserver.oauth2.services;
 
 import cz.cvut.authserver.oauth2.dao.mongo.MongoRefreshTokenDAO;
+import cz.cvut.authserver.oauth2.services.internal.TokenStoreImpl;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,13 +32,13 @@ import static org.junit.Assert.*;
 public class MongoRefreshTokenStoreTest {
 
     private @Autowired MongoTemplate template;
-    private PersistentTokenStore tokenStore;
+    private TokenStoreImpl tokenStore;
 
 
     public @Before void initializeDb() {
         assertFalse("Database should be empty", template.collectionExists(REFRESH_TOKENS));
 
-        tokenStore = new PersistentTokenStore();
+        tokenStore = new TokenStoreImpl();
         tokenStore.setRefreshTokenDAO(new MongoRefreshTokenDAO(template));
     }
 

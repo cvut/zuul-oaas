@@ -1,4 +1,4 @@
-package cz.cvut.authserver.oauth2.services;
+package cz.cvut.authserver.oauth2.services.internal;
 
 import cz.cvut.authserver.oauth2.dao.ClientDAO;
 import cz.cvut.authserver.oauth2.models.Client;
@@ -14,21 +14,23 @@ import org.springframework.security.oauth2.provider.*;
 import java.util.List;
 
 /**
- * MongoDB implementation of the Client details and registration service.
+ * This is implementation of {@link @ClientRegistrationService} and
+ * {@link ClientDetailsService} that basically delegates calls to
+ * {@link ClientDAO}.
  *
  * @author Jakub Jirutka <jakub@jirutka.cz>
  */
-public class PersistentClientDetailsService implements ClientDetailsService, ClientRegistrationService {
+public class ClientRegistrationServiceImpl implements ClientDetailsService, ClientRegistrationService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(PersistentClientDetailsService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ClientRegistrationServiceImpl.class);
 
-    private ClientDAO clientDao;
+    private ClientDAO clientDAO;
     private PasswordEncoder passwordEncoder = NoOpPasswordEncoder.getInstance();
 
 
 
     public ClientDetails loadClientByClientId(String clientId) throws OAuth2Exception {
-        ClientDetails result = clientDao.findOne(clientId);
+        ClientDetails result = clientDAO.findOne(clientId);
 
         if (result == null) {
             throw OAuth2Exception.create(OAuth2Exception.INVALID_CLIENT, "No such client found with id = " + clientId);
@@ -39,7 +41,7 @@ public class PersistentClientDetailsService implements ClientDetailsService, Cli
     public void addClientDetails(ClientDetails clientDetails) throws ClientAlreadyExistsException {
         try {
             LOG.debug("Adding client: {}", clientDetails.getClientId());
-            clientDao.save(new Client(encodeClientSecret(clientDetails)));
+            clientDAO.save(new Client(encodeClientSecret(clientDetails)));
 
         } catch (DuplicateKeyException ex) {
             throw new ClientAlreadyExistsException("Client already exists: " + clientDetails.getClientId(), ex);
@@ -49,7 +51,7 @@ public class PersistentClientDetailsService implements ClientDetailsService, Cli
     public void updateClientDetails(ClientDetails clientDetails) throws NoSuchClientException {
         LOG.debug("Updating client: {}", clientDetails.getClientId());
         try {
-            clientDao.update(new Client(clientDetails));
+            clientDAO.update(new Client(clientDetails));
 
         } catch (EmptyResultDataAccessException ex) {
             throw new NoSuchClientException(ex.getMessage(), ex);
@@ -59,7 +61,7 @@ public class PersistentClientDetailsService implements ClientDetailsService, Cli
     public void updateClientSecret(String clientId, String secret) throws NoSuchClientException {
         LOG.debug("Updating secret for client: {}", clientId);
         try {
-            clientDao.updateClientSecret(clientId, passwordEncoder.encode(secret));
+            clientDAO.updateClientSecret(clientId, passwordEncoder.encode(secret));
 
         } catch (EmptyResultDataAccessException ex) {
             throw new NoSuchClientException(ex.getMessage(), ex);
@@ -70,11 +72,11 @@ public class PersistentClientDetailsService implements ClientDetailsService, Cli
         LOG.debug("Removing client: {}", clientId);
         assertClientExists(clientId);
 
-        clientDao.delete(clientId);
+        clientDAO.delete(clientId);
     }
 
     public List<ClientDetails> listClientDetails() {
-        return (List) clientDao.findAll();
+        return (List) clientDAO.findAll();
     }
 
 
@@ -89,7 +91,7 @@ public class PersistentClientDetailsService implements ClientDetailsService, Cli
     }
 
     private void assertClientExists(String clientId) {
-        if (! clientDao.exists(clientId)) {
+        if (! clientDAO.exists(clientId)) {
             throw new NoSuchClientException("No such client with id = " + clientId);
         }
     }
@@ -97,11 +99,11 @@ public class PersistentClientDetailsService implements ClientDetailsService, Cli
 
     ////////  Accessors  ////////
 
-    public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
-        this.passwordEncoder = passwordEncoder;
+    public void setClientDAO(ClientDAO clientDAO) {
+        this.clientDAO = clientDAO;
     }
 
-    public void setClientDAO(ClientDAO clientDAO) {
-        this.clientDao = clientDAO;
+    public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
     }
 }
