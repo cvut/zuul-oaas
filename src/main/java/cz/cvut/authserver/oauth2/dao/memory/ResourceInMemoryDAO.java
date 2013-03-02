@@ -1,6 +1,7 @@
-package cz.cvut.authserver.oauth2.dao;
+package cz.cvut.authserver.oauth2.dao.memory;
 
 import cz.cvut.authserver.oauth2.api.resources.exceptions.NoSuchResourceException;
+import cz.cvut.authserver.oauth2.dao.ResourceDAO;
 import cz.cvut.authserver.oauth2.generators.IdentifierGenerator;
 import cz.cvut.authserver.oauth2.models.resource.Auth;
 import cz.cvut.authserver.oauth2.models.resource.Resource;

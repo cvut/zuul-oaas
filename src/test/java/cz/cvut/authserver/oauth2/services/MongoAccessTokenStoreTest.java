@@ -1,6 +1,6 @@
 package cz.cvut.authserver.oauth2.services;
 
-import java.util.HashSet;
+import cz.cvut.authserver.oauth2.dao.mongo.MongoAccessTokenDAO;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,12 +15,14 @@ import org.springframework.test.annotation.IfProfileValue;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.HashSet;
+
 import static cz.cvut.authserver.oauth2.Factories.*;
 import static cz.cvut.authserver.oauth2.mongo.MongoDbConstants.collections.ACCESS_TOKENS;
 import static org.junit.Assert.*;
 
 /**
- * Integration tests for {@link MongoAccessTokenStore}.
+ * Integration tests for {@link cz.cvut.authserver.oauth2.dao.mongo.MongoAccessTokenDAO}.
  *
  * @author Jakub Jirutka <jakub@jirutka.cz>
  */
@@ -31,12 +33,14 @@ public class MongoAccessTokenStoreTest {
 
     private @Autowired MongoTemplate template;
     
-    private MongoAccessTokenStore tokenStore;
+    private PersistentTokenStore tokenStore;
 
 
     public @Before void initializeDb() {
         assertFalse("Database should be empty", template.collectionExists(ACCESS_TOKENS));
-        tokenStore = new MongoAccessTokenStore(template);
+
+        tokenStore = new PersistentTokenStore();
+        tokenStore.setAccessTokenDAO(new MongoAccessTokenDAO(template));
     }
 
     public @After void clearDb() {

@@ -30,7 +30,7 @@ public class PersistableAccessTokenReadConverter extends AutoRegisteredConverter
             target.setRefreshToken(new DefaultOAuth2RefreshToken(refreshToken)); // TODO is this okay?
         }
 
-        target.setAuthenticationKey(dbo.getString(AUTHENTICATION_KEY));
+        //target.setAuthenticationKey(dbo.getString(AUTHENTICATION_KEY));
 
         DBObject authentication = dbo.getDBObject(AUTHENTICATION);
         if (authentication != null) {

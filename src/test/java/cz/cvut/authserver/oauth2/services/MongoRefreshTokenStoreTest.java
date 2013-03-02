@@ -1,6 +1,6 @@
 package cz.cvut.authserver.oauth2.services;
 
-import java.util.Date;
+import cz.cvut.authserver.oauth2.dao.mongo.MongoRefreshTokenDAO;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,12 +14,14 @@ import org.springframework.test.annotation.IfProfileValue;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.Date;
+
 import static cz.cvut.authserver.oauth2.Factories.*;
 import static cz.cvut.authserver.oauth2.mongo.MongoDbConstants.collections.REFRESH_TOKENS;
 import static org.junit.Assert.*;
 
 /**
- * Integration tests for {@link MongoRefreshTokenStore}.
+ * Integration tests for {@link cz.cvut.authserver.oauth2.dao.mongo.MongoRefreshTokenDAO}.
  *
  * @author Jakub Jirutka <jakub@jirutka.cz>
  */
@@ -29,12 +31,14 @@ import static org.junit.Assert.*;
 public class MongoRefreshTokenStoreTest {
 
     private @Autowired MongoTemplate template;
-    private MongoRefreshTokenStore tokenStore;
+    private PersistentTokenStore tokenStore;
 
 
     public @Before void initializeDb() {
         assertFalse("Database should be empty", template.collectionExists(REFRESH_TOKENS));
-        tokenStore = new MongoRefreshTokenStore(template);
+
+        tokenStore = new PersistentTokenStore();
+        tokenStore.setRefreshTokenDAO(new MongoRefreshTokenDAO(template));
     }
 
     public @After void clearDb() {

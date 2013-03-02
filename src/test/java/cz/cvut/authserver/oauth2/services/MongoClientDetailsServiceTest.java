@@ -2,6 +2,8 @@ package cz.cvut.authserver.oauth2.services;
 
 import java.util.Arrays;
 import java.util.HashSet;
+
+import cz.cvut.authserver.oauth2.dao.mongo.MongoClientDAO;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -9,6 +11,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.common.exceptions.InvalidClientException;
 import org.springframework.security.oauth2.provider.BaseClientDetails;
 import org.springframework.security.oauth2.provider.ClientAlreadyExistsException;
 import org.springframework.security.oauth2.provider.ClientDetails;
@@ -22,7 +25,7 @@ import static cz.cvut.authserver.oauth2.mongo.MongoDbConstants.collections.CLIEN
 import static org.junit.Assert.*;
 
 /**
- * Integration tests for {@link MongoClientDetailsService}.
+ * Integration tests for {@link PersistentClientDetailsService}.
  *
  * @author Jakub Jirutka <jakub@jirutka.cz>
  */
@@ -33,12 +36,13 @@ public class MongoClientDetailsServiceTest {
 
     private @Autowired MongoTemplate template;
 
-    private MongoClientDetailsService service;
+    private PersistentClientDetailsService service;
 
 
     public @Before void initializeDb() {
         assertFalse("Database should be empty", template.collectionExists(CLIENT_DETAILS));
-        service = new MongoClientDetailsService(template);
+        service = new PersistentClientDetailsService();
+        service.setClientDAO(new MongoClientDAO(template));
     }
 
     public @After void clearDb() {
@@ -47,7 +51,7 @@ public class MongoClientDetailsServiceTest {
 
 
 
-    @Test(expected = NoSuchClientException.class)
+    @Test(expected = InvalidClientException.class)
     public void load_client_for_non_existing_client_id() {
 
         service.loadClientByClientId("nonExistingClientId");
@@ -159,7 +163,7 @@ public class MongoClientDetailsServiceTest {
         service.removeClientDetails("nonExistentClientId");
     }
 
-    @Test(expected = NoSuchClientException.class)
+    @Test(expected = InvalidClientException.class)
     public void remove_client() {
 
         ClientDetails client = createRandomClientDetails("clientIdWithRandomDetails");
