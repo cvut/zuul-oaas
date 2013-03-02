@@ -16,13 +16,13 @@ import javax.validation.Valid;
 @Validated
 public interface ClientsService {
     
-    ClientDTO findClientDetailsById(String clientId) throws OAuth2Exception;
+    ClientDTO findClientById(String clientId) throws NoSuchClientException;
 
-    String createClientDetails(@Valid ClientDTO client) throws ClientAlreadyExistsException;
+    String createClient(@Valid ClientDTO client) throws ClientAlreadyExistsException;
 
-    void updateClientDetails(@Valid ClientDTO client) throws NoSuchClientException;
+    void updateClient(@Valid ClientDTO client) throws NoSuchClientException;
     
-    void removeClientDetails(String clientId) throws NoSuchClientException;
+    void removeClient(String clientId) throws NoSuchClientException;
     
     void resetClientSecret(String clientId) throws NoSuchClientException;
 

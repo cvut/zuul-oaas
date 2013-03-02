@@ -38,7 +38,7 @@ public class ClientsServiceImpl implements ClientsService {
     //////////  Business methods  //////////
 
     @Override
-    public ClientDTO findClientDetailsById(String clientId) throws NoSuchClientException, OAuth2Exception {
+    public ClientDTO findClientById(String clientId) throws NoSuchClientException, OAuth2Exception {
         Client client = clientDAO.findOne(clientId);
 
         if (client == null) {
@@ -48,7 +48,7 @@ public class ClientsServiceImpl implements ClientsService {
     }
 
     @Override
-    public String createClientDetails(ClientDTO clientDTO) throws ClientAlreadyExistsException {
+    public String createClient(ClientDTO clientDTO) throws ClientAlreadyExistsException {
         LOG.info("Creating new client: [{}]", clientDTO);
 
         Client client = mapper.map(clientDTO, Client.class);
@@ -72,7 +72,7 @@ public class ClientsServiceImpl implements ClientsService {
     }
 
     @Override
-    public void updateClientDetails(ClientDTO clientDTO) throws NoSuchClientException {
+    public void updateClient(ClientDTO clientDTO) throws NoSuchClientException {
         LOG.info("Updating client: [{}]", clientDTO);
         try {
             clientDAO.update(mapper.map(clientDTO, Client.class));
@@ -83,7 +83,7 @@ public class ClientsServiceImpl implements ClientsService {
     }
 
     @Override
-    public void removeClientDetails(String clientId) throws NoSuchClientException {
+    public void removeClient(String clientId) throws NoSuchClientException {
         LOG.info("Removing client: [{}]", clientId);
         assertClientExists(clientId);
 
