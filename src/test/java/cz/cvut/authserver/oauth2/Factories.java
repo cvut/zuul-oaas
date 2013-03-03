@@ -3,7 +3,9 @@ package cz.cvut.authserver.oauth2;
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import cz.cvut.authserver.oauth2.api.models.ClientDTO;
 import cz.cvut.authserver.oauth2.models.AuthorizationGrant;
+import cz.cvut.authserver.oauth2.models.Client;
 import cz.cvut.authserver.oauth2.models.resource.Auth;
 import cz.cvut.authserver.oauth2.models.resource.Resource;
 import cz.cvut.authserver.oauth2.models.resource.Scope;
@@ -62,7 +64,64 @@ public class Factories {
     public static ClientDetails createRandomClientDetails() {
         return createRandomClientDetails(randomString());
     }
-    
+
+
+    //////// Client ////////
+
+    public static Client createEmptyClient(String clientId) {
+        Client client = new Client();
+        client.setClientId(clientId);
+        return client;
+    }
+
+    public static Client createRandomClient(String clientId) {
+        Client client = new Client();
+
+        client.setAccessTokenValiditySeconds( randomInt() );
+        client.setAuthorities( randomGrantedAuthorities(2) );
+        client.setAuthorizedGrantTypes( asList(AuthorizationGrant.AUTH_CODE, AuthorizationGrant.REFRESH_TOKEN) );
+        client.setClientId( clientId );
+        client.setClientSecret( randomString() );
+        client.setRefreshTokenValiditySeconds( randomInt() );
+        client.setRegisteredRedirectUri( asList(URI.create("https://app.cvut.cz")) );
+        client.setResourceIds( randomStringList(DEFAULT_LIST_SIZE) );
+        client.setScope( randomStringList(DEFAULT_LIST_SIZE) );
+        client.setProductName( randomString() );
+
+        return client;
+    }
+
+    public static Client createRandomClient() {
+        return createRandomClient( randomString() );
+    }
+
+
+    //////// ClientDTO ////////
+
+    public static ClientDTO createEmptyClientDTO() {
+        ClientDTO client = new ClientDTO();
+        return client;
+    }
+
+    public static ClientDTO createRandomClientDTO(String clientId) {
+        ClientDTO client = new ClientDTO();
+
+        client.setAccessTokenValiditySeconds( randomInt() );
+        client.setAuthorities( randomStringList(DEFAULT_LIST_SIZE) );
+        client.setAuthorizedGrantTypes( randomStringList(DEFAULT_LIST_SIZE) );
+        client.setClientId( clientId );
+        client.setClientSecret( randomString() );
+        client.setRefreshTokenValiditySeconds( randomInt() );
+        client.setRegisteredRedirectUri(randomStringList(DEFAULT_LIST_SIZE));
+        client.setResourceIds( randomStringList(DEFAULT_LIST_SIZE) );
+        client.setScope( randomStringList(DEFAULT_LIST_SIZE) );
+
+        return client;
+    }
+
+    public static ClientDTO createRandomClientDTO() {
+        return createRandomClientDTO(randomString());
+    }
     
     
     //////////  Authorization Grant  //////////

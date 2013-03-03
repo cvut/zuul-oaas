@@ -1,13 +1,16 @@
 package cz.cvut.authserver.oauth2;
 
+import com.google.common.collect.Sets;
+
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 /**
  * @author Jakub Jirutka <jakub@jirutka.cz>
@@ -42,5 +45,14 @@ public class TestUtils {
         assertFalse(String.format(
                 "Validator did not complain about property %s", propertyName),
                 getValidator().validateProperty(object, propertyName).isEmpty());
+    }
+
+
+    public static <A, B> void assertEachEquals(Iterable<A> expected, Iterable<B> actual) {
+        if (expected == null || actual == null) {
+            assertEquals(expected, actual);
+        } else {
+            assertEquals(Sets.newHashSet(expected), Sets.newHashSet(actual));
+        }
     }
 }

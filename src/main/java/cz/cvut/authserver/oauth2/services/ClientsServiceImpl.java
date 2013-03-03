@@ -95,7 +95,12 @@ public class ClientsServiceImpl implements ClientsService {
         LOG.info("Resetting secret for client: [{}]", clientId);
 
         String newSecret = oauth2ClientCredentialsGenerator.generateClientSecret();
-        clientDAO.updateClientSecret(clientId, newSecret);
+        try {
+            clientDAO.updateClientSecret(clientId, newSecret);
+
+        } catch (EmptyResultDataAccessException ex) {
+            throw new NoSuchClientException(ex.getMessage(), ex);
+        }
     }
 
     private void assertClientExists(String clientId) {
