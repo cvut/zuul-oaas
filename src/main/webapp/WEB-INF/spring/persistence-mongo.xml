@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+       http://www.springframework.org/schema/data/mongo http://www.springframework.org/schema/data/mongo/spring-mongo-1.0.xsd">
+
+    
+    <!--////////// Mongo DB Persistence //////////-->
+
+
+    <!--//// Mongo DB ////-->
+
+    <!-- Define MongoDB instance -->
+    <mongo:mongo host="localhost" port="27017" />
+
+    <!-- Configure database access -->
+    <mongo:db-factory id="mongoDbFactory"
+                      username="auth_server" password=""
+                      dbname="auth_server"
+                      write-concern="SAFE" />
+
+    <!-- Enable JMX MBeans export -->
+    <mongo:jmx />
+
+
+    <!--//// Converters ////-->
+
+    <!-- Register converters for mapping domain objects to Mongo and vice versa -->
+    <mongo:mapping-converter id="mappingConverter">
+        <mongo:custom-converters base-package="cz.cvut.authserver.oauth2.mongo" />
+    </mongo:mapping-converter>
+
+    <!-- ConversionService to which are converters automatically registered -->
+    <bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean" />
+
+
+    <!--//// DAOs ////-->
+
+    <!-- Template that provides basic CRUD operations against Mongo database -->
+    <bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+        <constructor-arg name="mongoDbFactory" ref="mongoDbFactory" />
+        <property name="writeResultChecking" value="EXCEPTION" />
+    </bean>
+
+    <bean id="clientDAO" class="cz.cvut.authserver.oauth2.dao.mongo.MongoClientDAO">
+        <constructor-arg ref="mongoTemplate" />
+    </bean>
+
+    <bean id="accessTokenDAO" class="cz.cvut.authserver.oauth2.dao.mongo.MongoAccessTokenDAO">
+        <constructor-arg ref="mongoTemplate" />
+    </bean>
+
+    <bean id="refreshTokenDAO" class="cz.cvut.authserver.oauth2.dao.mongo.MongoRefreshTokenDAO">
+        <constructor-arg ref="mongoTemplate" />
+    </bean>
+
+</beans>

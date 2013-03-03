@@ -51,23 +51,11 @@
     <beans profile="mongo">
 
         <bean id="clientDetails" class="cz.cvut.authserver.oauth2.services.internal.ClientRegistrationServiceImpl"
-              p:clientDAO-ref="mongoClientDAO" />
-
-        <bean id="mongoClientDAO" class="cz.cvut.authserver.oauth2.dao.mongo.MongoClientDAO">
-            <constructor-arg ref="mongoTemplate" />
-        </bean>
+              p:clientDAO-ref="clientDAO" />
 
         <bean id="tokenStore" class="cz.cvut.authserver.oauth2.services.internal.TokenStoreImpl"
               p:accessTokenDAO-ref="accessTokenDAO"
               p:refreshTokenDAO-ref="refreshTokenDAO" />
-
-        <bean id="accessTokenDAO" class="cz.cvut.authserver.oauth2.dao.mongo.MongoAccessTokenDAO">
-            <constructor-arg ref="mongoTemplate" />
-        </bean>
-
-        <bean id="refreshTokenDAO" class="cz.cvut.authserver.oauth2.dao.mongo.MongoRefreshTokenDAO">
-            <constructor-arg ref="mongoTemplate" />
-        </bean>
 
     </beans>
 

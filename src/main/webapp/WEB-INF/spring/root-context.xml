@@ -2,11 +2,9 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:aop="http://www.springframework.org/schema/aop"
        xsi:schemaLocation="
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
-       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
-       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.1.xsd">
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
 
 
     <!--////////// Root Context Configuration //////////-->
@@ -15,10 +13,17 @@
     <!-- Export MBeans via JMX for monitoring -->
     <context:mbean-export />
 
-    <!-- Load all configuration files -->
-    <import resource="persistence.xml"/>
-    <import resource="oauth2/auth-server.xml"/>
-    <import resource="oauth2/security-server.xml"/>
-    <!--<import resource="api/api-security.xml"/>-->
-    
+    <beans profile="mongo">
+        <import resource="persistence-mongo.xml"/>
+    </beans>
+
+    <beans profile="jdbc">
+        <import resource="persistence-jdbc.xml"/>
+    </beans>
+
+    <beans profile="mongo,jdbc">
+        <import resource="oauth2/auth-server.xml"/>
+        <import resource="oauth2/security-server.xml"/>
+        <!--<import resource="api/api-security.xml"/>-->
+    </beans>
 </beans>

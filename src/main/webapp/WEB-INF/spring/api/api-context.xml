@@ -46,8 +46,7 @@
           p:resourceDAO-ref="resourceDAO" />
     
     <bean id="clientsService" class="cz.cvut.authserver.oauth2.services.ClientsServiceImpl"
-          p:clientDetailsService-ref="clientDetails"
-          p:clientRegistrationService-ref="clientDetails" 
+          p:clientDAO-ref="clientDAO"
           p:oauth2ClientCredentialsGenerator-ref="oauth2ClientCredentialsGenerator"/>
 
 
