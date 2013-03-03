@@ -4,6 +4,9 @@ import java.util.Date;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.codehaus.jackson.annotate.JsonCreator;
 import org.codehaus.jackson.annotate.JsonValue;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.TypeAlias;
+import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.oauth2.common.ExpiringOAuth2RefreshToken;
 import org.springframework.security.oauth2.common.OAuth2RefreshToken;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
@@ -12,13 +15,18 @@ import org.springframework.security.oauth2.provider.OAuth2Authentication;
  *
  * @author Jakub Jirutka <jakub@jirutka.cz>
  */
+@TypeAlias("RefreshToken")
+@Document(collection = "refresh_tokens")
 public class PersistableRefreshToken implements ExpiringOAuth2RefreshToken {
 
-    private final String value;
-    private final Date expiration;
+    private @Id String value;
+    private Date expiration;
     private OAuth2Authentication authentication;
 
-    
+
+    protected PersistableRefreshToken() {
+    }
+
     @JsonCreator
     public PersistableRefreshToken(String value) {
         this.value = value;
