@@ -2,10 +2,13 @@ package cz.cvut.authserver.oauth2.dao;
 
 import cz.cvut.authserver.oauth2.models.Client;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 
 import java.net.URI;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static cz.cvut.authserver.oauth2.Factories.createEmptyClient;
 import static cz.cvut.authserver.oauth2.Factories.createRandomClient;
@@ -18,7 +21,9 @@ import static org.junit.Assert.*;
  *
  * @author Jakub Jirutka <jakub@jirutka.cz>
  */
-public class AbstractClientDAO_IT {
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration("classpath:dao-test.xml")
+public abstract class AbstractClientDAO_IT {
 
     protected @Autowired ClientDAO dao;
 

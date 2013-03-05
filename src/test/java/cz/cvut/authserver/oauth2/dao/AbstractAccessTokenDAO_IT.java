@@ -2,12 +2,15 @@ package cz.cvut.authserver.oauth2.dao;
 
 import cz.cvut.authserver.oauth2.models.PersistableAccessToken;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2RefreshToken;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.token.TokenStore;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static cz.cvut.authserver.oauth2.Factories.*;
 import static cz.cvut.authserver.oauth2.TestUtils.assertEachEquals;
@@ -18,7 +21,9 @@ import static org.junit.Assert.*;
  *
  * @author Jakub Jirutka <jakub@jirutka.cz>
  */
-public class AbstractAccessTokenDAO_IT {
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration("classpath:dao-test.xml")
+public abstract class AbstractAccessTokenDAO_IT {
 
     protected @Autowired AccessTokenDAO dao;
 

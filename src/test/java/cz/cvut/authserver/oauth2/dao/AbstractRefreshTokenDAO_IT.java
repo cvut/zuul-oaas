@@ -2,10 +2,13 @@ package cz.cvut.authserver.oauth2.dao;
 
 import cz.cvut.authserver.oauth2.models.PersistableRefreshToken;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.common.ExpiringOAuth2RefreshToken;
 import org.springframework.security.oauth2.common.OAuth2RefreshToken;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.Date;
 
@@ -17,7 +20,9 @@ import static org.junit.Assert.*;
  *
  * @author Jakub Jirutka <jakub@jirutka.cz>
  */
-public class AbstractRefreshTokenDAO_IT {
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration("classpath:dao-test.xml")
+public abstract class AbstractRefreshTokenDAO_IT {
 
     protected @Autowired RefreshTokenDAO dao;
 

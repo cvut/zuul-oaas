@@ -1,25 +1,23 @@
-package cz.cvut.authserver.oauth2.dao;
+package cz.cvut.authserver.oauth2.dao.mongo;
 
+import cz.cvut.authserver.oauth2.dao.AbstractClientDAO_IT;
 import cz.cvut.authserver.oauth2.models.Client;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.test.annotation.IfProfileValue;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.ActiveProfiles;
 
 import static org.junit.Assert.assertFalse;
 
 /**
- * Integration tests for {@link ClientDAO} implementations.
+ * Integration tests for {@link cz.cvut.authserver.oauth2.dao.ClientDAO} implementations.
  *
  * @author Jakub Jirutka <jakub@jirutka.cz>
  */
-@RunWith(SpringJUnit4ClassRunner.class)
+@ActiveProfiles("mongo")
 @IfProfileValue(name="it-profile", values={"all", "mongo"})
-@ContextConfiguration("classpath:dao-test.xml")
 public class MongoClientDAO_IT extends AbstractClientDAO_IT {
 
     private @Autowired MongoTemplate template;
