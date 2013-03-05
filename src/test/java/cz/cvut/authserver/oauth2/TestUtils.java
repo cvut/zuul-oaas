@@ -7,10 +7,10 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Set;
 
 import static org.junit.Assert.*;
+import static org.springframework.util.CollectionUtils.isEmpty;
 
 /**
  * @author Jakub Jirutka <jakub@jirutka.cz>
@@ -48,10 +48,10 @@ public class TestUtils {
     }
 
 
-    public static <A, B> void assertEachEquals(Iterable<A> expected, Iterable<B> actual) {
-        if (expected == null || actual == null) {
+    public static <A, B> void assertEachEquals(Collection<A> expected, Collection<B> actual) {
+        if (isEmpty(expected) ^ isEmpty(actual)) {
             assertEquals(expected, actual);
-        } else {
+        } else if (!isEmpty(expected)) {
             assertEquals(Sets.newHashSet(expected), Sets.newHashSet(actual));
         }
     }
