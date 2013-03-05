@@ -11,8 +11,6 @@
     <!--////////// Mongo DB Persistence //////////-->
 
 
-    <!--//// Mongo DB ////-->
-
     <!-- Define MongoDB instance -->
     <mongo:mongo host="localhost" port="27017" />
 
@@ -45,16 +43,13 @@
         <property name="writeResultChecking" value="EXCEPTION" />
     </bean>
 
-    <bean id="clientDAO" class="cz.cvut.authserver.oauth2.dao.mongo.MongoClientDAO">
-        <constructor-arg ref="mongoTemplate" />
-    </bean>
+    <bean id="clientDAO" class="cz.cvut.authserver.oauth2.dao.mongo.MongoClientDAO"
+          p:mongoOperations-ref="mongoTemplate" />
 
-    <bean id="accessTokenDAO" class="cz.cvut.authserver.oauth2.dao.mongo.MongoAccessTokenDAO">
-        <constructor-arg ref="mongoTemplate" />
-    </bean>
+    <bean id="accessTokenDAO" class="cz.cvut.authserver.oauth2.dao.mongo.MongoAccessTokenDAO"
+          p:mongoOperations-ref="mongoTemplate" />
 
-    <bean id="refreshTokenDAO" class="cz.cvut.authserver.oauth2.dao.mongo.MongoRefreshTokenDAO">
-        <constructor-arg ref="mongoTemplate" />
-    </bean>
+    <bean id="refreshTokenDAO" class="cz.cvut.authserver.oauth2.dao.mongo.MongoRefreshTokenDAO"
+          p:mongoOperations-ref="mongoTemplate" />
 
 </beans>

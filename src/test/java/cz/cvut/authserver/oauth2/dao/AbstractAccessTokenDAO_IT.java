@@ -8,7 +8,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2RefreshToken;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
-import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -41,6 +40,7 @@ public abstract class AbstractAccessTokenDAO_IT {
         dao.save(new PersistableAccessToken(expectedToken, expectedAuth));
         OAuth2AccessToken actualToken = dao.findOne("emptyToken");
 
+        assertNotNull(actualToken);
         assertEquals("emptyToken", actualToken.getValue());
         assertEquals(expectedToken.getAdditionalInformation(), actualToken.getAdditionalInformation());
         assertEquals(expectedToken.getExpiration(), actualToken.getExpiration());
@@ -86,7 +86,7 @@ public abstract class AbstractAccessTokenDAO_IT {
 
     public @Test void find_by_authentication_that_does_not_exist() {
 
-        assertNull(dao.findByAuthentication(createEmptyOAuth2Authentication("doesNotExist")));
+        assertNull(dao.findOneByAuthentication(createEmptyOAuth2Authentication("doesNotExist")));
     }
 
     public @Test void find_by_authentication() {
@@ -95,7 +95,7 @@ public abstract class AbstractAccessTokenDAO_IT {
         OAuth2Authentication authentication = createRandomOAuth2Authentication(true);
         dao.save(new PersistableAccessToken(expectedToken, authentication));
 
-        OAuth2AccessToken actualToken = dao.findByAuthentication(authentication);
+        OAuth2AccessToken actualToken = dao.findOneByAuthentication(authentication);
 
         assertEquals(expectedToken, actualToken);
     }
@@ -103,12 +103,14 @@ public abstract class AbstractAccessTokenDAO_IT {
 
     public @Test void remove() {
 
-        OAuth2AccessToken accessToken = createRandomAccessToken();
-        dao.save(new PersistableAccessToken(accessToken, createEmptyOAuth2Authentication("dummy")));
+        PersistableAccessToken accessToken = new PersistableAccessToken(
+                createRandomAccessToken(),
+                createEmptyOAuth2Authentication("dummy"));
+        dao.save(accessToken);
 
         assertNotNull(dao.findOne(accessToken.getValue()));
 
-        dao.remove(accessToken);
+        dao.delete(accessToken);
 
         assertNull(dao.findOne(accessToken.getValue()));
     }
@@ -121,7 +123,7 @@ public abstract class AbstractAccessTokenDAO_IT {
 
         assertNotNull(dao.findOne("access"));
 
-        dao.removeByRefreshToken(refreshToken);
+        dao.deleteByRefreshToken(refreshToken);
 
         assertNull(dao.findOne("access"));
     }

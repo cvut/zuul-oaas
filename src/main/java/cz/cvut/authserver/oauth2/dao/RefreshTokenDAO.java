@@ -1,16 +1,11 @@
 package cz.cvut.authserver.oauth2.dao;
 
 import cz.cvut.authserver.oauth2.models.PersistableRefreshToken;
-import org.springframework.security.oauth2.common.OAuth2RefreshToken;
+import org.springframework.data.repository.CrudRepository;
 
 /**
  * @author Jakub Jirutka <jakub@jirutka.cz>
  */
-public interface RefreshTokenDAO {
+public interface RefreshTokenDAO extends CrudRepository<PersistableRefreshToken, String> {
 
-    PersistableRefreshToken findOne(String tokenCode);
-
-    void save(PersistableRefreshToken persistableToken);
-
-    void delete(OAuth2RefreshToken token);
 }

@@ -31,17 +31,14 @@
         </bean>
 
 
-        <bean id="mongoAccessTokenDAO" class="cz.cvut.authserver.oauth2.dao.mongo.MongoAccessTokenDAO">
-            <constructor-arg ref="mongoTemplate" />
-        </bean>
+        <bean id="mongoAccessTokenDAO" class="cz.cvut.authserver.oauth2.dao.mongo.MongoAccessTokenDAO"
+              p:mongoOperations-ref="mongoTemplate" />
 
-        <bean id="mongoRefreshTokenDAO" class="cz.cvut.authserver.oauth2.dao.mongo.MongoRefreshTokenDAO">
-            <constructor-arg ref="mongoTemplate" />
-        </bean>
+        <bean id="mongoRefreshTokenDAO" class="cz.cvut.authserver.oauth2.dao.mongo.MongoRefreshTokenDAO"
+              p:mongoOperations-ref="mongoTemplate" />
 
-        <bean id="mongoClientDAO" class="cz.cvut.authserver.oauth2.dao.mongo.MongoClientDAO">
-            <constructor-arg ref="mongoTemplate" />
-        </bean>
+        <bean id="mongoClientDAO" class="cz.cvut.authserver.oauth2.dao.mongo.MongoClientDAO"
+              p:mongoOperations-ref="mongoTemplate"  />
 
     </beans>
 

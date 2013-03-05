@@ -36,7 +36,7 @@ public class TokenStoreImpl implements TokenStore {
     }
 
     public OAuth2AccessToken getAccessToken(OAuth2Authentication authentication) {
-        return accessTokenDAO.findByAuthentication(authentication);
+        return accessTokenDAO.findOneByAuthentication(authentication);
     }
 
     public OAuth2AccessToken readAccessToken(String tokenValue) {
@@ -44,11 +44,11 @@ public class TokenStoreImpl implements TokenStore {
     }
     
     public void removeAccessToken(OAuth2AccessToken token) {
-        accessTokenDAO.remove(token);
+        accessTokenDAO.delete(token.getValue());
     }
 
     public void removeAccessTokenUsingRefreshToken(OAuth2RefreshToken refreshToken) {
-        accessTokenDAO.removeByRefreshToken(refreshToken);
+        accessTokenDAO.deleteByRefreshToken(refreshToken);
     }
 
     public Collection<OAuth2AccessToken> findTokensByClientId(String clientId) {
@@ -81,7 +81,7 @@ public class TokenStoreImpl implements TokenStore {
     }
 
     public void removeRefreshToken(OAuth2RefreshToken token) {
-        refreshTokenDAO.delete(token);
+        refreshTokenDAO.delete(token.getValue());
     }
 
     public OAuth2Authentication readAuthenticationForRefreshToken(OAuth2RefreshToken token) {

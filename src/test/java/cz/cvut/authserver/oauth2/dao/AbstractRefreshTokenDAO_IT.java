@@ -65,7 +65,7 @@ public abstract class AbstractRefreshTokenDAO_IT {
 
         assertNotNull(dao.findOne(refreshToken.getValue()));
 
-        dao.delete(refreshToken);
+        dao.delete(refreshToken.getValue());
 
         assertNull(dao.findOne(refreshToken.getValue()));
     }

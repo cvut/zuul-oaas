@@ -74,12 +74,9 @@ public class ClientsServiceImpl implements ClientsService {
     @Override
     public void updateClient(ClientDTO clientDTO) throws NoSuchClientException {
         LOG.info("Updating client: [{}]", clientDTO);
-        try {
-            clientDAO.update(mapper.map(clientDTO, Client.class));
 
-        } catch (EmptyResultDataAccessException ex) {
-            throw new NoSuchClientException(ex.getMessage(), ex);
-        }
+        assertClientExists(clientDTO.getClientId());
+        clientDAO.save(mapper.map(clientDTO, Client.class));
     }
 
     @Override

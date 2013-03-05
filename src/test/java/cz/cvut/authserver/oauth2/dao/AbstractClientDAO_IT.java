@@ -70,13 +70,6 @@ public abstract class AbstractClientDAO_IT {
     }
 
 
-    @Test(expected = EmptyResultDataAccessException.class)
-    public void update_non_existing_client() {
-
-        Client client = createRandomClient("nonExistentClientId");
-        dao.update(client);
-    }
-
     public @Test void update_redirect_uri() {
 
         Client expected = createRandomClient();
@@ -84,7 +77,7 @@ public abstract class AbstractClientDAO_IT {
 
         URI[] redirectURI = {URI.create("http://localhost:8080"), URI.create("http://localhost:9090")};
         expected.setRegisteredRedirectUri(asList(redirectURI));
-        dao.update(expected);
+        dao.save(expected);
 
         Client actual = dao.findOne(expected.getClientId());
 

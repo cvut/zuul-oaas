@@ -50,12 +50,9 @@ public class ClientRegistrationServiceImpl implements ClientDetailsService, Clie
 
     public void updateClientDetails(ClientDetails clientDetails) throws NoSuchClientException {
         LOG.debug("Updating client: {}", clientDetails.getClientId());
-        try {
-            clientDAO.update(new Client(clientDetails));
 
-        } catch (EmptyResultDataAccessException ex) {
-            throw new NoSuchClientException(ex.getMessage(), ex);
-        }
+        assertClientExists(clientDetails.getClientId());
+        clientDAO.save(new Client(clientDetails));
     }
 
     public void updateClientSecret(String clientId, String secret) throws NoSuchClientException {
