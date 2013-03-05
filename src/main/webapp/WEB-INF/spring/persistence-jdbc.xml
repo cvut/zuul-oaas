@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:jdbc="http://www.springframework.org/schema/jdbc"
        xmlns:jee="http://www.springframework.org/schema/jee"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+       http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.1.xsd
        http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.1.xsd">
 
     
@@ -18,9 +20,23 @@
                      lookup-on-startup="true"
                      cache="true" />
 
-    <!-- Proxy for a target DataSource, fetching actual JDBC Connections lazily,
-         i.e. not until first creation of a Statement.-->
-    <bean name="lazyDataSourceProxy" class="org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy"
-          p:targetDataSource-ref="dataSource" />
+    <jdbc:initialize-database enabled="false">
+        <jdbc:script execution="INIT" location="classpath:schema.pg.sql" />
+    </jdbc:initialize-database>
+
+
+    <!--//// DAOs ////-->
+
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate"
+          p:dataSource-ref="dataSource"  />
+
+    <bean id="clientDAO" class="cz.cvut.authserver.oauth2.dao.jdbc.JdbcClientDAO"
+          p:jdbcOperations-ref="jdbcTemplate"  />
+
+    <bean id="accessTokenDAO" class="cz.cvut.authserver.oauth2.dao.jdbc.JdbcAccessTokenDAO"
+          p:jdbcOperations-ref="jdbcTemplate"  />
+
+    <bean id="refreshTokenDAO" class="cz.cvut.authserver.oauth2.dao.jdbc.JdbcRefreshTokenDAO"
+          p:jdbcOperations-ref="jdbcTemplate"  />
 
 </beans>

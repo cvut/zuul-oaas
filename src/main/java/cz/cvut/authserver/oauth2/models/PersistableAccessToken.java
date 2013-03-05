@@ -2,6 +2,7 @@ package cz.cvut.authserver.oauth2.models;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.TypeAlias;
+import org.springframework.data.domain.Persistable;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
@@ -16,17 +17,17 @@ import org.springframework.util.Assert;
  */
 @TypeAlias("AccessToken")
 @Document(collection = "access_tokens")
-public class PersistableAccessToken extends DefaultOAuth2AccessToken {
+public class PersistableAccessToken extends DefaultOAuth2AccessToken implements Persistable<String> {
 
     private static final long serialVersionUID = 1L;
-    private static final AuthenticationKeyGenerator authKeyGenerator = new DefaultAuthenticationKeyGenerator();
+    private static final AuthenticationKeyGenerator AUTH_KEY_GENERATOR = new DefaultAuthenticationKeyGenerator();
 
     private String authenticationKey;
     private OAuth2Authentication authentication;
 
 
     public static String extractAuthenticationKey(OAuth2Authentication authentication) {
-        return authKeyGenerator.extractKey(authentication);
+        return AUTH_KEY_GENERATOR.extractKey(authentication);
     }
 
 
@@ -82,4 +83,23 @@ public class PersistableAccessToken extends DefaultOAuth2AccessToken {
         return getRefreshToken() != null ? getRefreshToken().getValue() : null;
     }
 
+    public String getId() {
+        return getValue();
+    }
+
+    public boolean isNew() {
+        return true;
+    }
+
+
+    public static abstract class fields {
+        public static final String
+                VALUE = "value",
+                EXPIRATION = "expiration",
+                TOKEN_TYPE = "token_type",
+                REFRESH_TOKEN = "refresh_token",
+                SCOPE = "scope",
+                AUTHENTICATION = "authentication",
+                AUTHENTICATION_KEY = "authentication_key";
+    }
 }

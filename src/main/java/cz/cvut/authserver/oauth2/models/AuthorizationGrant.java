@@ -1,5 +1,10 @@
 package cz.cvut.authserver.oauth2.models;
 
+import cz.cvut.authserver.oauth2.utils.EnumUtils;
+
+import java.util.Collection;
+import java.util.List;
+
 /**
  *
  * @author Tomas Mano <tomasmano@gmail.com>
@@ -14,13 +19,8 @@ public enum AuthorizationGrant {
     REFRESH_TOKEN;
 
 
-    public static boolean contains(String name) {
-        for (AuthorizationGrant type : values()) {
-            if (type.toString().equals(name)) {
-                return true;
-            }
-        }
-        return false;
+    public static List<AuthorizationGrant> valuesOf(Collection<String> names) {
+        return EnumUtils.valuesOf(names, AuthorizationGrant.class);
     }
 
     @Override

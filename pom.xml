@@ -113,6 +113,12 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-jdbc</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.blogspot.nurkiewicz</groupId>
+            <artifactId>jdbcrepository</artifactId>
+            <version>0.3.1-SNAPSHOT</version>
+        </dependency>
         
         <!--/// AOP Module ///-->
 
@@ -259,6 +265,13 @@
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
             <version>4.1.2</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hsqldb</groupId>
+            <artifactId>hsqldb</artifactId>
+            <version>2.2.8</version>
             <scope>test</scope>
         </dependency>
 

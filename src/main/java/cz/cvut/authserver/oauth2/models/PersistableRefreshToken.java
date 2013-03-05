@@ -1,15 +1,17 @@
 package cz.cvut.authserver.oauth2.models;
 
-import java.util.Date;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.codehaus.jackson.annotate.JsonCreator;
 import org.codehaus.jackson.annotate.JsonValue;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.TypeAlias;
+import org.springframework.data.domain.Persistable;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.oauth2.common.ExpiringOAuth2RefreshToken;
 import org.springframework.security.oauth2.common.OAuth2RefreshToken;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
+
+import java.util.Date;
 
 /**
  *
@@ -17,7 +19,7 @@ import org.springframework.security.oauth2.provider.OAuth2Authentication;
  */
 @TypeAlias("RefreshToken")
 @Document(collection = "refresh_tokens")
-public class PersistableRefreshToken implements ExpiringOAuth2RefreshToken {
+public class PersistableRefreshToken implements ExpiringOAuth2RefreshToken, Persistable<String> {
 
     private @Id String value;
     private Date expiration;
@@ -44,8 +46,6 @@ public class PersistableRefreshToken implements ExpiringOAuth2RefreshToken {
         
         if (refreshToken instanceof ExpiringOAuth2RefreshToken) {
             this.expiration = ((ExpiringOAuth2RefreshToken) refreshToken).getExpiration();
-        } else {
-            this.expiration = null;
         }
     }
 
@@ -71,7 +71,15 @@ public class PersistableRefreshToken implements ExpiringOAuth2RefreshToken {
         this.authentication = authentication;
     }
 
-    
+    public String getId() {
+        return value;
+    }
+
+    public boolean isNew() {
+        return true;
+    }
+
+
     @Override
     public String toString() {
         return getValue();
@@ -88,5 +96,13 @@ public class PersistableRefreshToken implements ExpiringOAuth2RefreshToken {
     @Override
     public int hashCode() {
         return value != null ? value.hashCode() : 0;
+    }
+
+
+    public static abstract class fields {
+        public static final String
+                VALUE = "value",
+                EXPIRATION = "expiration",
+                AUTHENTICATION = "authentication";
     }
 }
