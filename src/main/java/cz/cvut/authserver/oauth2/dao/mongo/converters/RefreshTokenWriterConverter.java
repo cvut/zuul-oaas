@@ -1,4 +1,4 @@
-package cz.cvut.authserver.oauth2.mongo;
+package cz.cvut.authserver.oauth2.dao.mongo.converters;
 
 import org.springframework.security.oauth2.common.OAuth2RefreshToken;
 import org.springframework.stereotype.Component;

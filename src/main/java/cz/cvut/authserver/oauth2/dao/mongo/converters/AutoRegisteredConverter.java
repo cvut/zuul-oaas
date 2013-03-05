@@ -1,4 +1,4 @@
-package cz.cvut.authserver.oauth2.mongo;
+package cz.cvut.authserver.oauth2.dao.mongo.converters;
 
 import javax.annotation.PostConstruct;
 import org.slf4j.Logger;

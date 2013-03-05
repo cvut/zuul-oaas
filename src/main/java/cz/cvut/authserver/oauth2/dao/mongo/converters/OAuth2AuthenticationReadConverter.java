@@ -1,8 +1,8 @@
-package cz.cvut.authserver.oauth2.mongo;
+package cz.cvut.authserver.oauth2.dao.mongo.converters;
 
 import com.mongodb.DBObject;
-import cz.cvut.authserver.oauth2.mongo.MongoDbConstants.authz_request;
-import cz.cvut.authserver.oauth2.mongo.MongoDbConstants.user_auth;
+import cz.cvut.authserver.oauth2.dao.mongo.converters.MongoDbConstants.authz_request;
+import cz.cvut.authserver.oauth2.dao.mongo.converters.MongoDbConstants.user_auth;
 import java.util.Collection;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -13,7 +13,7 @@ import org.springframework.security.oauth2.provider.DefaultAuthorizationRequest;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.stereotype.Component;
 
-import static cz.cvut.authserver.oauth2.mongo.MongoDbConstants.authentication.*;
+import static cz.cvut.authserver.oauth2.dao.mongo.converters.MongoDbConstants.authentication.*;
 
 /**
  * Converter from MongoDB object to {@link OAuth2Authentication}.

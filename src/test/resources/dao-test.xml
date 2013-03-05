@@ -19,7 +19,7 @@
         <mongo:db-factory id="mongoDbFactory" dbname="authtest" write-concern="SAFE" />
 
         <mongo:mapping-converter id="mappingConverter">
-            <mongo:custom-converters base-package="cz.cvut.authserver.oauth2.mongo" />
+            <mongo:custom-converters base-package="cz.cvut.authserver.oauth2.dao.mongo.converters" />
         </mongo:mapping-converter>
 
         <bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean" />

@@ -1,4 +1,4 @@
-package cz.cvut.authserver.oauth2.mongo;
+package cz.cvut.authserver.oauth2.dao.mongo.converters;
 
 import com.mongodb.DBObject;
 import java.util.Arrays;

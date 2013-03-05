@@ -28,7 +28,7 @@
 
     <!-- Register converters for mapping domain objects to Mongo and vice versa -->
     <mongo:mapping-converter id="mappingConverter">
-        <mongo:custom-converters base-package="cz.cvut.authserver.oauth2.mongo" />
+        <mongo:custom-converters base-package="cz.cvut.authserver.oauth2.dao.mongo.converters" />
     </mongo:mapping-converter>
 
     <!-- ConversionService to which are converters automatically registered -->
