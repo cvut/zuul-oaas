@@ -1,6 +1,7 @@
 package cz.cvut.authserver.oauth2.dao.mongo;
 
 import cz.cvut.authserver.oauth2.dao.AbstractAccessTokenDAO_IT;
+import cz.cvut.authserver.oauth2.models.PersistableAccessToken;
 import org.junit.After;
 import org.junit.Before;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +9,6 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.test.annotation.IfProfileValue;
 import org.springframework.test.context.ActiveProfiles;
 
-import static cz.cvut.authserver.oauth2.mongo.MongoDbConstants.collections.ACCESS_TOKENS;
 import static org.junit.Assert.assertFalse;
 
 /**
@@ -24,12 +24,12 @@ public class MongoAccessTokenDAO_IT extends AbstractAccessTokenDAO_IT {
 
 
     public @Before void initializeDb() {
-        template.dropCollection(ACCESS_TOKENS);
-        assertFalse("Database should be empty", template.collectionExists(ACCESS_TOKENS));
+        template.dropCollection(PersistableAccessToken.class);
+        assertFalse("Database should be empty", template.collectionExists(PersistableAccessToken.class));
     }
 
     public @After void clearDb() {
-        //template.dropCollection(ACCESS_TOKENS); TODO why not working correctly?
+        //template.dropCollection(PersistableAccessToken.class); TODO why not working correctly?
     }
 
 }

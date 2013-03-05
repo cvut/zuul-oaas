@@ -15,8 +15,6 @@ import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import javax.annotation.PostConstruct;
 import java.util.Collection;
 
-import static cz.cvut.authserver.oauth2.mongo.MongoDbConstants.access_tokens.*;
-import static cz.cvut.authserver.oauth2.mongo.MongoDbConstants.collections.ACCESS_TOKENS;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.query.Query.query;
 
@@ -28,11 +26,13 @@ public class MongoAccessTokenDAO
         extends AbstractMongoGenericDAO<PersistableAccessToken, String> implements AccessTokenDAO {
 
     private static final Logger LOG = LoggerFactory.getLogger(MongoAccessTokenDAO.class);
-    private static final Class<PersistableAccessToken> ENTITY_CLASS = PersistableAccessToken.class;
+    private static final String
+            CLIENT_ID = "authentication.authorization_request.client_id",
+            USER_NAME = "authentication.user_authentication.user_name";
 
     private static final IndexDefinition[] INDEXES = {
-        new Index().on(AUTHENTICATION_KEY, Order.ASCENDING),
-        new Index().on(REFRESH_TOKEN, Order.ASCENDING),
+        new Index().on("authenticationKey", Order.ASCENDING),
+        new Index().on("refreshToken", Order.ASCENDING),
         new Index().on(CLIENT_ID, Order.ASCENDING),
         new Index().on(USER_NAME, Order.ASCENDING)
     };
@@ -45,12 +45,13 @@ public class MongoAccessTokenDAO
         }
     }
 
+
     public PersistableAccessToken findOneByAuthentication(OAuth2Authentication authentication) {
         String authKey = PersistableAccessToken.extractAuthenticationKey(authentication);
 
-        PersistableAccessToken accessToken = mongo().findOne(
-                query(where(AUTHENTICATION_KEY).is(authKey)),
-                ENTITY_CLASS, ACCESS_TOKENS);
+        PersistableAccessToken accessToken = mongo().findOne(query(
+                where("authenticationKey").is(authKey)),
+                entityClass());
 
         if (accessToken == null) {
             LOG.debug("Failed to find access token for authentication {}", authentication);
@@ -73,14 +74,16 @@ public class MongoAccessTokenDAO
     }
 
     public void deleteByRefreshToken(OAuth2RefreshToken refreshToken) {
-        mongo().remove(query(where(REFRESH_TOKEN).is(refreshToken.getValue())), ACCESS_TOKENS);
+        mongo().remove(query(
+                where("refreshToken").is(refreshToken.getValue())),
+                entityClass());
     }
 
 
     private Collection<OAuth2AccessToken> findTokensBy(String field, Object value) {
         Query query = query(where(field).is(value));
-        query.fields().exclude(AUTHENTICATION);
+        query.fields().exclude("authentication");
 
-        return (Collection) mongo().find(query, ENTITY_CLASS, ACCESS_TOKENS);
+        return (Collection) mongo().find(query, entityClass());
     }
 }

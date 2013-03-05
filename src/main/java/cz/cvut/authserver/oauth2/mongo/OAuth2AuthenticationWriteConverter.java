@@ -38,6 +38,7 @@ public class OAuth2AuthenticationWriteConverter extends AutoRegisteredConverter<
         target.put(authz_request.AUTHORITIES, AuthorityUtils.authorityListToSet(source.getAuthorities()));
         target.put(authz_request.AUTHZ_PARAMS, source.getAuthorizationParameters());
         target.put(authz_request.RESOURCE_IDS, source.getResourceIds());
+        target.put("client_id", source.getClientId());
 
         return target;
     }
