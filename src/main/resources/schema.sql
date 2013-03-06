@@ -32,3 +32,16 @@ CREATE INDEX refresh_token_idx ON access_tokens (refresh_token);
 CREATE INDEX authentication_key_idx ON access_tokens (authentication_key);
 CREATE INDEX client_id_idx ON access_tokens (client_id);
 CREATE INDEX user_name_idx ON access_tokens (user_name);
+
+
+CREATE TABLE resources (
+  id            VARCHAR(256) PRIMARY KEY,
+  base_url      VARCHAR(256),
+  description   VARCHAR(2000),
+  name          VARCHAR(256),
+  version       VARCHAR(256),
+  title         VARCHAR(256),
+  visibility    VARCHAR(20)
+);
+
+CREATE INDEX visibility_idx ON resources (visibility);

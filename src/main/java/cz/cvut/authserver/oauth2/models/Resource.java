@@ -10,12 +10,12 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.TypeAlias;
+import org.springframework.data.domain.Persistable;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.io.Serializable;
 import java.net.URI;
 
 /**
@@ -26,7 +26,7 @@ import java.net.URI;
 @TypeAlias("Resource")
 @Document(collection = "resources")
 @JsonIgnoreProperties(ignoreUnknown=true)
-public class Resource implements Serializable {
+public class Resource implements Persistable<String> {
 
     private static final long serialVersionUID = 1L;
 
@@ -146,6 +146,10 @@ public class Resource implements Serializable {
     }
 
 
+    public boolean isNew() {
+        return true;
+    }
+
     @Override
     public int hashCode() {
         return new HashCodeBuilder(7, 31).append(id).append(name).append(version).toHashCode();
@@ -168,6 +172,19 @@ public class Resource implements Serializable {
         return new ToStringBuilder(this).append("id", id).append("name", name)
                 .append("version", version).append("visibility", visibility)
                 .toString();
+    }
+
+
+    public static abstract class fields {
+        public static final String
+                RESOURCE_ID = "resource_id",
+                AUTH = "auth",
+                BASE_URL = "base_url",
+                DESCRIPTION = "description",
+                NAME = "name",
+                VERSION = "version",
+                TITLE = "title",
+                VISIBILITY = "visibility";
     }
     
 }

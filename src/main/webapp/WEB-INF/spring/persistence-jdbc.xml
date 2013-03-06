@@ -39,4 +39,6 @@
     <bean id="refreshTokenDAO" class="cz.cvut.authserver.oauth2.dao.jdbc.JdbcRefreshTokenDAO"
           p:jdbcOperations-ref="jdbcTemplate"  />
 
+    <bean id="resourceDAO" class="cz.cvut.authserver.oauth2.dao.jdbc.JdbcResourceDAO"
+          p:jdbcOperations-ref="jdbcTemplate"  />
 </beans>
