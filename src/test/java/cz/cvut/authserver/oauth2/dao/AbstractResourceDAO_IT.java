@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import static cz.cvut.authserver.oauth2.Factories.createResources;
+import static cz.cvut.authserver.oauth2.Factories.createResource;
 import static cz.cvut.authserver.oauth2.TestUtils.assertEachEquals;
 import static org.junit.Assert.*;
 
@@ -31,10 +31,10 @@ public abstract class AbstractResourceDAO_IT {
 
     public @Test void save_and_find_resource() {
 
-        Resource expected = createResources();
+        Resource expected = createResource("foo");
 
         dao.save(expected);
-        Resource actual = dao.findOne(expected.getId());
+        Resource actual = dao.findOne("foo");
 
         assertNotNull(actual);
         assertEquals(expected.getBaseUrl(), actual.getBaseUrl());
@@ -56,14 +56,13 @@ public abstract class AbstractResourceDAO_IT {
 
     public @Test void delete() {
 
-        Resource resource = createResources();
-        dao.save(resource);
+        dao.save(createResource("foo"));
 
-        assertNotNull(dao.findOne(resource.getId()));
+        assertNotNull(dao.findOne("foo"));
 
-        dao.delete(resource);
+        dao.delete("foo");
 
-        assertNull(dao.findOne(resource.getId()));
+        assertNull(dao.findOne("foo"));
     }
 
 

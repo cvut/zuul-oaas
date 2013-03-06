@@ -50,7 +50,7 @@ public class ResourceValidatorTest {
 
     @Test
     public void validate_missing_baseUrl() {
-        Resource toCreate = Factories.createResources();
+        Resource toCreate = Factories.createResource();
         toCreate.setBaseUrl(null);
         Set<ConstraintViolation<Resource>> violations = validator.validate(toCreate, javax.validation.groups.Default.class);
         // uncomment to display invalid values with validations messages
@@ -63,7 +63,7 @@ public class ResourceValidatorTest {
 
     @Test
     public void validate_missing_visibility() {
-        Resource toCreate = Factories.createResources();
+        Resource toCreate = Factories.createResource();
         toCreate.setVisibility(null);
         Set<ConstraintViolation<Resource>> violations = validator.validate(toCreate, javax.validation.groups.Default.class);
         // uncomment to display invalid values with validations messages
@@ -76,7 +76,7 @@ public class ResourceValidatorTest {
 
     @Test
     public void validate_invalid_baseUrl() {
-        Resource toCreate = Factories.createResources();
+        Resource toCreate = Factories.createResource();
         toCreate.setBaseUrl("wwww.baaaad_wrrrr");
         Set<ConstraintViolation<Resource>> violations = validator.validate(toCreate, javax.validation.groups.Default.class);
         assertFalse("No violatons registered.", violations.isEmpty());
@@ -84,7 +84,7 @@ public class ResourceValidatorTest {
 
     @Test
     public void validate_invalid_visibility() {
-        Resource toCreate = Factories.createResources();
+        Resource toCreate = Factories.createResource();
         toCreate.setVisibility("BAAANG");
         Set<ConstraintViolation<Resource>> violations = validator.validate(toCreate, javax.validation.groups.Default.class);
         assertFalse("No violatons registered.", violations.isEmpty());
@@ -92,7 +92,7 @@ public class ResourceValidatorTest {
     
     @Test
     public void validate_valid_resource() {
-        Resource toCreate = Factories.createResources();
+        Resource toCreate = Factories.createResource();
         Set<ConstraintViolation<Resource>> violations = validator.validate(toCreate, javax.validation.groups.Default.class);
         assertTrue("Violatons was registered.", violations.isEmpty());
     }
