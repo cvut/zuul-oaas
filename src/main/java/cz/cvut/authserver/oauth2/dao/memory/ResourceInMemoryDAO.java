@@ -16,9 +16,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-//@Service
+@Service
 @Deprecated
-public class ResourceInMemoryDAO {//} implements ResourceDAO {
+public class ResourceInMemoryDAO implements ResourceDAO {
 
     private static List<Resource> resources;
     
@@ -30,7 +30,7 @@ public class ResourceInMemoryDAO {//} implements ResourceDAO {
         populateResources();
     }
 
-    public boolean exists(Serializable id) {
+    public boolean exists(String id) {
         for (Resource resource : resources) {
             if (resource.getId().equals(id)) {
                 return true;
@@ -39,7 +39,7 @@ public class ResourceInMemoryDAO {//} implements ResourceDAO {
         return false;
     }
     
-    public Resource save(Resource resource) {
+    public <S extends Resource> S save(S resource) {
         resource.setId(identifierGenerator.generateArgBasedIdentifier(resource.getTitle()));
         resources.add(resource);
         return resource;
@@ -73,10 +73,10 @@ public class ResourceInMemoryDAO {//} implements ResourceDAO {
         }
         throw new NoSuchResourceException(String.format("No resource exists with given id [%s]", id));
     }
-    
-    public boolean delete(String id) throws NoSuchResourceException{
+
+    public void delete(String id) throws NoSuchResourceException{
         Resource deleted = findOne(id);
-        return resources.remove(deleted);
+        resources.remove(deleted);
     }
 
     private static void populateResources() {
@@ -109,6 +109,34 @@ public class ResourceInMemoryDAO {//} implements ResourceDAO {
     private static Scope createScope(String name, String description, boolean secured) {
         return new Scope(name, description, secured);
     }
+
+
+
+    public Iterable<Resource> findAll(Iterable<String> strings) {
+        throw new IllegalStateException("Not implemented");
+    }
+
+    public long count() {
+        throw new IllegalStateException("Not implemented");
+    }
+
+
+    public <S extends Resource> Iterable<S> save(Iterable<S> entities) {
+        throw new IllegalStateException("Not implemented");
+    }
+
+    public void delete(Resource entity) {
+        throw new IllegalStateException("Not implemented");
+    }
+
+    public void delete(Iterable<? extends Resource> entities) {
+        throw new IllegalStateException("Not implemented");
+    }
+
+    public void deleteAll() {
+        throw new IllegalStateException("Not implemented");
+    }
+
     
     //////////  Getters / Setters  //////////
 
