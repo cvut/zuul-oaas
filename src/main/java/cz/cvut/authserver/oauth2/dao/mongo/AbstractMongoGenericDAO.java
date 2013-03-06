@@ -25,14 +25,13 @@ public abstract class AbstractMongoGenericDAO<T, ID extends Serializable> implem
     private MongoOperations mongoOperations;
 
     private Class<T> entityClass;
-    private MongoEntityInformation<T, ID> entityInformation;
     private MongoRepository<T, ID> mongoRepository;
 
 
     @PostConstruct
     protected void initialize() {
         entityClass = determineEntityClass();
-        entityInformation = MongoUtils.createEntityInformation(entityClass, mongoOperations);
+        MongoEntityInformation<T, ID> entityInformation = MongoUtils.createEntityInformation(entityClass, mongoOperations);
         mongoRepository = new SimpleMongoRepository<>(entityInformation, mongoOperations);
     }
 

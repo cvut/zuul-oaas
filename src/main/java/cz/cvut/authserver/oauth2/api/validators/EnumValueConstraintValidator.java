@@ -12,14 +12,13 @@ import java.util.List;
  */
 public class EnumValueConstraintValidator implements ConstraintValidator<EnumValue, String> {
 
-    private Class<? extends Enum> clazz;
     private boolean nullable;
     private boolean caseSensitive;
     private List<String> values;
 
 
     public void initialize(EnumValue constraint) {
-        clazz = constraint.value();
+        Class<? extends Enum> clazz = constraint.value();
         nullable = constraint.nullable();
         caseSensitive = constraint.caseSensitive();
         values = new ArrayList<>(clazz.getEnumConstants().length);

@@ -21,6 +21,8 @@ import java.util.Date;
 @Document(collection = "refresh_tokens")
 public class PersistableRefreshToken implements ExpiringOAuth2RefreshToken, Persistable<String> {
 
+    private static final long serialVersionUID = 1L;
+
     private @Id String value;
     private Date expiration;
     private OAuth2Authentication authentication;

@@ -32,6 +32,7 @@ public class TokenStoreImpl implements TokenStore {
     //////// Delegate to AccessToken DAO ////////
 
     public void storeAccessToken(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
+        LOG.debug("Storing access token: {}", accessToken);
         accessTokenDAO.save(new PersistableAccessToken(accessToken, authentication));
     }
 
@@ -44,10 +45,12 @@ public class TokenStoreImpl implements TokenStore {
     }
     
     public void removeAccessToken(OAuth2AccessToken token) {
+        LOG.debug("Removing access token: {}", token);
         accessTokenDAO.delete(token.getValue());
     }
 
     public void removeAccessTokenUsingRefreshToken(OAuth2RefreshToken refreshToken) {
+        LOG.debug("Removing access token by refresh token: {}", refreshToken);
         accessTokenDAO.deleteByRefreshToken(refreshToken);
     }
 
@@ -73,6 +76,7 @@ public class TokenStoreImpl implements TokenStore {
     //////// Delegate to RefreshToken DAO ////////
 
     public void storeRefreshToken(OAuth2RefreshToken refreshToken, OAuth2Authentication authentication) {
+        LOG.debug("Storing refresh token: {}", refreshToken);
         refreshTokenDAO.save(new PersistableRefreshToken(refreshToken, authentication));
     }
 
@@ -81,6 +85,7 @@ public class TokenStoreImpl implements TokenStore {
     }
 
     public void removeRefreshToken(OAuth2RefreshToken token) {
+        LOG.debug("Removing refresh token: {}", token);
         refreshTokenDAO.delete(token.getValue());
     }
 

@@ -14,7 +14,6 @@ public class CaseInsensitiveToEnumConverter extends CustomConverter<String, Enum
     }
 
     public Enum convert(String source, Type<? extends Enum> destinationType) {
-        System.out.println(">>>" + source);
         String name = source.toUpperCase();
         return Enum.valueOf(destinationType.getRawType(), name);
     }

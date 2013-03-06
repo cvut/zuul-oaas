@@ -8,13 +8,14 @@ import ma.glasnost.orika.impl.DefaultMapperFactory;
 import org.springframework.beans.factory.FactoryBean;
 
 import java.util.Collection;
+import java.util.Collections;
 
 /**
  * @author Jakub Jirutka <jakub@jirutka.cz>
  */
 public class MapperFacadeFactoryBean implements FactoryBean<MapperFacade> {
 
-    private Collection<Converter> converters;
+    private Collection<Converter> converters = Collections.emptyList();
 
 
     public MapperFacade getObject() throws Exception {

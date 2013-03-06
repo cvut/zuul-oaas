@@ -7,14 +7,13 @@ import cz.cvut.authserver.oauth2.models.Auth;
 import cz.cvut.authserver.oauth2.models.Resource;
 import cz.cvut.authserver.oauth2.models.Scope;
 import cz.cvut.authserver.oauth2.models.enums.Visibility;
-import java.io.Serializable;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 @Service
 @Deprecated

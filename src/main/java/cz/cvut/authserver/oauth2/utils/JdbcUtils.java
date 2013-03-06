@@ -35,7 +35,7 @@ public final class JdbcUtils {
 
 
     public static byte[] serialize(Serializable object) {
-        if (object == null) return null;
+        if (object == null) return new byte[0];
         return SerializationUtils.serialize(object);
     }
 

@@ -137,7 +137,7 @@ public class ClientsController {
     public void deleteRoleFromClientDetails(@PathVariable String clientId, @PathVariable String role) {
         ClientDTO client = clientsService.findClientById(clientId);
 
-        if (client.getAuthorities().remove(new SimpleGrantedAuthority(role))) {
+        if (client.getAuthorities().remove(role)) {
             clientsService.updateClient(client);
         }
     }

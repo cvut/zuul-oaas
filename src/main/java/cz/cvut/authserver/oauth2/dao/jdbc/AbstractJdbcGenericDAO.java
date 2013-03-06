@@ -31,7 +31,7 @@ public abstract class AbstractJdbcGenericDAO<T extends Persistable<ID>, ID exten
         jdbcRepository = new JdbcRepository<T, ID>(getRowMapper(), getRowUnmapper(), getTableName(), getIdColumn(), jdbcOperations) {
             @Override
             public <S extends T> S save(S entity) {
-                if (exists(entity.getId())) {
+                if (super.exists(entity.getId())) {
                     return update(entity);
                 } else {
                     return create(entity);
