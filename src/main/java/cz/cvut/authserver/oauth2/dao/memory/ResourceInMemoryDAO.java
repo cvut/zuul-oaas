@@ -16,8 +16,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-@Service
-public class ResourceInMemoryDAO implements ResourceDAO {
+//@Service
+@Deprecated
+public class ResourceInMemoryDAO {//} implements ResourceDAO {
 
     private static List<Resource> resources;
     
@@ -29,8 +30,7 @@ public class ResourceInMemoryDAO implements ResourceDAO {
         populateResources();
     }
 
-    @Override
-    public boolean isRegisteredResource(Serializable id) {
+    public boolean exists(Serializable id) {
         for (Resource resource : resources) {
             if (resource.getId().equals(id)) {
                 return true;
@@ -39,22 +39,19 @@ public class ResourceInMemoryDAO implements ResourceDAO {
         return false;
     }
     
-    @Override
-    public Resource createResource(Resource resource) {
+    public Resource save(Resource resource) {
         resource.setId(identifierGenerator.generateArgBasedIdentifier(resource.getTitle()));
         resources.add(resource);
         return resource;
     }
 
-    @Override
-    public void updateResource(String id, Resource resource) throws NoSuchResourceException{
-        Resource update = findResourceById(id);
+    public void update(String id, Resource resource) throws NoSuchResourceException{
+        Resource update = findOne(id);
         resources.remove(update);
         resources.add(resource);
     }
 
-    @Override
-    public List<Resource> getAllPublicResources() {
+    public List<Resource> findAllPublic() {
         List<Resource> publicResources = new ArrayList<Resource>();
         for (Resource resource : resources) {
             if (resource.getVisibility().equals(Visibility.PUBLIC.toString())) {
@@ -64,13 +61,11 @@ public class ResourceInMemoryDAO implements ResourceDAO {
         return publicResources;
     }
     
-    @Override
-    public List<Resource> getAllResources() {
+    public List<Resource> findAll() {
         return resources;
     }
 
-    @Override
-    public Resource findResourceById(String id) throws NoSuchResourceException{
+    public Resource findOne(String id) throws NoSuchResourceException{
         for (Resource resource : resources) {
             if (resource.getId().equals(id)) {
                 return resource;
@@ -79,9 +74,8 @@ public class ResourceInMemoryDAO implements ResourceDAO {
         throw new NoSuchResourceException(String.format("No resource exists with given id [%s]", id));
     }
     
-    @Override
-    public boolean deleteResourceById(String id) throws NoSuchResourceException{
-        Resource deleted = findResourceById(id);
+    public boolean delete(String id) throws NoSuchResourceException{
+        Resource deleted = findOne(id);
         return resources.remove(deleted);
     }
 

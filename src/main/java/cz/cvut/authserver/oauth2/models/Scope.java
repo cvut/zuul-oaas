@@ -5,6 +5,9 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.TypeAlias;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.Size;
 import java.io.Serializable;
@@ -18,11 +21,14 @@ import java.io.Serializable;
  *
  * @author Tomas Mano <tomasmano@gmail.com>
  */
+@TypeAlias("Scope")
+@Document(collection = "scopes")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Scope implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @Id
     @Size(max=256)
     @JsonProperty("name")
     private String name;

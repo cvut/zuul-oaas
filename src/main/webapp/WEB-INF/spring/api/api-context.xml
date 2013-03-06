@@ -52,8 +52,8 @@
 
     <!--///// DAO /////-->
 
-    <bean id="resourceDAO" class="cz.cvut.authserver.oauth2.dao.memory.ResourceInMemoryDAO"
-          p:identifierGenerator-ref="identifierGenerator"/>
+<!--    <bean id="resourceDAO" class="cz.cvut.authserver.oauth2.dao.memory.ResourceInMemoryDAO"
+          p:identifierGenerator-ref="identifierGenerator"/>-->
 
 
     <!--///// DTO Mapping /////-->

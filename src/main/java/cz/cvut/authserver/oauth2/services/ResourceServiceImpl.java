@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import java.io.Serializable;
 import java.util.List;
 
+import static com.google.common.collect.Lists.newArrayList;
+
 /**
  *
  * @author Tomas Mano <tomasmano@gmail.com>
@@ -25,40 +27,55 @@ public class ResourceServiceImpl implements ResourceService {
     private ResourceDAO resourceDAO;
 
     @Override
-    public boolean isRegisteredResource(Serializable id) {
-        return resourceDAO.isRegisteredResource(id);
+    public boolean isRegisteredResource(String id) {
+        return resourceDAO.exists(id);
     }
 
     @Override
     public List<Resource> getAllResources() {
-        return resourceDAO.getAllResources();
+        return newArrayList(resourceDAO.findAll());
     }
 
     @Override
     public List<Resource> getAllPublicResources() {
-        return resourceDAO.getAllPublicResources();
+        return resourceDAO.findAllPublic();
     }
 
     @Override
     public Resource createResource(Resource resource) {
         LOG.info("Creating new resource [{}]", resource);
-        return resourceDAO.createResource(resource);
+        return resourceDAO.save(resource);
     }
 
     @Override
     public void updateResource(String id, Resource resource) throws NoSuchResourceException{
         LOG.info("Updating resource [{}]", resource);
-        resourceDAO.updateResource(id, resource);
+
+        assertResourceExists(id);
+        resourceDAO.save(resource);
     }
 
     @Override
-    public Resource findResourceById(String id) throws NoSuchResourceException{
-        return resourceDAO.findResourceById(id);
+    public Resource findResourceById(String id) throws NoSuchResourceException {
+        Resource resource = resourceDAO.findOne(id);
+
+        if (resource == null) {
+            throw new NoSuchResourceException("No such resource with id = " + id);
+        }
+        return resource;
     }
 
     @Override
-    public void deleteResourceById(String id) throws NoSuchResourceException{
-        resourceDAO.deleteResourceById(id);
+    public void deleteResourceById(String id) throws NoSuchResourceException {
+        assertResourceExists(id);
+        resourceDAO.delete(id);
+    }
+
+
+    private void assertResourceExists(String resourceId) {
+        if (! resourceDAO.exists(resourceId)) {
+            throw new NoSuchResourceException("No such resource with id = " + resourceId);
+        }
     }
 
     //////////  Getters / Setters  //////////

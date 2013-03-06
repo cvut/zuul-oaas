@@ -52,4 +52,7 @@
     <bean id="refreshTokenDAO" class="cz.cvut.authserver.oauth2.dao.mongo.MongoRefreshTokenDAO"
           p:mongoOperations-ref="mongoTemplate" />
 
+    <bean id="resourceDAO" class="cz.cvut.authserver.oauth2.dao.mongo.MongoResourceDAO"
+          p:mongoOperations-ref="mongoTemplate" />
+
 </beans>

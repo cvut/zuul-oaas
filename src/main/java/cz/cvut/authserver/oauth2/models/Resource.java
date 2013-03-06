@@ -8,6 +8,10 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.TypeAlias;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -19,16 +23,19 @@ import java.net.URI;
  * 
  * @author Tomas Mano <tomasmano@gmail.com>
  */
+@TypeAlias("Resource")
+@Document(collection = "resources")
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class Resource implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
-    @JsonProperty("auth")
-    private Auth auth;
 
+    @Id
     @JsonProperty("resource_id")
     private String id;
+
+    @JsonProperty("auth")
+    private Auth auth;
 
     @NotNull @Size(max=256)
     @ValidURI(scheme ={"https", "http"})
@@ -50,7 +57,8 @@ public class Resource implements Serializable {
     @NotNull @Size(max=256)
     @JsonProperty("title")
     private String title;
-    
+
+    @Indexed
     @NotNull
     @EnumValue(Visibility.class)
     @JsonProperty("visibility")

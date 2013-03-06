@@ -40,6 +40,9 @@
         <bean id="mongoClientDAO" class="cz.cvut.authserver.oauth2.dao.mongo.MongoClientDAO"
               p:mongoOperations-ref="mongoTemplate"  />
 
+        <bean id="mongoResourceDAO" class="cz.cvut.authserver.oauth2.dao.mongo.MongoResourceDAO"
+              p:mongoOperations-ref="mongoTemplate"  />
+
     </beans>
 
 

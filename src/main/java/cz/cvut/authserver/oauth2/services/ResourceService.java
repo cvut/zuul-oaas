@@ -21,7 +21,7 @@ public interface ResourceService {
      * @param id resource's id to be checked 
      * @return if the given resource is registered resource
      */
-    boolean isRegisteredResource(Serializable id);
+    boolean isRegisteredResource(String id);
     
     /**
      * Finds resource with the given id.
