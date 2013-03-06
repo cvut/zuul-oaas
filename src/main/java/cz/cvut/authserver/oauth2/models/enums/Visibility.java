@@ -1,4 +1,4 @@
-package cz.cvut.authserver.oauth2.models.resource.enums;
+package cz.cvut.authserver.oauth2.models.enums;
 
 /**
  * Value indicating Resource visibility

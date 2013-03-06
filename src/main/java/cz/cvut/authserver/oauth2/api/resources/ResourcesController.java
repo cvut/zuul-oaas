@@ -2,7 +2,7 @@ package cz.cvut.authserver.oauth2.api.resources;
 
 import cz.cvut.authserver.oauth2.api.models.ErrorResponse;
 import cz.cvut.authserver.oauth2.api.resources.exceptions.NoSuchResourceException;
-import cz.cvut.authserver.oauth2.models.resource.Resource;
+import cz.cvut.authserver.oauth2.models.Resource;
 import cz.cvut.authserver.oauth2.services.ResourceService;
 import org.hibernate.validator.method.MethodConstraintViolationException;
 import org.springframework.http.ResponseEntity;

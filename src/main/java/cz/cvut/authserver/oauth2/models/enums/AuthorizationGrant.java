@@ -1,4 +1,4 @@
-package cz.cvut.authserver.oauth2.models;
+package cz.cvut.authserver.oauth2.models.enums;
 
 import cz.cvut.authserver.oauth2.utils.EnumUtils;
 

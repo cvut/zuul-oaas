@@ -1,5 +1,6 @@
 package cz.cvut.authserver.oauth2.models;
 
+import cz.cvut.authserver.oauth2.models.enums.AuthorizationGrant;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.TypeAlias;

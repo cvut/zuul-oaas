@@ -1,7 +1,7 @@
 package cz.cvut.authserver.oauth2.services;
 
 import cz.cvut.authserver.oauth2.api.resources.exceptions.NoSuchResourceException;
-import cz.cvut.authserver.oauth2.models.resource.Resource;
+import cz.cvut.authserver.oauth2.models.Resource;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;

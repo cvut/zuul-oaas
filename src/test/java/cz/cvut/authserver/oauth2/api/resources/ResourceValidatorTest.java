@@ -1,12 +1,10 @@
 package cz.cvut.authserver.oauth2.api.resources;
 
 import cz.cvut.authserver.oauth2.Factories;
-import cz.cvut.authserver.oauth2.models.resource.Resource;
+import cz.cvut.authserver.oauth2.models.Resource;
 import java.util.Set;
 import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
 import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
 import javax.validation.metadata.PropertyDescriptor;
 import org.junit.Test;
 import org.junit.runner.RunWith;

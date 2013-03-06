@@ -1,4 +1,4 @@
-package cz.cvut.authserver.oauth2.models.resource;
+package cz.cvut.authserver.oauth2.models;
 
 import java.util.List;
 import org.codehaus.jackson.annotate.JsonIgnore;

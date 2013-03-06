@@ -4,7 +4,7 @@ import com.blogspot.nurkiewicz.jdbcrepository.RowUnmapper;
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import cz.cvut.authserver.oauth2.dao.ClientDAO;
-import cz.cvut.authserver.oauth2.models.AuthorizationGrant;
+import cz.cvut.authserver.oauth2.models.enums.AuthorizationGrant;
 import cz.cvut.authserver.oauth2.models.Client;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;

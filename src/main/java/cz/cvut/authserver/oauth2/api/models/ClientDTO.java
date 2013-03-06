@@ -4,7 +4,7 @@ import cz.cvut.authserver.oauth2.api.validators.EachEnum;
 import cz.cvut.authserver.oauth2.api.validators.EachURI;
 import cz.cvut.authserver.oauth2.api.validators.EnumValue;
 import cz.cvut.authserver.oauth2.api.validators.ValidURI;
-import cz.cvut.authserver.oauth2.models.AuthorizationGrant;
+import cz.cvut.authserver.oauth2.models.enums.AuthorizationGrant;
 import cz.jirutka.validator.collection.constraints.EachPattern;
 import cz.jirutka.validator.collection.constraints.EachSize;
 import cz.jirutka.validator.spring.SpELAssert;

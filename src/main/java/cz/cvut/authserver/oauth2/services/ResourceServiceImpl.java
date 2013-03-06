@@ -2,7 +2,7 @@ package cz.cvut.authserver.oauth2.services;
 
 import cz.cvut.authserver.oauth2.api.resources.exceptions.NoSuchResourceException;
 import cz.cvut.authserver.oauth2.dao.ResourceDAO;
-import cz.cvut.authserver.oauth2.models.resource.Resource;
+import cz.cvut.authserver.oauth2.models.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

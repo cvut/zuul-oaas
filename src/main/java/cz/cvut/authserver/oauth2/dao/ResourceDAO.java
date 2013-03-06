@@ -1,7 +1,7 @@
 package cz.cvut.authserver.oauth2.dao;
 
 import cz.cvut.authserver.oauth2.api.resources.exceptions.NoSuchResourceException;
-import cz.cvut.authserver.oauth2.models.resource.Resource;
+import cz.cvut.authserver.oauth2.models.Resource;
 import java.io.Serializable;
 import java.util.List;
 

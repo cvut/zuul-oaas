@@ -1,8 +1,8 @@
-package cz.cvut.authserver.oauth2.models.resource;
+package cz.cvut.authserver.oauth2.models;
 
 import cz.cvut.authserver.oauth2.api.validators.EnumValue;
 import cz.cvut.authserver.oauth2.api.validators.ValidURI;
-import cz.cvut.authserver.oauth2.models.resource.enums.Visibility;
+import cz.cvut.authserver.oauth2.models.enums.Visibility;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
