@@ -14,7 +14,7 @@ public enum AuthorizationGrant {
 
     CLIENT_CREDENTIALS,
     IMPLICIT,
-    AUTH_CODE,
+    AUTHORIZATION_CODE,
     RESOURCE_OWNER,
     REFRESH_TOKEN;
 

@@ -79,7 +79,7 @@ public class Factories {
 
         client.setAccessTokenValiditySeconds( randomInt() );
         client.setAuthorities( randomGrantedAuthorities(2) );
-        client.setAuthorizedGrantTypes( asList(AuthorizationGrant.AUTH_CODE, AuthorizationGrant.REFRESH_TOKEN) );
+        client.setAuthorizedGrantTypes( asList(AuthorizationGrant.AUTHORIZATION_CODE, AuthorizationGrant.REFRESH_TOKEN) );
         client.setClientId( clientId );
         client.setClientSecret( randomString() );
         client.setRefreshTokenValiditySeconds( randomInt() );
@@ -131,7 +131,7 @@ public class Factories {
     }
 
     public static Set<String> createAuthorizationCodeGrant(){
-        return Sets.newHashSet(AuthorizationGrant.AUTH_CODE.toString());
+        return Sets.newHashSet(AuthorizationGrant.AUTHORIZATION_CODE.toString());
     }
 
     public static Set<String> createImplicitGrant(){
