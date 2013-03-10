@@ -27,7 +27,7 @@
     <!--//// Converters ////-->
 
     <!-- Register converters for mapping domain objects to Mongo and vice versa -->
-    <mongo:mapping-converter id="mappingConverter">
+    <mongo:mapping-converter id="mappingConverter" db-factory-ref="mongoDbFactory">
         <mongo:custom-converters base-package="cz.cvut.authserver.oauth2.dao.mongo.converters" />
     </mongo:mapping-converter>
 
@@ -40,6 +40,7 @@
     <!-- Template that provides basic CRUD operations against Mongo database -->
     <bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
         <constructor-arg name="mongoDbFactory" ref="mongoDbFactory" />
+        <constructor-arg name="mongoConverter" ref="mappingConverter" />
         <property name="writeResultChecking" value="EXCEPTION" />
     </bean>
 

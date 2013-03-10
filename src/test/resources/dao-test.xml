@@ -18,7 +18,7 @@
 
         <mongo:db-factory id="mongoDbFactory" dbname="authtest" write-concern="SAFE" />
 
-        <mongo:mapping-converter id="mappingConverter">
+        <mongo:mapping-converter id="mappingConverter" db-factory-ref="mongoDbFactory">
             <mongo:custom-converters base-package="cz.cvut.authserver.oauth2.dao.mongo.converters" />
         </mongo:mapping-converter>
 
