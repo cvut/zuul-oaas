@@ -9,6 +9,11 @@
 
     <!--////////// Root Context Configuration //////////-->
 
+    <!--
+        Activate detection of various annotations such as @PostConstruct, @Required, @Autowired, ...
+        Note that this will *not* enable classpath scan and auto-registering of beans.
+    -->
+    <context:annotation-config />
 
     <!-- Export MBeans via JMX for monitoring -->
     <context:mbean-export />

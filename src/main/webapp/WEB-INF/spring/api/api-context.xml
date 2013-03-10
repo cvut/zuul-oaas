@@ -47,7 +47,8 @@
     
     <bean id="clientsService" class="cz.cvut.authserver.oauth2.services.ClientsServiceImpl"
           p:clientDAO-ref="clientDAO"
-          p:oauth2ClientCredentialsGenerator-ref="oauth2ClientCredentialsGenerator"/>
+          p:oauth2ClientCredentialsGenerator-ref="oauth2ClientCredentialsGenerator"
+          p:mapperFacade-ref="mapperFacade" />
 
 
     <!--///// DAO /////-->
