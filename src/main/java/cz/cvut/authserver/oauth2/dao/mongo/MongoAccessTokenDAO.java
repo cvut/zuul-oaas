@@ -54,11 +54,12 @@ public class MongoAccessTokenDAO
                 entityClass());
 
         if (accessToken == null) {
-            LOG.debug("Failed to find access token for authentication {}", authentication);
+            LOG.debug("Failed to find access token for authentication: [{}] with key: [{}]", authentication, authKey);
         }
 
         if (accessToken != null && !authentication.equals(accessToken.getAuthentication())) {
-            delete(accessToken);
+            LOG.debug("Stored authentication details differs from given one, updating to keep the store consistent");
+            delete(accessToken); //TODO not needed?
             // keep the store consistent (maybe the same user is represented by this auth. but the details have changed)
             save(new PersistableAccessToken(accessToken, authentication));
         }

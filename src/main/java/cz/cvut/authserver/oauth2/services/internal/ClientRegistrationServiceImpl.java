@@ -30,6 +30,7 @@ public class ClientRegistrationServiceImpl implements ClientDetailsService, Clie
 
 
     public ClientDetails loadClientByClientId(String clientId) throws OAuth2Exception {
+        LOG.debug("Loading client: [{}]", clientId);
         ClientDetails result = clientDAO.findOne(clientId);
 
         if (result == null) {
@@ -40,7 +41,7 @@ public class ClientRegistrationServiceImpl implements ClientDetailsService, Clie
 
     public void addClientDetails(ClientDetails clientDetails) throws ClientAlreadyExistsException {
         try {
-            LOG.debug("Adding client: {}", clientDetails.getClientId());
+            LOG.info("Adding client: [{}]", clientDetails.getClientId());
             clientDAO.save(new Client(encodeClientSecret(clientDetails)));
 
         } catch (DuplicateKeyException ex) {
@@ -49,14 +50,14 @@ public class ClientRegistrationServiceImpl implements ClientDetailsService, Clie
     }
 
     public void updateClientDetails(ClientDetails clientDetails) throws NoSuchClientException {
-        LOG.debug("Updating client: {}", clientDetails.getClientId());
+        LOG.info("Updating client: [{}]", clientDetails.getClientId());
 
         assertClientExists(clientDetails.getClientId());
         clientDAO.save(new Client(clientDetails));
     }
 
     public void updateClientSecret(String clientId, String secret) throws NoSuchClientException {
-        LOG.debug("Updating secret for client: {}", clientId);
+        LOG.info("Updating secret for client: [{}]", clientId);
         try {
             clientDAO.updateClientSecret(clientId, passwordEncoder.encode(secret));
 
@@ -66,7 +67,7 @@ public class ClientRegistrationServiceImpl implements ClientDetailsService, Clie
     }
 
     public void removeClientDetails(String clientId) throws NoSuchClientException {
-        LOG.debug("Removing client: {}", clientId);
+        LOG.info("Removing client: [{}]", clientId);
         assertClientExists(clientId);
 
         clientDAO.delete(clientId);
