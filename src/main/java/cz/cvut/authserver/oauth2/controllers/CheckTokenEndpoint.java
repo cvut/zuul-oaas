@@ -60,7 +60,7 @@ public class CheckTokenEndpoint implements InitializingBean {
 
     @RequestMapping(value = "/check-token")
     @ResponseBody
-    public Map<String, ?> checkToken(@RequestParam("token") String value) {
+    public Map<String, ?> checkToken(@RequestParam("access_token") String value) {
         
         // first check if token is recognized and if it is not expired
         

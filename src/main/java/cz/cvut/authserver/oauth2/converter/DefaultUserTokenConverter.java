@@ -15,11 +15,15 @@ public class DefaultUserTokenConverter implements UserTokenConverter {
     @Override
     public Map<String, ?> convertUserAuthentication(Authentication authentication) {
         Map<String, Object> response = new LinkedHashMap<String, Object>();
-        if (authentication.getPrincipal() instanceof User) {
+
+        if (authentication.getPrincipal() instanceof String) {
+            response.put("user_id", authentication.getPrincipal());
+
+        } else if (authentication.getPrincipal() instanceof User) {
             User principal = (User) authentication.getPrincipal();
-            response.put("user-login", principal.getUsername());
-            response.put("user-authorities", StringUtils.collectionToCommaDelimitedString(principal.getAuthorities()));
-            response.put("user-locked", !principal.isAccountNonLocked());
+            response.put("user_id", principal.getUsername());
+            response.put("user_authorities", StringUtils.collectionToCommaDelimitedString(principal.getAuthorities()));
+            response.put("user_locked", !principal.isAccountNonLocked());
         }
         return response;
     }

@@ -26,8 +26,8 @@ public class DefaultTokenConverter implements AccessTokenConverter {
         }
 
         response.put("client_id", clientToken.getClientId());
-        response.put("client-authorities", StringUtils.collectionToCommaDelimitedString(clientToken.getAuthorities()));
-        response.put("client-locked", clientToken.isDenied());
+        response.put("client_authorities", StringUtils.collectionToCommaDelimitedString(clientToken.getAuthorities()));
+        response.put("client_locked", clientToken.isDenied());
         response.put(OAuth2AccessToken.SCOPE, token.getScope());
         response.put(OAuth2AccessToken.TOKEN_TYPE, token.getTokenType());
         
@@ -36,13 +36,13 @@ public class DefaultTokenConverter implements AccessTokenConverter {
 //        }
 
         if (token.getExpiration() != null) {
-            response.put("exp", token.getExpiration().getTime() / 1000);
+            response.put("expires_in", token.getExpiration().getTime() / 1000);
         }
 
         response.putAll(token.getAdditionalInformation());
 
         if (clientToken.getResourceIds() != null && !clientToken.getResourceIds().isEmpty()) {
-            response.put("resources", clientToken.getResourceIds());
+            response.put("audience", clientToken.getResourceIds());
         }
         return response;
     }
