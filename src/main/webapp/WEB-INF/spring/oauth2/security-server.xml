@@ -105,7 +105,7 @@
               disable-url-rewriting="true"
               access-decision-manager-ref="accessDecisionManager">
 
-        <sec:intercept-url pattern="/oauth/**" access="ROLE_USER" />
+        <sec:intercept-url pattern="/oauth/**" access="IS_AUTHENTICATED_FULLY" />
         <sec:intercept-url pattern="/**" access="IS_AUTHENTICATED_ANONYMOUSLY" />
         <sec:form-login login-page="/login.jsp"
                         login-processing-url="/login.do"

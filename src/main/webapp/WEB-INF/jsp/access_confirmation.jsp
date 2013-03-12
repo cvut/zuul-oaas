@@ -95,7 +95,7 @@
         </div>
         <% }%>
         <c:remove scope="session" var="SPRING_SECURITY_LAST_EXCEPTION"/>
-        <authz:authorize ifAllGranted="ROLE_USER">
+        <authz:authorize access="isAuthenticated()">
             <div class="row">
                 <div class="span4" style="padding-top: 5%">
                     <!--<img src="http://oauth.net/images/oauth-2-sm.png" alt="OAuth logo" style="padding-left: 30%; padding-bottom: 10%; opacity: 0.5"/>--> 
