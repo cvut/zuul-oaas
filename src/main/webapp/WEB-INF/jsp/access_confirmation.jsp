@@ -1,6 +1,7 @@
 <%@ page import="org.springframework.security.core.AuthenticationException" %>
 <%@ page import="org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter" %>
 <%@ page import="org.springframework.security.oauth2.common.exceptions.UnapprovedClientAuthenticationException" %>
+<%@ page import="org.springframework.security.web.WebAttributes" %>
 
 <%@page contentType="application/xhtml+xml" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/jspf/taglibs.jspf" %>
@@ -86,11 +87,11 @@
     </div>
 
     <div id="container-main" class="container">
-        <% if (session.getAttribute(AbstractAuthenticationProcessingFilter.SPRING_SECURITY_LAST_EXCEPTION_KEY) != null && !(session.getAttribute(AbstractAuthenticationProcessingFilter.SPRING_SECURITY_LAST_EXCEPTION_KEY) instanceof UnapprovedClientAuthenticationException)) {%>
+        <% if (session.getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION) != null && !(session.getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION) instanceof UnapprovedClientAuthenticationException)) {%>
         <div class="error">
             <h2>Ups!</h2>
 
-            <p>Access could not be granted. (<%= ((AuthenticationException) session.getAttribute(AbstractAuthenticationProcessingFilter.SPRING_SECURITY_LAST_EXCEPTION_KEY)).getMessage()%>)</p>
+            <p>Access could not be granted. (<%= ((AuthenticationException) session.getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION)).getMessage()%>)</p>
         </div>
         <% }%>
         <c:remove scope="session" var="SPRING_SECURITY_LAST_EXCEPTION"/>
@@ -156,6 +157,8 @@
                     </div>
                 </div>
             </div>
+            </authz:authorize>
+
         </div>
         <!--<img src="http://static.simpledesktops.com/uploads/desktops/2012/11/20/Bubbles.png" alt="Image Description" style="opacity: 0.15; position: absolute; bottom: 0px; width:100%;height: auto; z-index: -1"/>-->
         <!--<img src="http://www.dottotrains.com/_img/footer/footer3.png" alt="Image Description" style="opacity: 0.28; position: absolute; bottom: 0px; width:100%;height: auto; z-index: -1"/>-->
@@ -171,9 +174,6 @@
         <!--<img src="http://static.simpledesktops.com/uploads/desktops/2011/03/10/tornado.png" alt="Image Description" style="opacity: 0.2; position: absolute; bottom: 0px; width:100%;height: auto; z-index: -1"/>-->
         <!--<img src="http://static.simpledesktops.com/uploads/desktops/2010/12/08/watergrass.png" alt="Image Description" style="opacity: 0.5; position: absolute; bottom: 0px; width:100%;height: auto; z-index: -1"/>-->
         <!--<img src="http://static.simpledesktops.com/uploads/desktops/2011/04/12/Edison.png" alt="Image Description" style="opacity: 0.5; position: absolute; bottom: 0px; width:100%;height: auto; z-index: -1"/>-->
-
-
-    </authz:authorize>
 
 
     <script src="<c:url value='/js/jquery-1.8.3.min.js'/>"></script>
