@@ -118,7 +118,7 @@
                             <div class="span7">
                                 <h2>Milý uživateli, prosím potvrďte</h2>
                                 <br/>
-                                <p class="lead">jestli souhlasíte, aby bylo umožneno aplikaci <strong class="emphasis">"<c:out value="${client.getAdditionalInformation()['product-name']}"/>"</strong> přistoupit k nekerým Vašim <strong class="emphasis">chráneným zdrojům.</strong></p>
+                                <p class="lead">jestli souhlasíte, aby bylo umožneno aplikaci <strong class="emphasis">"<c:out value="${client.productName}"/>"</strong> přistoupit k nekerým Vašim <strong class="emphasis">chráneným zdrojům.</strong></p>
                             </div>
 
                         </div>

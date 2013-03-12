@@ -5,11 +5,14 @@
 package cz.cvut.authserver.oauth2.controllers;
 
 import java.util.Map;
+
+import cz.cvut.authserver.oauth2.dao.ClientDAO;
+import cz.cvut.authserver.oauth2.models.Client;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Required;
 import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 import org.springframework.security.oauth2.provider.AuthorizationRequest;
 import org.springframework.security.oauth2.provider.ClientDetails;
-import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
@@ -24,12 +27,12 @@ import org.springframework.web.servlet.ModelAndView;
 @SessionAttributes("authorizationRequest")
 public class AccessConfirmationController {
 
-	private ClientDetailsService clientDetailsService;
+	private ClientDAO clientDAO;
 
 	@RequestMapping("/oauth/confirm_access")
 	public ModelAndView getAccessConfirmation(Map<String, Object> model) throws OAuth2Exception {
 		AuthorizationRequest clientAuth = (AuthorizationRequest) model.remove("authorizationRequest");
-		ClientDetails client = clientDetailsService.loadClientByClientId(clientAuth.getClientId());
+		Client client = clientDAO.findOne(clientAuth.getClientId());
 		model.put("auth_request", clientAuth);
 		model.put("client", client);
 		return new ModelAndView("access_confirmation", model);
@@ -43,8 +46,8 @@ public class AccessConfirmationController {
 		return "oauth_error";
 	}
 
-	@Autowired
-	public void setClientDetailsService(ClientDetailsService clientDetailsService) {
-		this.clientDetailsService = clientDetailsService;
+	@Required
+	public void setClientDAO(ClientDAO clientDAO) {
+		this.clientDAO = clientDAO;
 	}
 }
