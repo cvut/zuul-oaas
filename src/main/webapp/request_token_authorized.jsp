@@ -15,7 +15,7 @@
     <div id="content">
         <h2>Home</h2>
 
-        <p>You have successfully authorized the request for a protected resource.</p>
+        <p>Úspěšně jste povolil přístup k Vašemu chráněnému zdroji.</p>
     </div>
 
     <%@ include file="/WEB-INF/jspf/footer.jspf" %>

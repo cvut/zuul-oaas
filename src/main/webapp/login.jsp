@@ -73,7 +73,7 @@
                 <div class="alert alert-error">
                     <button type="button" class="close" data-dismiss="alert">&times;</button>
                     <h4>Uuups!</h4>
-                    Zadané uživatelské jméno nebo heslo nejsou správně.
+                    Zadané uživatelské jméno nebo heslo není správné.
                 </div>
             </c:if>
             <c:if test="${not empty param.authorization_error}">
@@ -94,7 +94,7 @@
             <!--<div class="span7">-->
             <form class="form-horizontal" id="loginHere" method='post' action='<c:url value="/login.do"/>'>
                 <fieldset>
-                    <legend>Přihlásení</legend>
+                    <legend>Přihlášení</legend>
                     <div class="control-group">
                         <label class="control-label" for="input01">Jméno</label>
                         <div class="controls">
@@ -163,7 +163,7 @@
 //                    },
                     j_password: {
                         required: "Zadejte prosím Vaše heslo",
-                        minlength: "Heslo musí pozestávat z minímalně 6 znaků"
+                        minlength: "Heslo musí mít minímalně 6 znaků"
                     }
                 },
                 errorClass: "help-inline",

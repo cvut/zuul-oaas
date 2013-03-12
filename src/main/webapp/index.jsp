@@ -34,7 +34,7 @@
             <a href="http://oauth.net/2/" target="_blank">
                 <img class="featurette-image pull-left" src="img/oauth2logo_big.png" height="512" width="512"/>
             </a>
-            <h2 class="featurette-heading">OAuth2 Autorizační server ČVUT. <span class="muted">Je to jednoduchý.</span></h2>
+            <h2 class="featurette-heading">OAuth2 Autorizační server ČVUT. <span class="muted">Je to jednoduché.</span></h2>
             <p class="lead">Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.</p>
         </div>
 

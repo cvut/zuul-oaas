@@ -103,10 +103,9 @@
 
                     <div class="well" style="background-color: #eeeeee;">
                         <ul  style="font-family: sans-serif; font-weight: 100">
-                            <li><strong class="emphasis">Autorizace pomocí nového protokolu <span class="badge badge-info">OAuth 2.0</span></strong> umožňuje uživatelům sdílet data, texty, fotografie a videa uložená na jednom zařízením, s jiným zařízením, <strong class="emphasis">aniž by ste museli vyzradit svoje přístupové údaje.</strong></li>
+                            <li><strong class="emphasis">Autorizace pomocí nového protokolu <strong>OAuth 2.0</strong></strong> umožňuje uživatelům sdílet data, texty, fotografie a videa uložená na jednom zařízením, s jiným zařízením, <strong class="emphasis">aniž byste museli vyzradit své přístupové údaje.</strong></li>
                             <br/>
-                            <li>Protokol <span class="badge badge-info">OAuth 2.0</span> úspěšne používají společnosti jako je <strong class="emphasis">Google, Facebook, Twitter, Yahoo a další.</strong></li>
-                            <br/>
+                            <li>Protokol <strong>OAuth 2.0</strong> úspěšne používají společnosti jako je <strong class="emphasis">Google, Facebook, Twitter, Yahoo a další.</strong></li>
                         </ul>
                     </div>
                 </div>
@@ -118,7 +117,7 @@
                             <div class="span7">
                                 <h2>Milý uživateli, prosím potvrďte</h2>
                                 <br/>
-                                <p class="lead">jestli souhlasíte, aby bylo umožneno aplikaci <strong class="emphasis">"<c:out value="${client.productName}"/>"</strong> přistoupit k nekerým Vašim <strong class="emphasis">chráneným zdrojům.</strong></p>
+                                <p class="lead">zda souhlasíte, aby byl aplikaci <strong class="emphasis">"<c:out value="${client.productName}"/>"</strong> umožňěn přístup k někerým Vašim <strong class="emphasis">chráněným zdrojům.</strong></p>
                             </div>
 
                         </div>
