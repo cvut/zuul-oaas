@@ -12,12 +12,13 @@
 
 
     <!-- Define MongoDB instance -->
-    <mongo:mongo host="localhost" port="27017" />
+    <mongo:mongo host="${mongo.host}" port="${mongo.port}" />
 
     <!-- Configure database access -->
     <mongo:db-factory id="mongoDbFactory"
-                      username="auth_server" password=""
-                      dbname="auth_server"
+                      username="${mongo.username}"
+                      password="${mongo.password}"
+                      dbname="${mongo.dbname}"
                       write-concern="SAFE" />
 
     <!-- Enable JMX MBeans export -->
