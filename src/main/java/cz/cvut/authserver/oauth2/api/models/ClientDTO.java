@@ -72,7 +72,7 @@ public class ClientDTO implements Serializable {
 
     @JsonProperty("authorities")
     @JsonDeserialize(using = ArrayOrStringDeserializer.class)
-	private List<String> authorities;
+	private Collection<String> authorities;
 
     //TODO
 	@JsonProperty("access_token_validity")
@@ -129,10 +129,10 @@ public class ClientDTO implements Serializable {
         this.registeredRedirectUri = registeredRedirectUri;
     }
 
-    public List<String> getAuthorities() {
+    public Collection<String> getAuthorities() {
         return authorities;
     }
-    public void setAuthorities(List<String> authorities) {
+    public void setAuthorities(Collection<String> authorities) {
         this.authorities = authorities;
     }
 
