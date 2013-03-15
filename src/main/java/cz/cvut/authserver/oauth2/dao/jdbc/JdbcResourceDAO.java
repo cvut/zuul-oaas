@@ -1,6 +1,5 @@
 package cz.cvut.authserver.oauth2.dao.jdbc;
 
-import com.blogspot.nurkiewicz.jdbcrepository.RowUnmapper;
 import cz.cvut.authserver.oauth2.dao.ResourceDAO;
 import cz.cvut.authserver.oauth2.models.Resource;
 import cz.cvut.authserver.oauth2.models.enums.Visibility;
@@ -8,9 +7,7 @@ import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import static cz.cvut.authserver.oauth2.models.Resource.fields.*;
 
@@ -27,7 +24,11 @@ public class JdbcResourceDAO extends AbstractJdbcGenericDAO<Resource, String> im
 
     
     //////// Mapping ////////
-    
+
+    protected String getTableName() {
+        return "resources";
+    }
+
     protected RowMapper<Resource> getRowMapper() {
         return new RowMapper<Resource>() {
             public Resource mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -46,23 +47,15 @@ public class JdbcResourceDAO extends AbstractJdbcGenericDAO<Resource, String> im
         };
     }
 
-    protected RowUnmapper<Resource> getRowUnmapper() {
-        return new RowUnmapper<Resource>() {
-            public Map<String, Object> mapColumns(final Resource e) {
-                return new LinkedHashMap<String, Object>() {{
-                    put(ID, e.getId());
-                    put(BASE_URL, e.getBaseUrl());
-                    put(DESCRIPTION, e.getDescription());
-                    put(NAME, e.getName());
-                    put(VERSION, e.getVersion());
-                    put(TITLE, e.getTitle());
-                    put(VISIBILITY, e.getVisibility());
-                }};
-            }
+    protected Object[][] getEntityMapping(Resource e) {
+        return new Object[][] {
+                { ID,           e.getId()           },
+                { BASE_URL,     e.getBaseUrl()      },
+                { DESCRIPTION,  e.getDescription()  },
+                { NAME,         e.getName()         },
+                { VERSION,      e.getVersion()      },
+                { TITLE,        e.getTitle()        },
+                { VISIBILITY,   e.getVisibility()   }
         };
-    }
-
-    protected String getTableName() {
-        return "resources";
     }
 }

@@ -1,6 +1,5 @@
 package cz.cvut.authserver.oauth2.dao.jdbc;
 
-import com.blogspot.nurkiewicz.jdbcrepository.RowUnmapper;
 import cz.cvut.authserver.oauth2.dao.AccessTokenDAO;
 import cz.cvut.authserver.oauth2.models.PersistableAccessToken;
 import org.springframework.jdbc.core.RowMapper;
@@ -12,9 +11,7 @@ import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import static cz.cvut.authserver.oauth2.models.PersistableAccessToken.fields.*;
 import static cz.cvut.authserver.oauth2.utils.JdbcUtils.*;
@@ -90,22 +87,17 @@ public class JdbcAccessTokenDAO extends AbstractJdbcGenericDAO<PersistableAccess
         };
     }
 
-    protected RowUnmapper<PersistableAccessToken> getRowUnmapper() {
-        return new RowUnmapper<PersistableAccessToken>() {
-            public Map<String, Object> mapColumns(final PersistableAccessToken e) {
-                return new LinkedHashMap<String, Object>() {{
-                    put(ID, e.getValue());
-                    put(EXPIRATION, e.getExpiration());
-                    put(TOKEN_TYPE, e.getTokenType());
-                    put(REFRESH_TOKEN, e.getRefreshTokenValue());
-                    put(SCOPE, toArray(e.getScope()) );
-                    put(AUTHENTICATION, serialize(e.getAuthentication()));
-                    put(AUTH_KEY, e.getAuthenticationKey());
-                    put(CLIENT_ID, e.getAuthenticatedClientId());
-                    put(USER_NAME, e.getAuthenticatedUsername());
-                }};
-            }
+    protected Object[][] getEntityMapping(PersistableAccessToken e) {
+        return new Object[][] {
+                { ID,               e.getValue()                     },
+                { EXPIRATION,       e.getExpiration()                },
+                { TOKEN_TYPE,       e.getTokenType()                 },
+                { REFRESH_TOKEN,    e.getRefreshTokenValue()         },
+                { SCOPE,            toArray(e.getScope())            },
+                { AUTHENTICATION,   serialize(e.getAuthentication()) },
+                { AUTH_KEY,         e.getAuthenticationKey()         },
+                { CLIENT_ID,        e.getAuthenticatedClientId()     },
+                { USER_NAME,        e.getAuthenticatedUsername()     }
         };
     }
-
 }

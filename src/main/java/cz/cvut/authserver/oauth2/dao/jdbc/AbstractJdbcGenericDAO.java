@@ -7,10 +7,13 @@ import org.springframework.data.domain.Persistable;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.util.Assert;
 
 import javax.annotation.PostConstruct;
 import java.io.Serializable;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Abstract implementation of the {@link CrudRepository} for plain JDBC that
@@ -43,12 +46,28 @@ public abstract class AbstractJdbcGenericDAO<T extends Persistable<ID>, ID exten
 
     //////// Abstract methods ////////
 
-    protected abstract RowMapper<T> getRowMapper();
-
-    protected abstract RowUnmapper<T> getRowUnmapper();
-
     protected abstract String getTableName();
 
+    protected abstract RowMapper<T> getRowMapper();
+
+    protected abstract Object[][] getEntityMapping(T entity);
+
+
+    protected RowUnmapper<T> getRowUnmapper() {
+        return new RowUnmapper<T>() {
+            public Map<String, Object> mapColumns(T t) {
+                Map<String, Object> mapping = new LinkedHashMap<>();
+
+                for (Object[] pair : getEntityMapping(t)) {
+                    Assert.isTrue(pair.length == 2, "Inner array should have exactly two components");
+                    Assert.isInstanceOf(String.class, pair[0], "First item of the inner array should be String");
+
+                    mapping.put((String) pair[0], pair[1]);
+                }
+                return mapping;
+            }
+        };
+    }
 
     protected String getIdColumn() { return ID; }
 
