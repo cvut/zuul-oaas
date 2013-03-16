@@ -1,15 +1,15 @@
 package cz.cvut.authserver.oauth2.controllers;
 
 import cz.cvut.authserver.oauth2.api.models.JsonExceptionMapping;
+import cz.cvut.authserver.oauth2.dao.AccessTokenDAO;
+import cz.cvut.authserver.oauth2.models.PersistableAccessToken;
 import cz.cvut.oauth.provider.spring.TokenInfo;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.common.exceptions.InvalidTokenException;
 import org.springframework.security.oauth2.provider.AuthorizationRequest;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
-import org.springframework.security.oauth2.provider.token.ResourceServerTokenServices;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,12 +25,12 @@ import static org.springframework.http.HttpStatus.CONFLICT;
 @Controller
 public class CheckTokenEndpoint {
 
-    private ResourceServerTokenServices resourceServerTokenServices;
+    private AccessTokenDAO dao;
 
 
     @RequestMapping(value = "/check-token")
     public @ResponseBody TokenInfo checkToken(@RequestParam("access_token") String value) {
-        OAuth2AccessToken token = resourceServerTokenServices.readAccessToken(value);
+        PersistableAccessToken token = dao.findOne(value);
 
         // first check if token is recognized and if it is not expired
         if (token == null) {
@@ -40,8 +40,9 @@ public class CheckTokenEndpoint {
             throw new InvalidTokenException("Token has expired");
         }
 
-        OAuth2Authentication authentication = resourceServerTokenServices.loadAuthentication(value);
+        OAuth2Authentication authentication = token.getAuthentication();
         AuthorizationRequest clientAuth = authentication.getAuthorizationRequest();
+
         TokenInfo info = new TokenInfo();
 
         info.setAudience(clientAuth.getResourceIds());
@@ -74,8 +75,8 @@ public class CheckTokenEndpoint {
     //////////  Accessors  //////////
 
     @Required
-    public void setTokenServices(ResourceServerTokenServices resourceServerTokenServices) {
-        this.resourceServerTokenServices = resourceServerTokenServices;
+    public void setAccessTokenDAO(AccessTokenDAO accessTokenDAO) {
+        this.dao = accessTokenDAO;
     }
 
 }

@@ -1,5 +1,7 @@
 package cz.cvut.authserver.oauth2.controllers;
 
+import cz.cvut.authserver.oauth2.dao.AccessTokenDAO;
+import cz.cvut.authserver.oauth2.models.PersistableAccessToken;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,7 +13,6 @@ import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.common.exceptions.InvalidTokenException;
 import org.springframework.security.oauth2.provider.AuthorizationRequest;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
-import org.springframework.security.oauth2.provider.token.ResourceServerTokenServices;
 import org.springframework.test.web.server.MockMvc;
 
 import static cz.cvut.authserver.oauth2.Factories.*;
@@ -46,7 +47,7 @@ public class CheckTokenEndpointTest {
             USER_EMAIL = "user_email",
             USER_AUTHORITIES = "user_authorities";
 
-    private @Mock ResourceServerTokenServices tokenServices;
+    private @Mock AccessTokenDAO accessTokenDAO;
     private @InjectMocks CheckTokenEndpoint checkTokenEndpoint;
 
     private MockMvc controller;
@@ -59,7 +60,7 @@ public class CheckTokenEndpointTest {
 
 
     public @Test void check_non_existing_token() throws Exception {
-        doThrow(InvalidTokenException.class).when(tokenServices).readAccessToken("666");
+        doThrow(InvalidTokenException.class).when(accessTokenDAO).findOne("666");
 
         controller.perform(get(CHECK_TOKEN_URI + 666)
                 .accept(APPLICATION_JSON))
@@ -67,7 +68,9 @@ public class CheckTokenEndpointTest {
     }
 
     public @Test void check_expired_token() throws Exception {
-        doReturn(createExpiredAccessToken()).when(tokenServices).readAccessToken("expired");
+        OAuth2AccessToken token = createExpiredAccessToken();
+
+        doReturn(new PersistableAccessToken(token, null)).when(accessTokenDAO).findOne("expired");
 
         controller.perform(get(CHECK_TOKEN_URI + "expired")
                 .accept(APPLICATION_JSON))
@@ -77,11 +80,11 @@ public class CheckTokenEndpointTest {
     public @Test void check_valid_token() throws Exception {
         OAuth2AccessToken expToken = createRandomAccessToken();
         OAuth2Authentication expAuth = createRandomOAuth2Authentication(false);
+
         AuthorizationRequest expClientAuth = expAuth.getAuthorizationRequest();
         Authentication expUserAuth = expAuth.getUserAuthentication();
 
-        doReturn(expToken).when(tokenServices).readAccessToken("valid_token");
-        doReturn(expAuth).when(tokenServices).loadAuthentication("valid_token");
+        doReturn(new PersistableAccessToken(expToken, expAuth)).when(accessTokenDAO).findOne("valid_token");
 
         controller.perform(get(CHECK_TOKEN_URI + "valid_token")
                 .accept(APPLICATION_JSON))
