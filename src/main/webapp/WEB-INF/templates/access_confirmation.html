@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+
+<html lang="cs"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="_layout">
+
+<head>
+    <title>Potvrzení přístupu</title>
+
+    <link type="text/css" rel="stylesheet" href="../../css/bootstrap-cosmo.css" th:href="@{/css/bootstrap-cosmo.css}" />
+    <link type="text/css" rel="stylesheet" href="../../css/bootstrap-responsive.min.css" th:href="@{/css/bootstrap-responsive.min.css}" />
+    <link type="text/css" rel="stylesheet" href="../../css/specs/bootstrap-classic-navbar.css" th:href="@{/css/specs/bootstrap-classic-navbar.css}" />
+
+    <script type="text/javascript" src="../../js/jquery-1.8.3.min.js" th:src="@{/js/jquery-1.8.3.min.js}"></script>
+    <script type="text/javascript" src="../../js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
+
+    <style type="text/css">
+        /* Override some defaults */
+        html, body {
+        }
+        .well {
+        }
+        #container-main{
+            z-index: 100;
+            padding-top: 6%;
+        }
+        #form-approve{
+            padding-top: 7%;
+        }
+        .emphasis{
+            font-family: sans-serif; font-weight: normal;
+        }
+        body, input {
+            font-family: sans-serif;
+            font-weight: 100;
+        }
+        h2 {
+            font-family: sans-serif;
+            font-weight: 100;
+        }
+    </style>
+</head>
+
+<body layout:fragment="body">
+    <div class="navbar navbar-fixed-top">
+        <div class="navbar-inner">
+            <div class="container">
+                <a class="brand" href="#" th:href="@{/foo}">OAuth 2.0 Autorizačňí server ČVUT</a>
+                <div class="nav-collapse collapse">
+                    <ul class="nav">
+                        <li>
+                            <a href="#about">Chci vědet více <span class="icon-question-sign" /></a>
+                        </li>
+                        <li>
+                            <a href="#contact">Kontakt</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="container-main" class="container">
+        <div class="row">
+            <div class="span4" style="padding-top: 5%">
+                <div class="well" style="background-color: #eeeeee;">
+                    <ul style="font-family: sans-serif; font-weight: 100">
+                        <li>
+                            <strong class="emphasis">Autorizace pomocí nového protokolu <strong>OAuth 2.0</strong></strong>
+                            umožňuje uživatelům sdílet data, texty, fotografie a videa uložená na jednom zařízením, s jiným zařízením,
+                            <strong class="emphasis">aniž byste museli vyzradit své přístupové údaje.</strong>
+                        </li>
+                        <br />
+                        <li>
+                            Protokol <strong>OAuth 2.0</strong> úspěšne používají společnosti jako je
+                            <strong class="emphasis">Google, Facebook, Twitter, Yahoo a další.</strong>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="span1"></div>
+
+            <div class="span7">
+                <div id="form-approve">
+
+                    <div class="row">
+                        <div class="span7">
+                            <h2>Milý uživateli, prosím potvrďte</h2>
+                            <br />
+                            <p class="lead">
+                                zda souhlasíte, aby byl aplikaci <strong class="emphasis">„<span th:text="${client.productName}">Mock App</span>“
+                                </strong> umožňěn přístup k někerým Vašim <strong class="emphasis">chráněným zdrojům.</strong>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <br />
+                        <div class="span6">
+                            <table>
+                                <tr>
+                                    <td style="padding-right: 25px">
+                                        <form id="confirmationForm" name="confirmationForm" method="post" th:action="@{/oauth/authorize}">
+                                            <input name="user_oauth_approval" value="true" type="hidden" />
+
+                                            <button name="authorize" type="submit" class="btn btn-large btn-success">
+                                                <span class="icon-ok icon-white"></span>
+                                                Ano, souhlasím
+                                            </button>
+                                        </form>
+                                    </td>
+
+                                    <td>
+                                        <form id="denialForm" name="denialForm" method="post" th:action="@{/oauth/authorize}">
+                                            <input name="user_oauth_approval" value="false" type="hidden" />
+
+                                            <button name="deny" type="submit" class="btn btn-large btn-danger">
+                                                <span class="icon-ban-circle icon-white"></span>
+                                                Ne, nesouhlasím
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <img src="http://static.simpledesktops.com/uploads/desktops/2011/04/12/Franklin.png" alt="Image Description" style="opacity: 0.5; position: absolute; bottom: 0px; width:100%;height: auto; z-index: -1"/>
+</body>
+</html>

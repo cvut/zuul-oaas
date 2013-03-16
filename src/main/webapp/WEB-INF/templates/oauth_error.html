@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+
+<html lang="cs"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="_layout">
+
+<head>
+    <title>Chyba</title>
+
+    <link type="text/css" rel="stylesheet" href="../../css/bootstrap-cosmo.css" th:href="@{/css/bootstrap-cosmo.css}" />
+    <link type="text/css" rel="stylesheet" href="../../css/bootstrap-responsive.min.css" th:href="@{/css/bootstrap-responsive.min.css}" />
+
+    <style type="text/css">
+            /* Override some defaults */
+        html, body {
+        }
+        footer {
+            position: absolute;
+            bottom: 0;
+            height: 60px;
+        }
+        body {
+            font-family: sans-serif;
+            font-weight: 100;
+        }
+    </style>
+</head>
+
+<body layout:fragment="body">
+    <div class="container" style="padding-top: 5%">
+
+        <h1>Je nám velice líto, vyskytl se problém…</h1>
+
+        <div id="content">
+            <h2>OAuth 2.0 Autorizačňí server ČVUT</h2>
+            <div>
+                <span th:text="${message}">Chybová zpráva</span>
+                <br />
+                <br />
+                <div class="alert alert-block">
+                    <b>(<span th:text="${error.summary}">Popis chyby</span>)</b>
+                </div>
+            </div>
+            <p>Zkuste zopakovat svůj pokus <a href="" onclick="history.back();">ješte jednou</a> nebo <a href="#" th:href="@{/support}">nás kontaktuje.</a></p>
+        </div>
+
+        <footer style="font-size: 80%;">
+            <p >&copy; 2012 České vysoké učení technické v Praze. &middot; <a href="#">Soukromí</a> &middot; <a href="#">Podmínky</a></p>
+        </footer>
+    </div>
+</body>
+</html>

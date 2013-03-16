@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+
+<html lang="cs"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="_layout">
+<head>
+    <title>Přihlášení</title>
+
+    <link type="text/css" rel="stylesheet" href="../../css/bootstrap-cosmo.css" th:href="@{/css/bootstrap-cosmo.css}" />
+    <link type="text/css" rel="stylesheet" href="../../css/bootstrap-responsive.min.css" th:href="@{/css/bootstrap-responsive.min.css}" />
+    <link type="text/css" rel="stylesheet" href="../../css/specs/login.css" th:href="@{/css/specs/login.css}" />
+    <link type="text/css" rel="stylesheet" href="../../css/specs/bootstrap-classic-navbar.css" th:href="@{/css/specs/bootstrap-classic-navbar.css}" />
+
+    <script type="text/javascript" src="../../js/jquery-1.8.3.min.js" th:src="@{/js/jquery-1.8.3.min.js}"></script>
+    <script type="text/javascript" src="../../js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
+    <script type="text/javascript" src="http://jzaefferer.github.com/jquery-validation/jquery.validate.js"></script>
+</head>
+
+<body layout:fragment="body">
+    <div class="navbar navbar-fixed-top">
+        <div class="navbar-inner">
+            <div class="container">
+                <a class="brand" href="/auth">OAuth 2.0 Autorizačňí server ČVUT</a>
+                <div class="nav-collapse collapse">
+                    <ul class="nav">
+                        <li><a href="#about">Chci vědet více</a></li>
+                        <li><a href="#contact">Kontakt</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="wrap">
+        <div class="row" style="margin-bottom: 15px">
+            <img src="http://oauth.net/images/oauth-2-sm.png" alt="OAuth logo" height="70" width="70" class="oauth-logo" style="opacity: 0.5;float: left; padding-right: 15px; "/>
+            <h1>OAuth 2.0 Autorizační server ČVUT</h1>
+        </div>
+
+        <div class="row">
+            <div th:if="${param.authentication_error}" class="alert alert-error">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <h4>Uuups!</h4>
+                Zadané uživatelské jméno nebo heslo není správné.
+            </div>
+
+            <div th:if="${param.authorization_error}" class="alert alert-error">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <h4>Woops!</h4>
+                Nejste oprávněn k přístupu ku tomuto zdroji.
+            </div>
+
+            <div class="alert alert-info">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                We've got a grand total of 1 user: <strong class="emphasis">tomy</strong>.
+                Go ahead and log in. tomy's password is <strong class="emphasis">best</strong>.
+            </div>
+        </div>
+
+        <div class="row">
+            <form id="loginHere" class="form-horizontal" method='post' th:action="@{/login.do}">
+                <legend>Přihlášení</legend>
+
+                <div class="control-group">
+                    <label class="control-label" for="user_name">Jméno</label>
+                    <div class="controls">
+                        <input id="user_name" name="j_username" type="text" class="input-xlarge" rel="popover" data-content="Enter your first and last name." data-original-title="Full Name" />
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label" for="password">Heslo</label>
+                    <div class="controls">
+                        <input id="password" name="j_password" type="password" class="input-xlarge" rel="popover" data-content="6 characters or more! Be tricky" data-original-title="Password" />
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <div class="controls">
+                        <button type="submit" class="btn btn-large btn-success" rel="tooltip">Přihlásit se</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <img src="http://static.simpledesktops.com/uploads/desktops/2011/04/12/Franklin.png" alt="Image Description" style="opacity: 0.5; position: absolute; bottom: 0px; width:100%;height: auto; z-index: -1"/>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $("#loginHere").validate({
+                rules: {
+                    j_username: "required",
+                    user_email: {
+                        required: true,
+                        email: true
+                    },
+                    j_password: {
+                        required: true,
+                        minlength: 4
+                    }
+                },
+                messages: {
+                    j_username: "Zadejte prosím Váš login",
+                    j_password: {
+                        required: "Zadejte prosím Vaše heslo",
+                        minlength: "Heslo musí mít minímalně 6 znaků"
+                    }
+                },
+                errorClass: "help-inline",
+                errorElement: "span",
+                highlight: function(element, errorClass, validClass) {
+                    $(element).parents('.control-group').addClass('error');
+                },
+                unhighlight: function(element, errorClass, validClass) {
+                    $(element).parents('.control-group').removeClass('error');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

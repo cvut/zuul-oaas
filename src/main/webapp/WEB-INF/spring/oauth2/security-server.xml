@@ -97,17 +97,17 @@
     <!-- element je zakomentovany, lebo vacsinu z tych veci moze spring generovat automaticky, co v tomto stadiu postacuje...
     following section is temporary commented bock, spring generates most of that stuff automatically, which is sufficient at this stage.....
     -->
-    <sec:http access-denied-page="/login.jsp?authorization_error=true"
+    <sec:http access-denied-page="/login.html?authorization_error=true"
               disable-url-rewriting="true"
               access-decision-manager-ref="accessDecisionManager">
 
         <sec:intercept-url pattern="/oauth/**" access="IS_AUTHENTICATED_FULLY" />
         <sec:intercept-url pattern="/**" access="IS_AUTHENTICATED_ANONYMOUSLY" />
-        <sec:form-login login-page="/login.jsp"
+        <sec:form-login login-page="/login.html"
                         login-processing-url="/login.do"
-                        default-target-url="/index.jsp"
-                        authentication-failure-url="/login.jsp?authentication_error=true" />
-        <sec:logout logout-url="/logout.do" logout-success-url="/index.jsp" />
+                        default-target-url="/"
+                        authentication-failure-url="/login.html?authentication_error=true" />
+        <sec:logout logout-url="/logout.do" logout-success-url="/" />
         <sec:anonymous />
     </sec:http>
 
