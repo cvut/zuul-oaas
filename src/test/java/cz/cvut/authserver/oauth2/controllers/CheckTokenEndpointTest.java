@@ -6,8 +6,10 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.common.exceptions.InvalidTokenException;
+import org.springframework.security.oauth2.provider.AuthorizationRequest;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.token.ResourceServerTokenServices;
 import org.springframework.test.web.server.MockMvc;
@@ -18,6 +20,7 @@ import static org.hamcrest.Matchers.hasItems;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.security.core.authority.AuthorityUtils.authorityListToSet;
 import static org.springframework.test.web.server.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.server.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.server.setup.MockMvcBuilders.standaloneSetup;
@@ -72,23 +75,25 @@ public class CheckTokenEndpointTest {
     }
 
     public @Test void check_valid_token() throws Exception {
-        OAuth2AccessToken expectedToken = createRandomAccessToken();
-        OAuth2Authentication expectedAuth = createRandomOAuth2Authentication(false);
+        OAuth2AccessToken expToken = createRandomAccessToken();
+        OAuth2Authentication expAuth = createRandomOAuth2Authentication(false);
+        AuthorizationRequest expClientAuth = expAuth.getAuthorizationRequest();
+        Authentication expUserAuth = expAuth.getUserAuthentication();
 
-        doReturn(expectedToken).when(tokenServices).readAccessToken("valid_token");
-        doReturn(expectedAuth).when(tokenServices).loadAuthentication("valid_token");
+        doReturn(expToken).when(tokenServices).readAccessToken("valid_token");
+        doReturn(expAuth).when(tokenServices).loadAuthentication("valid_token");
 
         controller.perform(get(CHECK_TOKEN_URI + "valid_token")
                 .accept(APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().mimeType(MIME_TYPE_JSON))
-                .andExpect(jsonPath(CLIENT_ID, equalTo(expectedAuth.getAuthorizationRequest().getClientId())))
-                .andExpect(jsonPath(SCOPE, hasItems(expectedToken.getScope().toArray())))
-                .andExpect(jsonPath(AUDIENCE, hasItems(expectedAuth.getAuthorizationRequest().getResourceIds().toArray())))
-                .andExpect(jsonPath(CLIENT_AUTHORITIES, hasItems(expectedAuth.getAuthorities().toArray())))
-                .andExpect(jsonPath(EXPIRES_IN, equalTo(expectedToken.getExpiresIn())))
-                .andExpect(jsonPath(USER_ID, equalTo(expectedAuth.getUserAuthentication().getPrincipal())));
+                .andExpect(jsonPath(CLIENT_ID, equalTo(expClientAuth.getClientId())))
+                .andExpect(jsonPath(SCOPE, hasItems(expToken.getScope().toArray())))
+                .andExpect(jsonPath(AUDIENCE, hasItems(expClientAuth.getResourceIds().toArray())))
+                .andExpect(jsonPath(CLIENT_AUTHORITIES, hasItems(authorityListToSet(expClientAuth.getAuthorities()).toArray())))
+                //.andExpect(jsonPath(EXPIRES_IN, equalTo(expToken.getExpiresIn()))) TODO need approximated match
+                .andExpect(jsonPath(USER_ID, equalTo(expUserAuth.getName())))
                 //.andExpect(jsonPath(USER_EMAIL, )))
-                //.andExpect(jsonPath(USER_AUTHORITIES, hasItems(AuthorityUtils.authorityListToSet(expectedAuth.getUserAuthentication().getAuthorities()).toArray()))); TODO
+                .andExpect(jsonPath(USER_AUTHORITIES, hasItems(authorityListToSet(expUserAuth.getAuthorities()).toArray())));
     }
 }

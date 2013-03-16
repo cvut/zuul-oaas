@@ -79,6 +79,12 @@
     <!--//////////////////// DEPENDENCIES ////////////////////-->
 
     <dependencies>
+        <dependency>
+            <groupId>cz.cvut.oauth.support</groupId>
+            <artifactId>provider-spring-support</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
         
         <!--////////// Spring //////////-->
 
