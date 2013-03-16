@@ -4,11 +4,11 @@ import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import cz.cvut.authserver.oauth2.api.models.ClientDTO;
-import cz.cvut.authserver.oauth2.models.enums.AuthorizationGrant;
-import cz.cvut.authserver.oauth2.models.Client;
 import cz.cvut.authserver.oauth2.models.Auth;
+import cz.cvut.authserver.oauth2.models.Client;
 import cz.cvut.authserver.oauth2.models.Resource;
 import cz.cvut.authserver.oauth2.models.Scope;
+import cz.cvut.authserver.oauth2.models.enums.AuthorizationGrant;
 import cz.cvut.authserver.oauth2.models.enums.Visibility;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
@@ -177,6 +177,13 @@ public class Factories {
         return createRandomAccessToken( randomString() );
     }
 
+    public static OAuth2AccessToken createExpiredAccessToken() {
+        DefaultOAuth2AccessToken token = (DefaultOAuth2AccessToken) createRandomAccessToken();
+        token.setExpiration( randomPastDate() );
+
+        return token;
+    }
+
 
 
     //////// OAuth2RefreshToken ////////
@@ -228,7 +235,7 @@ public class Factories {
     //////// UserAuthentication ////////
 
     public static Authentication createUserAuthentication(String name, boolean authenticated) {
-        return new StubAuthentication(name, authenticated);
+        return new StubAuthentication(name, randomGrantedAuthorities(2), authenticated);
     }
 
 
@@ -313,6 +320,12 @@ public class Factories {
         return new Date(now.getTime() + offset);
     }
 
+    private static Date randomPastDate() {
+        Date now = new Date();
+        int offset = randomInt();
+        return new Date(now.getTime() - offset);
+    }
+
 
 
     //////// Stubs ////////
@@ -320,11 +333,16 @@ public class Factories {
     private static class StubAuthentication extends AbstractAuthenticationToken {
 
         private String principal;
+        private Collection<GrantedAuthority> authorities;
 
         public StubAuthentication(String name, boolean authenticated) {
+            this(name, Collections.<GrantedAuthority>emptySet(), authenticated);
+        }
+        public StubAuthentication(String name, Collection<GrantedAuthority> authorities, boolean authenticated) {
             super(null);
             setAuthenticated(authenticated);
             this.principal = name;
+            this.authorities = authorities;
         }
 
         public Object getCredentials() {
@@ -333,6 +351,11 @@ public class Factories {
 
         public Object getPrincipal() {
             return principal;
+        }
+
+        @Override
+        public Collection<GrantedAuthority> getAuthorities() {
+            return authorities;
         }
 
         @Override
