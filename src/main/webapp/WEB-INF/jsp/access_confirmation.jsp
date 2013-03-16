@@ -87,76 +87,66 @@
     </div>
 
     <div id="container-main" class="container">
-        <% if (session.getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION) != null && !(session.getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION) instanceof UnapprovedClientAuthenticationException)) {%>
-        <div class="error">
-            <h2>Ups!</h2>
+        <div class="row">
+            <div class="span4" style="padding-top: 5%">
+                <!--<img src="http://oauth.net/images/oauth-2-sm.png" alt="OAuth logo" style="padding-left: 30%; padding-bottom: 10%; opacity: 0.5"/>-->
+                <!--<h3>Proč jsem se tady ocitnul?</h3>-->
 
-            <p>Access could not be granted. (<%= ((AuthenticationException) session.getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION)).getMessage()%>)</p>
-        </div>
-        <% }%>
-        <c:remove scope="session" var="SPRING_SECURITY_LAST_EXCEPTION"/>
-        <authz:authorize access="isAuthenticated()">
-            <div class="row">
-                <div class="span4" style="padding-top: 5%">
-                    <!--<img src="http://oauth.net/images/oauth-2-sm.png" alt="OAuth logo" style="padding-left: 30%; padding-bottom: 10%; opacity: 0.5"/>--> 
-                    <!--<h3>Proč jsem se tady ocitnul?</h3>-->
-
-                    <div class="well" style="background-color: #eeeeee;">
-                        <ul  style="font-family: sans-serif; font-weight: 100">
-                            <li><strong class="emphasis">Autorizace pomocí nového protokolu <strong>OAuth 2.0</strong></strong> umožňuje uživatelům sdílet data, texty, fotografie a videa uložená na jednom zařízením, s jiným zařízením, <strong class="emphasis">aniž byste museli vyzradit své přístupové údaje.</strong></li>
-                            <br/>
-                            <li>Protokol <strong>OAuth 2.0</strong> úspěšne používají společnosti jako je <strong class="emphasis">Google, Facebook, Twitter, Yahoo a další.</strong></li>
-                        </ul>
-                    </div>
+                <div class="well" style="background-color: #eeeeee;">
+                    <ul  style="font-family: sans-serif; font-weight: 100">
+                        <li><strong class="emphasis">Autorizace pomocí nového protokolu <strong>OAuth 2.0</strong></strong> umožňuje uživatelům sdílet data, texty, fotografie a videa uložená na jednom zařízením, s jiným zařízením, <strong class="emphasis">aniž byste museli vyzradit své přístupové údaje.</strong></li>
+                        <br/>
+                        <li>Protokol <strong>OAuth 2.0</strong> úspěšne používají společnosti jako je <strong class="emphasis">Google, Facebook, Twitter, Yahoo a další.</strong></li>
+                    </ul>
                 </div>
-                <div class="span1"></div>
-                <div class="span7">
-                    <div id="form-approve">
-                        <!--<h2>OAuth 2.0 Autorizačňí server ČVUT</h2>-->
-                        <div class="row">
-                            <div class="span7">
-                                <h2>Milý uživateli, prosím potvrďte</h2>
-                                <br/>
-                                <p class="lead">zda souhlasíte, aby byl aplikaci <strong class="emphasis">"<c:out value="${client.productName}"/>"</strong> umožňěn přístup k někerým Vašim <strong class="emphasis">chráněným zdrojům.</strong></p>
-                            </div>
-
-                        </div>
-                        <div class="row">
-
+            </div>
+            <div class="span1"></div>
+            <div class="span7">
+                <div id="form-approve">
+                    <!--<h2>OAuth 2.0 Autorizačňí server ČVUT</h2>-->
+                    <div class="row">
+                        <div class="span7">
+                            <h2>Milý uživateli, prosím potvrďte</h2>
                             <br/>
-                            <div class="span6">
-                                <table>
-                                    <tr>
-                                        <td style="padding-right: 25px">
-                                            <form id="confirmationForm" name="confirmationForm" action="<%=request.getContextPath()%>/oauth/authorize" method="post" >
-                                                <input name="user_oauth_approval" value="true" type="hidden"/>
-                                                <!--<label>-->
-                                                <button name="authorize" type="submit" class="btn btn-large btn-success">
-                                                    <i class="icon-ok icon-white"></i> Ano, souhlasím
-                                                </button>
-                                                <!--</label>-->
-                                            </form>
-                                        </td>
+                            <p class="lead">zda souhlasíte, aby byl aplikaci <strong class="emphasis">"<c:out value="${client.productName}"/>"</strong> umožňěn přístup k někerým Vašim <strong class="emphasis">chráněným zdrojům.</strong></p>
+                        </div>
 
-                                        <td>  
-                                            <form id="denialForm" name="denialForm" action="<%=request.getContextPath()%>/oauth/authorize" method="post">
-                                                <input name="user_oauth_approval" value="false" type="hidden" />
-                                                <!--<label>-->
-                                                <button name="deny" type="submit" class="btn btn-large btn-danger">
-                                                    <i class="icon-ban-circle icon-white"></i> Ne, nesouhlasím
-                                                </button>
-                                                <!--</label>-->
-                                            </form>
+                    </div>
+                    <div class="row">
 
-                                        </td>
-                                    </tr>
-                                </table>
-                            </div>
+                        <br/>
+                        <div class="span6">
+                            <table>
+                                <tr>
+                                    <td style="padding-right: 25px">
+                                        <form id="confirmationForm" name="confirmationForm" action="<%=request.getContextPath()%>/oauth/authorize" method="post" >
+                                            <input name="user_oauth_approval" value="true" type="hidden"/>
+                                            <!--<label>-->
+                                            <button name="authorize" type="submit" class="btn btn-large btn-success">
+                                                <i class="icon-ok icon-white"></i> Ano, souhlasím
+                                            </button>
+                                            <!--</label>-->
+                                        </form>
+                                    </td>
+
+                                    <td>
+                                        <form id="denialForm" name="denialForm" action="<%=request.getContextPath()%>/oauth/authorize" method="post">
+                                            <input name="user_oauth_approval" value="false" type="hidden" />
+                                            <!--<label>-->
+                                            <button name="deny" type="submit" class="btn btn-large btn-danger">
+                                                <i class="icon-ban-circle icon-white"></i> Ne, nesouhlasím
+                                            </button>
+                                            <!--</label>-->
+                                        </form>
+
+                                    </td>
+                                </tr>
+                            </table>
                         </div>
                     </div>
                 </div>
             </div>
-            </authz:authorize>
+        </div>
 
         </div>
         <!--<img src="http://static.simpledesktops.com/uploads/desktops/2012/11/20/Bubbles.png" alt="Image Description" style="opacity: 0.15; position: absolute; bottom: 0px; width:100%;height: auto; z-index: -1"/>-->
