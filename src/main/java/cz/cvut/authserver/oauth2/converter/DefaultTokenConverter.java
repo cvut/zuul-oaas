@@ -36,7 +36,7 @@ public class DefaultTokenConverter implements AccessTokenConverter {
 //        }
 
         if (token.getExpiration() != null) {
-            response.put("expires_in", token.getExpiration().getTime() / 1000);
+            response.put("expires_in", token.getExpiresIn());
         }
 
         response.putAll(token.getAdditionalInformation());
