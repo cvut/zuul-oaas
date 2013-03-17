@@ -42,7 +42,4 @@
           p:defaultEncoding="utf-8"
           p:cacheSeconds="0" />
     
-    <!-- Property files -->
-    <context:property-placeholder location="classpath:api-context.properties"/>
-    
 </beans>
