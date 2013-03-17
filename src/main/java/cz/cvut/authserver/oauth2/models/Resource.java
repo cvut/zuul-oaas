@@ -38,8 +38,8 @@ public class Resource implements Persistable<String> {
     private Auth auth;
 
     @NotNull @Size(max=256)
-    @ValidURI(scheme ={"https", "http"})
-    @JsonProperty("baser_url")
+    @ValidURI(scheme={"https", "http"})
+    @JsonProperty("base_url")
     private String baseUrl;
     
     @Size(max=256)
