@@ -14,7 +14,7 @@
 
     <script type="text/javascript" src="../../js/jquery-1.8.3.min.js" th:src="@{/js/jquery-1.8.3.min.js}"></script>
     <script type="text/javascript" src="../../js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
-    <script type="text/javascript" src="http://jzaefferer.github.com/jquery-validation/jquery.validate.js"></script>
+    <script type="text/javascript" src="../../js/jquery.validate.js" th:src="@{/js/jquery.validate.js}"></script>
 </head>
 
 <body layout:fragment="body">
@@ -34,7 +34,7 @@
 
     <div id="wrap">
         <div class="row" style="margin-bottom: 15px">
-            <img src="http://oauth.net/images/oauth-2-sm.png" alt="OAuth logo" height="70" width="70" class="oauth-logo" style="opacity: 0.5;float: left; padding-right: 15px; "/>
+            <img src="../../img/oauth2-logo_small.png" th:src="@{/img/oauth2-logo_small.png}" alt="OAuth2 logo" height="70" width="70" class="oauth-logo" style="opacity: 0.5;float: left; padding-right: 15px; "/>
             <h1 th:text="#{project.title}">CTU Authorization Server</h1>
         </div>
 
@@ -87,7 +87,7 @@
         </div>
     </div>
 
-    <img src="http://static.simpledesktops.com/uploads/desktops/2011/04/12/Franklin.png" alt="background image" style="opacity: 0.5; position: absolute; bottom: 0px; width:100%;height: auto; z-index: -1"/>
+    <img src="../../img/franklin.png" th:src="@{/img/franklin.png}" alt="background image" style="opacity: 0.5; position: absolute; bottom: 0px; width:100%;height: auto; z-index: -1"/>
 
     <script type="text/javascript">
         $(document).ready(function() {
