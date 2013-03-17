@@ -5,7 +5,7 @@
       xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
       layout:decorator="_layout">
 <head>
-    <title>Přihlášení</title>
+    <title th:text="#{page.title(#{page.login})}"></title>
 
     <link type="text/css" rel="stylesheet" href="../../css/bootstrap-cosmo.css" th:href="@{/css/bootstrap-cosmo.css}" />
     <link type="text/css" rel="stylesheet" href="../../css/bootstrap-responsive.min.css" th:href="@{/css/bootstrap-responsive.min.css}" />
@@ -21,11 +21,11 @@
     <div class="navbar navbar-fixed-top">
         <div class="navbar-inner">
             <div class="container">
-                <a class="brand" href="/auth">OAuth 2.0 Autorizačňí server ČVUT</a>
+                <a class="brand" href="#" th:href="@{/}" th:text="#{project.title}">CTU Authorization Server</a>
                 <div class="nav-collapse collapse">
                     <ul class="nav">
-                        <li><a href="#about">Chci vědet více</a></li>
-                        <li><a href="#contact">Kontakt</a></li>
+                        <li><a href="#about" th:text="#{page.about}">About</a></li>
+                        <li><a href="#contact" th:text="#{page.contact}">Contact</a></li>
                     </ul>
                 </div>
             </div>
@@ -35,20 +35,22 @@
     <div id="wrap">
         <div class="row" style="margin-bottom: 15px">
             <img src="http://oauth.net/images/oauth-2-sm.png" alt="OAuth logo" height="70" width="70" class="oauth-logo" style="opacity: 0.5;float: left; padding-right: 15px; "/>
-            <h1>OAuth 2.0 Autorizační server ČVUT</h1>
+            <h1 th:text="#{project.title}">CTU Authorization Server</h1>
         </div>
 
         <div class="row">
             <div th:if="${param.authentication_error}" class="alert alert-error">
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
-                <h4>Uuups!</h4>
-                Zadané uživatelské jméno nebo heslo není správné.
+
+                <h4 th:text="#{login.error.title}">Oops…</h4>
+                <span th:text="#{login.error.authentication}">Username or password is wrong.</span>
             </div>
 
             <div th:if="${param.authorization_error}" class="alert alert-error">
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
-                <h4>Woops!</h4>
-                Nejste oprávněn k přístupu ku tomuto zdroji.
+
+                <h4 th:text="#{login.error.title}">Oops…</h4>
+                <span th:text="#{login.error.authorization}">You’re not allowed to access this resource.</span>
             </div>
 
             <div class="alert alert-info">
@@ -60,32 +62,32 @@
 
         <div class="row">
             <form id="loginHere" class="form-horizontal" method='post' th:action="@{/login.do}">
-                <legend>Přihlášení</legend>
+                <legend th:text="#{page.login}">Login</legend>
 
                 <div class="control-group">
-                    <label class="control-label" for="user_name">Jméno</label>
+                    <label class="control-label" for="user_name" th:text="#{login.form.name}">Name</label>
                     <div class="controls">
-                        <input id="user_name" name="j_username" type="text" class="input-xlarge" rel="popover" data-content="Enter your first and last name." data-original-title="Full Name" />
+                        <input id="user_name" name="j_username" type="text" class="input-xlarge" />
                     </div>
                 </div>
 
                 <div class="control-group">
-                    <label class="control-label" for="password">Heslo</label>
+                    <label class="control-label" for="password" th:text="#{login.form.password}">Password</label>
                     <div class="controls">
-                        <input id="password" name="j_password" type="password" class="input-xlarge" rel="popover" data-content="6 characters or more! Be tricky" data-original-title="Password" />
+                        <input id="password" name="j_password" type="password" class="input-xlarge" />
                     </div>
                 </div>
 
                 <div class="control-group">
                     <div class="controls">
-                        <button type="submit" class="btn btn-large btn-success" rel="tooltip">Přihlásit se</button>
+                        <button type="submit" class="btn btn-large btn-success" th:text="#{login.form.login}">Login</button>
                     </div>
                 </div>
             </form>
         </div>
     </div>
 
-    <img src="http://static.simpledesktops.com/uploads/desktops/2011/04/12/Franklin.png" alt="Image Description" style="opacity: 0.5; position: absolute; bottom: 0px; width:100%;height: auto; z-index: -1"/>
+    <img src="http://static.simpledesktops.com/uploads/desktops/2011/04/12/Franklin.png" alt="background image" style="opacity: 0.5; position: absolute; bottom: 0px; width:100%;height: auto; z-index: -1"/>
 
     <script type="text/javascript">
         $(document).ready(function() {

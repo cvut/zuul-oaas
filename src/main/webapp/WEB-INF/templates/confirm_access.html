@@ -6,7 +6,7 @@
       layout:decorator="_layout">
 
 <head>
-    <title>Potvrzení přístupu</title>
+    <title th:text="#{page.title(#{page.confirm_access})}"></title>
 
     <link type="text/css" rel="stylesheet" href="../../css/bootstrap-cosmo.css" th:href="@{/css/bootstrap-cosmo.css}" />
     <link type="text/css" rel="stylesheet" href="../../css/bootstrap-responsive.min.css" th:href="@{/css/bootstrap-responsive.min.css}" />
@@ -46,14 +46,14 @@
     <div class="navbar navbar-fixed-top">
         <div class="navbar-inner">
             <div class="container">
-                <a class="brand" href="#" th:href="@{/foo}">OAuth 2.0 Autorizačňí server ČVUT</a>
+                <a class="brand" href="#" th:href="@{/}" th:text="#{project.title}">CTU Authorization Server</a>
                 <div class="nav-collapse collapse">
                     <ul class="nav">
                         <li>
-                            <a href="#about">Chci vědet více <span class="icon-question-sign" /></a>
+                            <a href="#about" th:text="#{page.about}">About</a>
                         </li>
                         <li>
-                            <a href="#contact">Kontakt</a>
+                            <a href="#contact" th:text="#{page.contact}">Contact</a>
                         </li>
                     </ul>
                 </div>
@@ -66,15 +66,12 @@
             <div class="span4" style="padding-top: 5%">
                 <div class="well" style="background-color: #eeeeee;">
                     <ul style="font-family: sans-serif; font-weight: 100">
-                        <li>
-                            <strong class="emphasis">Autorizace pomocí nového protokolu <strong>OAuth 2.0</strong></strong>
-                            umožňuje uživatelům sdílet data, texty, fotografie a videa uložená na jednom zařízením, s jiným zařízením,
-                            <strong class="emphasis">aniž byste museli vyzradit své přístupové údaje.</strong>
+                        <li th:utext="#{confirm_access.explain.1}">
+                            Explain how is <strong>OAuth2</strong> useful
                         </li>
                         <br />
-                        <li>
-                            Protokol <strong>OAuth 2.0</strong> úspěšne používají společnosti jako je
-                            <strong class="emphasis">Google, Facebook, Twitter, Yahoo a další.</strong>
+                        <li th:utext="#{confirm_access.explain.2}">
+                            and some other stuff
                         </li>
                     </ul>
                 </div>
@@ -87,11 +84,12 @@
 
                     <div class="row">
                         <div class="span7">
-                            <h2>Milý uživateli, prosím potvrďte</h2>
+                            <h2 th:text="#{confirm_access.notice.title(${client.productName})}">
+                                Authorize application AwesomeApp?
+                            </h2>
                             <br />
-                            <p class="lead">
-                                zda souhlasíte, aby byl aplikaci <strong class="emphasis">„<span th:text="${client.productName}">Mock App</span>“
-                                </strong> umožňěn přístup k někerým Vašim <strong class="emphasis">chráněným zdrojům.</strong>
+                            <p class="lead" th:utext="#{confirm_access.notice.text}">
+                                Do you want to allow this application to access your data?
                             </p>
                         </div>
                     </div>
@@ -107,7 +105,7 @@
 
                                             <button name="authorize" type="submit" class="btn btn-large btn-success">
                                                 <span class="icon-ok icon-white"></span>
-                                                Ano, souhlasím
+                                                <span th:text="#{confirm_access.form.authorize}">Authorize</span>
                                             </button>
                                         </form>
                                     </td>
@@ -118,7 +116,7 @@
 
                                             <button name="deny" type="submit" class="btn btn-large btn-danger">
                                                 <span class="icon-ban-circle icon-white"></span>
-                                                Ne, nesouhlasím
+                                                <span th:text="#{confirm_access.form.deny}">Deny</span>
                                             </button>
                                         </form>
                                     </td>
@@ -131,6 +129,6 @@
         </div>
     </div>
 
-    <img src="http://static.simpledesktops.com/uploads/desktops/2011/04/12/Franklin.png" alt="Image Description" style="opacity: 0.5; position: absolute; bottom: 0px; width:100%;height: auto; z-index: -1"/>
+    <img src="http://static.simpledesktops.com/uploads/desktops/2011/04/12/Franklin.png" alt="background image" style="opacity: 0.5; position: absolute; bottom: 0px; width:100%;height: auto; z-index: -1"/>
 </body>
 </html>

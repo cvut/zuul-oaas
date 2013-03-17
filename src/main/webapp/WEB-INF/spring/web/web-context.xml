@@ -26,7 +26,8 @@
 
     <bean id="templateEngine" class="org.thymeleaf.spring3.SpringTemplateEngine"
           p:additionalDialects-ref="thymeleafDialects"
-          p:templateResolver-ref="templateResolver" />
+          p:templateResolver-ref="templateResolver"
+          p:messageSource-ref="messageSource" />
 
     <bean id="templateResolver" class="org.thymeleaf.templateresolver.ServletContextTemplateResolver"
           p:prefix="/WEB-INF/templates/"
@@ -34,6 +35,11 @@
           p:characterEncoding="utf-8"
           p:templateMode="HTML5"
           p:cacheable="false" />
+
+    <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource"
+          p:basename="/WEB-INF/i18n/web-messages"
+          p:defaultEncoding="utf-8"
+          p:cacheSeconds="0" />
 
     <util:set id="thymeleafDialects">
         <bean class="nz.net.ultraq.web.thymeleaf.LayoutDialect" />

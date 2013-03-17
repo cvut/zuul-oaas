@@ -6,7 +6,7 @@
       layout:decorator="_layout">
 
 <head>
-    <title>Chyba</title>
+    <title th:text="#{page.title(#{page.error})}"></title>
 
     <link type="text/css" rel="stylesheet" href="../../css/bootstrap-cosmo.css" th:href="@{/css/bootstrap-cosmo.css}" />
     <link type="text/css" rel="stylesheet" href="../../css/bootstrap-responsive.min.css" th:href="@{/css/bootstrap-responsive.min.css}" />
@@ -30,23 +30,22 @@
 <body layout:fragment="body">
     <div class="container" style="padding-top: 5%">
 
-        <h1>Je nám velice líto, vyskytl se problém…</h1>
+        <h1 th:text="#{oauth_error.title}">We’re really sorry, there’s some problem…</h1>
 
         <div id="content">
-            <h2>OAuth 2.0 Autorizačňí server ČVUT</h2>
+            <h2 th:text="#{project.title}">CTU Authorization Server</h2>
             <div>
-                <span th:text="${message}">Chybová zpráva</span>
-                <br />
-                <br />
                 <div class="alert alert-block">
-                    <b>(<span th:text="${error.summary}">Popis chyby</span>)</b>
+                    <b>(<span th:text="${error.summary}">Error summary</span>)</b>
                 </div>
             </div>
-            <p>Zkuste zopakovat svůj pokus <a href="" onclick="history.back();">ješte jednou</a> nebo <a href="#" th:href="@{/support}">nás kontaktuje.</a></p>
+            <p th:utext="#{oauth_error.hint(@{/support})}">
+                Please try it later or <a href="#">let us know</a> about it.
+            </p>
         </div>
 
         <footer style="font-size: 80%;">
-            <p >&copy; 2012 České vysoké učení technické v Praze. &middot; <a href="#">Soukromí</a> &middot; <a href="#">Podmínky</a></p>
+            <p><span th:text="#{project.copyright}">Copyright</span></p>
         </footer>
     </div>
 </body>

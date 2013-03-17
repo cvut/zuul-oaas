@@ -6,7 +6,7 @@
       layout:decorator="_layout">
 
 <head>
-    <title>Hlavní stránka</title>
+    <title th:text="#{page.title(#{page.home})}"></title>
 
     <link type="text/css" rel="stylesheet" href="../../css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" />
     <link type="text/css" rel="stylesheet" href="../../css/bootstrap-responsive.min.css" th:href="@{/css/bootstrap-responsive.min.css}" />
@@ -39,11 +39,12 @@
                 <img class="featurette-image pull-left" src="../../img/oauth2logo_big.png" th:src="@{/img/oauth2logo_big.png}" height="512" width="512"/>
             </a>
             <h2 class="featurette-heading">
-                OAuth2 Autorizační server ČVUT.
-                <span class="muted">Je to jednoduché.</span>
+                <div th:text="#{project.title}">CTU Authorization Server</div>
+                <div class="muted" th:text="#{project.motto}">It’s simple!</div>
             </h2>
-            <p class="lead">
-                Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.
+            <p class="lead" th:text="#{project.description}">
+                Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper.
+                Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.
             </p>
         </div>
 
@@ -51,10 +52,7 @@
 
         <!-- FOOTER -->
         <footer>
-            <p class="pull-right">
-                <a href="#">Nahoru</a>
-            </p>
-            <p>&copy; 2012 České vysoké učení technické v Praze. &middot; <a href="#">Soukromí</a> &middot; <a href="#">Podmínky</a></p>
+            <p><span th:text="#{project.copyright}">Copyright</span></p>
         </footer>
     </div>
 </body>
