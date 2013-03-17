@@ -26,9 +26,11 @@
     <bean class="org.springframework.validation.beanvalidation.MethodValidationPostProcessor"
           p:validatorFactory-ref="validator" />
 
-    <!-- Bind our validation_errors.properties -->
-    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource"
-          p:basename="validation_errors" />
+    <!-- Bind our message properties -->
+    <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource"
+          p:basename="/WEB-INF/i18n/api-messages"
+          p:defaultEncoding="utf-8"
+          p:cacheSeconds="0" />
 
 
     <!--///// Controllers /////-->

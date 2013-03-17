@@ -65,7 +65,8 @@ public class ClientDTO implements Serializable {
 	private Collection<String> authorizedGrantTypes;
 
     @EachSize( @Size(min = 5, max = 255) )
-    @EachURI( @ValidURI(relative = false, fragment = false) )
+    @EachURI( @ValidURI(relative = false, fragment = false,
+        message = "{validator.invalid_redirect_uri}"))
 	@JsonProperty("redirect_uri")
 	@JsonDeserialize(using = ArrayOrStringDeserializer.class)
 	private Collection<String> registeredRedirectUri;

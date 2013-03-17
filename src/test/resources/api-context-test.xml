@@ -35,11 +35,12 @@
     
     <bean id="oauth2ClientCredentialsGenerator" class="cz.cvut.authserver.oauth2.generators.OAuth2ClientCredentialsGeneratorImpl" />
     <bean id="identifierGenerator" class="cz.cvut.authserver.oauth2.generators.IdentifierGeneratorImpl" />
-    
-    <!-- bind our messages.properties -->
-    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
-        <property name="basenames" value="validation_errors" />
-    </bean>
+
+    <!-- Bind our message properties -->
+    <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource"
+          p:basename="/WEB-INF/i18n/api-messages"
+          p:defaultEncoding="utf-8"
+          p:cacheSeconds="0" />
     
     <!-- Property files -->
     <context:property-placeholder location="classpath:api-context.properties"/>
