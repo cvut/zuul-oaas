@@ -25,6 +25,7 @@ import static org.springframework.http.HttpStatus.CONFLICT;
 @Controller
 public class CheckTokenEndpoint {
 
+    //TODO there should be a service
     private AccessTokenDAO dao;
 
 
