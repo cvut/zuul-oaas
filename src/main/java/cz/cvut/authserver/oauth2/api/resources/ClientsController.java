@@ -161,6 +161,15 @@ public class ClientsController {
         clientsService.updateClient(client);
     }
 
+    @ResponseStatus(NO_CONTENT)
+    @RequestMapping(value = "{clientId}/locked", method = PUT)
+    public void setLockedToClientDetails(@PathVariable String clientId, @RequestBody Boolean locked) {
+        ClientDTO client = clientsService.findClientById(clientId);
+
+        client.setLocked(locked);
+        clientsService.updateClient(client);
+    }
+
 
     //////////  Exception Handlers  //////////
     

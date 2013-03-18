@@ -86,6 +86,9 @@ public class ClientDTO implements Serializable {
     @JsonProperty("product_name")
 	private String productName;
 
+    @JsonProperty("client_locked")
+    private Boolean locked;
+
 
 
     public String getClientId() {
@@ -157,6 +160,15 @@ public class ClientDTO implements Serializable {
     public void setProductName(String productName) {
         this.productName = productName;
     }
+
+    public Boolean getLocked() {
+        return locked;
+    }
+
+    public void setLocked(Boolean locked) {
+        this.locked = locked;
+    }
+
 
     @SuppressWarnings("UnusedDeclaration")
     public boolean hasRedirectUri() {

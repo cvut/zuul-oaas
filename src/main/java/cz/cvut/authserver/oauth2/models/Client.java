@@ -22,7 +22,9 @@ import java.util.*;
 public class Client implements ClientDetails, Persistable<String> {
 
     private static final long serialVersionUID = 1L;
-    private static final String EXT_PRODUCT_NAME = "product_name";
+    private static final String
+            EXT_PRODUCT_NAME = "product_name",
+            EXT_LOCKED = "locked";
 
 	private @Id String clientId;
 	private String clientSecret;
@@ -35,6 +37,7 @@ public class Client implements ClientDetails, Persistable<String> {
 	private Integer refreshTokenValiditySeconds;
 
     private String productName;
+    private boolean locked = false;
 
 
     public Client() {
@@ -136,6 +139,7 @@ public class Client implements ClientDetails, Persistable<String> {
     public Map<String, Object> getAdditionalInformation() {
         return new HashMap<String, Object>() {{
             put(EXT_PRODUCT_NAME, productName);
+            put(EXT_LOCKED, locked);
         }};
     }
 
@@ -144,6 +148,13 @@ public class Client implements ClientDetails, Persistable<String> {
     }
     public void setProductName(String productName) {
         this.productName = productName;
+    }
+
+    public boolean isLocked() {
+        return locked;
+    }
+    public void setLocked(boolean locked) {
+        this.locked = locked;
     }
 
     public String getId() {
@@ -189,6 +200,7 @@ public class Client implements ClientDetails, Persistable<String> {
                 AUTHORITIES = "authorities",
                 ACCESS_TOKEN_VALIDITY = "access_token_validity",
                 REFRESH_TOKEN_VALIDITY = "refresh_token_validity",
-                PRODUCT_NAME = "product_name";
+                PRODUCT_NAME = "product_name",
+                LOCKED = "locked";
     }
 }
