@@ -49,11 +49,13 @@ public abstract class AbstractClientDAO_IT {
         assertEquals(null, actual.getAccessTokenValiditySeconds());
         assertEquals(null, actual.getRefreshTokenValiditySeconds());
         assertEquals(null, actual.getProductName());
+        assertEquals(false, actual.isLocked());
     }
 
     public @Test void save_and_find_client_with_details() {
 
         Client expected = createRandomClient();
+        expected.setLocked(true);  //false is default value so we have to test true
 
         dao.save(expected);
         Client actual = dao.findOne(expected.getClientId());
@@ -67,6 +69,8 @@ public abstract class AbstractClientDAO_IT {
         assertEachEquals(expected.getAuthorities(), actual.getAuthorities());
         assertEquals(expected.getAccessTokenValiditySeconds(), actual.getAccessTokenValiditySeconds());
         assertEquals(expected.getRefreshTokenValiditySeconds(), actual.getRefreshTokenValiditySeconds());
+        assertEquals(expected.getProductName(), actual.getProductName());
+        assertEquals(expected.isLocked(), actual.isLocked());
     }
 
 

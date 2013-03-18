@@ -7,7 +7,9 @@ CREATE TABLE clients (
   redirect_uri            VARCHAR(256) ARRAY,
   authorities             VARCHAR(256) ARRAY,
   access_token_validity   INTEGER,
-  refresh_token_validity  INTEGER
+  refresh_token_validity  INTEGER,
+  product_name            VARCHAR(256),
+  locked                  BOOLEAN
 );
 
 CREATE TABLE refresh_tokens (

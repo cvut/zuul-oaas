@@ -59,6 +59,8 @@ public class JdbcClientDAO extends AbstractJdbcGenericDAO<Client, String> implem
                 e.setRegisteredRedirectUri( arrayToURIs(rs.getArray(REDIRECT_URI)) );
                 e.setAccessTokenValiditySeconds( rs.getObject(ACCESS_TOKEN_VALIDITY, Integer.class) );
                 e.setRefreshTokenValiditySeconds( rs.getObject(REFRESH_TOKEN_VALIDITY, Integer.class) );
+                e.setProductName( rs.getString(PRODUCT_NAME) );
+                e.setLocked( rs.getBoolean(LOCKED) );
 
                 return e;
             }
@@ -75,8 +77,9 @@ public class JdbcClientDAO extends AbstractJdbcGenericDAO<Client, String> implem
                 { REDIRECT_URI,             toArray(e.getRegisteredRedirectUri())   },
                 { AUTHORITIES,              authoritiesToArray(e.getAuthorities())  },
                 { ACCESS_TOKEN_VALIDITY,    e.getAccessTokenValiditySeconds()       },
-                { REFRESH_TOKEN_VALIDITY,   e.getRefreshTokenValiditySeconds()      }
-                //{ PRODUCT_NAME,             e.getProductName()                      }
+                { REFRESH_TOKEN_VALIDITY,   e.getRefreshTokenValiditySeconds()      },
+                { PRODUCT_NAME,             e.getProductName()                      },
+                { LOCKED,                   e.isLocked()                            }
         };
     }
 
