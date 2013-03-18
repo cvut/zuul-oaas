@@ -2,31 +2,16 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:p="http://www.springframework.org/schema/p"
        xmlns:mvc="http://www.springframework.org/schema/mvc"
-       xmlns:util="http://www.springframework.org/schema/util"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
-       http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
-       http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd">
+       http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd">
 
 
     <!--////////// API Context Configuration //////////-->
 
     <!-- Enable the Spring MVC @Controller programming model -->
-    <mvc:annotation-driven validator="validator" />
-
-    <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"
-          p:validationMessageSource-ref="messageSource" />
-
-    <!-- Enable method-level validation on annotated methods via JSR-303 -->
-    <bean class="org.springframework.validation.beanvalidation.MethodValidationPostProcessor"
-          p:validatorFactory-ref="validator" />
-
-    <!-- Bind our message properties -->
-    <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource"
-          p:basename="/WEB-INF/i18n/api-messages"
-          p:defaultEncoding="utf-8"
-          p:cacheSeconds="0" />
+    <mvc:annotation-driven />
 
 
     <!--///// Controllers /////-->
@@ -36,40 +21,6 @@
 
     <bean id="resourcesController" class="cz.cvut.authserver.oauth2.api.resources.ResourcesController"
           p:resourceService-ref="resourceService" />
-
-
-    <!--///// Services /////-->
-
-    <bean id="resourceService" class="cz.cvut.authserver.oauth2.services.ResourceServiceImpl"
-          p:resourceDAO-ref="resourceDAO" />
-    
-    <bean id="clientsService" class="cz.cvut.authserver.oauth2.services.ClientsServiceImpl"
-          p:clientDAO-ref="clientDAO"
-          p:oauth2ClientCredentialsGenerator-ref="oauth2ClientCredentialsGenerator"
-          p:mapperFacade-ref="mapperFacade" />
-
-
-    <!--///// DAO /////-->
-
-<!--    <bean id="resourceDAO" class="cz.cvut.authserver.oauth2.dao.memory.ResourceInMemoryDAO"
-          p:identifierGenerator-ref="identifierGenerator"/>-->
-
-
-    <!--///// DTO Mapping /////-->
-
-    <bean id="mapperFacade" class="cz.cvut.authserver.oauth2.support.MapperFacadeFactoryBean"
-          p:converters-ref="mapperConverters" />
-
-    <util:list id="mapperConverters">
-        <bean class="cz.cvut.authserver.oauth2.support.CaseInsensitiveToEnumConverter" />
-        <bean class="cz.cvut.authserver.oauth2.support.GrantedAuthorityConverter" />
-    </util:list>
-
-    
-    <!--///// Generators /////-->
-    
-    <bean id="oauth2ClientCredentialsGenerator" class="cz.cvut.authserver.oauth2.generators.OAuth2ClientCredentialsGeneratorImpl" />
-    <bean id="identifierGenerator" class="cz.cvut.authserver.oauth2.generators.IdentifierGeneratorImpl" />
 
     
     <!-- Import additional configuration files -->

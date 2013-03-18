@@ -29,8 +29,10 @@
     </beans>
 
     <beans profile="mongo,jdbc">
+        <import resource="services.xml" />
         <import resource="oauth2/auth-server.xml"/>
         <import resource="oauth2/security-server.xml"/>
         <!--<import resource="api/api-security.xml"/>-->
     </beans>
+
 </beans>
