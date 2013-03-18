@@ -45,9 +45,9 @@ public class ClientDTO implements Serializable {
 	@JsonProperty("client_secret")
 	private String clientSecret;
 
-    @NotEmpty
     @EachSize( @Size(min = 5, max = 255) )
-    @EachPattern( @Pattern(regexp = "[a-zA-Z0-9\\-_\\.]+") )
+    @EachPattern( @Pattern(regexp = "[\\x21\\x23-\\x5B\\x5D-\\x7E]+",
+        message = "{validator.invalid_scope}" ))
     @JsonProperty("scope")
 	@JsonDeserialize(using = ArrayOrStringDeserializer.class)
 	private Collection<String> scope;

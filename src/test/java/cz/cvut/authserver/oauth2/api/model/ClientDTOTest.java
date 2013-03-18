@@ -27,12 +27,8 @@ public class ClientDTOTest {
     }
 
 
-    public @Test void validate_empty_scope() {
-        assertInvalidProperty(client, "scope");
-    }
-
     public @Test void validate_scope_with_illegal_chars() {
-        client.setScope(asList("fooooo", "d1r%ty' s*tr$n6+= @}"));
+        client.setScope(asList("first-valid", "spa ce", "quote\"", "back\\"));
         assertInvalidProperty(client, "scope");
     }
 
@@ -42,7 +38,7 @@ public class ClientDTOTest {
     }
 
     public @Test void validate_valid_scope() {
-        client.setScope(asList("poignant", "chun_ky.B4c-0n"));
+        client.setScope(asList("poignant", "chun_ky.B4c-0n", "urn:ctu:oauth:sample.read", "http://cvut.cz/scope#read"));
         assertValidProperty(client, "scope");
     }
 
