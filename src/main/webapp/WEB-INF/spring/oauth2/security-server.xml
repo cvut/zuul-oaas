@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:p="http://www.springframework.org/schema/p"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:sec="http://www.springframework.org/schema/security"
        xmlns:oauth="http://www.springframework.org/schema/security/oauth2"
@@ -143,9 +144,9 @@
         <sec:authentication-provider user-service-ref="clientDetailsUserService" />
     </sec:authentication-manager>
     
-    <bean id="clientDetailsUserService" class="org.springframework.security.oauth2.provider.client.ClientDetailsUserDetailsService">
-        <constructor-arg ref="clientDetails" />
-    </bean>
+    <!-- Replacement for org.springframework.security.oauth2.provider.client.ClientDetailsUserDetailsService -->
+    <bean id="clientDetailsUserService" class="cz.cvut.authserver.oauth2.services.internal.LockableClientUserDetailsService"
+          p:clientDAO-ref="clientDAO" />
 
 
     <!-- TO DELETE (only for testing) -->
