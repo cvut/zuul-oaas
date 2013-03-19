@@ -52,6 +52,20 @@ body {
     margin-top: 10px;
 }
 
+.container:before{
+    content: '';
+    display: inline-block;
+    height: 100%; 
+    vertical-align: middle;
+    margin-right: -0.5em; /* Adjusts for spacing */
+}
+
+.dead-center{
+    display: inline-block;
+    vertical-align: middle;
+    width: 1300px;
+    padding: 10px 15px;
+}
 
 
 /* CUSTOMIZE THE NAVBAR

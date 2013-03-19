@@ -3,7 +3,7 @@ html, body {
     /*background-color: #eee;*/
 }
 body {
-     /*padding-top: 100px;*/
+    /*padding-top: 100px;*/
 }
 
 .container {
@@ -11,13 +11,32 @@ body {
 }
 
 #wrap {
-    padding-top: 6%;
-     max-width: 735px;
-    /*position:relative;*/
-    /*padding-left: 25%;*/
-/*    min-height: 100%;
-    height: auto !important;
-    height: 100%;*/
-    /* Negative indent footer by it's height */
+    padding-top: 3%;
+    max-width: 735px;
     margin: 0 auto ;
+}
+
+/* placholder magic */
+
+input::-webkit-input-placeholder { /* WebKit browsers */
+    color: #c6c6c6;
+}
+input:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    color: #c6c6c6;
+}
+input::-moz-placeholder { /* Mozilla Firefox 19+ */
+    color: #c6c6c6;
+}
+input:-ms-input-placeholder { /* Internet Explorer 10+ */
+    color:  #c6c6c6;
+}
+
+a:link {
+    color: #379f15;
+}
+a:hover {
+    color: #28720f
+}
+a.more-info-link {
+    color: #28720f
 }
