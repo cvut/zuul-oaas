@@ -12,149 +12,144 @@
         <link type="text/css" rel="stylesheet" href="../../css/specs/bootstrap-classic-navbar.css" th:href="@{/css/specs/bootstrap-classic-navbar.css}" />
         <link type="text/css" rel="stylesheet" href="../../css/specs/login.css" th:href="@{/css/specs/login.css}" />
 
-        <script type="text/javascript" src="../../js/jquery-1.8.3.min.js" th:src="@{/js/jquery-1.8.3.min.js}"></script>
+<!--        <script type="text/javascript" src="../../js/jquery-1.8.3.min.js" th:src="@{/js/jquery-1.8.3.min.js}"></script>
         <script type="text/javascript" src="../../js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
-        <script type="text/javascript" src="../../js/jquery.validate.js" th:src="@{/js/jquery.validate.js}"></script>
+        <script type="text/javascript" src="../../js/jquery.validate.js" th:src="@{/js/jquery.validate.js}"></script>-->
+        <style>
+            /*
+            .emphasis{
+            font-family: sans-serif; font-weight: normal;
+            }*/
+            h1{
+                font-family: sans-serif;
+                font-weight: 100;
+            }
+            .metro-font{
+                font-family: sans-serif;
+                font-weight: 100;
+            }
+
+        </style>
     </head>
-
-    <style>
-        /* body,
-        input,
-        button,
-        select,
-        textarea,
-        .navbar-search .search-query {
-        font-family: sans-serif;
-        font-weight: 100;
-        }
-        .emphasis{
-        font-family: sans-serif; font-weight: normal;
-        }*/
-        h1{
-            font-family: sans-serif;
-            font-weight: 100;
-        }
-        .metro-font{
-            font-family: sans-serif;
-            font-weight: 100;
-        }
-
-    </style>
-        
-
 
 
     <body layout:fragment="body">
         <div class="navbar navbar-fixed-top">
             <div class="navbar-inner">
                 <div class="container">
-                       <!--<a class="brand" href="#" th:href="@{/}" th:text="#{project.title}">CTU Authorization Server</a>-->
-                       <div class="nav-collapse collapse">
-                           <ul class="nav">
-                               <li><a href="#about" th:text="#{page.about}">About</a></li>
-                               <li><a href="#contact" th:text="#{page.contact}">Contact</a></li>
-                           </ul>
-                       </div>
-                   </div>
+                    <!--<a class="brand" href="#" th:href="@{/}" th:text="#{project.title}">CTU Authorization Server</a>-->
+                    <div class="nav-collapse collapse">
+                        <ul class="nav">
+                            <li><a href="#about" th:text="#{page.about}">About</a></li>
+                            <li><a href="#contact" th:text="#{page.contact}">Contact</a></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
+        </div>
 
-            <div id="wrap">
-                <div class="row" style="padding-top: 7%">
-                        <!--<div class="span2">-->
-                        <!--<img class="oauth-logo" src="../../img/oauth2-logo_small.png" th:src="@{/img/oauth2-logo_small.png}" alt="OAuth logo" height="70" width="70" style="opacity: 0.5;float: left; padding-right: 15px; "/>-->
-                        <!--</div>-->
-                        <!--<div class="span6">-->
-                        <!--</div>-->
-                        <h1 class="metro-font" style="line-height: 110%; margin: 0 auto; text-align: center" th:text="#{project.title}">CTU Authorization Server</h1>
-                    </div>
+        <div id="wrap">
 
-                    <div class="row">
-                        <div th:if="${param.authentication_error}" class="alert alert-error">
-                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <div class="row" style="padding-top: 8%; padding-bottom: 20px">
+                <!--<div class="span2">-->
+                <!--<img class="oauth-logo" src="../../img/oauth2-logo_small.png" th:src="@{/img/oauth2-logo_small.png}" alt="OAuth logo" height="70" width="70" style="opacity: 0.5;float: left; padding-right: 15px; "/>-->
+                <!--</div>-->
+                <!--<div class="span6">-->
+                <!--</div>-->
+                <h1 class="metro-font" style="line-height: 110%; margin: 0 auto; " th:text="#{project.title}">CTU Authorization Server</h1>
+            </div>
 
-                            <h4 th:text="#{login.error.title}">Oops…</h4>
-                            <span th:text="#{login.error.authentication}">Username or password is wrong.</span>
-                        </div>
+            <div class="row">
+                <div th:if="${param.authentication_error}" class="alert alert-heading">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
 
-                        <div th:if="${param.authorization_error}" class="alert alert-error">
-                            <button type="button" class="close" data-dismiss="alert">&times;</button>
-
-                            <h4 th:text="#{login.error.title}">Oops…</h4>
-                            <span th:text="#{login.error.authorization}">You’re not allowed to access this resource.</span>
-                        </div>
-
-<!--                        <div class="alert alert-info">
-                            <button type="button" class="close" data-dismiss="alert">&times;</button>
-                            We've got a grand total of 1 user: <strong class="emphasis">tomy</strong>.
-                            Go ahead and log in. tomy's password is <strong class="emphasis">best</strong>.
-                        </div>-->
-                    </div>
-
-                    <div class="row">
-                        <form id="loginHere" class="form-inline" method='post' th:action="@{/login.do}">
-                            <fieldset>
-
-
-                                <legend class="muted" th:text="#{page.login}">Login</legend>
-
-                                <div class="control-group">
-                                    <label class="control-label" for="user_name" th:text="#{login.form.name}">Name</label>
-                                    <div class="controls">
-                                         <input type="text" class="input-xlarge" id="user_name" name="j_username" rel="popover" data-content="Enter your first and last name." data-original-title="Full Name"/>
-                                    </div>
-                                </div>
-
-                                <div class="control-group">
-                                    <label class="control-label" for="password" th:text="#{login.form.password}">Password</label>
-                                    <div class="controls">
-                                         <input type="password" class="input-xlarge" id="pwd" name="j_password" rel="popover" data-content="6 characters or more! Be tricky" data-original-title="Password" />
-                                    </div>
-                                </div>
-
-                                <div class="control-group">
-                                    <div class="controls">
-                                        <button type="submit" class="btn btn-large btn-success" rel="tooltip" title="Přihlásit se" th:text="#{login.form.login}">Login</button>
-                                    </div>
-                                </div>
-                            </fieldset>
-                        </form>
-                    </div>
+                    <h4 th:text="#{login.error.title}">Oops…</h4>
+                    <span th:text="#{login.error.authentication}">Username or password is wrong.</span>
                 </div>
 
-                <img src="../../img/franklin.png" th:src="@{/img/franklin.png}" alt="background image" style="opacity: 0.5; position: absolute; bottom: 0px; width:100%;height: auto; z-index: -1"/>
+                <div th:if="${param.authorization_error}" class="alert alert-error">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
 
-                <script type="text/javascript">
-                    $(document).ready(function() {
-                        $("#loginHere").validate({
-                            rules: {
-                                j_username: "required",
-                                user_email: {
-                                    required: true,
-                                    email: true
-                                },
-                                j_password: {
-                                    required: true,
-                                    minlength: 4
-                                }
-                            },
-                            messages: {
-                                j_username: "Zadejte prosím Váš login",
-                                j_password: {
-                                    required: "Zadejte prosím Vaše heslo",
-                                    minlength: "Heslo musí mít minímalně 6 znaků"
-                                }
-                            },
-                            errorClass: "help-inline",
-                            errorElement: "span",
-                            highlight: function(element, errorClass, validClass) {
-                                $(element).parents('.control-group').addClass('error');
-                            },
-                            unhighlight: function(element, errorClass, validClass) {
-                                $(element).parents('.control-group').removeClass('error');
-                            }
-                        });
-                    });
-                </script>
-            </body>
-        </html>
+                    <h4 th:text="#{login.error.title}">Oops…</h4>
+                    <span th:text="#{login.error.authorization}">You’re not allowed to access this resource.</span>
+                </div>
+
+                <!--                        <div class="alert alert-info">
+                                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                            We've got a grand total of 1 user: <strong class="emphasis">tomy</strong>.
+                                            Go ahead and log in. tomy's password is <strong class="emphasis">best</strong>.
+                                        </div>-->
+            </div>
+
+            <br/>
+
+            <div class="row">
+                <form id="loginHere" class="form-inline" method='post' th:action="@{/login.do}">
+
+                    <fieldset>
+                        <legend class="muted metro-font" th:text="#{page.login}">Login</legend>
+                        <div class="control-group">
+                            <label class="control-label" for="user_name" th:text="#{login.form.name}">Name</label>
+                            <div class="controls">
+                                <input type="text" class="input-xlarge" id="user_name" name="j_username" rel="popover" data-content="Enter your first and last name." data-original-title="Full Name"/>
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label class="control-label" for="password" th:text="#{login.form.password}">Password</label>
+                            <div class="controls">
+                                <input type="password" class="input-xlarge" id="pwd" name="j_password" rel="popover" data-content="6 characters or more! Be tricky" data-original-title="Password" />
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label class="control-label" for="input01"></label>
+                            <div class="controls">
+                                <button type="submit" class="btn btn-large btn-success" rel="tooltip" title="Přihlásit se" th:text="#{login.form.login}">Login</button>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                </form>
+            </div>
+        </div>
+
+        <img src="../../img/franklin.png" th:src="@{/img/franklin.png}" alt="background image" style="opacity: 0.5; position: absolute; bottom: 0px; width:100%;height: auto; z-index: -1"/>
+
+        <script type="text/javascript" src="../../js/jquery-1.8.3.min.js" th:src="@{/js/jquery-1.8.3.min.js}"></script>
+        <script type="text/javascript" src="../../js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
+        <script type="text/javascript" src="../../js/jquery.validate.js" th:src="@{/js/jquery.validate.js}"></script>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $("#loginHere").validate({
+                    rules: {
+                        j_username: "required",
+                        user_email: {
+                            required: true,
+                            email: true
+                        },
+                        j_password: {
+                            required: true,
+                            minlength: 4
+                        }
+                    },
+                    messages: {
+                        j_username: "Zadejte prosím Váš login",
+                        j_password: {
+                            required: "Zadejte prosím Vaše heslo",
+                            minlength: "Heslo musí mít minímalně 6 znaků"
+                        }
+                    },
+                    errorClass: "help-inline",
+                    errorElement: "span",
+                    highlight: function(element, errorClass, validClass) {
+                        $(element).parents('.control-group').addClass('error');
+                    },
+                    unhighlight: function(element, errorClass, validClass) {
+                        $(element).parents('.control-group').removeClass('error');
+                    }
+                });
+            });
+        </script>
+    </body>
+</html>
