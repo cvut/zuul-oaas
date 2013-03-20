@@ -57,9 +57,9 @@
           p:tokenServices-ref="tokenServices" />
 
 
-    <!--///// MongoDB storage for clients and tokens /////-->
+    <!--///// MongoDB or JDBC storage for clients and tokens /////-->
 
-    <beans profile="mongo">
+    <beans profile="mongo,jdbc">
 
         <bean id="clientDetails" class="cz.cvut.authserver.oauth2.services.internal.ClientRegistrationServiceImpl"
               p:clientDAO-ref="clientDAO" />
@@ -69,22 +69,6 @@
               p:refreshTokenDAO-ref="refreshTokenDAO" />
 
     </beans>
-
-
-
-    <!--///// SQL/JDBC storage for clients and tokens /////-->
-
-    <beans profile="jdbc">
-
-        <bean id="clientDetails" class="org.springframework.security.oauth2.provider.JdbcClientDetailsService">
-            <constructor-arg ref="lazyDataSourceProxy" />
-        </bean>
-
-        <bean id="tokenStore" class="org.springframework.security.oauth2.provider.token.JdbcTokenStore">
-            <constructor-arg ref="lazyDataSourceProxy" />
-        </bean>
-    </beans>
-
 
 
     <!--/////  In-memory storage for clients and tokens /////-->
