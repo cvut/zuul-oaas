@@ -26,11 +26,10 @@
 
     <!-- Hibernate Validator which can interpolate the value being validated in the constraint message -->
     <bean id="messageInterpolator" class="cz.cvut.authserver.oauth2.support.ValueFormatterMessageInterpolatorFactoryBean"
-          p:messageSource-ref="messageSource" />
+          p:messageSource-ref="validatorMessageSource" />
 
-    <!-- Bind our message properties -->
-    <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource"
-          p:basename="/WEB-INF/i18n/api-messages"
+    <bean id="validatorMessageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource"
+          p:basename="/WEB-INF/i18n/validator-messages"
           p:defaultEncoding="utf-8"
           p:cacheSeconds="0" />
 
