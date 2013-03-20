@@ -22,17 +22,21 @@
     <!--////////// Validator //////////-->
 
     <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" primary="true"
-          p:validationMessageSource-ref="messageSource" />
+          p:messageInterpolator-ref="messageInterpolator" />
 
-    <!-- Enable method-level validation on annotated methods via JSR-303 -->
-    <bean class="org.springframework.validation.beanvalidation.MethodValidationPostProcessor"
-          p:validatorFactory-ref="validator" />
+    <!-- Hibernate Validator which can interpolate the value being validated in the constraint message -->
+    <bean id="messageInterpolator" class="cz.cvut.authserver.oauth2.support.ValueFormatterMessageInterpolatorFactoryBean"
+          p:messageSource-ref="messageSource" />
 
     <!-- Bind our message properties -->
     <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource"
           p:basename="/WEB-INF/i18n/api-messages"
           p:defaultEncoding="utf-8"
           p:cacheSeconds="0" />
+
+    <!-- Enable method-level validation on annotated methods via JSR-303 -->
+    <bean class="org.springframework.validation.beanvalidation.MethodValidationPostProcessor"
+          p:validatorFactory-ref="validator" />
 
 
     <!--///// DTO Mapping /////-->

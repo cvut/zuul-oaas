@@ -47,7 +47,7 @@ public class ClientDTO implements Serializable {
 
     @EachSize( @Size(min = 5, max = 255) )
     @EachPattern( @Pattern(regexp = "[\\x21\\x23-\\x5B\\x5D-\\x7E]+",
-        message = "{validator.invalid_scope}" ))
+        message = "{validator.invalid_scope}" )) // see http://tools.ietf.org/html/rfc6749#section-3.3
     @JsonProperty("scope")
 	@JsonDeserialize(using = ArrayOrStringDeserializer.class)
 	private Collection<String> scope;
