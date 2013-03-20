@@ -168,7 +168,7 @@ public class Factories {
         token.setExpiration( randomFutureDate() );
         token.setRefreshToken(null);
         token.setScope( new HashSet<>(randomStringList(2)) );
-        token.setTokenType( OAuth2AccessToken.OAUTH2_TYPE );
+        token.setTokenType( OAuth2AccessToken.BEARER_TYPE );
 
         return token;
     }
