@@ -11,25 +11,26 @@
     <!--////////// OAuth 2.0 Server Configuration //////////-->
     
     <!--
-        Authorziation server specifies that the OAuth2 authorization and token endpoints should
+        Authorization server specifies that the OAuth2 authorization and token endpoints should
         be created in the application context.
 
         ! Change of endpoint URLs doesn't work in 1.0.0.RC2, we must use default ones !
     -->
-    <oauth:authorization-server 
+    <oauth:authorization-server
         authorization-endpoint-url="${authorization.endpoint}"
         token-endpoint-url="${token.endpoint}"
         client-details-service-ref="clientDetails"
-        token-services-ref="tokenServices">
+        token-services-ref="tokenServices"
+        user-approval-handler-ref="lockableApprovalHandler">
 
-        <oauth:authorization-code/>
+        <oauth:authorization-code />
         <oauth:implicit />
         <oauth:refresh-token />
         <oauth:client-credentials />
         <oauth:password disabled="true" />
     </oauth:authorization-server>
-    
-    <!--  
+
+    <!--
         Base implementation for token services using random UUID values for the access token and refresh token
         values. The main extension point for customizations is the TokenEnhancer which will be called after the
         access and refresh tokens have been generated but before they are stored. Persistence is delegated to
@@ -39,6 +40,21 @@
           p:supportRefreshToken="true"
           p:tokenStore-ref="tokenStore"
           p:clientDetailsService-ref="clientDetails" />
+
+    <!--
+        A user approval handler that prevents locked clients to be authorized.
+        This is important especially for clients with implicit grant which are issued an access token directly
+        without requesting token endpoint.
+    -->
+    <bean id="lockableApprovalHandler" class="cz.cvut.authserver.oauth2.handlers.LockableClientUserApprovalHandler"
+          p:clientDAO-ref="clientDAO"
+          p:parentHandler-ref="memorizingApprovalHandler" />
+
+    <!--
+        A user approval handler that remembers approval decisions by consulting existing tokens.
+    -->
+    <bean id="memorizingApprovalHandler" class="org.springframework.security.oauth2.provider.approval.TokenServicesUserApprovalHandler"
+          p:tokenServices-ref="tokenServices" />
 
 
     <!--///// MongoDB storage for clients and tokens /////-->
