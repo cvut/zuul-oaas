@@ -22,6 +22,10 @@
     <bean id="resourcesController" class="cz.cvut.authserver.oauth2.api.resources.ResourcesController"
           p:resourceService-ref="resourceService" />
 
+    <bean id="tokensController" class="cz.cvut.authserver.oauth2.api.resources.TokensController"
+          p:tokenDao-ref="accessTokenDAO"
+          p:clientDetails-ref="clientDetails"/>
+
     
     <!-- Import additional configuration files -->
     <import resource="aspects.xml"/>
