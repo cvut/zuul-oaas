@@ -14,9 +14,16 @@
 
     <beans profile="mongo">
 
-        <mongo:mongo host="localhost" port="27017" />
+        <!--
+            Embedded MongoDB
+            It's not truly embedded 'cause there's no Java implementation of the MongoDB. This factory
+            initializes embedmongo.flapdoodle.de that is able to download original MongoDB binary for
+            your platform and run it for your integration tests.
+        -->
+        <bean id="mongo" class="cz.jirutka.mongo.embed.EmbeddedMongoFactoryBean"
+              p:version="2.2" />
 
-        <mongo:db-factory id="mongoDbFactory" dbname="authtest" write-concern="SAFE" />
+        <mongo:db-factory mongo-ref="mongo" id="mongoDbFactory" dbname="authtest" write-concern="SAFE" />
 
         <mongo:mapping-converter id="mappingConverter" db-factory-ref="mongoDbFactory">
             <mongo:custom-converters base-package="cz.cvut.authserver.oauth2.dao.mongo.converters" />
