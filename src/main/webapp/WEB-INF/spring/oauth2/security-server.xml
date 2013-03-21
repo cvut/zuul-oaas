@@ -78,9 +78,12 @@
     
     <sec:http pattern="/check-token/**" create-session="stateless"
                   entry-point-ref="oauthAuthenticationEntryPoint" use-expressions="true">
+
+        <!-- scope 'token-check' is deprecated and will be removed in future version -->
         <sec:intercept-url pattern="/check-token/**" 
-                           access="hasAnyRole('ROLE_BIG_BOSS','ROLE_RESOURCE_SERVER') and #oauth2.hasScope('token-check')"
+                           access="(#oauth2.hasScope('urn:ctu:oauth:oaas:check-token') or #oauth2.hasScope('token-check')) and #oauth2.isClient()"
                            method="GET" />
+
         <sec:custom-filter ref="resourceServerFilterCheckTokenEndpoint" before="PRE_AUTH_FILTER" />
         <sec:access-denied-handler ref="oauthAccessDeniedHandler" />
         <sec:expression-handler ref="oauthWebExpressionHandler" />
