@@ -57,4 +57,15 @@
     <bean id="resourceDAO" class="cz.cvut.authserver.oauth2.dao.mongo.MongoResourceDAO"
           p:mongoOperations-ref="mongoTemplate" />
 
+
+    <!--//// Seeder ////-->
+
+    <beans profile="dev">
+        <!-- Insert seed data into database -->
+        <bean class="cz.cvut.authserver.oauth2.dao.mongo.support.MongoSeedLoader" lazy-init="false"
+              init-method="seed"
+              p:mongoTemplate-ref="mongoTemplate"
+              p:location="classpath:seeds.json" />
+    </beans>
+
 </beans>

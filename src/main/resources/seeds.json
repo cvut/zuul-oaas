@@ -1,0 +1,51 @@
+{
+    "clients": [
+        {
+            "_class": "Client",
+            "_id": "apps-manager",
+            "authorities": [ "ROLE_BIG_BOSS" ],
+            "authorizedGrantTypes": [ "client_credentials" ],
+            "clientSecret": "change-me",
+            "locked": false,
+            "productName": "AppsManager",
+            "scope": [ "manager" ],
+            "resourceIds": [ "auth-server-clients-api", "auth-server-resources-api", "auth-server-check-token-endpoint" ],
+            "registeredRedirectUri": []
+        },
+        {
+            "_class": "Client",
+            "_id": "simple-client",
+            "authorities": [ "ROLE_CLIENT" ],
+            "authorizedGrantTypes": [ "client_credentials" ],
+            "clientSecret": "change-me",
+            "locked": false,
+            "productName": "Simple Client",
+            "registeredRedirectUri": [],
+            "resourceIds": [],
+            "scope": [ "urn:ctu:oauth:sample.read" ]
+        },
+        {
+            "_class": "Client",
+            "_id": "better-client",
+            "authorities": [ "ROLE_CLIENT" ],
+            "authorizedGrantTypes": [ "refresh_token", "authorization_code" ],
+            "clientSecret": "change-me",
+            "locked": false,
+            "productName": "Better Client",
+            "registeredRedirectUri": [ "http://localhost:8080/client" ],
+            "resourceIds": [],
+            "scope": [ "urn:ctu:oauth:sample.read", "urn:ctu:oauth:sample.write" ]
+        },
+        {
+            "_class": "Client",
+            "_id": "simple-provider",
+            "authorities": [ "ROLE_RESOURCE_SERVER" ],
+            "authorizedGrantTypes": [ "client_credentials" ],
+            "clientSecret": "change-me",
+            "locked": false,
+            "registeredRedirectUri": [],
+            "resourceIds": [],
+            "scope": [ "urn:ctu:oauth:oaas:check-token" ]
+        }
+    ]
+}

@@ -7,9 +7,10 @@
             - inMemory: store all data in-memory only (for testing)
             - mongo: use Mongo database
             - jdbc: use SQL database via JDBC
+            - dev: developer profile (insert seed data etc.)
     -->
     
-    <Environment name="spring.profiles.active" value="mongo"
+    <Environment name="spring.profiles.active" value="mongo,dev"
                  type="java.lang.String" override="false" />
 
     <Resource name="jdbc/AuthServerDS"
