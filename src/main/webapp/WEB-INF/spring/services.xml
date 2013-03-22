@@ -10,6 +10,7 @@
 
     <!--////////// Services //////////-->
 
+
     <bean id="resourceService" class="cz.cvut.authserver.oauth2.services.ResourceServiceImpl"
           p:resourceDAO-ref="resourceDAO" />
 
@@ -19,7 +20,7 @@
           p:mapperFacade-ref="mapperFacade" />
 
 
-    <!--////////// Validator //////////-->
+    <!--///// Validators /////-->
 
     <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" primary="true"
           p:messageInterpolator-ref="messageInterpolator" />

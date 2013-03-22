@@ -4,8 +4,7 @@
     <!-- 
         Define Spring profile to be activated.
         Available profiles:
-            - inMemory: store all data in-memory only (for testing)
-            - mongo: use Mongo database
+            - mongo: use Mongo database (recommended)
             - jdbc: use SQL database via JDBC
             - dev: developer profile (insert seed data etc.)
     -->

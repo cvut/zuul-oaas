@@ -24,10 +24,10 @@
 
     <bean id="tokensController" class="cz.cvut.authserver.oauth2.api.resources.TokensController"
           p:tokenDao-ref="accessTokenDAO"
-          p:clientDetails-ref="clientDetails"/>
+          p:clientDetails-ref="clientDetailsService"/>
 
     
     <!-- Import additional configuration files -->
-    <import resource="aspects.xml"/>
+    <import resource="aspects.xml" />
 
 </beans>

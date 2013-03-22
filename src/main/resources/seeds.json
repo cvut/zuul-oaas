@@ -8,8 +8,8 @@
             "clientSecret": "change-me",
             "locked": false,
             "productName": "AppsManager",
-            "scope": [ "manager" ],
-            "resourceIds": [ "auth-server-clients-api", "auth-server-resources-api", "auth-server-check-token-endpoint" ],
+            "scope": [ "urn:ctu:oauth:oaas:manager", "urn:ctu:oauth:oaas:check-token" ],
+            "resourceIds": [ "ctu-oauth-server" ],
             "registeredRedirectUri": []
         },
         {
