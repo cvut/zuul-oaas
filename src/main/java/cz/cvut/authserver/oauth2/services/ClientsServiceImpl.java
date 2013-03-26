@@ -49,7 +49,7 @@ public class ClientsServiceImpl implements ClientsService {
 
     @Override
     public String createClient(ClientDTO clientDTO) throws ClientAlreadyExistsException {
-        LOG.info("Creating new client: [{}]", clientDTO);
+        LOG.debug("Creating a new client.,");
 
         Client client = mapper.map(clientDTO, Client.class);
 
@@ -67,6 +67,7 @@ public class ClientsServiceImpl implements ClientsService {
             client.setAuthorities(client.getAuthorities());
         }
         clientDAO.save(client);
+        LOG.info("New client was created: [{}]", client);
 
         return clientId;
     }
