@@ -144,7 +144,7 @@ public class ClientsController {
 
     @ResponseStatus(NO_CONTENT)
     @RequestMapping(value = "{clientId}/redirect-url", method = PUT)
-    public void setRedirectUriToClientDetails(@PathVariable String clientId, @RequestBody String redirectUri) {
+    public void addRedirectUriToClientDetails(@PathVariable String clientId, @RequestBody String redirectUri) {
         ClientDTO client = clientsService.findClientById(clientId);
 
         client.getRegisteredRedirectUri().clear();
@@ -154,7 +154,7 @@ public class ClientsController {
    
     @ResponseStatus(NO_CONTENT)
     @RequestMapping(value = "{clientId}/product-name", method = PUT)
-    public void setProductNameToClientDetails(@PathVariable String clientId, @RequestBody String productName) {
+    public void addProductNameToClientDetails(@PathVariable String clientId, @RequestBody String productName) {
         ClientDTO client = clientsService.findClientById(clientId);
 
         client.setProductName(productName);
