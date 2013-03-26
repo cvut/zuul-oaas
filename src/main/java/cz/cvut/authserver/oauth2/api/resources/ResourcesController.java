@@ -21,10 +21,10 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
  * @author Tomas Mano <tomasmano@gmail.com>
  */
 @Controller
-@RequestMapping("/v1/resources")
+@RequestMapping("/v1/resources/")
 public class ResourcesController {
 
-    private static final String SELF_URI = "/v1/resources";
+    private static final String SELF_URI = "/v1/resources/";
 
     private ResourceService resourceService;
 
