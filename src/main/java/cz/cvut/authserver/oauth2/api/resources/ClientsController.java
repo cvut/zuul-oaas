@@ -162,6 +162,12 @@ public class ClientsController {
     }
 
     @ResponseStatus(NO_CONTENT)
+    @RequestMapping(value = "{clientId}/implicit-client-details/type", method = PUT)
+    public void addImplicitClientDetailsToClientDetails(@PathVariable String clientId, @RequestBody String implicitClientType) throws Exception {
+        throw new UnsupportedOperationException("Not implemented yet");
+    }
+
+    @ResponseStatus(NO_CONTENT)
     @RequestMapping(value = "{clientId}/locked", method = PUT)
     public void setLockedToClientDetails(@PathVariable String clientId, @RequestBody Boolean locked) {
         ClientDTO client = clientsService.findClientById(clientId);
