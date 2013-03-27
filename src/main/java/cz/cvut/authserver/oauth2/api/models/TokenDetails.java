@@ -35,7 +35,10 @@ public class TokenDetails {
     @JsonProperty("scopes")
     private Set<String> scope;
     
+    @JsonProperty("client_details")
     private ClientDetails clientDetails;
+    
+    @JsonProperty("user_details")
     private UserDetails userDetails;
 
     public TokenDetails() {
