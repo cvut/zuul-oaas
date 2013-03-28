@@ -87,7 +87,7 @@ public class ClientDTO implements Serializable {
 	private String productName;
 
     @JsonProperty("client_locked")
-    private Boolean locked;
+    private boolean locked;
 
 
 
@@ -161,11 +161,11 @@ public class ClientDTO implements Serializable {
         this.productName = productName;
     }
 
-    public Boolean getLocked() {
+    public boolean isLocked() {
         return locked;
     }
 
-    public void setLocked(Boolean locked) {
+    public void setLocked(boolean locked) {
         this.locked = locked;
     }
 

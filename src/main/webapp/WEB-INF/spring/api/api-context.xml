@@ -24,7 +24,7 @@
 
     <bean id="tokensController" class="cz.cvut.authserver.oauth2.api.resources.TokensController"
           p:tokenDao-ref="accessTokenDAO"
-          p:clientDetails-ref="clientDetailsService"/>
+          p:clientsService-ref="clientsService"/>
 
     
     <!-- Import additional configuration files -->
