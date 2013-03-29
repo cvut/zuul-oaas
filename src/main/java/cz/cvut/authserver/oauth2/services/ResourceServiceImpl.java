@@ -2,6 +2,7 @@ package cz.cvut.authserver.oauth2.services;
 
 import cz.cvut.authserver.oauth2.api.resources.exceptions.NoSuchResourceException;
 import cz.cvut.authserver.oauth2.dao.ResourceDAO;
+import cz.cvut.authserver.oauth2.generators.IdentifierGenerator;
 import cz.cvut.authserver.oauth2.models.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,9 +22,9 @@ public class ResourceServiceImpl implements ResourceService {
 
     private static final Logger LOG = LoggerFactory.getLogger(ResourceServiceImpl.class);
 
+    private @Autowired ResourceDAO resourceDAO;
+    private @Autowired IdentifierGenerator identifierGenerator;
 
-    @Autowired
-    private ResourceDAO resourceDAO;
 
     @Override
     public boolean isRegisteredResource(String id) {
@@ -42,8 +43,18 @@ public class ResourceServiceImpl implements ResourceService {
 
     @Override
     public Resource createResource(Resource resource) {
-        LOG.info("Creating new resource [{}]", resource);
-        return resourceDAO.save(resource);
+        String resourceId;
+        do {
+            LOG.debug("Generating unique resourceId");
+            resourceId = identifierGenerator.generateArgBasedIdentifier(resource.getName());
+        } while (resourceDAO.exists(resourceId));
+
+        resource.setId(resourceId);
+
+        LOG.info("Creating new resource: [{}]", resource);
+        resourceDAO.save(resource);
+
+        return resource;
     }
 
     @Override
@@ -77,14 +88,14 @@ public class ResourceServiceImpl implements ResourceService {
         }
     }
 
-    //////////  Getters / Setters  //////////
-    
-    public ResourceDAO getResourceDAO() {
-        return resourceDAO;
-    }
+
+    //////////  Accessors  //////////
 
     public void setResourceDAO(ResourceDAO resourceDAO) {
         this.resourceDAO = resourceDAO;
     }
-    
+
+    public void setIdentifierGenerator(IdentifierGenerator identifierGenerator) {
+        this.identifierGenerator = identifierGenerator;
+    }
 }
