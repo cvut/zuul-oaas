@@ -56,6 +56,8 @@
     -->
     <bean id="tokenServices" class="org.springframework.security.oauth2.provider.token.DefaultTokenServices"
           p:supportRefreshToken="true"
+          p:accessTokenValiditySeconds="3600"
+          p:refreshTokenValiditySeconds="2592000"
           p:tokenStore-ref="tokenStore"
           p:clientDetailsService-ref="clientDetailsService" />
 
