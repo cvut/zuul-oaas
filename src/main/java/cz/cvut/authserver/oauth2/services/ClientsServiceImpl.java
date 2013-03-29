@@ -32,7 +32,7 @@ public class ClientsServiceImpl implements ClientsService {
     private ClientDAO clientDAO;
     private MapperFacade mapper;
     private IdentifierGenerator identifierGenerator;
-    private OAuth2ClientCredentialsGenerator oauth2ClientCredentialsGenerator;
+    private OAuth2ClientCredentialsGenerator credentialsGenerator;
 
     
     //////////  Business methods  //////////
@@ -57,7 +57,7 @@ public class ClientsServiceImpl implements ClientsService {
             clientId = identifierGenerator.generateArgBasedIdentifier(client.getProductName());
         } while (clientDAO.exists(clientId));
 
-        String clientSecret = oauth2ClientCredentialsGenerator.generateClientSecret();
+        String clientSecret = credentialsGenerator.generateClientSecret();
         
         client.setClientId(clientId);
         client.setClientSecret(clientSecret);
@@ -67,7 +67,7 @@ public class ClientsServiceImpl implements ClientsService {
         } else {
             client.setAuthorities(client.getAuthorities());
         }
-        
+
         LOG.info("Saving new client: [{}]", client);
         clientDAO.save(client);
 
@@ -94,7 +94,7 @@ public class ClientsServiceImpl implements ClientsService {
     public void resetClientSecret(String clientId) throws NoSuchClientException {
         LOG.info("Resetting secret for client: [{}]", clientId);
 
-        String newSecret = oauth2ClientCredentialsGenerator.generateClientSecret();
+        String newSecret = credentialsGenerator.generateClientSecret();
         try {
             clientDAO.updateClientSecret(clientId, newSecret);
 
@@ -120,8 +120,8 @@ public class ClientsServiceImpl implements ClientsService {
         this.identifierGenerator = identifierGenerator;
     }
 
-    public void setOauth2ClientCredentialsGenerator(OAuth2ClientCredentialsGenerator oauth2ClientCredentialsGenerator) {
-        this.oauth2ClientCredentialsGenerator = oauth2ClientCredentialsGenerator;
+    public void setCredentialsGenerator(OAuth2ClientCredentialsGenerator credentialsGenerator) {
+        this.credentialsGenerator = credentialsGenerator;
     }
 
     public void setMapperFacade(MapperFacade mapper) {

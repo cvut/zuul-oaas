@@ -18,7 +18,7 @@
     <bean id="clientsService" class="cz.cvut.authserver.oauth2.services.ClientsServiceImpl"
           p:clientDAO-ref="clientDAO"
           p:identifierGenerator-ref="identifierGenerator"
-          p:oauth2ClientCredentialsGenerator-ref="oauth2ClientCredentialsGenerator"
+          p:credentialsGenerator-ref="credentialsGenerator"
           p:mapperFacade-ref="mapperFacade" />
 
 
@@ -54,7 +54,7 @@
 
     <!--///// Generators /////-->
 
-    <bean id="oauth2ClientCredentialsGenerator" class="cz.cvut.authserver.oauth2.generators.OAuth2ClientCredentialsGeneratorImpl" />
+    <bean id="credentialsGenerator" class="cz.cvut.authserver.oauth2.generators.OAuth2ClientCredentialsGeneratorImpl" />
     <bean id="identifierGenerator" class="cz.cvut.authserver.oauth2.generators.IdentifierGeneratorImpl" />
 
 </beans>
