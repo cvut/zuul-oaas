@@ -15,8 +15,6 @@ import java.util.List;
 public interface ResourceService {
 
     /**
-     * Finds resource with the given id.
-     * 
      * @param id resource's id
      * @return resource if exists
      * @throws NoSuchResourceException when no matching resource was found
@@ -24,41 +22,31 @@ public interface ResourceService {
     Resource findResourceById(String id) throws NoSuchResourceException;
     
     /**
-     * Creates new resource.
-     * 
      * @param resource resource to be created
-     * @return resourceId
+     * @return id of the created resource
      */
     String createResource(@Valid Resource resource);
     
     /**
-     * Update resource with the given id.
-     * 
-     * @param id resource's id
+     * @param id id of the resource to be updated
      * @param resource resource's content to be updated with
      * @throws NoSuchResourceException when no matching resource was found
      */
     void updateResource(String id, @Valid Resource resource) throws NoSuchResourceException;
 
     /**
-     * Delete resource with the given id.
-     * 
-     * @param id resource§s id
+     * @param id id of the resource to be deleted
      * @throws NoSuchResourceException when no matching resource was found
      */
     void deleteResourceById(String id) throws NoSuchResourceException;
     
     /**
-     * Returns all resources.
-     * 
      * @return all resources
      */
     List<Resource> getAllResources();
 
     /**
-     * Returns all resources.
-     *
-     * @return all resources
+     * @return all public resources
      */
     List<Resource> getAllPublicResources();
 }
