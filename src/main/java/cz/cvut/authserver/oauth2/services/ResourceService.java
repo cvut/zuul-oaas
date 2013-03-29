@@ -5,7 +5,6 @@ import cz.cvut.authserver.oauth2.models.Resource;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
-import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -14,15 +13,7 @@ import java.util.List;
  */
 @Validated
 public interface ResourceService {
-    
-    /**
-     * Checks if the given resource is registered resource.
-     * 
-     * @param id resource's id to be checked 
-     * @return if the given resource is registered resource
-     */
-    boolean isRegisteredResource(String id);
-    
+
     /**
      * Finds resource with the given id.
      * 

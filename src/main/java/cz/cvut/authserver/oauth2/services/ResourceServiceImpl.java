@@ -26,10 +26,6 @@ public class ResourceServiceImpl implements ResourceService {
     private @Autowired IdentifierGenerator identifierGenerator;
 
 
-    @Override
-    public boolean isRegisteredResource(String id) {
-        return resourceDAO.exists(id);
-    }
 
     @Override
     public List<Resource> getAllResources() {
