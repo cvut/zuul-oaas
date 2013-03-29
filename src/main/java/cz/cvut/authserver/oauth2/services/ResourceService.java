@@ -36,9 +36,9 @@ public interface ResourceService {
      * Creates new resource.
      * 
      * @param resource resource to be created
-     * @return created resource
+     * @return resourceId
      */
-    Resource createResource(@Valid Resource resource);
+    String createResource(@Valid Resource resource);
     
     /**
      * Update resource with the given id.

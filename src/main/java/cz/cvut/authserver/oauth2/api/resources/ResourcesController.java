@@ -48,10 +48,10 @@ public class ResourcesController {
     @ResponseStatus(CREATED)
     @RequestMapping(method = POST)
     public void createResource(@RequestBody Resource resource, HttpServletResponse response) {
-        Resource created = resourceService.createResource(resource);
+        String resourceId = resourceService.createResource(resource);
 
         // send redirect to URI of the created resource (i.e. api/resources/{id}/)
-        response.setHeader("Location", SELF_URI + created.getId());
+        response.setHeader("Location", SELF_URI + resourceId);
     }
 
     @ResponseStatus(NO_CONTENT)

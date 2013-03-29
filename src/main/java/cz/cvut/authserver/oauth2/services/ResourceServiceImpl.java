@@ -42,7 +42,7 @@ public class ResourceServiceImpl implements ResourceService {
     }
 
     @Override
-    public Resource createResource(Resource resource) {
+    public String createResource(Resource resource) {
         String resourceId;
         do {
             LOG.debug("Generating unique resourceId");
@@ -54,7 +54,7 @@ public class ResourceServiceImpl implements ResourceService {
         LOG.info("Creating new resource: [{}]", resource);
         resourceDAO.save(resource);
 
-        return resource;
+        return resourceId;
     }
 
     @Override
