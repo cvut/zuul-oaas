@@ -49,11 +49,14 @@ public class ClientsServiceImpl implements ClientsService {
 
     @Override
     public String createClient(ClientDTO clientDTO) throws ClientAlreadyExistsException {
-        LOG.debug("Creating a new client");
-
         Client client = mapper.map(clientDTO, Client.class);
 
-        String clientId = identifierGenerator.generateArgBasedIdentifier(client.getProductName());
+        String clientId;
+        do {
+            LOG.debug("Generating new clientId");
+            clientId = identifierGenerator.generateArgBasedIdentifier(client.getProductName());
+        } while (clientDAO.exists(clientId));
+
         String clientSecret = oauth2ClientCredentialsGenerator.generateClientSecret();
         
         client.setClientId(clientId);
@@ -64,8 +67,9 @@ public class ClientsServiceImpl implements ClientsService {
         } else {
             client.setAuthorities(client.getAuthorities());
         }
+        
+        LOG.info("Saving new client: [{}]", client);
         clientDAO.save(client);
-        LOG.info("New client was created: [{}]", client);
 
         return clientId;
     }
