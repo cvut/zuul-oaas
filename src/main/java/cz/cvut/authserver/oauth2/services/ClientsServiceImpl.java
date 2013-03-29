@@ -2,6 +2,7 @@ package cz.cvut.authserver.oauth2.services;
 
 import cz.cvut.authserver.oauth2.api.models.ClientDTO;
 import cz.cvut.authserver.oauth2.dao.ClientDAO;
+import cz.cvut.authserver.oauth2.generators.IdentifierGenerator;
 import cz.cvut.authserver.oauth2.generators.OAuth2ClientCredentialsGenerator;
 import cz.cvut.authserver.oauth2.models.Client;
 import ma.glasnost.orika.MapperFacade;
@@ -29,11 +30,10 @@ public class ClientsServiceImpl implements ClientsService {
     private static final List<GrantedAuthority> DEFAULT_AUTHORITIES =  AuthorityUtils.createAuthorityList("ROLE_CLIENT");
 
     private ClientDAO clientDAO;
-
     private MapperFacade mapper;
-    
+    private IdentifierGenerator identifierGenerator;
     private OAuth2ClientCredentialsGenerator oauth2ClientCredentialsGenerator;
-    
+
     
     //////////  Business methods  //////////
 
@@ -49,15 +49,13 @@ public class ClientsServiceImpl implements ClientsService {
 
     @Override
     public String createClient(ClientDTO clientDTO) throws ClientAlreadyExistsException {
-        LOG.debug("Creating a new client.,");
+        LOG.debug("Creating a new client");
 
         Client client = mapper.map(clientDTO, Client.class);
 
-        // generate oauth2 client credentials
-        String clientId = oauth2ClientCredentialsGenerator.generateClientId();
+        String clientId = identifierGenerator.generateArgBasedIdentifier(client.getProductName());
         String clientSecret = oauth2ClientCredentialsGenerator.generateClientSecret();
         
-        // set necessary fields
         client.setClientId(clientId);
         client.setClientSecret(clientSecret);
 
@@ -112,6 +110,10 @@ public class ClientsServiceImpl implements ClientsService {
 
     public void setClientDAO(ClientDAO clientDAO) {
         this.clientDAO = clientDAO;
+    }
+
+    public void setIdentifierGenerator(IdentifierGenerator identifierGenerator) {
+        this.identifierGenerator = identifierGenerator;
     }
 
     public void setOauth2ClientCredentialsGenerator(OAuth2ClientCredentialsGenerator oauth2ClientCredentialsGenerator) {
