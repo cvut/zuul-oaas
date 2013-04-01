@@ -31,7 +31,6 @@ public class ClientsServiceImpl implements ClientsService {
 
     private ClientDAO clientDAO;
     private MapperFacade mapper;
-    private IdentifierGenerator identifierGenerator;
     private OAuth2ClientCredentialsGenerator credentialsGenerator;
 
     
@@ -53,8 +52,8 @@ public class ClientsServiceImpl implements ClientsService {
 
         String clientId;
         do {
-            LOG.debug("Generating new clientId");
-            clientId = identifierGenerator.generateArgBasedIdentifier(client.getProductName());
+            LOG.debug("Generating a new clientId");
+            clientId = credentialsGenerator.generateClientId();
         } while (clientDAO.exists(clientId));
 
         String clientSecret = credentialsGenerator.generateClientSecret();
@@ -68,7 +67,7 @@ public class ClientsServiceImpl implements ClientsService {
             client.setAuthorities(client.getAuthorities());
         }
 
-        LOG.info("Saving new client: [{}]", client);
+        LOG.info("Saving a new client: [{}]", client);
         clientDAO.save(client);
 
         return clientId;
@@ -114,10 +113,6 @@ public class ClientsServiceImpl implements ClientsService {
 
     public void setClientDAO(ClientDAO clientDAO) {
         this.clientDAO = clientDAO;
-    }
-
-    public void setIdentifierGenerator(IdentifierGenerator identifierGenerator) {
-        this.identifierGenerator = identifierGenerator;
     }
 
     public void setCredentialsGenerator(OAuth2ClientCredentialsGenerator credentialsGenerator) {
