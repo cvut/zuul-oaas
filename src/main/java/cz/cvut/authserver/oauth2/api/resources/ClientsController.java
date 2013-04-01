@@ -169,10 +169,10 @@ public class ClientsController {
 
     @ResponseStatus(NO_CONTENT)
     @RequestMapping(value = "{clientId}/locked", method = PUT)
-    public void setLockedToClientDetails(@PathVariable String clientId, @RequestBody Boolean locked) {
+    public void addLockedToClientDetails(@PathVariable String clientId, @RequestBody String locked) {
         ClientDTO client = clientsService.findClientById(clientId);
 
-        client.setLocked(locked);
+        client.setLocked(Boolean.parseBoolean(locked));
         clientsService.updateClient(client);
     }
 
