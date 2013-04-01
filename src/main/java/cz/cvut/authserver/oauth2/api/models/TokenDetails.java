@@ -11,6 +11,9 @@ import java.util.Date;
 import java.util.Set;
 
 /**
+ * Represents token details retrieved from the CTU OAuth 2.0 authorization
+ * server.
+ * 
  * @author Tomas Mano <tomasmano@gmail.com>
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
