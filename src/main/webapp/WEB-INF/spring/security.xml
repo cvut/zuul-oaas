@@ -81,6 +81,11 @@
                            access="(#oauth2.hasScope('urn:ctu:oauth:oaas:manager')
                                    or #oauth2.clientHasRole('ROLE_BIG_BOSS'))
                                    and #oauth2.isClient()" />
+        
+        <sec:intercept-url pattern="/api/v1/tokens/**"
+                           access="(#oauth2.hasScope('urn:ctu:oauth:oaas:manager')
+                                   or #oauth2.clientHasRole('ROLE_BIG_BOSS'))
+                                   and #oauth2.isClient()" />
 
         <sec:custom-filter ref="API_ResourcesFilter" before="PRE_AUTH_FILTER" />
         <sec:access-denied-handler ref="oauthAccessDeniedHandler" />
