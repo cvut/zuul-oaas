@@ -1,8 +1,10 @@
 package cz.cvut.authserver.oauth2.controllers;
 
+import cz.cvut.authserver.oauth2.api.models.ClientDTO;
 import cz.cvut.authserver.oauth2.api.models.JsonExceptionMapping;
 import cz.cvut.authserver.oauth2.dao.AccessTokenDAO;
 import cz.cvut.authserver.oauth2.models.PersistableAccessToken;
+import cz.cvut.authserver.oauth2.services.ClientsService;
 import cz.cvut.oauth.provider.spring.TokenInfo;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.http.HttpStatus;
@@ -27,6 +29,7 @@ public class CheckTokenEndpoint {
 
     //TODO there should be a service
     private AccessTokenDAO dao;
+    private ClientsService clientsService;
 
 
     @RequestMapping(value = "/check-token")
@@ -39,6 +42,10 @@ public class CheckTokenEndpoint {
         }
         if (token.isExpired()) {
             throw new InvalidTokenException("Token has expired");
+        }
+        ClientDTO client = clientsService.findClientById(token.getAuthenticatedClientId());
+        if (client.isLocked()) {
+            throw new InvalidTokenException("The client is locked");
         }
 
         OAuth2Authentication authentication = token.getAuthentication();
@@ -80,4 +87,8 @@ public class CheckTokenEndpoint {
         this.dao = accessTokenDAO;
     }
 
+    public void setClientsService(ClientsService clientsService) {
+        this.clientsService = clientsService;
+    }
+    
 }

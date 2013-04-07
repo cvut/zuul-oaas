@@ -56,6 +56,7 @@
     
     <!-- Check Token Enpoint for Resource Servers -->
     <bean id="checkTokenEndpoint" class="cz.cvut.authserver.oauth2.controllers.CheckTokenEndpoint"
-          p:accessTokenDAO-ref="accessTokenDAO" />
+          p:accessTokenDAO-ref="accessTokenDAO"
+          p:clientsService-ref="clientsService" />
 
 </beans>
