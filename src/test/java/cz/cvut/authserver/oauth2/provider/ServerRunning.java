@@ -137,7 +137,7 @@ public class ServerRunning implements MethodRule, RestTemplateHolder {
 		HttpURLConnection.setFollowRedirects(false);
 		boolean online = false;
 		try {
-			client.getForEntity(new UriTemplate(getUrl("/auth/login.jsp")).toString(), String.class);
+			client.getForEntity(new UriTemplate(getUrl("/auth/login.html")).toString(), String.class);
 			online = true;
 			logger.info("Basic connectivity test passed");
 		}
