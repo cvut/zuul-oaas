@@ -114,12 +114,12 @@
                         <!--<h2>OAuth 2.0 Autorizačňí server ČVUT</h2>-->
                         <div class="row">
                             <div class="span7">
-                                <h2 th:text="#{confirm_access.notice.title(${client.productName})}">
-                                    Authorize application AwesomeApp?
+                                <h2 th:text="#{confirm_access.notice.title}">
+                                    Dear user, please confirm
                                 </h2>
                                 <br />
-                                <p class="lead metro-font" th:utext="#{confirm_access.notice.text}">
-                                    Do you want to allow this application to access your data?
+                                <p class="lead metro-font" th:utext="#{confirm_access.notice.text(${client.productName})}">
+                                    Do you want to allow this AwesomeApp to access your some of yours data?
                                 </p>
                             </div>
 
@@ -135,7 +135,7 @@
                                                 <input name="user_oauth_approval" value="true" type="hidden" />
                                                 <button name="authorize" type="submit" class="btn btn-large btn-success">
                                                     <span class="icon-ok icon-white"></span>
-                                                    <span th:text="#{confirm_access.form.authorize}">Authorize</span>
+                                                    <span th:text="#{confirm_access.form.authorize}">Yes, I agree</span>
                                                 </button>
                                             </form>
                                         </td>
@@ -145,7 +145,7 @@
                                                 <input name="user_oauth_approval" value="false" type="hidden" />
                                                 <button name="deny" type="submit" class="btn btn-large btn-danger">
                                                     <span class="icon-ban-circle icon-white"></span>
-                                                    <span th:text="#{confirm_access.form.deny}">Deny</span>
+                                                    <span th:text="#{confirm_access.form.deny}">Yes, I don't agree</span>
                                                 </button>
                                             </form>
 
