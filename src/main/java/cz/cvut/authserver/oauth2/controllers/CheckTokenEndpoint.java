@@ -48,7 +48,7 @@ public class CheckTokenEndpoint {
         try {
             client = clientsService.findClientById(token.getAuthenticatedClientId());
         } catch (NoSuchClientException ex) {
-            throw new InvalidTokenException("Client doesn't exists anymore");
+            throw new InvalidTokenException("Client doesn't exist anymore");
         }
         if (client.isLocked()) {
             throw new InvalidTokenException("The client is locked");

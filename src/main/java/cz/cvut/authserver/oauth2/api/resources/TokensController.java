@@ -48,7 +48,7 @@ public class TokensController {
         try {
             client = clientsService.findClientById(token.getAuthenticatedClientId());
         } catch (NoSuchClientException ex) {
-            throw new InvalidTokenException("Client doesn't exists anymore");
+            throw new InvalidTokenException("Client doesn't exist anymore");
         }
 
         return new TokenDetails(token, clientAuth.isDenied(), client, userAuth);
