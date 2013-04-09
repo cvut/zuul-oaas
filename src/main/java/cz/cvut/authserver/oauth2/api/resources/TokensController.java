@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.http.HttpStatus.CONFLICT;
+import org.springframework.security.oauth2.provider.NoSuchClientException;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 
@@ -43,7 +44,12 @@ public class TokensController {
         AuthorizationRequest clientAuth = authentication.getAuthorizationRequest();
         Authentication userAuth = authentication.getUserAuthentication();
 
-        ClientDTO client = clientsService.findClientById(token.getAuthenticatedClientId());
+        ClientDTO client = null; 
+        try {
+            client = clientsService.findClientById(token.getAuthenticatedClientId());
+        } catch (NoSuchClientException ex) {
+            throw new InvalidTokenException("Client doesn't exists already");
+        }
 
         return new TokenDetails(token, clientAuth.isDenied(), client, userAuth);
     }

@@ -16,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.http.HttpStatus.CONFLICT;
+import org.springframework.security.oauth2.provider.NoSuchClientException;
 
 /**
  * Controller which decodes access tokens for clients who are not able to do so
@@ -43,7 +44,12 @@ public class CheckTokenEndpoint {
         if (token.isExpired()) {
             throw new InvalidTokenException("Token has expired");
         }
-        ClientDTO client = clientsService.findClientById(token.getAuthenticatedClientId());
+        ClientDTO client = null;
+        try {
+            client = clientsService.findClientById(token.getAuthenticatedClientId());
+        } catch (NoSuchClientException ex) {
+            throw new InvalidTokenException("Client doesn't exists already");
+        }
         if (client.isLocked()) {
             throw new InvalidTokenException("The client is locked");
         }
