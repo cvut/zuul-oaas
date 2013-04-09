@@ -4,6 +4,7 @@ import cz.cvut.authserver.oauth2.api.models.ClientDTO;
 import cz.cvut.authserver.oauth2.dao.ClientDAO;
 import cz.cvut.authserver.oauth2.generators.OAuth2ClientCredentialsGenerator;
 import cz.cvut.authserver.oauth2.models.Client;
+import java.util.Collection;
 import ma.glasnost.orika.MapperFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +16,8 @@ import org.springframework.security.oauth2.provider.ClientAlreadyExistsException
 import org.springframework.security.oauth2.provider.NoSuchClientException;
 
 import java.util.List;
+import org.springframework.security.oauth2.common.OAuth2AccessToken;
+import org.springframework.security.oauth2.provider.token.TokenStore;
 
 import static org.springframework.util.CollectionUtils.isEmpty;
 
@@ -29,6 +32,7 @@ public class ClientsServiceImpl implements ClientsService {
     private static final List<GrantedAuthority> DEFAULT_AUTHORITIES =  AuthorityUtils.createAuthorityList("ROLE_CLIENT");
 
     private ClientDAO clientDAO;
+    private TokenStore tokenStore;
     private MapperFacade mapper;
     private OAuth2ClientCredentialsGenerator credentialsGenerator;
 
@@ -84,8 +88,16 @@ public class ClientsServiceImpl implements ClientsService {
     public void removeClient(String clientId) throws NoSuchClientException {
         LOG.info("Removing client: [{}]", clientId);
         assertClientExists(clientId);
-
+        
+        //remove associated tokens
+        Collection<OAuth2AccessToken> tokens = tokenStore.findTokensByClientId(clientId);
+        if (!isEmpty(tokens)) {
+            for (OAuth2AccessToken token : tokens) {
+                tokenStore.removeAccessToken(token);
+            }
+        } 
         clientDAO.delete(clientId);
+        
     }
 
     @Override
@@ -112,6 +124,10 @@ public class ClientsServiceImpl implements ClientsService {
 
     public void setClientDAO(ClientDAO clientDAO) {
         this.clientDAO = clientDAO;
+    }
+
+    public void setTokenStore(TokenStore tokenStore) {
+        this.tokenStore = tokenStore;
     }
 
     public void setCredentialsGenerator(OAuth2ClientCredentialsGenerator credentialsGenerator) {
