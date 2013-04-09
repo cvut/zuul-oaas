@@ -2,7 +2,6 @@ package cz.cvut.authserver.oauth2.services;
 
 import cz.cvut.authserver.oauth2.api.models.ClientDTO;
 import cz.cvut.authserver.oauth2.dao.ClientDAO;
-import cz.cvut.authserver.oauth2.generators.IdentifierGenerator;
 import cz.cvut.authserver.oauth2.generators.OAuth2ClientCredentialsGenerator;
 import cz.cvut.authserver.oauth2.models.Client;
 import ma.glasnost.orika.MapperFacade;
