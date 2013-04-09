@@ -4,6 +4,7 @@ import cz.cvut.authserver.oauth2.api.validators.EachEnum;
 import cz.cvut.authserver.oauth2.api.validators.EachURI;
 import cz.cvut.authserver.oauth2.api.validators.EnumValue;
 import cz.cvut.authserver.oauth2.api.validators.ValidURI;
+import cz.cvut.authserver.oauth2.models.ImplicitClientDetails;
 import cz.cvut.authserver.oauth2.models.enums.AuthorizationGrant;
 import cz.jirutka.validator.collection.constraints.EachPattern;
 import cz.jirutka.validator.collection.constraints.EachSize;
@@ -87,8 +88,8 @@ public class ClientDTO implements Serializable {
 	private String productName;
 
     @JsonProperty("client_locked")
-    private boolean locked;
-
+    private Boolean locked;
+    
 
 
     public String getClientId() {
@@ -162,7 +163,7 @@ public class ClientDTO implements Serializable {
     }
 
     public boolean isLocked() {
-        return locked;
+        return locked == null ? false : locked;
     }
 
     public void setLocked(boolean locked) {
