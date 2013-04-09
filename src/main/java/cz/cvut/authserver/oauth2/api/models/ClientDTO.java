@@ -90,6 +90,8 @@ public class ClientDTO implements Serializable {
     @JsonProperty("client_locked")
     private Boolean locked;
     
+    @JsonProperty("implicit_client_details")
+    private ImplicitClientDetails implicitClientDetails;
 
 
     public String getClientId() {
@@ -168,6 +170,14 @@ public class ClientDTO implements Serializable {
 
     public void setLocked(boolean locked) {
         this.locked = locked;
+    }
+
+    public ImplicitClientDetails getImplicitClientDetails() {
+        return implicitClientDetails;
+    }
+
+    public void setImplicitClientDetails(ImplicitClientDetails implicitClientDetails) {
+        this.implicitClientDetails = implicitClientDetails;
     }
 
 

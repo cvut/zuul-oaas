@@ -24,7 +24,8 @@ public class Client implements ClientDetails, Persistable<String> {
     private static final long serialVersionUID = 1L;
     private static final String
             EXT_PRODUCT_NAME = "product_name",
-            EXT_LOCKED = "locked";
+            EXT_LOCKED = "locked",
+            EXT_IMPLICIT_CLIENT_DETAILS = "implicit_client_details";
 
 	private @Id String clientId;
 	private String clientSecret;
@@ -38,6 +39,7 @@ public class Client implements ClientDetails, Persistable<String> {
 
     private String productName;
     private boolean locked = false;
+    private ImplicitClientDetails implicitClientDetails;
 
 
     public Client() {
@@ -140,6 +142,7 @@ public class Client implements ClientDetails, Persistable<String> {
         return new HashMap<String, Object>() {{
             put(EXT_PRODUCT_NAME, productName);
             put(EXT_LOCKED, locked);
+            put(EXT_IMPLICIT_CLIENT_DETAILS, implicitClientDetails);
         }};
     }
 
@@ -157,6 +160,13 @@ public class Client implements ClientDetails, Persistable<String> {
         this.locked = locked;
     }
 
+    public ImplicitClientDetails getImplicitClientDetails() {
+        return implicitClientDetails;
+    }
+    public void setImplicitClientDetails(ImplicitClientDetails implicitClientDetails) {
+        this.implicitClientDetails = implicitClientDetails;
+    }
+    
     public String getId() {
         return clientId;
     }
@@ -201,6 +211,7 @@ public class Client implements ClientDetails, Persistable<String> {
                 ACCESS_TOKEN_VALIDITY = "access_token_validity",
                 REFRESH_TOKEN_VALIDITY = "refresh_token_validity",
                 PRODUCT_NAME = "product_name",
-                LOCKED = "locked";
+                LOCKED = "locked",
+                IMPLICIT_CLIENT_DETAILS = "implicit_client_details";
     }
 }

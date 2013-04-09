@@ -2,6 +2,7 @@ package cz.cvut.authserver.oauth2.api.resources;
 
 import cz.cvut.authserver.oauth2.api.models.ClientDTO;
 import cz.cvut.authserver.oauth2.api.models.ErrorResponse;
+import cz.cvut.authserver.oauth2.models.ImplicitClientDetails;
 import cz.cvut.authserver.oauth2.services.ClientsService;
 import org.hibernate.validator.method.MethodConstraintViolationException;
 import org.springframework.http.ResponseEntity;
@@ -38,7 +39,8 @@ public class ClientsController {
     @ResponseBody
     @RequestMapping(value = "{clientId}", method = GET)
     public ClientDTO getClientDetails(@PathVariable String clientId) {
-        return clientsService.findClientById(clientId);
+        ClientDTO dto = clientsService.findClientById(clientId);
+        return dto;
     }
 
     @ResponseStatus(CREATED)
@@ -164,7 +166,10 @@ public class ClientsController {
     @ResponseStatus(NO_CONTENT)
     @RequestMapping(value = "{clientId}/implicit-client-details/type", method = PUT)
     public void addImplicitClientDetailsToClientDetails(@PathVariable String clientId, @RequestBody String implicitClientType) throws Exception {
-        throw new UnsupportedOperationException("Not implemented yet");
+        ClientDTO client = clientsService.findClientById(clientId);
+
+        client.setImplicitClientDetails(new ImplicitClientDetails(implicitClientType));
+        clientsService.updateClient(client);
     }
 
     @ResponseStatus(NO_CONTENT)
