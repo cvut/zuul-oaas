@@ -5,48 +5,50 @@
       xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
       layout:decorator="_layout">
 
-<head>
-    <title th:text="#{page.title(#{page.error})}"></title>
+    <head>
+        <title th:text="#{page.title(#{page.error})}"></title>
 
-    <link type="text/css" rel="stylesheet" href="../../css/bootstrap-cosmo.css" th:href="@{/css/bootstrap-cosmo.css}" />
-    <link type="text/css" rel="stylesheet" href="../../css/bootstrap-responsive.min.css" th:href="@{/css/bootstrap-responsive.min.css}" />
+        <link type="text/css" rel="stylesheet" href="../../css/bootstrap-cosmo.css" th:href="@{/css/bootstrap-cosmo.css}" />
+        <link type="text/css" rel="stylesheet" href="../../css/bootstrap-responsive.min.css" th:href="@{/css/bootstrap-responsive.min.css}" />
 
-    <style type="text/css">
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans:300&amp;subset=latin-ext,latin' rel='stylesheet' type='text/css'/>
+
+        <style type="text/css">
             /* Override some defaults */
-        html, body {
-        }
-        footer {
-            position: absolute;
-            bottom: 0;
-            height: 60px;
-        }
-        body {
-            font-family: sans-serif;
-            font-weight: 100;
-        }
-    </style>
-</head>
+            html, body {
+            }
+            footer {
+                position: absolute;
+                bottom: 0;
+                height: 60px;
+            }
+            body {
+                font-family: "Open Sans", Calibri, Candara, Arial, sans-serif;
+                font-weight: 100;
+            }
+        </style>
+    </head>
 
-<body layout:fragment="body">
-    <div class="container" style="padding-top: 5%">
+    <body layout:fragment="body">
+        <div class="container" style="padding-top: 5%">
 
-        <h1 th:text="#{oauth_error.title}">We’re really sorry, there’s some problem…</h1>
+            <h1 th:text="#{oauth_error.title}">We’re really sorry, there’s some problem…</h1>
 
-        <div id="content">
-            <h2 th:text="#{project.title}">CTU Authorization Server</h2>
-            <div>
-                <div class="alert alert-block">
-                    <b>(<span th:text="${error.summary}">Error summary</span>)</b>
+            <div id="content">
+                <h2 th:text="#{project.title}">CTU Authorization Server</h2>
+                <div>
+                    <div class="alert alert-block">
+                        <b>(<span th:text="${error.summary}">Error summary</span>)</b>
+                    </div>
                 </div>
+                <p th:utext="#{oauth_error.hint(@{/support})}">
+                    Please try it later or <a href="#">let us know</a> about it.
+                </p>
             </div>
-            <p th:utext="#{oauth_error.hint(@{/support})}">
-                Please try it later or <a href="#">let us know</a> about it.
-            </p>
-        </div>
 
-        <footer style="font-size: 80%;">
-            <p><span th:text="#{project.copyright}">Copyright</span></p>
-        </footer>
-    </div>
-</body>
+            <footer style="font-size: 80%;">
+                <p><span th:text="#{project.copyright}">Copyright</span></p>
+            </footer>
+        </div>
+    </body>
 </html>
