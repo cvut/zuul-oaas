@@ -56,7 +56,10 @@ public class TokenDetails {
         this.clientLocked = client.isLocked();
         this.scope = token.getScope();
         this.client = client;
-        this.userDetails = new User(userAuth.getPrincipal().toString(), "[secured]", userAuth.getAuthorities());
+        this.userDetails = (userAuth == null ? 
+                null : new User(userAuth.getPrincipal().toString(), 
+                                "[secured]", 
+                                userAuth.getAuthorities()));
     }
 
 
