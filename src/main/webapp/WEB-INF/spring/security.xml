@@ -208,7 +208,7 @@
               p:emailAttributeName="${ldap.fit.attribute.name.email}"
               p:passwordAttributeName="${ldap.fit.attribute.name.password}" />
 
-        <!--context mapper to create FET LDAP user object-->
+        <!--context mapper to create FEL LDAP user object-->
         <bean id="extendedFELUserDetailsContextMapper" class="cz.cvut.authserver.oauth2.support.ExtendedUserDetailsContextMapper" 
               p:firstnameAttributeName="${ldap.fel.attribute.name.fn}"
               p:lastnameAttributeName="${ldap.fel.attribute.name.sn}"
