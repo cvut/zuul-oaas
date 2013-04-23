@@ -91,6 +91,7 @@ public final class MongoDbConstants {
         //TODO incomplete!
         public static final String
                 USER_NAME = "user_name",
+                USER_EMAIL = "user_email",
                 AUTHORITIES = "authorities";
 
         private user_auth() { /* do not initialize */ }

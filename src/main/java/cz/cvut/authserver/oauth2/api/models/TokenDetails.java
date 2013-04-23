@@ -1,5 +1,6 @@
 package cz.cvut.authserver.oauth2.api.models;
 
+import cz.cvut.authserver.oauth2.models.ExtendedUserDetails;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.springframework.security.core.Authentication;
@@ -57,9 +58,7 @@ public class TokenDetails {
         this.scope = token.getScope();
         this.client = client;
         this.userDetails = (userAuth == null ? 
-                null : new User(userAuth.getPrincipal().toString(), 
-                                "[secured]", 
-                                userAuth.getAuthorities()));
+                null : retrieveDetailsFromPrincipal(userAuth.getPrincipal()));
     }
 
 
@@ -129,5 +128,12 @@ public class TokenDetails {
         this.userDetails = userDetails;
     }
     
-    
+    private ExtendedUserDetails retrieveDetailsFromPrincipal(Object principal){
+        ExtendedUserDetails userDetails = null;
+        if (principal instanceof ExtendedUserDetails) {
+            userDetails = (ExtendedUserDetails) principal;
+            return userDetails;
+        }
+        return null;
+    }
 }

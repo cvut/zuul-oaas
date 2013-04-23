@@ -11,6 +11,7 @@ import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.stereotype.Component;
 
 import static cz.cvut.authserver.oauth2.dao.mongo.converters.MongoDbConstants.authentication.*;
+import cz.cvut.authserver.oauth2.models.ExtendedUserDetails;
 
 /**
  * Converter from {@link OAuth2Authentication} to MongoDB object.
@@ -49,8 +50,18 @@ public class OAuth2AuthenticationWriteConverter extends AutoRegisteredConverter<
 
         //TODO incomplete!
         target.put(user_auth.USER_NAME, source.getName());
+        target.put(user_auth.USER_EMAIL, getEmailFromPrincipal(source.getPrincipal()));
         target.put(user_auth.AUTHORITIES, AuthorityUtils.authorityListToSet(source.getAuthorities()));
 
         return target;
+    }
+    
+    private String getEmailFromPrincipal(Object principal) {
+        ExtendedUserDetails userDetails = null;
+        if (principal instanceof ExtendedUserDetails) {
+            userDetails = (ExtendedUserDetails) principal;
+            return userDetails.getEmail();
+        }
+        return null;
     }
 }

@@ -3,9 +3,11 @@ package cz.cvut.authserver.oauth2.controllers;
 import cz.cvut.authserver.oauth2.api.models.ClientDTO;
 import cz.cvut.authserver.oauth2.api.models.JsonExceptionMapping;
 import cz.cvut.authserver.oauth2.dao.AccessTokenDAO;
+import cz.cvut.authserver.oauth2.models.ExtendedUserDetails;
 import cz.cvut.authserver.oauth2.models.PersistableAccessToken;
 import cz.cvut.authserver.oauth2.services.ClientsService;
 import cz.cvut.oauth.provider.spring.TokenInfo;
+import java.security.Principal;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
@@ -69,6 +71,12 @@ public class CheckTokenEndpoint {
             Authentication userAuth = authentication.getUserAuthentication();
             info.setUserAuthorities(userAuth.getAuthorities());
             info.setUserId(userAuth.getName());
+            Object principal = authentication.getPrincipal();
+            ExtendedUserDetails userDetails = null;
+            if (principal instanceof ExtendedUserDetails) {
+                userDetails = (ExtendedUserDetails) principal;
+                info.setUserEmail(userDetails.getEmail());
+            }
         }
 
         return info;

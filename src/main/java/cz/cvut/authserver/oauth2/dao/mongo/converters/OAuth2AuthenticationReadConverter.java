@@ -14,6 +14,7 @@ import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.stereotype.Component;
 
 import static cz.cvut.authserver.oauth2.dao.mongo.converters.MongoDbConstants.authentication.*;
+import cz.cvut.authserver.oauth2.models.ExtendedUserDetails;
 
 /**
  * Converter from MongoDB object to {@link OAuth2Authentication}.
@@ -49,10 +50,11 @@ public class OAuth2AuthenticationReadConverter extends AutoRegisteredConverter<D
     private Authentication convertUserAuthentication(DBObjectWrapper source) {
         if (source == null) return null;
 
-        String username = source.getString( user_auth.USER_NAME );
         Collection<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(source.getStringArray(authz_request.AUTHORITIES) );
+        ExtendedUserDetails userDetails = 
+                new ExtendedUserDetails(source.getString(user_auth.USER_EMAIL), "", "", source.getString( user_auth.USER_NAME ), "", authorities);
 
-        return new UsernamePasswordAuthenticationToken(username, null, authorities);
+        return new UsernamePasswordAuthenticationToken(userDetails, null, authorities);
     }
 
 }
