@@ -26,7 +26,7 @@
     </head>
 
 
-    <body layout:fragment="body">
+    <body onload="setFocus()" layout:fragment="body">
         <div class="navbar navbar-fixed-top">
             <div class="navbar-inner">
                 <div class="container">
@@ -49,7 +49,7 @@
                 <!--</div>-->
                 <!--<div class="span6">-->
                 <!--</div>-->
-                <h1 class="metro-font" style="line-height: 110%; margin: 0 auto; " th:text="#{project.title}">CTU Authorization Server</h1>
+                <h1 class="metro-font" style="line-height: 110%; margin: 0 auto; " th:utext="#{project.title.formated}">CTU Authorization Server</h1>
             </div>
 
             <div class="row">
@@ -84,14 +84,14 @@
                         <div class="control-group">
                             <label class="control-label" for="user_name" th:text="#{login.form.name}">Name</label>
                             <div class="controls">
-                                <input type="text" class="input-xlarge" id="user_name" name="j_username" rel="popover" data-content="Enter your first and last name." data-original-title="Full Name"/>
+                                <input type="text" class="input-xlarge" id="user_name" name="j_username" rel="popover" data-content="Enter your name." data-original-title="Name"/>
                             </div>
                         </div>
 
                         <div class="control-group">
                             <label class="control-label" for="password" th:text="#{login.form.password}">Password</label>
                             <div class="controls">
-                                <input type="password" class="input-xlarge" id="pwd" name="j_password" rel="popover" data-content="6 characters or more! Be tricky" data-original-title="Password" />
+                                <input type="password" class="input-xlarge" id="pwd" name="j_password" rel="popover" data-content="Enter your password" data-original-title="Password" />
                             </div>
                         </div>
 
@@ -113,36 +113,42 @@
         <script type="text/javascript" src="../../js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
         <script type="text/javascript" src="../../js/jquery.validate.js" th:src="@{/js/jquery.validate.js}"></script>
         <script type="text/javascript">
-            $(document).ready(function() {
-                $("#loginHere").validate({
-                    rules: {
-                        j_username: "required",
-                        user_email: {
-                            required: true,
-                            email: true
-                        },
-                        j_password: {
-                            required: true,
-                            minlength: 4
-                        }
+        $(document).ready(function() {
+            $("#loginHere").validate({
+                rules: {
+                    j_username: "required",
+                    user_email: {
+                        required: true,
+                        email: true
                     },
-                    messages: {
-                        j_username: "Zadejte prosím Váš login",
-                        j_password: {
-                            required: "Zadejte prosím Vaše heslo",
-                            minlength: "Heslo musí mít minímalně 6 znaků"
-                        }
-                    },
-                    errorClass: "help-inline",
-                    errorElement: "span",
-                    highlight: function(element, errorClass, validClass) {
-                        $(element).parents('.control-group').addClass('error');
-                    },
-                    unhighlight: function(element, errorClass, validClass) {
-                        $(element).parents('.control-group').removeClass('error');
+                    j_password: {
+                        required: true,
+                        minlength: 4
                     }
-                });
+                },
+                messages: {
+                    j_username: "Zadejte prosím Váš login",
+                    j_password: {
+                        required: "Zadejte prosím Vaše heslo",
+                        minlength: "Heslo musí mít minímalně 6 znaků"
+                    }
+                },
+                errorClass: "help-inline",
+                errorElement: "span",
+                highlight: function(element, errorClass, validClass) {
+                    $(element).parents('.control-group').addClass('error');
+                },
+                unhighlight: function(element, errorClass, validClass) {
+                    $(element).parents('.control-group').removeClass('error');
+                }
             });
+        });
+        </script>
+        <script type="text/javascript">
+            function setFocus()
+            {
+                document.getElementById("user_name").focus();
+            }
         </script>
     </body>
 </html>
