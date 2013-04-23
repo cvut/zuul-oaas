@@ -40,13 +40,13 @@
         Check Token Endpoint
         Used by resource providers to verify tokens received from clients.
     -->
-    <sec:http pattern="/check-token/**"
+<!--    <sec:http pattern="/check-token/**"
               create-session="stateless"
               entry-point-ref="oauthAuthenticationEntryPoint"
               authentication-manager-ref="clientAuthenticationManager"
               use-expressions="true">
 
-        <!-- scope 'token-check' is deprecated and will be removed in future version -->
+         scope 'token-check' is deprecated and will be removed in future version 
         <sec:intercept-url pattern="/check-token/**"
                            access="(#oauth2.hasScope('urn:ctu:oauth:oaas:check-token')
                                    or #oauth2.hasScope('token-check'))
@@ -55,17 +55,17 @@
         <sec:custom-filter ref="checkTokenResourcesFilter" before="PRE_AUTH_FILTER" />
         <sec:access-denied-handler ref="oauthAccessDeniedHandler" />
         <sec:expression-handler ref="oauthWebExpressionHandler" />
-    </sec:http>
+    </sec:http>-->
 
     <!--
         API resources
         Used for management of this authorization server.
     -->
     <sec:http pattern="/api/v1/**"
-               create-session="stateless"
-               entry-point-ref="oauthAuthenticationEntryPoint"
-               authentication-manager-ref="clientAuthenticationManager"
-               use-expressions="true">
+              create-session="stateless"
+              entry-point-ref="oauthAuthenticationEntryPoint"
+              authentication-manager-ref="clientAuthenticationManager"
+              use-expressions="true">
 
         <!-- 'ROLE_BIG_BOSS' is deprecated any may be removed in future version, use scope instead -->
         <sec:intercept-url pattern="/api/v1/clients/**"
@@ -180,15 +180,50 @@
     </beans>
 
     <beans profile="ldap">
+        
+        <!--context mapper to create FIT LDAP user object-->
+        <bean id="extendedFITUserDetailsContextMapper" class="cz.cvut.appsmanager.service.help.ExtendedUserDetailsContextMapper" 
+              p:firstnameAttributeName="${ldap.fit.attribute.name.fn}"
+              p:lastnameAttributeName="${ldap.fit.attribute.name.sn}"
+              p:emailAttributeName="${ldap.fit.attribute.name.email}"
+              p:passwordAttributeName="${ldap.fit.attribute.name.password}" />
+        
         <jee:jndi-lookup id="ldapServerUri" jndi-name="java:comp/env/conf/ldapServerUri"
                          cache="true" default-value="ldap://localhost/ou=dummy" />
 
-        <sec:ldap-server url="#{ldapServerUri}" />
+        <sec:ldap-server url="${ldap.fit.server.uri}" />
 
         <sec:authentication-manager id="userAuthenticationManager">
             <!-- Remote users from LDAP -->
             <sec:ldap-authentication-provider user-dn-pattern="uid={0},ou=People" />
         </sec:authentication-manager>
     </beans>
+    
+    <beans profile="ldap-2">
+        
+        <!--context mapper to create FIT LDAP user object-->
+        <bean id="extendedFITUserDetailsContextMapper" class="cz.cvut.authserver.oauth2.support.ExtendedUserDetailsContextMapper" 
+              p:firstnameAttributeName="${ldap.fit.attribute.name.fn}"
+              p:lastnameAttributeName="${ldap.fit.attribute.name.sn}"
+              p:emailAttributeName="${ldap.fit.attribute.name.email}"
+              p:passwordAttributeName="${ldap.fit.attribute.name.password}" />
+
+        <!--context mapper to create FET LDAP user object-->
+        <bean id="extendedFELUserDetailsContextMapper" class="cz.cvut.authserver.oauth2.support.ExtendedUserDetailsContextMapper" 
+              p:firstnameAttributeName="${ldap.fel.attribute.name.fn}"
+              p:lastnameAttributeName="${ldap.fel.attribute.name.sn}"
+              p:emailAttributeName="${ldap.fel.attribute.name.email}"
+              p:passwordAttributeName="${ldap.fel.attribute.name.password}" />
+        
+        <sec:ldap-server id="ldapFIT" url="${ldap.fit.server.uri}" />
+        <sec:ldap-server id="ldapFEL" url="${ldap.fel.server.uri}" />
+
+        <sec:authentication-manager id="userAuthenticationManager">
+            <!-- Remote users from LDAP -->
+            <sec:ldap-authentication-provider server-ref="ldapFEL" user-dn-pattern="uid={0},ou=People" user-context-mapper-ref="extendedFELUserDetailsContextMapper"/>
+            <sec:ldap-authentication-provider server-ref="ldapFIT" user-dn-pattern="uid={0},ou=People" user-context-mapper-ref="extendedFITUserDetailsContextMapper"/>
+        </sec:authentication-manager>
+    </beans>
+
     
 </beans>

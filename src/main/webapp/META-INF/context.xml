@@ -6,10 +6,11 @@
         Available profiles:
             - mongo: use Mongo database (recommended)
             - jdbc: use SQL database via JDBC
-            - ldap: authenticate users via LDAP
+            - ldap: authenticate users via LDAP (FIT)
+            - ldap-2: authenticate users via LDAPs (FIT, FEL)
             - dev: developer profile (insert seed data, use in-memory users etc.)
     -->
-    <Environment name="spring.profiles.active" value="mongo,dev"
+    <Environment name="spring.profiles.active" value="mongo,ldap-2"
                  type="java.lang.String" override="false" />
 
     <!-- URI of LDAP server for users authentication -->
