@@ -67,7 +67,7 @@ public abstract class AbstractAccessTokenDAO_IT {
 
     public @Test void save_and_load_token_with_client_and_user_authentication() {
 
-        Authentication expectedUserAuth = createUserAuthentication("myName", false);
+        Authentication expectedUserAuth = createExtendedUserAuthentication("myName", false);
         OAuth2Authentication authentication = new OAuth2Authentication(
                 createRandomAuthorizationRequest(),
                 expectedUserAuth);
