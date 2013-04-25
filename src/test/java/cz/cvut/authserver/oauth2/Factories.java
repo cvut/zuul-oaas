@@ -6,6 +6,7 @@ import com.google.common.collect.Sets;
 import cz.cvut.authserver.oauth2.api.models.ClientDTO;
 import cz.cvut.authserver.oauth2.models.Auth;
 import cz.cvut.authserver.oauth2.models.Client;
+import cz.cvut.authserver.oauth2.models.ExtendedUserDetails;
 import cz.cvut.authserver.oauth2.models.Resource;
 import cz.cvut.authserver.oauth2.models.Scope;
 import cz.cvut.authserver.oauth2.models.enums.AuthorizationGrant;
@@ -26,6 +27,7 @@ import java.net.URI;
 import java.util.*;
 
 import static java.util.Arrays.asList;
+import org.springframework.security.core.userdetails.UserDetails;
 
 /**
  *
@@ -238,7 +240,16 @@ public class Factories {
         return new StubAuthentication(name, randomGrantedAuthorities(2), authenticated);
     }
 
+    public static Authentication createExtendedUserAuthentication(String name, boolean authenticated) {
+        Collection<GrantedAuthority> authorities = randomGrantedAuthorities(2);
+        return new StubAuthentication(createExtendedUserDetails(name, authorities), authorities, authenticated);
+    }
 
+    //////////  UserDetails  //////////
+
+    public static UserDetails createExtendedUserDetails(String name, Collection<GrantedAuthority> authorities){
+        return new ExtendedUserDetails(randomString(), randomString(), randomString(), name, randomString(), authorities);
+    }
 
     //////////  Resources  //////////
 
@@ -332,13 +343,13 @@ public class Factories {
 
     private static class StubAuthentication extends AbstractAuthenticationToken {
 
-        private String principal;
+        private Object principal;
         private Collection<GrantedAuthority> authorities;
 
-        public StubAuthentication(String name, boolean authenticated) {
+        public StubAuthentication(Object name, boolean authenticated) {
             this(name, Collections.<GrantedAuthority>emptySet(), authenticated);
         }
-        public StubAuthentication(String name, Collection<GrantedAuthority> authorities, boolean authenticated) {
+        public StubAuthentication(Object name, Collection<GrantedAuthority> authorities, boolean authenticated) {
             super(null);
             setAuthenticated(authenticated);
             this.principal = name;
