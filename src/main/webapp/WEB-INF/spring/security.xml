@@ -136,7 +136,8 @@
 
     <!--
         OAuth2 security expression handler for ACL declarations
-        See http://static.springsource.org/spring-security/site/docs/3.0.x/reference/el-access.html
+        Docs for common built-in expressions: http://static.springsource.org/spring-security/site/docs/3.0.x/reference/el-access.html
+        Docs for OAuth2SecurityExpressionMethods extension: http://static.springsource.org/spring-security/oauth/apidocs/org/springframework/security/oauth2/provider/expression/OAuth2SecurityExpressionMethods.html
     -->
     <oauth:web-expression-handler id="oauthWebExpressionHandler" />
 
