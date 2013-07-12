@@ -13,10 +13,10 @@ import org.springframework.security.oauth2.provider.AuthorizationRequest;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
-import static org.springframework.http.HttpStatus.CONFLICT;
 import org.springframework.security.oauth2.provider.NoSuchClientException;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
+
+import static org.springframework.http.HttpStatus.*;
+import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 
 /**
@@ -52,6 +52,13 @@ public class TokensController {
         }
 
         return new TokenDetails(token, clientAuth.isDenied(), client, userAuth);
+    }
+    
+    @ResponseStatus(NO_CONTENT)
+    @RequestMapping(value = "{tokenValue}", method = DELETE)
+    public void invalidateToken(){
+        //TODO
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
 

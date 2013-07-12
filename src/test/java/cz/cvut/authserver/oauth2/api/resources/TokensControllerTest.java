@@ -18,6 +18,7 @@ import org.springframework.test.web.server.MockMvc;
 import static cz.cvut.authserver.oauth2.Factories.*;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItems;
+import org.junit.Ignore;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -86,6 +87,10 @@ public class TokensControllerTest {
                 .andExpect(jsonPath(CLIENT_LOCKED, equalTo(expClientDTO.isLocked())))
                 .andExpect(jsonPath(EXPIRATION, equalTo(expToken.getExpiration().getTime())))
                 .andExpect(jsonPath(SCOPES, hasItems(expToken.getScope().toArray())));
+    }
+
+    public @Test @Ignore("Not implemented yet") void test_invalidate_token() throws Exception {
+        //TODO
     }
 
 }
