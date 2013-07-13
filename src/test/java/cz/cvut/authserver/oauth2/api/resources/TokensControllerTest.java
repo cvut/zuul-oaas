@@ -18,10 +18,11 @@ import org.springframework.test.web.server.MockMvc;
 import static cz.cvut.authserver.oauth2.Factories.*;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItems;
-import org.junit.Ignore;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.test.web.server.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.server.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.server.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.server.setup.MockMvcBuilders.standaloneSetup;
@@ -34,7 +35,7 @@ import static org.springframework.test.web.server.setup.MockMvcBuilders.standalo
 public class TokensControllerTest {
 
     private static final String
-            GET_TOKEN_DETAILS_URI = "/v1/tokens/",
+            TOKEN_DETAILS_URI = "/v1/tokens/",
             MIME_TYPE_JSON = "application/json;charset=UTF-8";
 
     // JSON attributes
@@ -62,7 +63,7 @@ public class TokensControllerTest {
     public @Test void check_non_existing_token() throws Exception {
         doThrow(InvalidTokenException.class).when(accessTokenDAO).findOne("666");
 
-        controller.perform(get(GET_TOKEN_DETAILS_URI + 666)
+        controller.perform(get(TOKEN_DETAILS_URI + 666)
                 .accept(APPLICATION_JSON))
                 .andExpect(status().isConflict());
     }
@@ -77,7 +78,7 @@ public class TokensControllerTest {
         doReturn(new PersistableAccessToken(expToken, expAuth)).when(accessTokenDAO).findOne(expToken.getValue());
         doReturn(expClientDTO).when(clientsService).findClientById(clientId);
 
-        controller.perform(get(GET_TOKEN_DETAILS_URI + expToken.getValue())
+        controller.perform(get(TOKEN_DETAILS_URI + expToken.getValue())
                 .accept(APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().mimeType(MIME_TYPE_JSON))
@@ -89,8 +90,20 @@ public class TokensControllerTest {
                 .andExpect(jsonPath(SCOPES, hasItems(expToken.getScope().toArray())));
     }
 
-    public @Test @Ignore("Not implemented yet") void test_invalidate_token() throws Exception {
-        //TODO
+
+    public @Test void invalidate_non_existing_token() throws Exception {
+        when(accessTokenDAO.exists("666")).thenReturn(false);
+
+        controller.perform(delete(TOKEN_DETAILS_URI + 666))
+                .andExpect(status().isConflict());
     }
 
+    public @Test void invalidate_token() throws Exception {
+        OAuth2AccessToken expToken = createRandomAccessToken();
+
+        when(accessTokenDAO.exists(expToken.getValue())).thenReturn(true);
+
+        controller.perform(delete(TOKEN_DETAILS_URI + expToken))
+                .andExpect(status().isNoContent());
+    }
 }
