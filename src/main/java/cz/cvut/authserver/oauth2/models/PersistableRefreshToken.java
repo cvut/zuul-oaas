@@ -23,6 +23,8 @@ public class PersistableRefreshToken implements ExpiringOAuth2RefreshToken, Pers
 
     private static final long serialVersionUID = 1L;
 
+    public static final Date NON_EXPIRING_DATE = new Date(Long.MAX_VALUE);
+
     private @Id String value;
     private Date expiration;
     private OAuth2Authentication authentication;
@@ -58,7 +60,7 @@ public class PersistableRefreshToken implements ExpiringOAuth2RefreshToken, Pers
     }
 
     public Date getExpiration() {
-        return expiration;
+        return expiration != null ? expiration : NON_EXPIRING_DATE;
     }
     
     public boolean isExpiring() {
