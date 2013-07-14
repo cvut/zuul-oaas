@@ -41,9 +41,9 @@ public class JdbcRefreshTokenDAO extends AbstractJdbcGenericDAO<PersistableRefre
 
     protected Object[][] getEntityMapping(PersistableRefreshToken entity) {
         return new Object[][] {
-                { ID,               entity.getValue()                       },
-                { EXPIRATION,       entity.getExpiration()                  },
-                { AUTHENTICATION,   serialize(entity.getAuthentication())   }
+                { ID,               entity.getValue()                                   },
+                { EXPIRATION,       entity.isExpiring() ? entity.getExpiration() : null },
+                { AUTHENTICATION,   serialize(entity.getAuthentication())               }
         };
     }
 }
