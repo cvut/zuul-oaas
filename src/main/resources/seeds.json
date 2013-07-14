@@ -46,6 +46,69 @@
             "registeredRedirectUri": [],
             "resourceIds": [],
             "scope": [ "urn:ctu:oauth:oaas:check-token" ]
+        },
+        {
+            "_class": "Client",
+            "_id": "dummy-client",
+            "authorities": [ "ROLE_CLIENT" ],
+            "authorizedGrantTypes": [ "refresh_token", "authorization_code" ],
+            "clientSecret": "change-me",
+            "locked": false,
+            "registeredRedirectUri": [ "http://example.org" ],
+            "resourceIds": [],
+            "scope": [ "urn:ctu:oauth:dummy", "urn:ctu:oauth:oaas:check-token" ]
+        }
+    ],
+
+    "access_tokens": [
+        {
+            "_class": "AccessToken",
+            "_id": "dummy-access-token",
+            "authenticationKey": "cc76a58c5418860277a6b19d0a40a068",
+            "authentication": {
+                "authorization_request": {
+                    "approval_parameters": {},
+                    "approved": true,
+                    "authorities": [  "ROLE_CLIENT" ],
+                    "authorization_parameters": {
+                        "scope": "urn:ctu:oauth:dummy urn:ctu:oauth:oaas:check-token",
+                        "client_secret": "change-me",
+                        "grant_type": "refresh_token authorization_code",
+                        "client_id": "dummy-client"
+                    },
+                    "resource_ids": [],
+                    "client_id": "dummy-client"
+                },
+                "user_authentication": null
+            },
+            "expiration": "2099-01-01T0:00:00.000Z",
+            "tokenType" : "bearer",
+            "refreshToken" : "dummy-refresh-token",
+            "scope" : [ "urn:ctu:oauth:dummy", "urn:ctu:oauth:oaas:check-token" ],
+            "additionalInformation" : {}
+        }
+    ],
+
+    "refresh_tokens": [
+        {
+            "_class": "RefreshToken",
+            "_id": "dummy-refresh-token",
+            "authentication": {
+                "authorization_request": {
+                    "approval_parameters": {  },
+                    "approved": true,
+                    "authorities": [  "ROLE_CLIENT" ],
+                    "authorization_parameters": {
+                        "scope": "urn:ctu:oauth:dummy urn:ctu:oauth:oaas:check-token",
+                        "client_secret": "change-me",
+                        "grant_type": "refresh_token authorization_code",
+                        "client_id": "dummy-client"
+                    },
+                    "resource_ids": [ ],
+                    "client_id": "dummy-client"
+                },
+                "user_authentication": null
+            }
         }
     ]
 }
