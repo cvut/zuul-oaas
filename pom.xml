@@ -63,7 +63,7 @@
         <spring.version>3.2.2.RELEASE</spring.version>
         <spring.security.version>3.1.4.RELEASE</spring.security.version>
         <spring.oauth.version>1.0.0.RC2</spring.oauth.version>
-        <thymeleaf.version>2.0.15</thymeleaf.version>
+        <thymeleaf.version>2.0.17</thymeleaf.version>
         <aspectj.version>1.7.3</aspectj.version>
     </properties>
 
@@ -180,13 +180,6 @@
             <groupId>org.thymeleaf</groupId>
             <artifactId>thymeleaf</artifactId>
             <version>${thymeleaf.version}</version>
-            <exclusions>
-                <!-- we're using SpEL instead -->
-                <exclusion>
-                    <groupId>ognl</groupId>
-                    <artifactId>ognl</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <dependency>
@@ -197,9 +190,9 @@
 
         <!-- @see https://github.com/ultraq/thymeleaf-layout-dialect -->
         <dependency>
-            <groupId>nz.net.ultraq.web.thymeleaf</groupId>
+            <groupId>nz.net.ultraq.thymeleaf</groupId>
             <artifactId>thymeleaf-layout-dialect</artifactId>
-            <version>1.0.6</version>
+            <version>1.1.1</version>
         </dependency>
 
         <!--//// Apache Commons ////-->

@@ -42,7 +42,7 @@
           p:cacheSeconds="0" />
 
     <util:set id="thymeleafDialects">
-        <bean class="nz.net.ultraq.web.thymeleaf.LayoutDialect" />
+        <bean class="nz.net.ultraq.thymeleaf.LayoutDialect" />
     </util:set>
 
 
