@@ -27,6 +27,12 @@ public class LockableClientUserApprovalHandler implements UserApprovalHandler {
     private ClientDAO clientDAO;
 
 
+    public AuthorizationRequest updateBeforeApproval(AuthorizationRequest authorizationRequest,
+            Authentication userAuthentication) {
+
+        return authorizationRequest;
+    }
+
     public boolean isApproved(AuthorizationRequest authorizationRequest, Authentication userAuthentication) {
         Client client = clientDAO.findOne(authorizationRequest.getClientId());
 

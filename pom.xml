@@ -62,7 +62,7 @@
     <properties>
         <spring.version>3.2.2.RELEASE</spring.version>
         <spring.security.version>3.1.4.RELEASE</spring.security.version>
-        <spring.oauth.version>1.0.0.RC2</spring.oauth.version>
+        <spring.oauth.version>1.0.5.RELEASE</spring.oauth.version>
         <thymeleaf.version>2.0.17</thymeleaf.version>
         <aspectj.version>1.7.3</aspectj.version>
     </properties>
