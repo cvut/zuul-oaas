@@ -7,8 +7,8 @@
 
     <parent>
         <groupId>cz.cvut.fit.maven</groupId>
-        <artifactId>spring-parent</artifactId>
-        <version>1.1-SNAPSHOT</version>
+        <artifactId>root-parent</artifactId>
+        <version>1.1</version>
     </parent>
 
     
@@ -30,7 +30,7 @@
     </scm>
 
     <issueManagement>
-        <system>Gitlab</system>
+        <system>GitLab</system>
         <url>https://gitlab.fit.cvut.cz/cvut-oauth-server/issues</url>
     </issueManagement>
 
@@ -57,6 +57,15 @@
     </developers>
 
 
+    <!--//////////////////// PROPERTIES ////////////////////-->
+
+    <properties>
+        <spring.version>3.1.2.RELEASE</spring.version>
+        <spring.security.version>3.1.2.RELEASE</spring.security.version>
+        <spring.oauth.version>1.0.0.RC2</spring.oauth.version>
+        <aspectj.version>1.7.0</aspectj.version>
+    </properties>
+
 
     <!--//////////////////// REPOSITORIES ////////////////////-->
             
@@ -75,7 +84,6 @@
     </repositories>
 
 
-
     <!--//////////////////// DEPENDENCIES ////////////////////-->
 
     <dependencies>
@@ -85,84 +93,78 @@
             <version>1.0-SNAPSHOT</version>
         </dependency>
 
-        
-        <!--////////// Spring //////////-->
+        <!--//// Spring Framework ////-->
 
-        <!--/// Core & Context ///-->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+            <version>${spring.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>commons-logging</artifactId>
+                    <groupId>commons-logging</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-beans</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
+            <version>${spring.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework</groupId>
-            <artifactId>spring-context-support</artifactId>
+            <artifactId>spring-aop</artifactId>
+            <version>${spring.version}</version>
         </dependency>
-        
-        <!--/// Web Module ///-->
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
+            <version>${spring.version}</version>
         </dependency>
 
-        <!--/// Data Access/Integration Module ///-->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-tx</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-mongodb</artifactId>
             <version>1.2.0.RELEASE</version>
         </dependency>
-
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-jdbc</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.blogspot.nurkiewicz</groupId>
-            <artifactId>jdbcrepository</artifactId>
-            <version>0.3.1-SNAPSHOT</version>
-        </dependency>
         
-        <!--/// AOP Module ///-->
-
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-aop</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.aspectj</groupId>
-            <artifactId>aspectjweaver</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.aspectj</groupId>
-            <artifactId>aspectjrt</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>cglib</groupId>
-            <artifactId>cglib</artifactId>
-        </dependency>
-        
-        <!--/// Security Module ///-->
-
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-core</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-taglibs</artifactId>
+            <version>${spring.security.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-ldap</artifactId>
+            <version>${spring.security.version}</version>
         </dependency>
 
         <dependency>
@@ -171,8 +173,7 @@
             <version>1.0.0.RC2</version>
         </dependency>
 
-
-        <!--////////// Thymeleaf //////////-->
+        <!--//// Thymeleaf ////-->
 
         <dependency>
             <groupId>org.thymeleaf</groupId>
@@ -200,13 +201,18 @@
             <version>1.0.6</version>
         </dependency>
 
-
-        <!--////////// Commons //////////-->
+        <!--//// Apache Commons ////-->
 
         <dependency>
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
             <version>2.6</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.1</version>
         </dependency>
 
         <dependency>
@@ -219,21 +225,42 @@
             <groupId>commons-httpclient</groupId>
             <artifactId>commons-httpclient</artifactId>
             <version>3.1</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!--//// AOP ////-->
+
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>${aspectj.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>11.0.2</version>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjrt</artifactId>
+            <version>${aspectj.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>cglib</groupId>
+            <artifactId>cglib</artifactId>
+            <version>2.2.2</version>
+            <scope>runtime</scope>
+        </dependency>
 
-        <!--////////// Validation //////////-->
+        <!--//// Validation ////-->
 
         <!-- JSR-303 Validator -->
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-validator</artifactId>
+            <version>4.3.0.Final</version>
         </dependency>
 
         <!-- Collection validators for JSR-303 -->
@@ -250,8 +277,19 @@
             <version>1.0-SNAPSHOT</version>
         </dependency>
 
+        <!--//// Mappers ////-->
 
-        <!--////////// Others //////////-->
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-core-asl</artifactId>
+            <version>1.9.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-mapper-asl</artifactId>
+            <version>1.9.0</version>
+        </dependency>
 
         <dependency>
             <groupId>ma.glasnost.orika</groupId>
@@ -259,9 +297,53 @@
             <version>1.4.1</version>
         </dependency>
 
+        <!--//// Logging ////-->
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jcl-over-slf4j</artifactId>
+            <version>${org.slf4j.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>${org.slf4j.version}</version>
+        </dependency>
+
+        <!--//// Java APIs ////-->
+
         <dependency>
             <groupId>javax.servlet</groupId>
-            <artifactId>jstl</artifactId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.0.1</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <version>1.0.0.GA</version>
+        </dependency>
+
+        <!--//// Others ////-->
+
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>11.0.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.blogspot.nurkiewicz</groupId>
+            <artifactId>jdbcrepository</artifactId>
+            <version>0.3.1-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongo-java-driver</artifactId>
+            <version>2.10.1</version>
         </dependency>
 
 
@@ -270,6 +352,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
+            <version>4.10</version>
             <scope>test</scope>
         </dependency>
 
@@ -283,6 +366,7 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
+            <version>${spring.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -300,13 +384,7 @@
             <scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
-            <version>20090211</version>
-            <scope>test</scope>
-        </dependency>
-
+        <!-- TODO remove after refactor ServerRunning -->
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
@@ -334,9 +412,7 @@
             <version>1.0-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
-
 
 
     <!--//////////////////// BUILD ////////////////////-->
@@ -351,15 +427,6 @@
                     <target>1.7</target>
                     <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.12.4</version>
             </plugin>
         </plugins>
     </build>
