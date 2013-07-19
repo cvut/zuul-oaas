@@ -13,7 +13,7 @@ import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.common.exceptions.InvalidTokenException;
 import org.springframework.security.oauth2.provider.AuthorizationRequest;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
-import org.springframework.test.web.server.MockMvc;
+import org.springframework.test.web.servlet.MockMvc;
 
 import static cz.cvut.authserver.oauth2.Factories.*;
 import cz.cvut.authserver.oauth2.api.models.ClientDTO;
@@ -24,9 +24,9 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.security.core.authority.AuthorityUtils.authorityListToSet;
-import static org.springframework.test.web.server.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.server.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.server.setup.MockMvcBuilders.standaloneSetup;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
 /**
  * @author Jakub Jirutka <jakub@jirutka.cz>
@@ -120,7 +120,7 @@ public class CheckTokenEndpointTest {
         controller.perform(get(CHECK_TOKEN_URI + "valid_token")
                 .accept(APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().mimeType(MIME_TYPE_JSON))
+                .andExpect(content().contentType(MIME_TYPE_JSON))
                 .andExpect(jsonPath(CLIENT_ID, equalTo(expClientAuth.getClientId())))
                 .andExpect(jsonPath(SCOPE, hasItems(expToken.getScope().toArray())))
                 .andExpect(jsonPath(AUDIENCE, hasItems(expClientAuth.getResourceIds().toArray())))

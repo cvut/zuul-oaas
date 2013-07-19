@@ -12,15 +12,15 @@ import org.springframework.security.oauth2.provider.ClientDetails;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.ClientRegistrationService;
 import org.springframework.security.oauth2.provider.NoSuchClientException;
-import org.springframework.test.web.server.MockMvc;
+import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItems;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.server.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.server.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.server.setup.MockMvcBuilders.standaloneSetup;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
 /**
  *
@@ -69,7 +69,7 @@ public class ClientsControllerTest {
         mock.perform(get(BASE_URI + 42)
                 .accept(APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().mimeType(MIME_TYPE_JSON))
+                .andExpect(content().contentType(MIME_TYPE_JSON))
                 .andExpect(jsonPath(CLIENT_ID, equalTo("42")))
                 .andExpect(jsonPath(CLIENT_SECRET, equalTo(expected.getClientSecret())))
                 .andExpect(jsonPath(RESOURCE_IDS, hasItems(expected.getResourceIds().toArray())))

@@ -13,7 +13,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.common.exceptions.InvalidTokenException;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
-import org.springframework.test.web.server.MockMvc;
+import org.springframework.test.web.servlet.MockMvc;
 
 import static cz.cvut.authserver.oauth2.Factories.*;
 import static org.hamcrest.Matchers.equalTo;
@@ -22,10 +22,10 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.server.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.server.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.server.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.server.setup.MockMvcBuilders.standaloneSetup;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
 /**
  * @author Jakub Jirutka <jakub@jirutka.cz>
@@ -81,7 +81,7 @@ public class TokensControllerTest {
         controller.perform(get(TOKEN_DETAILS_URI + expToken.getValue())
                 .accept(APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().mimeType(MIME_TYPE_JSON))
+                .andExpect(content().contentType(MIME_TYPE_JSON))
                 .andExpect(jsonPath(TOKEN_VALUE, equalTo(expToken.getValue())))
                 .andExpect(jsonPath(TOKEN_TYPE, equalTo(expToken.getTokenType())))
                 .andExpect(jsonPath(TOKEN_DENIED, equalTo(expAuth.getAuthorizationRequest().isDenied())))
