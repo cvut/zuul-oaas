@@ -26,12 +26,5 @@
     <import resource="services.xml" />
     <import resource="auth-server.xml"/>
     <import resource="security.xml"/>
-
-    <beans profile="mongo">
-        <import resource="persistence-mongo.xml"/>
-    </beans>
-
-    <beans profile="jdbc">
-        <import resource="persistence-jdbc.xml"/>
-    </beans>
+    <import resource="persistence-mongo.xml"/>
 </beans>

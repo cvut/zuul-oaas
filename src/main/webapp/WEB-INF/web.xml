@@ -5,33 +5,15 @@
          version="3.0">
 
 
-    <!--//// Resources ////-->
-
-    <!--
-        JNDI reference of the default SQL DataSource defined in META-INF/context.xml or in Servlet Container.
-        Actual database connection should be always managed by Servlet Container!
-    -->
-    <resource-ref>
-        <description>SQL DataSource</description>
-        <res-ref-name>jdbc/AuthServerDS</res-ref-name>
-        <res-type>javax.sql.DataSource</res-type>
-        <res-auth>Container</res-auth>
-    </resource-ref>
-
-
     <!--//// Context ////-->
 
     <!--
         Default Spring profile used when no active profile is set via JNDI.
         Active profile is configured in META-INF/context.xml or in Servlet Container.
-        Available profiles:
-            - inMemory: store all data in-memory only (for testing)
-            - mongo: use Mongo database
-            - jdbc: use SQL database via JDBC
     -->
     <context-param>
        <param-name>spring.profiles.default</param-name>
-       <param-value>inMemory</param-value>
+       <param-value>ldap</param-value>
     </context-param>
 
     <!-- Spring’s parameter to identify root path of this webapp.

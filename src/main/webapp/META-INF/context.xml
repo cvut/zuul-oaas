@@ -4,34 +4,15 @@
     <!-- 
         Define Spring profiles to be activated.
         Available profiles:
-            - mongo: use Mongo database (recommended)
-            - jdbc: use SQL database via JDBC
             - ldap: authenticate users via LDAP (FIT)
             - ldap-2: authenticate users via LDAPs (FIT, FEL)
             - dev: developer profile (insert seed data, use in-memory users etc.)
     -->
-    <Environment name="spring.profiles.active" value="mongo,ldap-2"
+    <Environment name="spring.profiles.active" value="ldap-2"
                  type="java.lang.String" override="false" />
 
     <!-- URI of LDAP server for users authentication -->
     <Environment name="conf/ldapServerUri" value="ldap://localhost/ou=dummy"
                  type="java.lang.String" override="false" />
-
-
-    <!-- Uncomment to use JNDI DataSource
-    <Resource name="jdbc/AuthServerDS"
-              auth="Container"
-              type="javax.sql.DataSource"
-              factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
-              driverClassName="org.postgresql.Driver"
-              minIdle="2" maxIdle="5" maxActive="20"
-              initialSize="3"
-              removeAbandonedTimeout="60"
-              removeAbandoned="true"
-              logAbandoned="true"
-              minEvictableIdleTimeMillis="30000"
-              username="dev"
-              password="dev"
-              url="jdbc:postgresql://localhost:5432/auth_server" />-->
 
 </Context>
