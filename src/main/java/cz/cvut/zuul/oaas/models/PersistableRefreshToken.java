@@ -11,6 +11,7 @@ import org.springframework.security.oauth2.common.ExpiringOAuth2RefreshToken;
 import org.springframework.security.oauth2.common.OAuth2RefreshToken;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -19,7 +20,7 @@ import java.util.Date;
  */
 @TypeAlias("RefreshToken")
 @Document(collection = "refresh_tokens")
-public class PersistableRefreshToken implements ExpiringOAuth2RefreshToken, Persistable<String> {
+public class PersistableRefreshToken implements ExpiringOAuth2RefreshToken, Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -75,14 +76,6 @@ public class PersistableRefreshToken implements ExpiringOAuth2RefreshToken, Pers
         this.authentication = authentication;
     }
 
-    public String getId() {
-        return value;
-    }
-
-    public boolean isNew() {
-        return true;
-    }
-
 
     @Override
     public String toString() {
@@ -100,13 +93,5 @@ public class PersistableRefreshToken implements ExpiringOAuth2RefreshToken, Pers
     @Override
     public int hashCode() {
         return value != null ? value.hashCode() : 0;
-    }
-
-
-    public static abstract class fields {
-        public static final String
-                VALUE = "value",
-                EXPIRATION = "expiration",
-                AUTHENTICATION = "authentication";
     }
 }

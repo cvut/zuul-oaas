@@ -4,7 +4,6 @@ import cz.cvut.zuul.oaas.models.enums.AuthorizationGrant;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.TypeAlias;
-import org.springframework.data.domain.Persistable;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.provider.ClientDetails;
@@ -19,7 +18,7 @@ import java.util.*;
  */
 @TypeAlias("Client")
 @Document(collection = "clients")
-public class Client implements ClientDetails, Persistable<String> {
+public class Client implements ClientDetails {
 
     private static final long serialVersionUID = 1L;
     private static final String
@@ -166,14 +165,6 @@ public class Client implements ClientDetails, Persistable<String> {
     public void setImplicitClientDetails(ImplicitClientDetails implicitClientDetails) {
         this.implicitClientDetails = implicitClientDetails;
     }
-    
-    public String getId() {
-        return clientId;
-    }
-
-    public boolean isNew() {
-        return true;
-    }
 
 
     @Override
@@ -197,21 +188,4 @@ public class Client implements ClientDetails, Persistable<String> {
 	public String toString() {
         return String.format("Client [%s]", clientId);
 	}
-
-
-    public static abstract class fields {
-        public static final String
-                CLIENT_ID = "client_id",
-                CLIENT_SECRET = "client_secret",
-                SCOPE = "scope",
-                RESOURCE_IDS = "resource_ids",
-                AUTHORIZED_GRANT_TYPES = "authorized_grant_types",
-                REDIRECT_URI = "redirect_uri",
-                AUTHORITIES = "authorities",
-                ACCESS_TOKEN_VALIDITY = "access_token_validity",
-                REFRESH_TOKEN_VALIDITY = "refresh_token_validity",
-                PRODUCT_NAME = "product_name",
-                LOCKED = "locked",
-                IMPLICIT_CLIENT_DETAILS = "implicit_client_details";
-    }
 }
