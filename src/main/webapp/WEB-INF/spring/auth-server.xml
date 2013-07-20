@@ -35,7 +35,7 @@
         This is important especially for clients with implicit grant which are issued an access token directly
         without requesting token endpoint.
     -->
-    <bean id="lockableApprovalHandler" class="cz.cvut.authserver.oauth2.handlers.LockableClientUserApprovalHandler"
+    <bean id="lockableApprovalHandler" class="cz.cvut.zuul.oaas.handlers.LockableClientUserApprovalHandler"
           p:clientDAO-ref="clientDAO"
           p:parentHandler-ref="memorizingApprovalHandler" />
 
@@ -61,14 +61,14 @@
           p:tokenStore-ref="tokenStore"
           p:clientDetailsService-ref="clientDetailsService" />
 
-    <bean id="clientDetailsService" class="cz.cvut.authserver.oauth2.services.internal.ClientRegistrationServiceImpl"
+    <bean id="clientDetailsService" class="cz.cvut.zuul.oaas.services.internal.ClientRegistrationServiceImpl"
           p:clientDAO-ref="clientDAO" />
 
     <!-- Replacement for org.springframework.security.oauth2.provider.client.ClientDetailsUserDetailsService -->
-    <bean id="clientUserDetailsService" class="cz.cvut.authserver.oauth2.services.internal.LockableClientUserDetailsService"
+    <bean id="clientUserDetailsService" class="cz.cvut.zuul.oaas.services.internal.LockableClientUserDetailsService"
           p:clientDAO-ref="clientDAO" />
 
-    <bean id="tokenStore" class="cz.cvut.authserver.oauth2.services.internal.TokenStoreImpl"
+    <bean id="tokenStore" class="cz.cvut.zuul.oaas.services.internal.TokenStoreImpl"
           p:accessTokenDAO-ref="accessTokenDAO"
           p:refreshTokenDAO-ref="refreshTokenDAO" />
 

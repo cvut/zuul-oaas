@@ -203,14 +203,14 @@
     <beans profile="ldap-2">
         
         <!--context mapper to create FIT LDAP user object-->
-        <bean id="extendedFITUserDetailsContextMapper" class="cz.cvut.authserver.oauth2.support.ExtendedUserDetailsContextMapper" 
+        <bean id="extendedFITUserDetailsContextMapper" class="cz.cvut.zuul.oaas.support.ExtendedUserDetailsContextMapper"
               p:firstnameAttributeName="${ldap.fit.attribute.name.fn}"
               p:lastnameAttributeName="${ldap.fit.attribute.name.sn}"
               p:emailAttributeName="${ldap.fit.attribute.name.email}"
               p:passwordAttributeName="${ldap.fit.attribute.name.password}" />
 
         <!--context mapper to create FEL LDAP user object-->
-        <bean id="extendedFELUserDetailsContextMapper" class="cz.cvut.authserver.oauth2.support.ExtendedUserDetailsContextMapper" 
+        <bean id="extendedFELUserDetailsContextMapper" class="cz.cvut.zuul.oaas.support.ExtendedUserDetailsContextMapper"
               p:firstnameAttributeName="${ldap.fel.attribute.name.fn}"
               p:lastnameAttributeName="${ldap.fel.attribute.name.sn}"
               p:emailAttributeName="${ldap.fel.attribute.name.email}"

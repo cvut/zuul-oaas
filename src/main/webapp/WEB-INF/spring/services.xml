@@ -11,11 +11,11 @@
     <!--////////// Services //////////-->
 
 
-    <bean id="resourceService" class="cz.cvut.authserver.oauth2.services.ResourceServiceImpl"
+    <bean id="resourceService" class="cz.cvut.zuul.oaas.services.ResourceServiceImpl"
           p:resourceDAO-ref="resourceDAO"
           p:identifierGenerator-ref="identifierGenerator" />
 
-    <bean id="clientsService" class="cz.cvut.authserver.oauth2.services.ClientsServiceImpl"
+    <bean id="clientsService" class="cz.cvut.zuul.oaas.services.ClientsServiceImpl"
           p:clientDAO-ref="clientDAO"
           p:tokenStore-ref="tokenStore"
           p:credentialsGenerator-ref="credentialsGenerator"
@@ -28,7 +28,7 @@
           p:messageInterpolator-ref="messageInterpolator" />
 
     <!-- Hibernate Validator which can interpolate the value being validated in the constraint message -->
-    <bean id="messageInterpolator" class="cz.cvut.authserver.oauth2.support.ValueFormatterMessageInterpolatorFactoryBean"
+    <bean id="messageInterpolator" class="cz.cvut.zuul.oaas.support.ValueFormatterMessageInterpolatorFactoryBean"
           p:messageSource-ref="validatorMessageSource" />
 
     <bean id="validatorMessageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource"
@@ -43,18 +43,18 @@
 
     <!--///// DTO Mapping /////-->
 
-    <bean id="mapperFacade" class="cz.cvut.authserver.oauth2.support.MapperFacadeFactoryBean"
+    <bean id="mapperFacade" class="cz.cvut.zuul.oaas.support.MapperFacadeFactoryBean"
           p:converters-ref="mapperConverters" />
 
     <util:list id="mapperConverters">
-        <bean class="cz.cvut.authserver.oauth2.support.CaseInsensitiveToEnumConverter" />
-        <bean class="cz.cvut.authserver.oauth2.support.GrantedAuthorityConverter" />
+        <bean class="cz.cvut.zuul.oaas.support.CaseInsensitiveToEnumConverter" />
+        <bean class="cz.cvut.zuul.oaas.support.GrantedAuthorityConverter" />
     </util:list>
 
 
     <!--///// Generators /////-->
 
-    <bean id="credentialsGenerator" class="cz.cvut.authserver.oauth2.generators.OAuth2ClientCredentialsGeneratorImpl" />
-    <bean id="identifierGenerator" class="cz.cvut.authserver.oauth2.generators.IdentifierGeneratorImpl" />
+    <bean id="credentialsGenerator" class="cz.cvut.zuul.oaas.generators.OAuth2ClientCredentialsGeneratorImpl" />
+    <bean id="identifierGenerator" class="cz.cvut.zuul.oaas.generators.IdentifierGeneratorImpl" />
 
 </beans>

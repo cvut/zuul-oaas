@@ -10,7 +10,7 @@
     </appender>
 
 
-    <logger name="cz.cvut.authserver.oauth2">
+    <logger name="cz.cvut.zuul.oaas">
         <level value="DEBUG" />
     </logger>
 

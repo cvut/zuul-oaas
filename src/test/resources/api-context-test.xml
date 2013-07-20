@@ -13,17 +13,17 @@
     
     <!-- ClientsController is tested using mockito -->
 
-    <bean id="resourcesController" class="cz.cvut.authserver.oauth2.api.resources.ResourcesController"
+    <bean id="resourcesController" class="cz.cvut.zuul.oaas.api.resources.ResourcesController"
           p:resourceService-ref="resourceService" />
     
     <!--///// Services /////-->
 
-    <bean id="resourceService" class="cz.cvut.authserver.oauth2.services.ResourceServiceImpl"
+    <bean id="resourceService" class="cz.cvut.zuul.oaas.services.ResourceServiceImpl"
           p:resourceDAO-ref="resourceDAO" />
     
     <!--///// DAO /////-->
 
-    <bean id="resourceDAO" class="cz.cvut.authserver.oauth2.dao.memory.ResourceInMemoryDAO"
+    <bean id="resourceDAO" class="cz.cvut.zuul.oaas.dao.memory.ResourceInMemoryDAO"
           p:identifierGenerator-ref="identifierGenerator"/>
 
     <!--///// Validators /////-->
@@ -33,8 +33,8 @@
     
     <!--///// Generators /////-->
     
-    <bean id="credentialsGenerator" class="cz.cvut.authserver.oauth2.generators.OAuth2ClientCredentialsGeneratorImpl" />
-    <bean id="identifierGenerator" class="cz.cvut.authserver.oauth2.generators.IdentifierGeneratorImpl" />
+    <bean id="credentialsGenerator" class="cz.cvut.zuul.oaas.generators.OAuth2ClientCredentialsGeneratorImpl" />
+    <bean id="identifierGenerator" class="cz.cvut.zuul.oaas.generators.IdentifierGeneratorImpl" />
 
     <!-- Bind our message properties -->
     <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource"

@@ -48,14 +48,14 @@
 
     <!--///// Controllers /////-->
 
-    <bean id="mainController" class="cz.cvut.authserver.oauth2.controllers.MainController" />
+    <bean id="mainController" class="cz.cvut.zuul.oaas.controllers.MainController" />
 
     <!-- Override the default mappings for approval and error pages -->
-    <bean id="accessConfirmationController" class="cz.cvut.authserver.oauth2.controllers.AccessConfirmationController"
+    <bean id="accessConfirmationController" class="cz.cvut.zuul.oaas.controllers.AccessConfirmationController"
           p:clientsService-ref="clientsService" />
     
     <!-- Check Token Enpoint for Resource Servers -->
-    <bean id="checkTokenEndpoint" class="cz.cvut.authserver.oauth2.controllers.CheckTokenEndpoint"
+    <bean id="checkTokenEndpoint" class="cz.cvut.zuul.oaas.controllers.CheckTokenEndpoint"
           p:accessTokenDAO-ref="accessTokenDAO"
           p:clientsService-ref="clientsService" />
 

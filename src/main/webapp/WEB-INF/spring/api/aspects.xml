@@ -15,7 +15,7 @@
     <aop:aspectj-autoproxy/>-->
     
     <!-- Aspect -->
-    <bean id="loggingAspect" class="cz.cvut.authserver.oauth2.api.resources.aspect.LoggingAspect" />
+    <bean id="loggingAspect" class="cz.cvut.zuul.oaas.api.resources.aspect.LoggingAspect" />
     
     <!-- proxy-target-class forces the use of CGLIB proxies, which allows proxying classes in addition to interfaces, 
     sicne we need to create aspect on controller which doesn't implement any interface-->
@@ -25,13 +25,13 @@
  
             <!-- @AfterReturning -->
             <aop:pointcut id="updateLogging"
-                  expression="execution(* cz.cvut.authserver.oauth2.api.resources.ClientsController.add*(..))" />
+                  expression="execution(* cz.cvut.zuul.oaas.api.resources.ClientsController.add*(..))" />
  
             <aop:after-returning method="logUpdate" pointcut-ref="updateLogging" />
 
             <!-- @AfterReturning -->
             <aop:pointcut id="deleteLogging"
-                  expression="execution(* cz.cvut.authserver.oauth2.api.resources.ClientsController.delete*(..))" />
+                  expression="execution(* cz.cvut.zuul.oaas.api.resources.ClientsController.delete*(..))" />
  
             <aop:after-returning method="logDelete" pointcut-ref="deleteLogging" />
  

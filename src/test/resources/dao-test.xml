@@ -26,7 +26,7 @@
         <mongo:db-factory mongo-ref="mongo" id="mongoDbFactory" dbname="authtest" write-concern="SAFE" />
 
         <mongo:mapping-converter id="mappingConverter" db-factory-ref="mongoDbFactory">
-            <mongo:custom-converters base-package="cz.cvut.authserver.oauth2.dao.mongo.converters" />
+            <mongo:custom-converters base-package="cz.cvut.zuul.oaas.dao.mongo.converters" />
         </mongo:mapping-converter>
 
         <bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean" />
@@ -38,16 +38,16 @@
         </bean>
 
 
-        <bean id="mongoAccessTokenDAO" class="cz.cvut.authserver.oauth2.dao.mongo.MongoAccessTokenDAO"
+        <bean id="mongoAccessTokenDAO" class="cz.cvut.zuul.oaas.dao.mongo.MongoAccessTokenDAO"
               p:mongoOperations-ref="mongoTemplate" />
 
-        <bean id="mongoRefreshTokenDAO" class="cz.cvut.authserver.oauth2.dao.mongo.MongoRefreshTokenDAO"
+        <bean id="mongoRefreshTokenDAO" class="cz.cvut.zuul.oaas.dao.mongo.MongoRefreshTokenDAO"
               p:mongoOperations-ref="mongoTemplate" />
 
-        <bean id="mongoClientDAO" class="cz.cvut.authserver.oauth2.dao.mongo.MongoClientDAO"
+        <bean id="mongoClientDAO" class="cz.cvut.zuul.oaas.dao.mongo.MongoClientDAO"
               p:mongoOperations-ref="mongoTemplate"  />
 
-        <bean id="mongoResourceDAO" class="cz.cvut.authserver.oauth2.dao.mongo.MongoResourceDAO"
+        <bean id="mongoResourceDAO" class="cz.cvut.zuul.oaas.dao.mongo.MongoResourceDAO"
               p:mongoOperations-ref="mongoTemplate"  />
 
     </beans>
@@ -65,16 +65,16 @@
               p:dataSource-ref="dataSource"  />
 
 
-        <bean id="jdbcClientDAO" class="cz.cvut.authserver.oauth2.dao.jdbc.JdbcClientDAO"
+        <bean id="jdbcClientDAO" class="cz.cvut.zuul.oaas.dao.jdbc.JdbcClientDAO"
               p:jdbcOperations-ref="jdbcTemplate"  />
 
-        <bean id="jdbcAccessTokenDAO" class="cz.cvut.authserver.oauth2.dao.jdbc.JdbcAccessTokenDAO"
+        <bean id="jdbcAccessTokenDAO" class="cz.cvut.zuul.oaas.dao.jdbc.JdbcAccessTokenDAO"
               p:jdbcOperations-ref="jdbcTemplate"  />
 
-        <bean id="jdbcRefreshTokenDAO" class="cz.cvut.authserver.oauth2.dao.jdbc.JdbcRefreshTokenDAO"
+        <bean id="jdbcRefreshTokenDAO" class="cz.cvut.zuul.oaas.dao.jdbc.JdbcRefreshTokenDAO"
               p:jdbcOperations-ref="jdbcTemplate"  />
 
-        <bean id="jdbcResourceDAO" class="cz.cvut.authserver.oauth2.dao.jdbc.JdbcResourceDAO"
+        <bean id="jdbcResourceDAO" class="cz.cvut.zuul.oaas.dao.jdbc.JdbcResourceDAO"
               p:jdbcOperations-ref="jdbcTemplate"  />
 
     </beans>

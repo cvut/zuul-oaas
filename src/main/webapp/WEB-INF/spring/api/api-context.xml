@@ -16,13 +16,13 @@
 
     <!--///// Controllers /////-->
 
-    <bean id="clientsController" class="cz.cvut.authserver.oauth2.api.resources.ClientsController"
+    <bean id="clientsController" class="cz.cvut.zuul.oaas.api.resources.ClientsController"
           p:clientsService-ref="clientsService" />
 
-    <bean id="resourcesController" class="cz.cvut.authserver.oauth2.api.resources.ResourcesController"
+    <bean id="resourcesController" class="cz.cvut.zuul.oaas.api.resources.ResourcesController"
           p:resourceService-ref="resourceService" />
 
-    <bean id="tokensController" class="cz.cvut.authserver.oauth2.api.resources.TokensController"
+    <bean id="tokensController" class="cz.cvut.zuul.oaas.api.resources.TokensController"
           p:tokenDao-ref="accessTokenDAO"
           p:clientsService-ref="clientsService"/>
 
