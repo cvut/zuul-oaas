@@ -1,6 +1,8 @@
 package cz.cvut.zuul.oaas.api.resources;
 
 import cz.cvut.zuul.oaas.Factories;
+import cz.cvut.zuul.oaas.api.models.ClientDTO;
+import cz.cvut.zuul.oaas.services.ClientsService;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -8,9 +10,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.security.oauth2.provider.ClientDetails;
-import org.springframework.security.oauth2.provider.ClientDetailsService;
-import org.springframework.security.oauth2.provider.ClientRegistrationService;
 import org.springframework.security.oauth2.provider.NoSuchClientException;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -18,7 +17,8 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItems;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
@@ -26,47 +26,45 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standal
  *
  * @author Jakub Jirutka <jakub@jirutka.cz>
  */
-@Ignore
 @RunWith(MockitoJUnitRunner.class)
 public class ClientsControllerTest {
 
-    private static final String API_VERSION = "v1";
-    private static final String BASE_URI = "/" + API_VERSION + "/clients/";
-    private static final String MIME_TYPE_JSON = "application/json;charset=UTF-8";
+    private static final String
+            BASE_URI = "/v1/clients/",
+            MIME_TYPE_JSON = "application/json;charset=UTF-8";
+
     // JSON attributes
-    public static final String CLIENT_ID = "client_id",
+    public static final String
+            CLIENT_ID = "client_id",
             CLIENT_SECRET = "client_secret",
             RESOURCE_IDS = "resource_ids",
             GRANT_TYPES = "authorized_grant_types",
             REDIRECT_URI = "redirect_uri",
             ACCESS_TOKEN_VALIDITY = "access_token_validity",
             REFRESH_TOKEN_VALIDITY = "refresh_token_validity";
-    private @Mock
-    ClientRegistrationService clientRegistrationService;
-    private @Mock
-    ClientDetailsService clientDetailsService;
-    private @InjectMocks
-    ClientsController clientsController;
-    private MockMvc mock;
+
+    @Mock ClientsService clientsService;
+    @InjectMocks ClientsController clientsController;
+    MockMvc mockMvc;
 
     @Before
     public void buildMocks() {
-        mock = standaloneSetup(clientsController).build();
+        mockMvc = standaloneSetup(clientsController).build();
     }
 
     @Test
     public void get_client_details_for_non_existing_client_id() throws Exception {
-        doThrow(NoSuchClientException.class).when(clientDetailsService).loadClientByClientId("666");
+        doThrow(NoSuchClientException.class).when(clientsService).findClientById("666");
 
-        mock.perform(get(BASE_URI + 666).accept(APPLICATION_JSON)).andExpect(status().isNotFound());
+        mockMvc.perform(get(BASE_URI + 666).accept(APPLICATION_JSON)).andExpect(status().isNotFound());
     }
 
     @Test
     public void get_client_details() throws Exception {
-        ClientDetails expected = Factories.createRandomClientDetails("42");
-        doReturn(expected).when(clientDetailsService).loadClientByClientId("42");
+        ClientDTO expected = Factories.createRandomClientDTO("42");
+        when(clientsService.findClientById("42")).thenReturn(expected);
 
-        mock.perform(get(BASE_URI + 42)
+        mockMvc.perform(get(BASE_URI + 42)
                 .accept(APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MIME_TYPE_JSON))
@@ -117,16 +115,16 @@ public class ClientsControllerTest {
 
     @Test
     public void remove_client_details_for_unkown_client_id() throws Exception {
-        doThrow(NoSuchClientException.class).when(clientRegistrationService).removeClientDetails("666");
+        doThrow(NoSuchClientException.class).when(clientsService).removeClient("666");
 
-        mock.perform(delete(BASE_URI + 666)).andExpect(status().isNotFound());
+        mockMvc.perform(delete(BASE_URI + 666)).andExpect(status().isNotFound());
     }
 
     @Test
     public void remove_client_details() throws Exception {
-        mock.perform(delete(BASE_URI + 123)).andExpect(status().isNoContent());
+        mockMvc.perform(delete(BASE_URI + 123)).andExpect(status().isNoContent());
 
-        verify(clientRegistrationService).removeClientDetails("123");
+        verify(clientsService).removeClient("123");
     }
 
 }
