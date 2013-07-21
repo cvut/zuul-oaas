@@ -6,6 +6,7 @@ import cz.cvut.zuul.oaas.api.models.TokenDetails;
 import cz.cvut.zuul.oaas.dao.AccessTokenDAO;
 import cz.cvut.zuul.oaas.models.PersistableAccessToken;
 import cz.cvut.zuul.oaas.services.ClientsService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.common.exceptions.InvalidTokenException;
@@ -70,17 +71,18 @@ public class TokensController {
     @ResponseStatus(value = HttpStatus.CONFLICT)
     @ResponseBody
     public JsonExceptionMapping handleTokenProblem(InvalidTokenException ex) {
-        // TODO Should we really return 409 CONFLICT ? Status message from exception is 401
         return new JsonExceptionMapping(CONFLICT.value(), ex.getOAuth2ErrorCode(), ex.getMessage());
     }
 
     
     //////////  Accessors  //////////
 
+    @Autowired
     public void setTokenDao(AccessTokenDAO tokenDao) {
         this.tokenDao = tokenDao;
     }
 
+    @Autowired
     public void setClientsService(ClientsService clientsService) {
         this.clientsService = clientsService;
     }

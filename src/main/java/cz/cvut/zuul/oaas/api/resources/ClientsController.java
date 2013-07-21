@@ -1,12 +1,10 @@
 package cz.cvut.zuul.oaas.api.resources;
 
 import cz.cvut.zuul.oaas.api.models.ClientDTO;
-import cz.cvut.zuul.oaas.api.models.ErrorResponse;
 import cz.cvut.zuul.oaas.models.ImplicitClientDetails;
 import cz.cvut.zuul.oaas.services.ClientsService;
-import org.hibernate.validator.method.MethodConstraintViolationException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.oauth2.common.exceptions.BadClientCredentialsException;
 import org.springframework.security.oauth2.provider.ClientAlreadyExistsException;
 import org.springframework.security.oauth2.provider.NoSuchClientException;
 import org.springframework.stereotype.Controller;
@@ -182,27 +180,15 @@ public class ClientsController {
 
 
     //////////  Exception Handlers  //////////
-    
+
     @ExceptionHandler(NoSuchClientException.class)
-    public ResponseEntity<Void> handleNoSuchClientException(NoSuchClientException ex) {
+    public ResponseEntity<Void> handleNoSuchClientException() {
         return new ResponseEntity<>(NOT_FOUND);
     }
 
     @ExceptionHandler(ClientAlreadyExistsException.class)
-    public ResponseEntity<Void> handleClientAlreadyExistsException(ClientAlreadyExistsException ex) {
+    public ResponseEntity<Void> handleClientAlreadyExistsException() {
         return new ResponseEntity<>(CONFLICT);
-    }
-
-    @ExceptionHandler(BadClientCredentialsException.class)
-    public ResponseEntity<Void> handleBadClientCredentialsException(BadClientCredentialsException ex) {
-        return new ResponseEntity<>(UNAUTHORIZED);
-    }
-
-    @ResponseStatus(BAD_REQUEST)
-    @ExceptionHandler(MethodConstraintViolationException.class)
-    @SuppressWarnings("deprecation") // will be changed after JSR-349 release
-    public @ResponseBody ErrorResponse handleValidationError(MethodConstraintViolationException ex) {
-        return ErrorResponse.from(BAD_REQUEST, ex);
     }
 
 
@@ -212,6 +198,7 @@ public class ClientsController {
         return clientsService;
     }
 
+    @Autowired
     public void setClientsService(ClientsService clientsService) {
         this.clientsService = clientsService;
     }

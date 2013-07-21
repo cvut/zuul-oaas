@@ -4,35 +4,32 @@ import cz.cvut.zuul.oaas.api.models.ClientDTO;
 import cz.cvut.zuul.oaas.dao.AccessTokenDAO;
 import cz.cvut.zuul.oaas.models.PersistableAccessToken;
 import cz.cvut.zuul.oaas.services.ClientsService;
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.common.exceptions.InvalidTokenException;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static cz.cvut.zuul.oaas.Factories.*;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItems;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
 /**
  * @author Jakub Jirutka <jakub@jirutka.cz>
  * @author Tomas Mano <tomasmano@gmail.com>
  */
-@RunWith(MockitoJUnitRunner.class)
-public class TokensControllerTest {
+@ContextConfiguration
+public class TokensControllerIT extends AbstractResourceIT {
 
     private static final String
             TOKEN_DETAILS_URI = "/v1/tokens/",
@@ -47,23 +44,28 @@ public class TokensControllerTest {
             CLIENT_LOCKED = "client_locked",
             SCOPES = "scopes";
 
-    private @Mock AccessTokenDAO accessTokenDAO;
-    private @Mock ClientsService clientsService;
-    private @InjectMocks TokensController tokensController;
+    @Configuration static class Context {
 
-    private MockMvc controller;
-
-
-
-    public @Before void buildMocks() {
-        controller = standaloneSetup(tokensController).build();
+        @Bean AccessTokenDAO dao() {
+            return Mockito.mock(AccessTokenDAO.class);
+        }
+        @Bean ClientsService clientsService() {
+            return Mockito.mock(ClientsService.class);
+        }
+        @Bean TokensController controller() {
+            return new TokensController();
+        }
     }
+
+    @Autowired AccessTokenDAO accessTokenDAO;
+    @Autowired ClientsService clientsService;
+    @Autowired MockMvc mockMvc;
 
 
     public @Test void check_non_existing_token() throws Exception {
         doThrow(InvalidTokenException.class).when(accessTokenDAO).findOne("666");
 
-        controller.perform(get(TOKEN_DETAILS_URI + 666)
+        mockMvc.perform(get(TOKEN_DETAILS_URI + 666)
                 .accept(APPLICATION_JSON))
                 .andExpect(status().isConflict());
     }
@@ -78,7 +80,7 @@ public class TokensControllerTest {
         doReturn(new PersistableAccessToken(expToken, expAuth)).when(accessTokenDAO).findOne(expToken.getValue());
         doReturn(expClientDTO).when(clientsService).findClientById(clientId);
 
-        controller.perform(get(TOKEN_DETAILS_URI + expToken.getValue())
+        mockMvc.perform(get(TOKEN_DETAILS_URI + expToken.getValue())
                 .accept(APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MIME_TYPE_JSON))
@@ -94,7 +96,7 @@ public class TokensControllerTest {
     public @Test void invalidate_non_existing_token() throws Exception {
         when(accessTokenDAO.exists("666")).thenReturn(false);
 
-        controller.perform(delete(TOKEN_DETAILS_URI + 666))
+        mockMvc.perform(delete(TOKEN_DETAILS_URI + 666))
                 .andExpect(status().isConflict());
     }
 
@@ -103,7 +105,7 @@ public class TokensControllerTest {
 
         when(accessTokenDAO.exists(expToken.getValue())).thenReturn(true);
 
-        controller.perform(delete(TOKEN_DETAILS_URI + expToken))
+        mockMvc.perform(delete(TOKEN_DETAILS_URI + expToken))
                 .andExpect(status().isNoContent());
     }
 }

@@ -3,14 +3,14 @@ package cz.cvut.zuul.oaas.api.resources;
 import cz.cvut.zuul.oaas.Factories;
 import cz.cvut.zuul.oaas.api.models.ClientDTO;
 import cz.cvut.zuul.oaas.services.ClientsService;
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.oauth2.provider.NoSuchClientException;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.equalTo;
@@ -20,21 +20,19 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
 /**
- *
  * @author Jakub Jirutka <jakub@jirutka.cz>
  */
-@RunWith(MockitoJUnitRunner.class)
-public class ClientsControllerTest {
+@ContextConfiguration
+public class ClientsControllerIT extends AbstractResourceIT {
 
     private static final String
             BASE_URI = "/v1/clients/",
             MIME_TYPE_JSON = "application/json;charset=UTF-8";
 
     // JSON attributes
-    public static final String
+    private static final String
             CLIENT_ID = "client_id",
             CLIENT_SECRET = "client_secret",
             RESOURCE_IDS = "resource_ids",
@@ -43,14 +41,20 @@ public class ClientsControllerTest {
             ACCESS_TOKEN_VALIDITY = "access_token_validity",
             REFRESH_TOKEN_VALIDITY = "refresh_token_validity";
 
-    @Mock ClientsService clientsService;
-    @InjectMocks ClientsController clientsController;
-    MockMvc mockMvc;
 
-    @Before
-    public void buildMocks() {
-        mockMvc = standaloneSetup(clientsController).build();
+    @Configuration static class Context {
+
+        @Bean ClientsService clientsService() {
+            return Mockito.mock(ClientsService.class);
+        }
+        @Bean ClientsController controller() {
+            return new ClientsController();
+        }
     }
+
+    @Autowired ClientsService clientsService;
+    @Autowired MockMvc mockMvc;
+
 
     @Test
     public void get_client_details_for_non_existing_client_id() throws Exception {

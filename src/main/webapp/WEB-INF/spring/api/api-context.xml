@@ -26,6 +26,8 @@
           p:tokenDao-ref="accessTokenDAO"
           p:clientsService-ref="clientsService"/>
 
+    <bean id="exceptionHandler" class="cz.cvut.zuul.oaas.api.resources.CommonExceptionHandler" />
+
     
     <!-- Import additional configuration files -->
     <import resource="aspects.xml" />

@@ -1,10 +1,8 @@
 package cz.cvut.zuul.oaas.api.resources;
 
-import cz.cvut.zuul.oaas.api.models.ErrorResponse;
 import cz.cvut.zuul.oaas.api.resources.exceptions.NoSuchResourceException;
 import cz.cvut.zuul.oaas.models.Resource;
 import cz.cvut.zuul.oaas.services.ResourceService;
-import org.hibernate.validator.method.MethodConstraintViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -68,17 +66,10 @@ public class ResourcesController {
 
 
     //////////  Exceptions Handling  //////////
-    
-    @ExceptionHandler(NoSuchResourceException.class)
-    public ResponseEntity<Void> handleNoSuchClient(NoSuchResourceException ex) {
-        return new ResponseEntity<>(NOT_FOUND);
-    }
 
-    @ResponseStatus(BAD_REQUEST)
-    @ExceptionHandler(MethodConstraintViolationException.class)
-    @SuppressWarnings("deprecation") // will be changed after JSR-349 release
-    public @ResponseBody ErrorResponse handleValidationError(MethodConstraintViolationException ex) {
-        return ErrorResponse.from(BAD_REQUEST, ex);
+    @ExceptionHandler(NoSuchResourceException.class)
+    public ResponseEntity<Void> handleNoSuchResourceException() {
+        return new ResponseEntity<>(NOT_FOUND);
     }
 
 
