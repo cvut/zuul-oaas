@@ -30,7 +30,7 @@ import java.util.Collection;
  *
  * @author Jakub Jirutka <jakub@jirutka.cz>
  */
-@SpELAssert(value = "hasRedirectUri()", applyIf = "authorizedGrantTypes.contains('auth_code')",
+@SpELAssert(value = "hasRedirectUri()", applyIf = "authorizedGrantTypes.contains('authorization_code')",
             message = "{validator.missing_redirect_uri}")
 @JsonAutoDetect(JsonMethod.NONE)
 @JsonSerialize(include = Inclusion.NON_DEFAULT)

@@ -8,6 +8,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -37,7 +38,7 @@ public class Resource implements Serializable {
     @JsonProperty("auth")
     private Auth auth;
 
-    @NotNull @Size(max=256)
+    @NotEmpty @Size(max=256)
     @ValidURI(scheme={"https", "http"})
     @JsonProperty("base_url")
     private String baseUrl;
@@ -46,21 +47,20 @@ public class Resource implements Serializable {
     @JsonProperty("description")
     private String description;
     
-    @NotNull @Size(max=256)
+    @NotEmpty @Size(max=256)
     @JsonProperty("name")
     private String name;
     
-    @NotNull @Size(max=256)
+    @Size(max=256)
     @JsonProperty("version")
     private String version;
     
-    @NotNull @Size(max=256)
+    @NotEmpty @Size(max=256)
     @JsonProperty("title")
     private String title;
 
     @Indexed
-    @NotNull
-    @EnumValue(Visibility.class)
+    @NotEmpty @EnumValue(Visibility.class)
     @JsonProperty("visibility")
     private String visibility = Visibility.PUBLIC.toString();
 
