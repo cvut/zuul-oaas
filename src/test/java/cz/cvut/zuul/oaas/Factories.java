@@ -33,6 +33,7 @@ import org.springframework.security.core.userdetails.UserDetails;
  *
  * @author Jakub Jirutka <jakub@jirutka.cz>
  */
+@Deprecated
 public class Factories {
 
     private static final int MAX_STRING_LENGTH = 16;

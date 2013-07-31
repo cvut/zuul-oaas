@@ -409,6 +409,13 @@
             <version>0.7-groovy-2.0</version>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>net.java.quickcheck</groupId>
+            <artifactId>quickcheck</artifactId>
+            <version>0.6</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
 
