@@ -94,7 +94,7 @@ class ObjectFeeder {
         Class type = field.genericType.actualTypeArguments[0]
 
         return new Object[anyInteger(notNull ? 1 : 0, 4)].collect {
-            generateValueOfType(type, field)
+            generateValueOfType(type, field, true)
         }
     }
 
