@@ -5,10 +5,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
-import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken
-import org.springframework.security.oauth2.common.DefaultOAuth2RefreshToken
-import org.springframework.security.oauth2.common.OAuth2AccessToken
-import org.springframework.security.oauth2.common.OAuth2RefreshToken
+import org.springframework.security.oauth2.common.*
 import org.springframework.security.oauth2.provider.AuthorizationRequest
 import org.springframework.security.oauth2.provider.DefaultAuthorizationRequest
 import org.springframework.security.oauth2.provider.OAuth2Authentication
@@ -82,6 +79,10 @@ class ObjectFactory {
             new DefaultOAuth2RefreshToken(anyLetterString(5, 10))
         }
 
+        registerBuilder(DefaultExpiringOAuth2RefreshToken) {
+            new DefaultExpiringOAuth2RefreshToken(anyLetterString(5, 10), anyDate())
+        }
+
 
         //////// Authentication ////////
 
@@ -133,11 +134,12 @@ class ObjectFactory {
             )
         }
 
-
+        
         //////// Aliases ////////
 
         registerAlias(OAuth2AccessToken, DefaultOAuth2AccessToken)
         registerAlias(OAuth2RefreshToken, DefaultOAuth2RefreshToken)
+        registerAlias(ExpiringOAuth2RefreshToken, DefaultExpiringOAuth2RefreshToken)
         registerAlias(AuthorizationRequest, DefaultAuthorizationRequest)
         registerAlias(GrantedAuthority, SimpleGrantedAuthority)
         registerAlias(Authentication, UsernamePasswordAuthenticationToken)
