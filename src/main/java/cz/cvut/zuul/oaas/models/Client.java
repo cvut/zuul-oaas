@@ -9,7 +9,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.provider.ClientDetails;
 import org.springframework.util.CollectionUtils;
 
-import java.net.URI;
 import java.util.*;
 
 /**
@@ -32,7 +31,7 @@ public class Client implements ClientDetails {
 	private Set<String> resourceIds = new LinkedHashSet<>(0);
 	private Set<String> authorizedGrantTypes = new LinkedHashSet<>(0);
 	private Set<String> registeredRedirectUri = new LinkedHashSet<>(0);
-	private Collection<GrantedAuthority> authorities = new ArrayList<>(0);
+	private Set<GrantedAuthority> authorities = new LinkedHashSet<>(0);
 	private Integer accessTokenValiditySeconds;
 	private Integer refreshTokenValiditySeconds;
 
@@ -50,7 +49,7 @@ public class Client implements ClientDetails {
         this.resourceIds = prototype.getResourceIds();
         this.authorizedGrantTypes = prototype.getAuthorizedGrantTypes();
         this.registeredRedirectUri = prototype.getRegisteredRedirectUri();
-        this.authorities = prototype.getAuthorities();
+        this.authorities = new LinkedHashSet<>(prototype.getAuthorities());
         this.accessTokenValiditySeconds = prototype.getAccessTokenValiditySeconds();
         this.refreshTokenValiditySeconds = prototype.getRefreshTokenValiditySeconds();
     }
@@ -107,20 +106,19 @@ public class Client implements ClientDetails {
     public Set<String> getRegisteredRedirectUri() {
         return registeredRedirectUri;
     }
-    public void setRegisteredRedirectUri(Collection<URI> registeredRedirectUris) {
-        this.registeredRedirectUri = new LinkedHashSet<>();
-        for (URI uri : registeredRedirectUris) {
-            this.registeredRedirectUri.add(uri.toString());
-        }
+    public void setRegisteredRedirectUri(Collection<String> redirectUris) {
+        this.registeredRedirectUri = resourceIds != null
+            ? new LinkedHashSet<>(redirectUris)
+            : Collections.<String>emptySet();
     }
 
-    public Collection<GrantedAuthority> getAuthorities() {
+    public Set<GrantedAuthority> getAuthorities() {
         return authorities;
     }
     public void setAuthorities(Collection<GrantedAuthority> authorities) {
         this.authorities = authorities != null
-                ? new ArrayList<>(authorities)
-                : new ArrayList<GrantedAuthority>(0);
+                ? new LinkedHashSet<>(authorities)
+                : Collections.<GrantedAuthority>emptySet();
     }
 
     public Integer getAccessTokenValiditySeconds() {
