@@ -1,6 +1,7 @@
 package cz.cvut.zuul.oaas.api.resources
 
 import cz.cvut.zuul.oaas.test.AdvicedStandaloneMockMvcBuilder
+import cz.cvut.zuul.oaas.test.factories.ObjectFactory
 import groovy.json.JsonSlurper
 import org.springframework.mock.web.MockHttpServletResponse
 import org.springframework.test.web.servlet.MockMvc
@@ -15,6 +16,9 @@ import spock.lang.Specification
 abstract class AbstractControllerIT extends Specification {
 
     protected static final CONTENT_TYPE_JSON = "application/json;charset=UTF-8"
+
+    @Delegate @Shared
+    ObjectFactory factory = new ObjectFactory()
 
     @Shared MockMvc mockMvc
     @Shared controller

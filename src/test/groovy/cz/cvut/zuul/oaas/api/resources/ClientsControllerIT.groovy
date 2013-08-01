@@ -1,6 +1,5 @@
 package cz.cvut.zuul.oaas.api.resources
 
-import cz.cvut.zuul.oaas.Factories
 import cz.cvut.zuul.oaas.api.models.ClientDTO
 import cz.cvut.zuul.oaas.services.ClientsService
 import org.hibernate.validator.method.MethodConstraintViolationException
@@ -52,7 +51,7 @@ class ClientsControllerIT extends AbstractControllerIT {
                 json.refresh_token_validity == expected.refreshTokenValiditySeconds
             }
         where:
-            expected = Factories.createRandomClientDTO('42')
+            expected = build(ClientDTO, [clientId: '42'])
     }
 
     def 'POST: invalid client'() {

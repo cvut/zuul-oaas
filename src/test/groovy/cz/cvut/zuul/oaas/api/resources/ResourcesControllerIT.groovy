@@ -1,6 +1,5 @@
 package cz.cvut.zuul.oaas.api.resources
 
-import cz.cvut.zuul.oaas.Factories
 import cz.cvut.zuul.oaas.api.resources.exceptions.NoSuchResourceException
 import cz.cvut.zuul.oaas.models.Resource
 import cz.cvut.zuul.oaas.services.ResourceService
@@ -36,7 +35,7 @@ class ResourcesControllerIT extends AbstractControllerIT {
                 json.size() == 3
             }
         where:
-            expected = [Factories.createResource()] * 3
+            expected = [build(Resource)] * 3
     }
 
     void 'GET: non existing resource'() {
@@ -72,7 +71,7 @@ class ResourcesControllerIT extends AbstractControllerIT {
                 json.visibility         == expected.visibility
             }
         where:
-            expected = Factories.createResource('123')
+            expected = build(Resource, [id: '123'])
     }
 
 
