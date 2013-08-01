@@ -1,18 +1,31 @@
 package cz.cvut.zuul.oaas.test.factories
 
+import cz.cvut.zuul.oaas.models.Auth
+import cz.cvut.zuul.oaas.models.Client
 import cz.cvut.zuul.oaas.models.ExtendedUserDetails
+import cz.cvut.zuul.oaas.models.Resource
+import cz.cvut.zuul.oaas.models.Scope
+import cz.cvut.zuul.oaas.models.enums.AuthorizationGrant
+import cz.cvut.zuul.oaas.models.enums.Visibility
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
-import org.springframework.security.oauth2.common.*
+import org.springframework.security.oauth2.common.DefaultExpiringOAuth2RefreshToken
+import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken
+import org.springframework.security.oauth2.common.DefaultOAuth2RefreshToken
+import org.springframework.security.oauth2.common.ExpiringOAuth2RefreshToken
+import org.springframework.security.oauth2.common.OAuth2AccessToken
+import org.springframework.security.oauth2.common.OAuth2RefreshToken
 import org.springframework.security.oauth2.provider.AuthorizationRequest
 import org.springframework.security.oauth2.provider.DefaultAuthorizationRequest
 import org.springframework.security.oauth2.provider.OAuth2Authentication
 
+import static net.java.quickcheck.generator.CombinedGeneratorSamples.anyList
 import static net.java.quickcheck.generator.CombinedGeneratorSamples.anyMap
 import static net.java.quickcheck.generator.CombinedGeneratorSamples.anySet
 import static net.java.quickcheck.generator.PrimitiveGeneratorSamples.*
+import static net.java.quickcheck.generator.PrimitiveGenerators.enumValues
 import static net.java.quickcheck.generator.PrimitiveGenerators.integers
 import static net.java.quickcheck.generator.PrimitiveGenerators.letterStrings
 
@@ -134,7 +147,46 @@ class ObjectFactory {
             )
         }
 
-        
+
+        registerBuilder(Client) { values ->
+            def roles = new GrantedAuthority[anyInteger(0, 3)].collect {
+                build(GrantedAuthority)
+            }
+            def client = new Client(
+                clientId: anyLetterString(5, 10),
+                authorizedGrantTypes: anySet(enumValues(AuthorizationGrant), 1, 2),
+                authorities: roles
+            )
+            ObjectFeeder.populate(client)
+            values.each { prop, value ->
+                client[prop] = value
+            }
+            return client
+        }
+
+        registerBuilder(Resource) { values ->
+            def scopes = new Scope[anyInteger(0, 3)].collect {
+                build(Scope)
+            }
+            def resource = new Resource(
+                    id: anyLetterString(5, 10),
+                    baseUrl: 'http://example.org',
+                    description: anyLetterString(0, 255),
+                    name: anyLetterString(5, 255),
+                    version: anyLetterString(0, 255),
+                    title: anyLetterString(0, 255),
+                    visibility: anyEnumValue(Visibility).toString(),
+                    auth: new Auth(
+                            scopes: scopes
+                    )
+            )
+            values.each { prop, value ->
+                resource[prop] = value
+            }
+            return resource
+        }
+
+
         //////// Aliases ////////
 
         registerAlias(OAuth2AccessToken, DefaultOAuth2AccessToken)

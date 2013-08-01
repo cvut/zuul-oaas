@@ -86,7 +86,7 @@ public class Factories {
         client.setClientId( clientId );
         client.setClientSecret( randomString() );
         client.setRefreshTokenValiditySeconds( randomInt() );
-        client.setRegisteredRedirectUri( asList(URI.create("https://app.cvut.cz")) );
+        client.setRegisteredRedirectUri( asList("https://app.cvut.cz") );
         client.setResourceIds( randomStringList(DEFAULT_LIST_SIZE) );
         client.setScope( randomStringList(DEFAULT_LIST_SIZE) );
         client.setProductName( randomString() );
