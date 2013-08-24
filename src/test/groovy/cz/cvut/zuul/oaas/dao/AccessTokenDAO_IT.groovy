@@ -96,17 +96,33 @@ class AccessTokenDAO_IT extends AbstractDAO_IT<PersistableAccessToken> {
             result.size() == 2
     }
 
-    def 'remove token by refresh token'() {
+    def 'delete token by refresh token'() {
         setup:
             def refreshToken = build(OAuth2RefreshToken)
             def accessToken = build(OAuth2AccessToken, [refreshToken: refreshToken])
             def entity = new PersistableAccessToken(accessToken, build(OAuth2Authentication, [clientOnly: true]))
 
             dao.save(entity)
-            assert dao.findOne(accessToken.value)
+            assert dao.exists(accessToken.value)
         when:
             dao.deleteByRefreshToken(refreshToken)
         then:
-            ! dao.findOne(refreshToken.value)
+            ! dao.exists(refreshToken.value)
+    }
+
+    def 'delete token by clientId'() {
+        setup:
+            def clientId = 'someClientId'
+            def accessToken = new PersistableAccessToken(
+                    build(OAuth2AccessToken),
+                    build(OAuth2Authentication, [clientId: clientId])
+            )
+
+            dao.save(accessToken)
+            assert dao.exists(accessToken.value)
+        when:
+            dao.deleteByClientId(clientId)
+        then:
+            ! dao.exists(accessToken.value)
     }
 }

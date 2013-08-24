@@ -8,4 +8,5 @@ import org.springframework.data.repository.CrudRepository;
  */
 public interface RefreshTokenDAO extends CrudRepository<PersistableRefreshToken, String> {
 
+    void deleteByClientId(String clientId);
 }

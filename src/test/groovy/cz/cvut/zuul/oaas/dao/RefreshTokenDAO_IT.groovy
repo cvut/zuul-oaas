@@ -54,4 +54,20 @@ class RefreshTokenDAO_IT extends AbstractDAO_IT<PersistableRefreshToken> {
         then:
             assertIt actual, expected
     }
+
+    def 'delete token by clientId'() {
+        setup:
+            def clientId = 'someClientId'
+            def refreshToken = new PersistableRefreshToken(
+                    build(OAuth2RefreshToken),
+                    build(OAuth2Authentication, [clientId: clientId])
+            )
+
+            dao.save(refreshToken)
+            assert dao.exists(refreshToken.value)
+        when:
+            dao.deleteByClientId(clientId)
+        then:
+            ! dao.exists(refreshToken.value)
+    }
 }

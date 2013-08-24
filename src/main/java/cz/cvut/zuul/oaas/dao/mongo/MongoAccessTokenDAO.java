@@ -80,6 +80,12 @@ public class MongoAccessTokenDAO
                 entityClass());
     }
 
+    public void deleteByClientId(String clientId) {
+        mongo().remove(query(
+                where(CLIENT_ID).is(clientId)),
+                entityClass());
+    }
+
 
     private Collection<OAuth2AccessToken> findTokensBy(String field, Object value) {
         Query query = query(where(field).is(value));

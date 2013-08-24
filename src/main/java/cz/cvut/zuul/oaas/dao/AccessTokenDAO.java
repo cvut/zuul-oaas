@@ -20,4 +20,6 @@ public interface AccessTokenDAO extends CrudRepository<PersistableAccessToken, S
     Collection<OAuth2AccessToken> findByUserName(String userName);
 
     void deleteByRefreshToken(OAuth2RefreshToken refreshToken);
+
+    void deleteByClientId(String clientId);
 }
