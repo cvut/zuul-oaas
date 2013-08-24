@@ -21,7 +21,7 @@ import org.springframework.security.oauth2.provider.AuthorizationRequest
 import org.springframework.security.oauth2.provider.DefaultAuthorizationRequest
 import org.springframework.security.oauth2.provider.OAuth2Authentication
 
-import static net.java.quickcheck.generator.CombinedGeneratorSamples.anyList
+import static cz.cvut.zuul.oaas.test.factories.CustomGeneratorSamples.anyEmail
 import static net.java.quickcheck.generator.CombinedGeneratorSamples.anyMap
 import static net.java.quickcheck.generator.CombinedGeneratorSamples.anySet
 import static net.java.quickcheck.generator.PrimitiveGeneratorSamples.*
@@ -45,22 +45,28 @@ class ObjectFactory {
     /**
      * Registers builder for the given class.
      *
-     * @param clazz the class under which will be registered
-     * @param closure the closure that builds instance of the class
+     * @param clazz The class under which will be registered.
+     * @param closure The closure that builds instance of the class.
      */
     def <T> void registerBuilder(Class<T> clazz, Closure<? extends T> closure) {
         builders[clazz] = closure
     }
 
-    def <T> void registerAlias(Class<T> alias, Class<? extends T> existing) {
-        builders[alias] = builders[existing]
+    /**
+     * Registers superclass key for the already registered builder.
+     *
+     * @param superClass The superclass to register.
+     * @param registeredClass The class that has already registered builder.
+     */
+    def <T> void registerSuperclass(Class<T> superClass, Class<? extends T> registeredClass) {
+        builders[superClass] = builders[registeredClass]
     }
 
     /**
      * Builds instance of the given class, populated with random values.
      *
-     * @param clazz the type of object to build
-     * @param values the values to pass to the builder
+     * @param clazz The type of object to build.
+     * @param values The values to pass to the builder.
      * @return
      */
     def <T> T build(Class<T> clazz, Map<String, Object> values = [:]) {
@@ -69,6 +75,28 @@ class ObjectFactory {
         } else {
             ObjectFeeder.build(clazz, values)
         }
+    }
+
+    /**
+     * Builds list of instances of the given class, populated with random values.
+     *
+     * @param clazz The type of object to build.
+     * @param minSize The minimal size of the list to generate (default is 1).
+     * @param maxSize The maximal size of the list to generate (default is 3).
+     * @param values The values to pass to the builder (optional).
+     * @return
+     */
+    def <T> List<T> buildListOf(Class<T> clazz, int minSize = 1, int maxSize = 3, Map<String, Object> values = [:]) {
+        new T[ anyInteger(minSize, maxSize) ].collect {
+            build(clazz, values)
+        }
+    }
+
+    /**
+     * @see #buildListOf(Class, int, int, Map)
+     */
+    def <T> List<T> buildListOf(Class<T> clazz, Map<String, Object> values) {
+        buildListOf(clazz, 1, 3, values)
     }
 
 
@@ -113,12 +141,8 @@ class ObjectFactory {
                 return it
             } as Map
 
-            def roles = new GrantedAuthority[anyInteger(1, 3)].collect {
-                build(GrantedAuthority)
-            }
-
             def object = new DefaultAuthorizationRequest(authzParams).with {
-                authorities = roles
+                authorities = buildListOf(GrantedAuthority)
                 scope = anySet(letterStrings(5, 10), integers(1, 3))
                 return it
             }
@@ -131,13 +155,10 @@ class ObjectFactory {
         }
 
         registerBuilder(ExtendedUserDetails) { values ->
-            def roles = new GrantedAuthority[anyInteger(1, 3)].collect {
-                build(GrantedAuthority)
-            }
             String username = values['username'] ?: anyLetterString(5, 10)
 
             new ExtendedUserDetails(
-                    cz.cvut.zuul.oaas.test.factories.CustomGeneratorSamples.anyEmail(), anyLetterString(), anyLetterString(), username, 'empty', roles
+                    anyEmail(), anyLetterString(), anyLetterString(), username, 'empty', buildListOf(GrantedAuthority)
             )
         }
 
@@ -149,13 +170,10 @@ class ObjectFactory {
 
 
         registerBuilder(Client) { values ->
-            def roles = new GrantedAuthority[anyInteger(0, 3)].collect {
-                build(GrantedAuthority)
-            }
             def client = new Client(
                 clientId: anyLetterString(5, 10),
                 authorizedGrantTypes: anySet(enumValues(AuthorizationGrant), 1, 2),
-                authorities: roles
+                authorities: buildListOf(GrantedAuthority, 0, 3)
             )
             ObjectFeeder.populate(client)
             values.each { prop, value ->
@@ -165,9 +183,6 @@ class ObjectFactory {
         }
 
         registerBuilder(Resource) { values ->
-            def scopes = new Scope[anyInteger(0, 3)].collect {
-                build(Scope)
-            }
             def resource = new Resource(
                     id: anyLetterString(5, 10),
                     baseUrl: 'http://example.org',
@@ -177,7 +192,7 @@ class ObjectFactory {
                     title: anyLetterString(0, 255),
                     visibility: anyEnumValue(Visibility).toString(),
                     auth: new Auth(
-                            scopes: scopes
+                            scopes: buildListOf(Scope, 0, 3)
                     )
             )
             values.each { prop, value ->
@@ -187,13 +202,13 @@ class ObjectFactory {
         }
 
 
-        //////// Aliases ////////
+        //////// Superclasses ////////
 
-        registerAlias(OAuth2AccessToken, DefaultOAuth2AccessToken)
-        registerAlias(OAuth2RefreshToken, DefaultOAuth2RefreshToken)
-        registerAlias(ExpiringOAuth2RefreshToken, DefaultExpiringOAuth2RefreshToken)
-        registerAlias(AuthorizationRequest, DefaultAuthorizationRequest)
-        registerAlias(GrantedAuthority, SimpleGrantedAuthority)
-        registerAlias(Authentication, UsernamePasswordAuthenticationToken)
+        registerSuperclass OAuth2AccessToken, DefaultOAuth2AccessToken
+        registerSuperclass OAuth2RefreshToken, DefaultOAuth2RefreshToken
+        registerSuperclass ExpiringOAuth2RefreshToken, DefaultExpiringOAuth2RefreshToken
+        registerSuperclass AuthorizationRequest, DefaultAuthorizationRequest
+        registerSuperclass GrantedAuthority, SimpleGrantedAuthority
+        registerSuperclass Authentication, UsernamePasswordAuthenticationToken
     }
 }
