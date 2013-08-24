@@ -1,30 +1,27 @@
 package cz.cvut.zuul.oaas.services;
 
 import cz.cvut.zuul.oaas.api.models.ClientDTO;
+import cz.cvut.zuul.oaas.dao.AccessTokenDAO;
 import cz.cvut.zuul.oaas.dao.ClientDAO;
+import cz.cvut.zuul.oaas.dao.RefreshTokenDAO;
 import cz.cvut.zuul.oaas.generators.OAuth2ClientCredentialsGenerator;
 import cz.cvut.zuul.oaas.models.Client;
-import java.util.Collection;
 import ma.glasnost.orika.MapperFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 import org.springframework.security.oauth2.provider.ClientAlreadyExistsException;
 import org.springframework.security.oauth2.provider.NoSuchClientException;
 
 import java.util.List;
-import org.springframework.security.oauth2.common.OAuth2AccessToken;
-import org.springframework.security.oauth2.provider.token.TokenStore;
 
 import static org.springframework.util.CollectionUtils.isEmpty;
 
 /**
- *
- *
  * @author Tomas Mano <tomasmano@gmail.com>
+ * @author Jakub Jirutka <jakub@jirutka.cz>
  */
 public class ClientsServiceImpl implements ClientsService {
 
@@ -32,7 +29,9 @@ public class ClientsServiceImpl implements ClientsService {
     private static final List<GrantedAuthority> DEFAULT_AUTHORITIES =  AuthorityUtils.createAuthorityList("ROLE_CLIENT");
 
     private ClientDAO clientDAO;
-    private TokenStore tokenStore;
+    private AccessTokenDAO accessTokenDAO;
+    private RefreshTokenDAO refreshTokenDAO;
+
     private MapperFacade mapper;
     private OAuth2ClientCredentialsGenerator credentialsGenerator;
 
@@ -40,7 +39,7 @@ public class ClientsServiceImpl implements ClientsService {
     //////////  Business methods  //////////
 
     @Override
-    public ClientDTO findClientById(String clientId) throws NoSuchClientException, OAuth2Exception {
+    public ClientDTO findClientById(String clientId) throws NoSuchClientException {
         Client client = clientDAO.findOne(clientId);
 
         if (client == null) {
@@ -90,14 +89,10 @@ public class ClientsServiceImpl implements ClientsService {
         assertClientExists(clientId);
         
         //remove associated tokens
-        Collection<OAuth2AccessToken> tokens = tokenStore.findTokensByClientId(clientId);
-        if (!isEmpty(tokens)) {
-            for (OAuth2AccessToken token : tokens) {
-                tokenStore.removeAccessToken(token);
-            }
-        } 
+        accessTokenDAO.deleteByClientId(clientId);
+        refreshTokenDAO.deleteByClientId(clientId);
+
         clientDAO.delete(clientId);
-        
     }
 
     @Override
@@ -126,8 +121,12 @@ public class ClientsServiceImpl implements ClientsService {
         this.clientDAO = clientDAO;
     }
 
-    public void setTokenStore(TokenStore tokenStore) {
-        this.tokenStore = tokenStore;
+    public void setAccessTokenDAO(AccessTokenDAO accessTokenDAO) {
+        this.accessTokenDAO = accessTokenDAO;
+    }
+
+    public void setRefreshTokenDAO(RefreshTokenDAO refreshTokenDAO) {
+        this.refreshTokenDAO = refreshTokenDAO;
     }
 
     public void setCredentialsGenerator(OAuth2ClientCredentialsGenerator credentialsGenerator) {

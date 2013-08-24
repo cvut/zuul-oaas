@@ -17,7 +17,8 @@
 
     <bean id="clientsService" class="cz.cvut.zuul.oaas.services.ClientsServiceImpl"
           p:clientDAO-ref="clientDAO"
-          p:tokenStore-ref="tokenStore"
+          p:accessTokenDAO-ref="accessTokenDAO"
+          p:refreshTokenDAO-ref="refreshTokenDAO"
           p:credentialsGenerator-ref="credentialsGenerator"
           p:mapperFacade-ref="mapperFacade" />
 
