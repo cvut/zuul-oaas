@@ -27,7 +27,7 @@ abstract class AbstractDAO_IT<E> extends Specification {
 
     //////// Helper methods ////////
 
-    abstract CrudRepository<E, ?> getDao()
+    abstract CrudRepository<E, ? extends Serializable> getDao()
 
 
     def E buildEntity() {
