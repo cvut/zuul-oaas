@@ -23,7 +23,7 @@ class ClientDAO_IT extends AbstractDAO_IT<Client> {
     def 'update client secret'() {
         setup:
             def client = build(Client)
-            assert client.clientSecret && client.clientSecret != 'new-secret'
+            assert client.clientSecret != 'new-secret'
             dao.save(client)
         when:
             dao.updateClientSecret(client.clientId, 'new-secret')

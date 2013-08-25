@@ -16,7 +16,7 @@ class AccessTokenDAO_IT extends AbstractDAO_IT<PersistableAccessToken> {
 
     @Autowired AccessTokenDAO dao
 
-    def idPropertyName = 'value'
+    String idPropertyName = 'value'
 
     PersistableAccessToken buildEntity() {
         new PersistableAccessToken(

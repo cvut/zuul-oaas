@@ -1,28 +1,45 @@
 package cz.cvut.zuul.oaas.dao
 
 import cz.cvut.zuul.oaas.test.factories.ObjectFactory
-import cz.cvut.zuul.oaas.test.spock.MongoCleanup
-import org.apache.commons.lang3.reflect.TypeUtils
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.annotation.Id
+import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.data.repository.CrudRepository
 import org.springframework.test.context.ContextConfiguration
 import spock.lang.Shared
 import spock.lang.Specification
+
+import java.lang.reflect.ParameterizedType
 
 import static cz.cvut.zuul.oaas.test.Assertions.assertThat
 
 /**
  * @author Jakub Jirutka <jakub@jirutka.cz>
  */
-@MongoCleanup
 @ContextConfiguration('classpath:dao-test.xml')
 abstract class AbstractDAO_IT<E> extends Specification {
 
-    @Delegate
-    ObjectFactory factory = new ObjectFactory()
+    @Delegate ObjectFactory factory = new ObjectFactory()
 
-    @Shared Class<E> _entityClass
-    @Shared String _idPropertyName
+    @Autowired MongoTemplate mongoTemplate
+
+
+    //////// Setup ////////
+
+    @Shared Class<E> entityClass = determineEntityClass()
+    @Shared String idPropertyName = findIdProperty()
+    @Shared Class[] cleanup = [ entityClass ]
+
+
+    def setup() {
+        cleanup()
+    }
+
+    def cleanup() {
+        getCleanup().each { entityClass ->
+            mongoTemplate.dropCollection(entityClass)
+        }
+    }
 
 
     //////// Helper methods ////////
@@ -31,7 +48,7 @@ abstract class AbstractDAO_IT<E> extends Specification {
 
 
     def E buildEntity() {
-        build(getEntityClass())
+        build(entityClass)
     }
 
     def List<E> buildEntities(count) {
@@ -49,26 +66,14 @@ abstract class AbstractDAO_IT<E> extends Specification {
     }
 
     def ID(object) {
-        object[getIdPropertyName()]
+        object[idPropertyName]
     }
 
-    def getEntityClass() {
-        if (_entityClass == null) {
-            def typeVar = AbstractDAO_IT.class.typeParameters[0]
-            def typeArgs = TypeUtils.getTypeArguments(this.class, AbstractDAO_IT.class)
-            _entityClass = typeArgs[typeVar]
-        }
-        return _entityClass
+    private determineEntityClass() {
+        (getClass().genericSuperclass as ParameterizedType).actualTypeArguments[0] as Class<E>
     }
 
-    def getIdPropertyName() {
-        if (_idPropertyName == null) {
-            _idPropertyName = findIdProperty()
-        }
-        return _idPropertyName
-    }
-
-    def findIdProperty() {
+    private findIdProperty() {
         getEntityClass().declaredFields.find {
             it.declaredAnnotations*.annotationType().contains(Id)
         }?.name
