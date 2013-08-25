@@ -1,5 +1,6 @@
 package cz.cvut.zuul.oaas.test.factories
 
+import cz.cvut.oauth.provider.spring.TokenInfo
 import cz.cvut.zuul.oaas.models.Auth
 import cz.cvut.zuul.oaas.models.Client
 import cz.cvut.zuul.oaas.models.ExtendedUserDetails
@@ -199,6 +200,18 @@ class ObjectFactory {
                 resource[prop] = value
             }
             return resource
+        }
+
+        registerBuilder(TokenInfo) { values ->
+            def token = new TokenInfo(
+                    clientAuthorities: buildListOf(GrantedAuthority),
+                    userAuthorities: buildListOf(GrantedAuthority)
+            )
+            ObjectFeeder.populate(token)
+            values.each { prop, value ->
+                token[prop] = value
+            }
+            return token
         }
 
 

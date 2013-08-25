@@ -22,6 +22,10 @@
           p:credentialsGenerator-ref="credentialsGenerator"
           p:mapperFacade-ref="mapperFacade" />
 
+    <bean id="tokensService" class="cz.cvut.zuul.oaas.services.TokensServiceImpl"
+          p:accessTokenDAO-ref="accessTokenDAO"
+          p:clientDAO-ref="clientDAO" />
+
 
     <!--///// Validators /////-->
 
