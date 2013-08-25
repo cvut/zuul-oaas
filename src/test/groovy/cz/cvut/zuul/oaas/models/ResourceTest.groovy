@@ -10,7 +10,7 @@ import static cz.cvut.zuul.oaas.test.ValidatorUtils.*
  * @author Jakub Jirutka <jakub@jirutka.cz>
  */
 @Unroll
-class ResourceSpec extends Specification {
+class ResourceTest extends Specification {
 
     @Delegate
     static ValidatorUtils validator = createValidator(Resource.class)

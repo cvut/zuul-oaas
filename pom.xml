@@ -439,16 +439,6 @@
                     </dependency>
                 </dependencies>
             </plugin>
-
-            <plugin>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <includes>
-                        <include>**/*Test.*</include>
-                        <include>**/*Spec.*</include>
-                    </includes>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
     

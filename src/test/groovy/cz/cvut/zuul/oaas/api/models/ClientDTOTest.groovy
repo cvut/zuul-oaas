@@ -11,7 +11,7 @@ import static cz.cvut.zuul.oaas.test.ValidatorUtils.*
  * @author Jakub Jirutka <jakub@jirutka.cz>
  */
 @Unroll
-class ClientDTOSpec extends Specification {
+class ClientDTOTest extends Specification {
 
     @Delegate
     static ValidatorUtils validator = createValidator(ClientDTO.class)
