@@ -37,7 +37,7 @@
 
     <ciManagement>
         <system>jenkins</system>
-        <url>https://jenkins.fit.cvut.cz/job/authserver-oauth2/</url>
+        <url>https://jenkins.fit.cvut.cz/job/zuul-oaas</url>
     </ciManagement>
 
     <developers>
@@ -66,6 +66,8 @@
         <spring.oauth.version>1.0.5.RELEASE</spring.oauth.version>
         <thymeleaf.version>2.0.17</thymeleaf.version>
         <aspectj.version>1.7.3</aspectj.version>
+        <groovy.version>2.1.5</groovy.version>
+        <groovy-compiler.version>2.7.0-01</groovy-compiler.version>
     </properties>
 
 
@@ -392,7 +394,7 @@
         <dependency>
             <groupId>org.codehaus.groovy</groupId>
             <artifactId>groovy-all</artifactId>
-            <version>2.1.5</version>
+            <version>${groovy.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -423,8 +425,12 @@
 
     <build>
         <plugins>
+            <!--
+                Compile all classes with Groovy compiler
+            -->
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
                 <configuration>
                     <source>1.7</source>
                     <target>1.7</target>
@@ -435,9 +441,38 @@
                     <dependency>
                         <groupId>org.codehaus.groovy</groupId>
                         <artifactId>groovy-eclipse-compiler</artifactId>
-                        <version>2.7.0-01</version>
+                        <version>${groovy-compiler.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.codehaus.groovy</groupId>
+                        <artifactId>groovy-eclipse-batch</artifactId>
+                        <version>${groovy.version}-03</version>
                     </dependency>
                 </dependencies>
+            </plugin>
+
+            <!--
+                Add groovy source directories to the build
+                see http://docs.codehaus.org/display/GROOVY/Groovy-Eclipse+compiler+plugin+for+Maven
+            -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.7</version>
+                <executions>
+                    <execution>
+                        <id>add-test-source</id>
+                        <phase>generate-test-sources</phase>
+                        <goals>
+                            <goal>add-test-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>src/test/groovy</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
