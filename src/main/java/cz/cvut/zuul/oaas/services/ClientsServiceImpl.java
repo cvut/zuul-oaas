@@ -65,8 +65,6 @@ public class ClientsServiceImpl implements ClientsService {
 
         if (isEmpty(client.getAuthorities())) {
             client.setAuthorities(DEFAULT_AUTHORITIES);
-        } else {
-            client.setAuthorities(client.getAuthorities());
         }
 
         LOG.info("Saving a new client: [{}]", client);
