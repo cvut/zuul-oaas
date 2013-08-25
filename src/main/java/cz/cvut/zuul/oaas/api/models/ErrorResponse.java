@@ -1,6 +1,7 @@
 package cz.cvut.zuul.oaas.api.models;
 
 import com.google.common.collect.Iterables;
+import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.annotate.JsonPropertyOrder;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
@@ -12,58 +13,73 @@ import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Jakub Jirutka <jakub@jirutka.cz>
  */
 @JsonSerialize(include = Inclusion.ALWAYS)
-@JsonPropertyOrder({"status", "messages"})
+@JsonPropertyOrder({"status", "message", "more_info"})
 public class ErrorResponse implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 2L;
 
     private int status;
-    private List<String> messages;
+
+    private String message;
+
+    @JsonProperty("more_info")
+    private String moreInfo;
 
 
     private ErrorResponse() {
     }
 
-    private ErrorResponse(int status, List<String> messages) {
+    private ErrorResponse(int status, String message) {
+        this(status, message, null);
+    }
+
+    private ErrorResponse(int status, String message, String moreInfo) {
         this.status = status;
-        this.messages = messages;
+        this.message = message;
+        this.moreInfo = moreInfo;
     }
 
     public static ErrorResponse from(HttpStatus status, BindingResult bindingResult) {
-        List<String> messages = new ArrayList<>(2);
+        StringBuilder sb = new StringBuilder();
 
         for (ObjectError error : bindingResult.getAllErrors()) {
-            String msg = "";
-
-            if (error instanceof FieldError) {
-                msg = ((FieldError) error).getField() + " ";
+            if (sb.length() != 0) {
+                sb.append('\n');
             }
-            messages.add(msg += error.getDefaultMessage());
+            if (error instanceof FieldError) {
+                sb.append(((FieldError) error).getField())
+                  .append(" ");
+            }
+            sb.append(error.getDefaultMessage());
         }
-        return new ErrorResponse(status.value(), messages);
+        return new ErrorResponse(status.value(), "validation error", sb.toString());
     }
 
     @SuppressWarnings("deprecation")  // will be changed after JSR-349 release
     public static ErrorResponse from(HttpStatus status, MethodConstraintViolationException exception) {
-        List<String> messages = new ArrayList<>(2);
+        StringBuilder sb = new StringBuilder();
 
         for (MethodConstraintViolation violation : exception.getConstraintViolations()) {
-            String msg = "";
-
+            if (sb.length() != 0) {
+                sb.append('\n');
+            }
             // TODO FIXME
             if (Iterables.size(violation.getPropertyPath()) > 1) {
-                msg = Iterables.getLast(violation.getPropertyPath()).getName() + " ";
+                sb.append(Iterables.getLast(violation.getPropertyPath()).getName())
+                  .append(" ");
             }
-            messages.add(msg += violation.getMessage());
+            sb.append(violation.getMessage());
         }
-        return new ErrorResponse(status.value(), messages);
+        return new ErrorResponse(status.value(), "validation error", sb.toString());
+    }
+
+    public static ErrorResponse from(HttpStatus status, Throwable exception) {
+        return new ErrorResponse(status.value(), exception.getLocalizedMessage());
     }
 
 
@@ -71,8 +87,11 @@ public class ErrorResponse implements Serializable {
         return status;
     }
 
-    public List<String> getMessages() {
-        return messages;
+    public String getMessage() {
+        return message;
     }
 
+    public String getMoreInfo() {
+        return moreInfo;
+    }
 }

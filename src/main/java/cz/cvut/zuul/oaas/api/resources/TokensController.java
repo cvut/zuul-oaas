@@ -1,13 +1,12 @@
 package cz.cvut.zuul.oaas.api.resources;
 
 import cz.cvut.zuul.oaas.api.models.ClientDTO;
-import cz.cvut.zuul.oaas.api.models.JsonExceptionMapping;
+import cz.cvut.zuul.oaas.api.models.ErrorResponse;
 import cz.cvut.zuul.oaas.api.models.TokenDetails;
 import cz.cvut.zuul.oaas.dao.AccessTokenDAO;
 import cz.cvut.zuul.oaas.models.PersistableAccessToken;
 import cz.cvut.zuul.oaas.services.ClientsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.common.exceptions.InvalidTokenException;
 import org.springframework.security.oauth2.provider.AuthorizationRequest;
@@ -16,8 +15,10 @@ import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import static org.springframework.http.HttpStatus.*;
-import static org.springframework.web.bind.annotation.RequestMethod.*;
+import static org.springframework.http.HttpStatus.CONFLICT;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
+import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 
 /**
@@ -67,11 +68,11 @@ public class TokensController {
 
     //////////  Exceptions Handling  //////////
 
-    @ExceptionHandler(InvalidTokenException.class)
-    @ResponseStatus(value = HttpStatus.CONFLICT)
     @ResponseBody
-    public JsonExceptionMapping handleTokenProblem(InvalidTokenException ex) {
-        return new JsonExceptionMapping(CONFLICT.value(), ex.getOAuth2ErrorCode(), ex.getMessage());
+    @ResponseStatus(CONFLICT)
+    @ExceptionHandler(InvalidTokenException.class)
+    public ErrorResponse handleTokenProblem(InvalidTokenException ex) {
+        return ErrorResponse.from(CONFLICT, ex);
     }
 
     

@@ -1,23 +1,22 @@
 package cz.cvut.zuul.oaas.controllers;
 
+import cz.cvut.oauth.provider.spring.TokenInfo;
 import cz.cvut.zuul.oaas.api.models.ClientDTO;
-import cz.cvut.zuul.oaas.api.models.JsonExceptionMapping;
+import cz.cvut.zuul.oaas.api.models.ErrorResponse;
 import cz.cvut.zuul.oaas.dao.AccessTokenDAO;
 import cz.cvut.zuul.oaas.models.ExtendedUserDetails;
 import cz.cvut.zuul.oaas.models.PersistableAccessToken;
 import cz.cvut.zuul.oaas.services.ClientsService;
-import cz.cvut.oauth.provider.spring.TokenInfo;
 import org.springframework.beans.factory.annotation.Required;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.common.exceptions.InvalidTokenException;
 import org.springframework.security.oauth2.provider.AuthorizationRequest;
+import org.springframework.security.oauth2.provider.NoSuchClientException;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.http.HttpStatus.CONFLICT;
-import org.springframework.security.oauth2.provider.NoSuchClientException;
 
 /**
  * Controller which decodes access tokens for clients who are not able to do so
@@ -84,12 +83,11 @@ public class CheckTokenEndpoint {
 
     //////////  Exceptions Handling  //////////
 
-    @ExceptionHandler(InvalidTokenException.class)
-    @ResponseStatus(value = HttpStatus.CONFLICT)
     @ResponseBody
-    public JsonExceptionMapping handleTokenProblem(InvalidTokenException ex) {
-        // TODO Should we really return 409 CONFLICT ? Status message from exception is 401
-        return new JsonExceptionMapping(CONFLICT.value(), ex.getOAuth2ErrorCode(), ex.getMessage());
+    @ResponseStatus(CONFLICT)
+    @ExceptionHandler(InvalidTokenException.class)
+    public ErrorResponse handleTokenProblem(InvalidTokenException ex) {
+        return ErrorResponse.from(CONFLICT, ex);
     }
 
 
