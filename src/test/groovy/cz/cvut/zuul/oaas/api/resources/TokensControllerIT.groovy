@@ -1,8 +1,6 @@
 package cz.cvut.zuul.oaas.api.resources
 
-import cz.cvut.zuul.oaas.api.models.ClientAuthenticationDTO
 import cz.cvut.zuul.oaas.api.models.TokenDTO
-import cz.cvut.zuul.oaas.api.models.UserAuthenticationDTO
 import cz.cvut.zuul.oaas.api.resources.exceptions.NoSuchTokenException
 import cz.cvut.zuul.oaas.services.TokensService
 
@@ -58,8 +56,8 @@ class TokensControllerIT extends AbstractControllerIT {
                 }
             }
         where:
-            userAuth   = build(UserAuthenticationDTO)
-            clientAuth = build(ClientAuthenticationDTO)
+            userAuth   = build(TokenDTO.UserAuthentication)
+            clientAuth = build(TokenDTO.ClientAuthentication)
             token      = build(TokenDTO)
     }
 

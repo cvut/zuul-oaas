@@ -1,9 +1,7 @@
 package cz.cvut.zuul.oaas.services;
 
 import cz.cvut.oauth.provider.spring.TokenInfo;
-import cz.cvut.zuul.oaas.api.models.ClientAuthenticationDTO;
 import cz.cvut.zuul.oaas.api.models.TokenDTO;
-import cz.cvut.zuul.oaas.api.models.UserAuthenticationDTO;
 import cz.cvut.zuul.oaas.api.resources.exceptions.NoSuchTokenException;
 import cz.cvut.zuul.oaas.dao.AccessTokenDAO;
 import cz.cvut.zuul.oaas.dao.ClientDAO;
@@ -111,11 +109,11 @@ public class TokensServiceImpl implements TokensService {
                 .byDefault()
         );
         factory.registerClassMap(factory
-                .classMap(AuthorizationRequest.class, ClientAuthenticationDTO.class)
+                .classMap(AuthorizationRequest.class, TokenDTO.ClientAuthentication.class)
                 .byDefault()
         );
         factory.registerClassMap(factory
-                .classMap(ExtendedUserDetails.class, UserAuthenticationDTO.class)
+                .classMap(ExtendedUserDetails.class, TokenDTO.UserAuthentication.class)
                 .byDefault()
         );
         mapper = factory.getMapperFacade();

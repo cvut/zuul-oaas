@@ -1,7 +1,6 @@
 package cz.cvut.zuul.oaas.api.models;
 
 import lombok.Data;
-import org.codehaus.jackson.annotate.JsonProperty;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -15,16 +14,36 @@ public class TokenDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private ClientAuthenticationDTO clientAuthentication;
-
-    @JsonProperty("expiration")
     private Date expiration;
-
+    private ClientAuthentication clientAuthentication;
     private Set<String> scope;
-
     private String tokenType;
-
     private String tokenValue;
+    private UserAuthentication userAuthentication;
 
-    private UserAuthenticationDTO userAuthentication;
+
+    @Data
+    public static class ClientAuthentication implements Serializable {
+
+        private static final long serialVersionUID = 1L;
+
+        private String clientId;
+        private Boolean clientLocked;
+        private String productName;
+        private Set<String> scope;
+        private String redirectUri;
+        private Set<String> resourceIds;
+    }
+
+
+    @Data
+    public static class UserAuthentication implements Serializable {
+
+        private static final long serialVersionUID = 1L;
+
+        private String username;
+        private String email;
+        private String firstName;
+        private String lastName;
+    }
 }
