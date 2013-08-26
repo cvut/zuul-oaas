@@ -66,6 +66,7 @@
         <spring.oauth.version>1.0.5.RELEASE</spring.oauth.version>
         <thymeleaf.version>2.0.17</thymeleaf.version>
         <aspectj.version>1.7.3</aspectj.version>
+        <lombok.version>0.11.8</lombok.version>
         <groovy.version>2.1.5</groovy.version>
         <groovy-compiler.version>2.7.0-01</groovy-compiler.version>
     </properties>
@@ -331,6 +332,13 @@
             <version>2.10.1</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
 
         <!--////////// Test Libraries //////////-->
 
@@ -426,7 +434,7 @@
     <build>
         <plugins>
             <!--
-                Compile all classes with Groovy compiler
+                Compile all classes with Groovy compiler and Lombok processor
             -->
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -434,8 +442,12 @@
                 <configuration>
                     <source>1.7</source>
                     <target>1.7</target>
-                    <encoding>${project.build.sourceEncoding}</encoding>
                     <compilerId>groovy-eclipse-compiler</compilerId>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                    <fork>true</fork>
+                    <compilerArguments>
+                        <javaAgentClass>lombok.core.Agent</javaAgentClass>
+                    </compilerArguments>
                 </configuration>
                 <dependencies>
                     <dependency>
@@ -447,6 +459,11 @@
                         <groupId>org.codehaus.groovy</groupId>
                         <artifactId>groovy-eclipse-batch</artifactId>
                         <version>${groovy.version}-03</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.projectlombok</groupId>
+                        <artifactId>lombok</artifactId>
+                        <version>${lombok.version}</version>
                     </dependency>
                 </dependencies>
             </plugin>

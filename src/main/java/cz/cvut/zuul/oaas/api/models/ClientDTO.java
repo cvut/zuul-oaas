@@ -9,6 +9,7 @@ import cz.cvut.zuul.oaas.models.enums.AuthorizationGrant;
 import cz.jirutka.validator.collection.constraints.EachPattern;
 import cz.jirutka.validator.collection.constraints.EachSize;
 import cz.jirutka.validator.spring.SpELAssert;
+import lombok.Data;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
@@ -28,6 +29,7 @@ import java.util.Collection;
  *
  * @author Jakub Jirutka <jakub@jirutka.cz>
  */
+@Data
 @SpELAssert(value = "hasRedirectUri()", applyIf = "authorizedGrantTypes.contains('authorization_code')",
             message = "{validator.missing_redirect_uri}")
 @JsonSerialize(include = Inclusion.NON_DEFAULT)
@@ -77,107 +79,14 @@ public class ClientDTO implements Serializable {
 	private String productName;
 
     @JsonProperty("client_locked")
-    private Boolean locked;
+    private boolean locked;
     
     private ImplicitClientDetails implicitClientDetails;
 
-
-    public String getClientId() {
-        return clientId;
-    }
-    public void setClientId(String clientId) {
-        this.clientId = clientId;
-    }
-
-    public String getClientSecret() {
-        return clientSecret;
-    }
-    public void setClientSecret(String clientSecret) {
-        this.clientSecret = clientSecret;
-    }
-
-    public Collection<String> getScope() {
-        return scope;
-    }
-    public void setScope(Collection<String> scope) {
-        this.scope = scope;
-    }
-
-    public Collection<String> getResourceIds() {
-        return resourceIds;
-    }
-    public void setResourceIds(Collection<String> resourceIds) {
-        this.resourceIds = resourceIds;
-    }
-
-    public Collection<String> getAuthorizedGrantTypes() {
-        return authorizedGrantTypes;
-    }
-    public void setAuthorizedGrantTypes(Collection<String> authorizedGrantTypes) {
-        this.authorizedGrantTypes = authorizedGrantTypes;
-    }
-
-    public Collection<String> getRegisteredRedirectUri() {
-        return registeredRedirectUri;
-    }
-    public void setRegisteredRedirectUri(Collection<String> registeredRedirectUri) {
-        this.registeredRedirectUri = registeredRedirectUri;
-    }
-
-    public Collection<String> getAuthorities() {
-        return authorities;
-    }
-    public void setAuthorities(Collection<String> authorities) {
-        this.authorities = authorities;
-    }
-
-    public Integer getAccessTokenValiditySeconds() {
-        return accessTokenValiditySeconds;
-    }
-    public void setAccessTokenValiditySeconds(Integer accessTokenValiditySeconds) {
-        this.accessTokenValiditySeconds = accessTokenValiditySeconds;
-    }
-
-    public Integer getRefreshTokenValiditySeconds() {
-        return refreshTokenValiditySeconds;
-    }
-    public void setRefreshTokenValiditySeconds(Integer refreshTokenValiditySeconds) {
-        this.refreshTokenValiditySeconds = refreshTokenValiditySeconds;
-    }
-
-    public String getProductName() {
-        return productName;
-    }
-    public void setProductName(String productName) {
-        this.productName = productName;
-    }
-
-    public boolean isLocked() {
-        return locked == null ? false : locked;
-    }
-
-    public void setLocked(boolean locked) {
-        this.locked = locked;
-    }
-
-    public ImplicitClientDetails getImplicitClientDetails() {
-        return implicitClientDetails;
-    }
-
-    public void setImplicitClientDetails(ImplicitClientDetails implicitClientDetails) {
-        this.implicitClientDetails = implicitClientDetails;
-    }
 
 
     @SuppressWarnings("UnusedDeclaration")
     public boolean hasRedirectUri() {
         return !registeredRedirectUri.isEmpty();
     }
-
-
-	@Override
-	public String toString() {
-        return String.format("Client [%s]", clientId);
-	}
-
 }

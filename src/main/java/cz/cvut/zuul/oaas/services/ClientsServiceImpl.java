@@ -6,6 +6,7 @@ import cz.cvut.zuul.oaas.dao.ClientDAO;
 import cz.cvut.zuul.oaas.dao.RefreshTokenDAO;
 import cz.cvut.zuul.oaas.generators.OAuth2ClientCredentialsGenerator;
 import cz.cvut.zuul.oaas.models.Client;
+import lombok.Setter;
 import ma.glasnost.orika.MapperFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,15 +15,19 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.oauth2.provider.ClientAlreadyExistsException;
 import org.springframework.security.oauth2.provider.NoSuchClientException;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static lombok.AccessLevel.NONE;
 import static org.springframework.util.CollectionUtils.isEmpty;
 
 /**
  * @author Tomas Mano <tomasmano@gmail.com>
  * @author Jakub Jirutka <jakub@jirutka.cz>
  */
+@Setter
+@Service
 public class ClientsServiceImpl implements ClientsService {
 
     private static final Logger LOG = LoggerFactory.getLogger(ClientsServiceImpl.class);
@@ -32,7 +37,7 @@ public class ClientsServiceImpl implements ClientsService {
     private AccessTokenDAO accessTokenDAO;
     private RefreshTokenDAO refreshTokenDAO;
 
-    private MapperFacade mapper;
+    private @Setter(NONE) MapperFacade mapper;
     private OAuth2ClientCredentialsGenerator credentialsGenerator;
 
     
@@ -112,26 +117,8 @@ public class ClientsServiceImpl implements ClientsService {
         }
     }
 
-    
-    //////////  Getters / Setters  //////////
 
-    public void setClientDAO(ClientDAO clientDAO) {
-        this.clientDAO = clientDAO;
-    }
-
-    public void setAccessTokenDAO(AccessTokenDAO accessTokenDAO) {
-        this.accessTokenDAO = accessTokenDAO;
-    }
-
-    public void setRefreshTokenDAO(RefreshTokenDAO refreshTokenDAO) {
-        this.refreshTokenDAO = refreshTokenDAO;
-    }
-
-    public void setCredentialsGenerator(OAuth2ClientCredentialsGenerator credentialsGenerator) {
-        this.credentialsGenerator = credentialsGenerator;
-    }
-
-    public void setMapperFacade(MapperFacade mapper) {
-        this.mapper = mapper;
+    public void setMapperFacade(MapperFacade mapperFacade) {
+        this.mapper = mapperFacade;
     }
 }

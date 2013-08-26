@@ -2,9 +2,9 @@ package cz.cvut.zuul.oaas.services.internal;
 
 import cz.cvut.zuul.oaas.dao.ClientDAO;
 import cz.cvut.zuul.oaas.models.Client;
+import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Required;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -27,7 +27,7 @@ public class LockableClientUserDetailsService implements UserDetailsService {
 
     private static final Logger LOG = LoggerFactory.getLogger(LockableClientUserDetailsService.class);
 
-    private ClientDAO clientDAO;
+    private @Setter ClientDAO clientDAO;
     private String emptyPassword = "";
 
 
@@ -45,11 +45,6 @@ public class LockableClientUserDetailsService implements UserDetailsService {
         return new User(clientId, clientSecret, true, true, true, !client.isLocked(), client.getAuthorities());
     }
 
-
-    @Required
-    public void setClientDAO(ClientDAO clientDAO) {
-        this.clientDAO = clientDAO;
-    }
 
     /**
      * This is used only to encode empty password which is used when client does

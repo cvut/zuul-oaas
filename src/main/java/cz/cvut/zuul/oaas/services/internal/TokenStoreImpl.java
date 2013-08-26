@@ -4,6 +4,7 @@ import cz.cvut.zuul.oaas.dao.AccessTokenDAO;
 import cz.cvut.zuul.oaas.dao.RefreshTokenDAO;
 import cz.cvut.zuul.oaas.models.PersistableAccessToken;
 import cz.cvut.zuul.oaas.models.PersistableRefreshToken;
+import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
@@ -20,6 +21,7 @@ import java.util.Collection;
  *
  * @author Jakub Jirutka <jakub@jirutka.cz>
  */
+@Setter
 public class TokenStoreImpl implements TokenStore {
 
     private static final Logger LOG = LoggerFactory.getLogger(TokenStoreImpl.class);
@@ -100,16 +102,5 @@ public class TokenStoreImpl implements TokenStore {
         PersistableRefreshToken result = refreshTokenDAO.findOne(token.getValue());
 
         return result != null ? result.getAuthentication() : null;
-    }
-
-
-    ////////  Accessors  ////////
-
-    public void setAccessTokenDAO(AccessTokenDAO accessTokenDAO) {
-        this.accessTokenDAO = accessTokenDAO;
-    }
-
-    public void setRefreshTokenDAO(RefreshTokenDAO refreshTokenDAO) {
-        this.refreshTokenDAO = refreshTokenDAO;
     }
 }

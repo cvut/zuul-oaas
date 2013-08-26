@@ -4,7 +4,7 @@ import cz.cvut.zuul.oaas.api.models.ErrorResponse;
 import cz.cvut.zuul.oaas.api.models.TokenDTO;
 import cz.cvut.zuul.oaas.api.resources.exceptions.NoSuchTokenException;
 import cz.cvut.zuul.oaas.services.TokensService;
-import org.springframework.beans.factory.annotation.Required;
+import lombok.Setter;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +24,8 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 @RequestMapping("/v1/tokens")
 public class TokensController {
 
-    private TokensService tokensService;
+    private @Setter TokensService tokensService;
+    
     
     @ResponseBody
     @RequestMapping(value = "{tokenValue}", method = GET)
@@ -46,13 +47,5 @@ public class TokensController {
     @ExceptionHandler(NoSuchTokenException.class)
     public ErrorResponse handleNoSuchTokenException(NoSuchTokenException ex) {
         return ErrorResponse.from(NOT_FOUND, ex);
-    }
-
-    
-    //////////  Accessors  //////////
-
-    @Required
-    public void setTokensService(TokensService tokensService) {
-        this.tokensService = tokensService;
     }
 }

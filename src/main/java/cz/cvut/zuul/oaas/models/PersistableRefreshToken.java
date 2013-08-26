@@ -1,11 +1,11 @@
 package cz.cvut.zuul.oaas.models;
 
-import org.apache.commons.lang.builder.EqualsBuilder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import org.codehaus.jackson.annotate.JsonCreator;
 import org.codehaus.jackson.annotate.JsonValue;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.TypeAlias;
-import org.springframework.data.domain.Persistable;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.oauth2.common.ExpiringOAuth2RefreshToken;
 import org.springframework.security.oauth2.common.OAuth2RefreshToken;
@@ -18,6 +18,7 @@ import java.util.Date;
  *
  * @author Jakub Jirutka <jakub@jirutka.cz>
  */
+@EqualsAndHashCode(of="value")
 @TypeAlias("RefreshToken")
 @Document(collection = "refresh_tokens")
 public class PersistableRefreshToken implements ExpiringOAuth2RefreshToken, Serializable {
@@ -28,7 +29,7 @@ public class PersistableRefreshToken implements ExpiringOAuth2RefreshToken, Seri
 
     private @Id String value;
     private Date expiration;
-    private OAuth2Authentication authentication;
+    private @Getter OAuth2Authentication authentication;
 
 
     protected PersistableRefreshToken() {
@@ -68,30 +69,9 @@ public class PersistableRefreshToken implements ExpiringOAuth2RefreshToken, Seri
         return expiration != null;
     }
 
-    public OAuth2Authentication getAuthentication() {
-        return authentication;
-    }
-
-    public void setAuthentication(OAuth2Authentication authentication) {
-        this.authentication = authentication;
-    }
-
 
     @Override
     public String toString() {
         return getValue();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) return false;
-        if (getClass() != obj.getClass()) return false;
-        PersistableRefreshToken other = (PersistableRefreshToken) obj;
-        return new EqualsBuilder().append(this.value, other.value).isEquals();
-    }
-
-    @Override
-    public int hashCode() {
-        return value != null ? value.hashCode() : 0;
     }
 }

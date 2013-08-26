@@ -2,7 +2,7 @@ package cz.cvut.zuul.oaas.controllers;
 
 import cz.cvut.zuul.oaas.api.models.ClientDTO;
 import cz.cvut.zuul.oaas.services.ClientsService;
-import org.springframework.beans.factory.annotation.Required;
+import lombok.Setter;
 import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 import org.springframework.security.oauth2.provider.AuthorizationRequest;
 import org.springframework.stereotype.Controller;
@@ -22,7 +22,7 @@ import java.util.Map;
 @SessionAttributes("authorizationRequest")
 public class AccessConfirmationController {
 
-	private ClientsService clientsService;
+	private @Setter ClientsService clientsService;
 
 
 	@RequestMapping("/oauth/confirm_access")
@@ -40,10 +40,4 @@ public class AccessConfirmationController {
 	public String handleError(Map<String,Object> model) {
 		return "oauth_error";
 	}
-
-
-    @Required
-    public void setClientsService(ClientsService clientsService) {
-        this.clientsService = clientsService;
-    }
 }

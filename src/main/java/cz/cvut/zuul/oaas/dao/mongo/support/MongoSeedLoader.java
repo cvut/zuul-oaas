@@ -4,6 +4,7 @@ import com.google.common.io.Files;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.util.JSON;
+import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
@@ -26,8 +27,21 @@ public class MongoSeedLoader {
 
     private MongoOperations mongo;
     private File location;
-    private boolean dropAll = false;
-    private boolean skipNonEmptyCollections = true;
+
+    /**
+     * Drop all collections before seeding? Default is <tt>false</tt>.
+     *
+     * @param dropAll
+     */
+    private @Setter boolean dropAll = false;
+
+    /**
+     * Skip import for collections that already exists? Default is <tt>true</tt>.
+     *
+     * @param skipNonEmptyCollections
+     */
+    private @Setter boolean skipNonEmptyCollections = true;
+
 
 
     @SuppressWarnings("unchecked")
@@ -85,7 +99,7 @@ public class MongoSeedLoader {
      *   }
      * </pre>
      *
-     * @param location JSON file
+     * @param resource JSON file
      */
     @Required
     public void setLocation(Resource resource) {
@@ -99,23 +113,5 @@ public class MongoSeedLoader {
     @Required
     public void setMongoTemplate(MongoOperations mongoTemplate) {
         this.mongo = mongoTemplate;
-    }
-
-    /**
-     * Drop all collections before seeding? Default is <tt>false</tt>.
-     *
-     * @param dropAll
-     */
-    public void setDropAll(boolean dropAll) {
-        this.dropAll = dropAll;
-    }
-
-    /**
-     * Skip import for collections that already exists? Default is <tt>true</tt>.
-     *
-     * @param skipNonEmptyCollections
-     */
-    public void setSkipNonEmptyCollections(boolean skipNonEmptyCollections) {
-        this.skipNonEmptyCollections = skipNonEmptyCollections;
     }
 }

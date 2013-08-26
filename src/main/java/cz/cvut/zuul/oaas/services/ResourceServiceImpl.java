@@ -4,9 +4,9 @@ import cz.cvut.zuul.oaas.api.resources.exceptions.NoSuchResourceException;
 import cz.cvut.zuul.oaas.dao.ResourceDAO;
 import cz.cvut.zuul.oaas.generators.IdentifierGenerator;
 import cz.cvut.zuul.oaas.models.Resource;
+import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,13 +17,14 @@ import static com.google.common.collect.Lists.newArrayList;
  *
  * @author Tomas Mano <tomasmano@gmail.com>
  */
+@Setter
 @Service
 public class ResourceServiceImpl implements ResourceService {
 
     private static final Logger LOG = LoggerFactory.getLogger(ResourceServiceImpl.class);
 
-    private @Autowired ResourceDAO resourceDAO;
-    private @Autowired IdentifierGenerator identifierGenerator;
+    private ResourceDAO resourceDAO;
+    private IdentifierGenerator identifierGenerator;
 
 
 
@@ -82,16 +83,5 @@ public class ResourceServiceImpl implements ResourceService {
         if (! resourceDAO.exists(resourceId)) {
             throw new NoSuchResourceException("No such resource with id = " + resourceId);
         }
-    }
-
-
-    //////////  Accessors  //////////
-
-    public void setResourceDAO(ResourceDAO resourceDAO) {
-        this.resourceDAO = resourceDAO;
-    }
-
-    public void setIdentifierGenerator(IdentifierGenerator identifierGenerator) {
-        this.identifierGenerator = identifierGenerator;
     }
 }

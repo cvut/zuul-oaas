@@ -3,7 +3,7 @@ package cz.cvut.zuul.oaas.api.resources;
 import cz.cvut.zuul.oaas.api.models.ClientDTO;
 import cz.cvut.zuul.oaas.models.ImplicitClientDetails;
 import cz.cvut.zuul.oaas.services.ClientsService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.Setter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.provider.ClientAlreadyExistsException;
 import org.springframework.security.oauth2.provider.NoSuchClientException;
@@ -27,8 +27,8 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 public class ClientsController {
 
     private static final String SELF_URI = "/v1/clients/";
-    
-    private ClientsService clientsService;
+
+    private @Setter ClientsService clientsService;
 
     
     //////////  API methods  //////////
@@ -190,17 +190,4 @@ public class ClientsController {
     public ResponseEntity<Void> handleClientAlreadyExistsException() {
         return new ResponseEntity<>(CONFLICT);
     }
-
-
-    ////////  Getters / Setters  ////////
-
-    public ClientsService getClientsService() {
-        return clientsService;
-    }
-
-    @Autowired
-    public void setClientsService(ClientsService clientsService) {
-        this.clientsService = clientsService;
-    }
-
 }

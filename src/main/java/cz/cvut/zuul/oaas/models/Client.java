@@ -1,7 +1,10 @@
 package cz.cvut.zuul.oaas.models;
 
 import cz.cvut.zuul.oaas.models.enums.AuthorizationGrant;
-import org.apache.commons.lang.builder.HashCodeBuilder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -15,8 +18,14 @@ import java.util.*;
  *
  * @author Jakub Jirutka <jakub@jirutka.cz>
  */
+@Data
+@NoArgsConstructor
+@EqualsAndHashCode(of="clientId")
+@ToString(of={"clientId", "productName"})
+
 @TypeAlias("Client")
 @Document(collection = "clients")
+
 public class Client implements ClientDetails {
 
     private static final long serialVersionUID = 1L;
@@ -40,8 +49,6 @@ public class Client implements ClientDetails {
     private ImplicitClientDetails implicitClientDetails;
 
 
-    public Client() {
-    }
     public Client(ClientDetails prototype) {
         this.clientId = prototype.getClientId();
         this.clientSecret = prototype.getClientSecret();
@@ -55,47 +62,26 @@ public class Client implements ClientDetails {
     }
 
 
-    public String getClientId() {
-        return clientId;
-    }
-    public void setClientId(String clientId) {
-        this.clientId = clientId;
-    }
-
     public boolean isSecretRequired() {
         return this.clientSecret != null;
-    }
-    public String getClientSecret() {
-        return clientSecret;
-    }
-    public void setClientSecret(String clientSecret) {
-        this.clientSecret = clientSecret;
     }
 
     public boolean isScoped() {
         return !CollectionUtils.isEmpty(scope);
     }
-    public Set<String> getScope() {
-        return scope;
-    }
+
     public void setScope(Collection<String> scope) {
         this.scope = scope != null
                 ? new LinkedHashSet<>(scope)
                 : Collections.<String>emptySet();
     }
 
-    public Set<String> getResourceIds() {
-        return resourceIds;
-    }
     public void setResourceIds(Collection<String> resourceIds) {
         this.resourceIds = resourceIds != null
                 ? new LinkedHashSet<>(resourceIds)
                 : Collections.<String>emptySet();
     }
 
-    public Set<String> getAuthorizedGrantTypes() {
-        return authorizedGrantTypes;
-    }
     public void setAuthorizedGrantTypes(Collection<AuthorizationGrant> authorizedGrantTypes) {
         this.authorizedGrantTypes = new LinkedHashSet<>();
         for (AuthorizationGrant grant : authorizedGrantTypes) {
@@ -103,36 +89,16 @@ public class Client implements ClientDetails {
         }
     }
 
-    public Set<String> getRegisteredRedirectUri() {
-        return registeredRedirectUri;
-    }
     public void setRegisteredRedirectUri(Collection<String> redirectUris) {
         this.registeredRedirectUri = resourceIds != null
             ? new LinkedHashSet<>(redirectUris)
             : Collections.<String>emptySet();
     }
 
-    public Set<GrantedAuthority> getAuthorities() {
-        return authorities;
-    }
     public void setAuthorities(Collection<GrantedAuthority> authorities) {
         this.authorities = authorities != null
                 ? new LinkedHashSet<>(authorities)
                 : Collections.<GrantedAuthority>emptySet();
-    }
-
-    public Integer getAccessTokenValiditySeconds() {
-        return accessTokenValiditySeconds;
-    }
-    public void setAccessTokenValiditySeconds(Integer accessTokenValiditySeconds) {
-        this.accessTokenValiditySeconds = accessTokenValiditySeconds;
-    }
-
-    public Integer getRefreshTokenValiditySeconds() {
-        return refreshTokenValiditySeconds;
-    }
-    public void setRefreshTokenValiditySeconds(Integer refreshTokenValiditySeconds) {
-        this.refreshTokenValiditySeconds = refreshTokenValiditySeconds;
     }
 
     public Map<String, Object> getAdditionalInformation() {
@@ -142,48 +108,4 @@ public class Client implements ClientDetails {
             put(EXT_IMPLICIT_CLIENT_DETAILS, implicitClientDetails);
         }};
     }
-
-    public String getProductName() {
-        return productName;
-    }
-    public void setProductName(String productName) {
-        this.productName = productName;
-    }
-
-    public boolean isLocked() {
-        return locked;
-    }
-    public void setLocked(boolean locked) {
-        this.locked = locked;
-    }
-
-    public ImplicitClientDetails getImplicitClientDetails() {
-        return implicitClientDetails;
-    }
-    public void setImplicitClientDetails(ImplicitClientDetails implicitClientDetails) {
-        this.implicitClientDetails = implicitClientDetails;
-    }
-
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null) return false;
-        if (getClass() != obj.getClass()) return false;
-
-        Client other = (Client) obj;
-        if (!clientId.equals(other.clientId)) return false;
-
-        return true;
-    }
-
-	@Override
-	public int hashCode() {
-        return new HashCodeBuilder(33, 1).append(clientId).toHashCode();
-	}
-
-	@Override
-	public String toString() {
-        return String.format("Client [%s]", clientId);
-	}
 }

@@ -1,5 +1,6 @@
 package cz.cvut.zuul.oaas.models;
 
+import lombok.Getter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -22,7 +23,7 @@ public class PersistableAccessToken extends DefaultOAuth2AccessToken {
     private static final AuthenticationKeyGenerator AUTH_KEY_GENERATOR = new DefaultAuthenticationKeyGenerator();
 
     private String authenticationKey;
-    private OAuth2Authentication authentication;
+    private @Getter OAuth2Authentication authentication;
 
 
     public static String extractAuthenticationKey(OAuth2Authentication authentication) {
@@ -48,10 +49,6 @@ public class PersistableAccessToken extends DefaultOAuth2AccessToken {
     @Id @Override
     public String getValue() {
         return super.getValue();
-    }
-
-    public OAuth2Authentication getAuthentication() {
-        return authentication;
     }
 
     public void setAuthentication(OAuth2Authentication authentication) {

@@ -3,13 +3,12 @@ package cz.cvut.zuul.oaas.controllers;
 import cz.cvut.oauth.provider.spring.TokenInfo;
 import cz.cvut.zuul.oaas.api.models.ErrorResponse;
 import cz.cvut.zuul.oaas.services.TokensService;
-import org.springframework.beans.factory.annotation.Required;
+import lombok.Setter;
 import org.springframework.security.oauth2.common.exceptions.InvalidTokenException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.http.HttpStatus.CONFLICT;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 /**
  * @author Jakub Jirutka <jakub@jirutka.cz>
@@ -17,7 +16,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 @Controller
 public class CheckTokenEndpoint {
 
-    private TokensService tokensService;
+    private @Setter TokensService tokensService;
 
 
     @ResponseBody
@@ -32,11 +31,5 @@ public class CheckTokenEndpoint {
     @ExceptionHandler(InvalidTokenException.class)
     ErrorResponse handleInvalidTokenException(InvalidTokenException ex) {
         return ErrorResponse.from(CONFLICT, ex);
-    }
-
-
-    @Required
-    public void setTokensService(TokensService tokensService) {
-        this.tokensService = tokensService;
     }
 }

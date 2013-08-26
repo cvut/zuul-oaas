@@ -10,6 +10,7 @@ import cz.cvut.zuul.oaas.dao.ClientDAO;
 import cz.cvut.zuul.oaas.models.Client;
 import cz.cvut.zuul.oaas.models.ExtendedUserDetails;
 import cz.cvut.zuul.oaas.models.PersistableAccessToken;
+import lombok.Setter;
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.MapperFactory;
 import ma.glasnost.orika.impl.DefaultMapperFactory.Builder;
@@ -20,19 +21,21 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 
+import static lombok.AccessLevel.NONE;
 import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
 
 /**
  * @author Jakub Jirutka <jakub@jirutka.cz>
  */
+@Setter
 @Service
 public class TokensServiceImpl implements TokensService {
 
     private AccessTokenDAO accessTokenDAO;
     private ClientDAO clientDAO;
-
     private MapperFactory mapperFactory;
-    private MapperFacade mapper;
+
+    private @Setter(NONE) MapperFacade mapper;
 
 
     public TokenDTO getToken(String tokenValue) {
@@ -116,20 +119,5 @@ public class TokensServiceImpl implements TokensService {
                 .byDefault()
         );
         mapper = factory.getMapperFacade();
-    }
-
-
-    //////// Accessors ////////
-
-    public void setMapperFactory(MapperFactory factory) {
-        this.mapperFactory = mapperFactory;
-    }
-
-    public void setAccessTokenDAO(AccessTokenDAO accessTokenDAO) {
-        this.accessTokenDAO = accessTokenDAO;
-    }
-
-    public void setClientDAO(ClientDAO clientDAO) {
-        this.clientDAO = clientDAO;
     }
 }

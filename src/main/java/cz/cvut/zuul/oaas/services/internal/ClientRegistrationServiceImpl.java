@@ -2,6 +2,7 @@ package cz.cvut.zuul.oaas.services.internal;
 
 import cz.cvut.zuul.oaas.dao.ClientDAO;
 import cz.cvut.zuul.oaas.models.Client;
+import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DuplicateKeyException;
@@ -20,6 +21,7 @@ import java.util.List;
  *
  * @author Jakub Jirutka <jakub@jirutka.cz>
  */
+@Setter
 public class ClientRegistrationServiceImpl implements ClientDetailsService, ClientRegistrationService {
 
     private static final Logger LOG = LoggerFactory.getLogger(ClientRegistrationServiceImpl.class);
@@ -92,16 +94,5 @@ public class ClientRegistrationServiceImpl implements ClientDetailsService, Clie
         if (! clientDAO.exists(clientId)) {
             throw new NoSuchClientException("No such client with id = " + clientId);
         }
-    }
-
-
-    ////////  Accessors  ////////
-
-    public void setClientDAO(ClientDAO clientDAO) {
-        this.clientDAO = clientDAO;
-    }
-
-    public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
-        this.passwordEncoder = passwordEncoder;
     }
 }

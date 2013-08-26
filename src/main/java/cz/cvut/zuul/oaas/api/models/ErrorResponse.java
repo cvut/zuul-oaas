@@ -1,6 +1,8 @@
 package cz.cvut.zuul.oaas.api.models;
 
 import com.google.common.collect.Iterables;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.codehaus.jackson.annotate.JsonPropertyOrder;
 import org.hibernate.validator.method.MethodConstraintViolation;
 import org.hibernate.validator.method.MethodConstraintViolationException;
@@ -11,9 +13,13 @@ import org.springframework.validation.ObjectError;
 
 import java.io.Serializable;
 
+import static lombok.AccessLevel.PRIVATE;
+
 /**
  * @author Jakub Jirutka <jakub@jirutka.cz>
  */
+@Getter
+@NoArgsConstructor(access=PRIVATE)
 @JsonPropertyOrder({"status", "message", "more_info"})
 public class ErrorResponse implements Serializable {
 
@@ -25,9 +31,6 @@ public class ErrorResponse implements Serializable {
 
     private String moreInfo;
 
-
-    private ErrorResponse() {
-    }
 
     private ErrorResponse(int status, String message) {
         this(status, message, null);
@@ -75,18 +78,5 @@ public class ErrorResponse implements Serializable {
 
     public static ErrorResponse from(HttpStatus status, Throwable exception) {
         return new ErrorResponse(status.value(), exception.getLocalizedMessage());
-    }
-
-
-    public int getStatus() {
-        return status;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public String getMoreInfo() {
-        return moreInfo;
     }
 }
