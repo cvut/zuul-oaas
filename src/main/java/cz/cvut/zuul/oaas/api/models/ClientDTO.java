@@ -9,9 +9,7 @@ import cz.cvut.zuul.oaas.models.enums.AuthorizationGrant;
 import cz.jirutka.validator.collection.constraints.EachPattern;
 import cz.jirutka.validator.collection.constraints.EachSize;
 import cz.jirutka.validator.spring.SpELAssert;
-import org.codehaus.jackson.annotate.JsonAutoDetect;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.codehaus.jackson.annotate.JsonMethod;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
@@ -32,35 +30,29 @@ import java.util.Collection;
  */
 @SpELAssert(value = "hasRedirectUri()", applyIf = "authorizedGrantTypes.contains('authorization_code')",
             message = "{validator.missing_redirect_uri}")
-@JsonAutoDetect(JsonMethod.NONE)
 @JsonSerialize(include = Inclusion.NON_DEFAULT)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ClientDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-	@JsonProperty("client_id")
 	private String clientId;
 
-	@JsonProperty("client_secret")
 	private String clientSecret;
 
     @EachSize( @Size(min = 5, max = 255) )
     @EachPattern( @Pattern(regexp = "[\\x21\\x23-\\x5B\\x5D-\\x7E]+",
         message = "{validator.invalid_scope}" )) // see http://tools.ietf.org/html/rfc6749#section-3.3
-    @JsonProperty("scope")
 	@JsonDeserialize(using = ArrayOrStringDeserializer.class)
 	private Collection<String> scope;
 
     //TODO
-	@JsonProperty("resource_ids")
 	@JsonDeserialize(using = ArrayOrStringDeserializer.class)
 	private Collection<String> resourceIds;
 
     @NotEmpty
     @EachEnum( @EnumValue(value = AuthorizationGrant.class,
         message = "{validator.invalid_grant_type}"))
-	@JsonProperty("authorized_grant_types")
 	@JsonDeserialize(using = ArrayOrStringDeserializer.class)
 	private Collection<String> authorizedGrantTypes;
 
@@ -71,7 +63,6 @@ public class ClientDTO implements Serializable {
 	@JsonDeserialize(using = ArrayOrStringDeserializer.class)
 	private Collection<String> registeredRedirectUri;
 
-    @JsonProperty("authorities")
     @JsonDeserialize(using = ArrayOrStringDeserializer.class)
 	private Collection<String> authorities;
 
@@ -83,13 +74,11 @@ public class ClientDTO implements Serializable {
 	@JsonProperty("refresh_token_validity")
 	private Integer refreshTokenValiditySeconds;
 
-    @JsonProperty("product_name")
 	private String productName;
 
     @JsonProperty("client_locked")
     private Boolean locked;
     
-    @JsonProperty("implicit_client_details")
     private ImplicitClientDetails implicitClientDetails;
 
 

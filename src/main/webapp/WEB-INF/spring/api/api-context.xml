@@ -11,7 +11,15 @@
     <!--////////// API Context Configuration //////////-->
 
     <!-- Enable the Spring MVC @Controller programming model -->
-    <mvc:annotation-driven />
+    <mvc:annotation-driven>
+        <mvc:message-converters>
+            <bean class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter"
+                  p:objectMapper-ref="jacksonObjectMapper" />
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+
+    <bean id="jacksonObjectMapper" class="org.codehaus.jackson.map.ObjectMapper"
+          p:propertyNamingStrategy="CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES" />
 
 
     <!--///// Controllers /////-->

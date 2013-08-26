@@ -13,22 +13,17 @@ public class TokenDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @JsonProperty("client_authentication")
     private ClientAuthenticationDTO clientAuthentication;
 
     @JsonProperty("expiration")
     private Date expiration;
 
-    @JsonProperty("scope")
     private Set<String> scope;
 
-    @JsonProperty("token_type")
     private String tokenType;
 
-    @JsonProperty("token_value")
     private String tokenValue;
 
-    @JsonProperty("user_authentication")
     private UserAuthenticationDTO userAuthentication;
 
 

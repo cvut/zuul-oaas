@@ -4,7 +4,6 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.codehaus.jackson.annotate.JsonProperty;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -30,14 +29,11 @@ public class Scope implements Serializable {
 
     @Id
     @Size(max=256)
-    @JsonProperty("name")
     private String name;
     
     @Size(max=256)
-    @JsonProperty("description")
     private String description;
 
-    @JsonProperty("secured")
     private boolean secured = false;
 
 

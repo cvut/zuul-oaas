@@ -1,7 +1,5 @@
 package cz.cvut.zuul.oaas.api.models;
 
-import org.codehaus.jackson.annotate.JsonProperty;
-
 import java.io.Serializable;
 import java.util.Set;
 
@@ -12,22 +10,16 @@ public class ClientAuthenticationDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @JsonProperty("client_id")
     private String clientId;
 
-    @JsonProperty("client_locked")
     private Boolean clientLocked;
 
-    @JsonProperty("product_name")
     private String productName;
 
-    @JsonProperty("scope")
     private Set<String> scope;
 
-    @JsonProperty("redirect_uri")
     private String redirectUri;
 
-    @JsonProperty("resource_ids")
     private Set<String> resourceIds;
 
 

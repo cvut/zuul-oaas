@@ -1,14 +1,11 @@
 package cz.cvut.zuul.oaas.models;
 
-import org.codehaus.jackson.annotate.JsonProperty;
-
 /**
  *
  * @author Tomas Mano <tomasmano@gmail.com>
  */
 public class ImplicitClientDetails {
     
-    @JsonProperty("type")
     private String type;
 
     public ImplicitClientDetails() {

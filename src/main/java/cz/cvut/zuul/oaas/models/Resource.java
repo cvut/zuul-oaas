@@ -14,7 +14,6 @@ import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.net.URI;
@@ -35,33 +34,26 @@ public class Resource implements Serializable {
     @JsonProperty("resource_id")
     private String id;
 
-    @JsonProperty("auth")
     private Auth auth;
 
     @NotEmpty @Size(max=256)
     @ValidURI(scheme={"https", "http"})
-    @JsonProperty("base_url")
     private String baseUrl;
     
     @Size(max=256)
-    @JsonProperty("description")
     private String description;
     
     @NotEmpty @Size(max=256)
-    @JsonProperty("name")
     private String name;
     
     @Size(max=256)
-    @JsonProperty("version")
     private String version;
     
     @NotEmpty @Size(max=256)
-    @JsonProperty("title")
     private String title;
 
     @Indexed
     @NotEmpty @EnumValue(Visibility.class)
-    @JsonProperty("visibility")
     private String visibility = Visibility.PUBLIC.toString();
 
 

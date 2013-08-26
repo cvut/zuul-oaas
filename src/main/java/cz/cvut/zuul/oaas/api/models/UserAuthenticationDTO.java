@@ -1,7 +1,5 @@
 package cz.cvut.zuul.oaas.api.models;
 
-import org.codehaus.jackson.annotate.JsonProperty;
-
 /**
  * @author Jakub Jirutka <jakub@jirutka.cz>
  */
@@ -11,10 +9,8 @@ public class UserAuthenticationDTO {
 
     private String email;
 
-    @JsonProperty("first_name")
     private String firstName;
 
-    @JsonProperty("last_name")
     private String lastName;
 
 

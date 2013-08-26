@@ -3,12 +3,16 @@ package cz.cvut.zuul.oaas.api.resources
 import cz.cvut.zuul.oaas.test.AdvicedStandaloneMockMvcBuilder
 import cz.cvut.zuul.oaas.test.factories.ObjectFactory
 import groovy.json.JsonSlurper
+import org.codehaus.jackson.map.ObjectMapper
+import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter
 import org.springframework.mock.web.MockHttpServletResponse
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import spock.lang.Shared
 import spock.lang.Specification
+
+import static org.codehaus.jackson.map.PropertyNamingStrategy.CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES
 
 /**
  * @author Jakub Jirutka <jakub@jirutka.cz>
@@ -35,9 +39,15 @@ abstract class AbstractControllerIT extends Specification {
 
 
     void setupSpec() {
+        def messageConverter = new MappingJacksonHttpMessageConverter(
+                objectMapper: new ObjectMapper(
+                    propertyNamingStrategy: CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES
+                )
+        )
         controller = initController()
         mockMvc = new AdvicedStandaloneMockMvcBuilder(controller)
                 .setControllerAdvices(new CommonExceptionHandler())
+                .setMessageConverters(messageConverter)
                 .build()
     }
 

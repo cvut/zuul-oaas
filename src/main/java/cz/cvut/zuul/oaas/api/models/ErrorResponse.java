@@ -1,10 +1,7 @@
 package cz.cvut.zuul.oaas.api.models;
 
 import com.google.common.collect.Iterables;
-import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.annotate.JsonPropertyOrder;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 import org.hibernate.validator.method.MethodConstraintViolation;
 import org.hibernate.validator.method.MethodConstraintViolationException;
 import org.springframework.http.HttpStatus;
@@ -17,7 +14,6 @@ import java.io.Serializable;
 /**
  * @author Jakub Jirutka <jakub@jirutka.cz>
  */
-@JsonSerialize(include = Inclusion.ALWAYS)
 @JsonPropertyOrder({"status", "message", "more_info"})
 public class ErrorResponse implements Serializable {
 
@@ -27,7 +23,6 @@ public class ErrorResponse implements Serializable {
 
     private String message;
 
-    @JsonProperty("more_info")
     private String moreInfo;
 
 

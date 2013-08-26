@@ -1,9 +1,9 @@
 package cz.cvut.zuul.oaas.models;
 
-import java.util.List;
 import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonProperty;
 import org.springframework.data.annotation.TypeAlias;
+
+import java.util.List;
 
 /**
  *
@@ -13,7 +13,6 @@ import org.springframework.data.annotation.TypeAlias;
 public class Auth {
 
     //TODO should be saved as references
-    @JsonProperty("scopes")
     private List<Scope> scopes;
 
 
