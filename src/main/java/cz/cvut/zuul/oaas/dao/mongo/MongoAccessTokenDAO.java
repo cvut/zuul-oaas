@@ -2,8 +2,7 @@ package cz.cvut.zuul.oaas.dao.mongo;
 
 import cz.cvut.zuul.oaas.dao.AccessTokenDAO;
 import cz.cvut.zuul.oaas.models.PersistableAccessToken;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.mongodb.core.index.Index;
 import org.springframework.data.mongodb.core.index.IndexDefinition;
 import org.springframework.data.mongodb.core.query.Order;
@@ -22,10 +21,10 @@ import static org.springframework.data.mongodb.core.query.Query.query;
  *
  * @author Jakub Jirutka <jakub@jirutka.cz>
  */
+@Slf4j
 public class MongoAccessTokenDAO
         extends AbstractMongoGenericDAO<PersistableAccessToken, String> implements AccessTokenDAO {
 
-    private static final Logger LOG = LoggerFactory.getLogger(MongoAccessTokenDAO.class);
     private static final String
             CLIENT_ID = "authentication.authorization_request.client_id",
             USER_NAME = "authentication.user_authentication.user_name";
@@ -54,11 +53,11 @@ public class MongoAccessTokenDAO
                 entityClass());
 
         if (accessToken == null) {
-            LOG.debug("Failed to find access token for authentication: [{}] with key: [{}]", authentication, authKey);
+            log.debug("Failed to find access token for authentication: [{}] with key: [{}]", authentication, authKey);
         }
 
         if (accessToken != null && !authentication.equals(accessToken.getAuthentication())) {
-            LOG.debug("Stored authentication details differs from given one, updating to keep the store consistent");
+            log.debug("Stored authentication details differs from given one, updating to keep the store consistent");
             delete(accessToken); //TODO not needed?
             // keep the store consistent (maybe the same user is represented by this auth. but the details have changed)
             save(new PersistableAccessToken(accessToken, authentication));

@@ -5,8 +5,7 @@ import cz.cvut.zuul.oaas.dao.ResourceDAO;
 import cz.cvut.zuul.oaas.generators.IdentifierGenerator;
 import cz.cvut.zuul.oaas.models.Resource;
 import lombok.Setter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,11 +16,9 @@ import static com.google.common.collect.Lists.newArrayList;
  *
  * @author Tomas Mano <tomasmano@gmail.com>
  */
-@Setter
 @Service
+@Setter @Slf4j
 public class ResourceServiceImpl implements ResourceService {
-
-    private static final Logger LOG = LoggerFactory.getLogger(ResourceServiceImpl.class);
 
     private ResourceDAO resourceDAO;
     private IdentifierGenerator identifierGenerator;
@@ -42,13 +39,13 @@ public class ResourceServiceImpl implements ResourceService {
     public String createResource(Resource resource) {
         String resourceId;
         do {
-            LOG.debug("Generating unique resourceId");
+            log.debug("Generating unique resourceId");
             resourceId = identifierGenerator.generateArgBasedIdentifier(resource.getName());
         } while (resourceDAO.exists(resourceId));
 
         resource.setId(resourceId);
 
-        LOG.info("Creating new resource: [{}]", resource);
+        log.info("Creating new resource: [{}]", resource);
         resourceDAO.save(resource);
 
         return resourceId;
@@ -56,7 +53,7 @@ public class ResourceServiceImpl implements ResourceService {
 
     @Override
     public void updateResource(String id, Resource resource) throws NoSuchResourceException{
-        LOG.info("Updating resource [{}]", resource);
+        log.info("Updating resource [{}]", resource);
 
         assertResourceExists(id);
         resourceDAO.save(resource);

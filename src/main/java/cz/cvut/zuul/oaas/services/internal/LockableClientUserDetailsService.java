@@ -3,8 +3,7 @@ package cz.cvut.zuul.oaas.services.internal;
 import cz.cvut.zuul.oaas.dao.ClientDAO;
 import cz.cvut.zuul.oaas.models.Client;
 import lombok.Setter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -23,9 +22,8 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
  * @author Tomas Mano <tomasmano@gmail.com>
  * @author Jakub Jirutka <jakub@jirutka.cz>
  */
+@Slf4j
 public class LockableClientUserDetailsService implements UserDetailsService {
-
-    private static final Logger LOG = LoggerFactory.getLogger(LockableClientUserDetailsService.class);
 
     private @Setter ClientDAO clientDAO;
     private String emptyPassword = "";
@@ -39,8 +37,8 @@ public class LockableClientUserDetailsService implements UserDetailsService {
             clientSecret = emptyPassword;
         }
 
-        if (LOG.isInfoEnabled() && client.isLocked()) {
-            LOG.info("Locked client loaded: {}", client);
+        if (log.isInfoEnabled() && client.isLocked()) {
+            log.info("Locked client loaded: {}", client);
         }
         return new User(clientId, clientSecret, true, true, true, !client.isLocked(), client.getAuthorities());
     }

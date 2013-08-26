@@ -7,9 +7,8 @@ import cz.cvut.zuul.oaas.dao.RefreshTokenDAO;
 import cz.cvut.zuul.oaas.generators.OAuth2ClientCredentialsGenerator;
 import cz.cvut.zuul.oaas.models.Client;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import ma.glasnost.orika.MapperFacade;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -26,11 +25,10 @@ import static org.springframework.util.CollectionUtils.isEmpty;
  * @author Tomas Mano <tomasmano@gmail.com>
  * @author Jakub Jirutka <jakub@jirutka.cz>
  */
-@Setter
 @Service
+@Setter @Slf4j
 public class ClientsServiceImpl implements ClientsService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ClientsServiceImpl.class);
     private static final List<GrantedAuthority> DEFAULT_AUTHORITIES =  AuthorityUtils.createAuthorityList("ROLE_CLIENT");
 
     private ClientDAO clientDAO;
@@ -40,7 +38,7 @@ public class ClientsServiceImpl implements ClientsService {
     private @Setter(NONE) MapperFacade mapper;
     private OAuth2ClientCredentialsGenerator credentialsGenerator;
 
-    
+
     //////////  Business methods  //////////
 
     @Override
@@ -59,12 +57,12 @@ public class ClientsServiceImpl implements ClientsService {
 
         String clientId;
         do {
-            LOG.debug("Generating a new clientId");
+            log.debug("Generating a new clientId");
             clientId = credentialsGenerator.generateClientId();
         } while (clientDAO.exists(clientId));
 
         String clientSecret = credentialsGenerator.generateClientSecret();
-        
+
         client.setClientId(clientId);
         client.setClientSecret(clientSecret);
 
@@ -72,7 +70,7 @@ public class ClientsServiceImpl implements ClientsService {
             client.setAuthorities(DEFAULT_AUTHORITIES);
         }
 
-        LOG.info("Saving a new client: [{}]", client);
+        log.info("Saving a new client: [{}]", client);
         clientDAO.save(client);
 
         return clientId;
@@ -80,7 +78,7 @@ public class ClientsServiceImpl implements ClientsService {
 
     @Override
     public void updateClient(ClientDTO clientDTO) throws NoSuchClientException {
-        LOG.info("Updating client: [{}]", clientDTO);
+        log.info("Updating client: [{}]", clientDTO);
 
         assertClientExists(clientDTO.getClientId());
         clientDAO.save(mapper.map(clientDTO, Client.class));
@@ -88,9 +86,9 @@ public class ClientsServiceImpl implements ClientsService {
 
     @Override
     public void removeClient(String clientId) throws NoSuchClientException {
-        LOG.info("Removing client: [{}]", clientId);
+        log.info("Removing client: [{}]", clientId);
         assertClientExists(clientId);
-        
+
         //remove associated tokens
         accessTokenDAO.deleteByClientId(clientId);
         refreshTokenDAO.deleteByClientId(clientId);
@@ -100,7 +98,7 @@ public class ClientsServiceImpl implements ClientsService {
 
     @Override
     public void resetClientSecret(String clientId) throws NoSuchClientException {
-        LOG.info("Resetting secret for client: [{}]", clientId);
+        log.info("Resetting secret for client: [{}]", clientId);
 
         String newSecret = credentialsGenerator.generateClientSecret();
         try {

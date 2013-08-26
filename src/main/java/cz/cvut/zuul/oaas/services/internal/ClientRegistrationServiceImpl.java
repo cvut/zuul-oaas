@@ -3,8 +3,7 @@ package cz.cvut.zuul.oaas.services.internal;
 import cz.cvut.zuul.oaas.dao.ClientDAO;
 import cz.cvut.zuul.oaas.models.Client;
 import lombok.Setter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
@@ -21,10 +20,8 @@ import java.util.List;
  *
  * @author Jakub Jirutka <jakub@jirutka.cz>
  */
-@Setter
+@Setter @Slf4j
 public class ClientRegistrationServiceImpl implements ClientDetailsService, ClientRegistrationService {
-
-    private static final Logger LOG = LoggerFactory.getLogger(ClientRegistrationServiceImpl.class);
 
     private ClientDAO clientDAO;
     private PasswordEncoder passwordEncoder = NoOpPasswordEncoder.getInstance();
@@ -32,7 +29,7 @@ public class ClientRegistrationServiceImpl implements ClientDetailsService, Clie
 
 
     public ClientDetails loadClientByClientId(String clientId) throws OAuth2Exception {
-        LOG.debug("Loading client: [{}]", clientId);
+        log.debug("Loading client: [{}]", clientId);
         ClientDetails result = clientDAO.findOne(clientId);
 
         if (result == null) {
@@ -43,7 +40,7 @@ public class ClientRegistrationServiceImpl implements ClientDetailsService, Clie
 
     public void addClientDetails(ClientDetails clientDetails) throws ClientAlreadyExistsException {
         try {
-            LOG.info("Adding client: [{}]", clientDetails.getClientId());
+            log.info("Adding client: [{}]", clientDetails.getClientId());
             clientDAO.save(new Client(encodeClientSecret(clientDetails)));
 
         } catch (DuplicateKeyException ex) {
@@ -52,14 +49,14 @@ public class ClientRegistrationServiceImpl implements ClientDetailsService, Clie
     }
 
     public void updateClientDetails(ClientDetails clientDetails) throws NoSuchClientException {
-        LOG.info("Updating client: [{}]", clientDetails.getClientId());
+        log.info("Updating client: [{}]", clientDetails.getClientId());
 
         assertClientExists(clientDetails.getClientId());
         clientDAO.save(new Client(clientDetails));
     }
 
     public void updateClientSecret(String clientId, String secret) throws NoSuchClientException {
-        LOG.info("Updating secret for client: [{}]", clientId);
+        log.info("Updating secret for client: [{}]", clientId);
         try {
             clientDAO.updateClientSecret(clientId, passwordEncoder.encode(secret));
 
@@ -69,7 +66,7 @@ public class ClientRegistrationServiceImpl implements ClientDetailsService, Clie
     }
 
     public void removeClientDetails(String clientId) throws NoSuchClientException {
-        LOG.info("Removing client: [{}]", clientId);
+        log.info("Removing client: [{}]", clientId);
         assertClientExists(clientId);
 
         clientDAO.delete(clientId);

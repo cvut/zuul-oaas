@@ -1,12 +1,12 @@
 package cz.cvut.zuul.oaas.dao.mongo.converters;
 
-import javax.annotation.PostConstruct;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.core.convert.support.GenericConversionService;
+
+import javax.annotation.PostConstruct;
 
 /**
  * Abstract class for auto-registering {@linkplain Converter converters}.
@@ -16,9 +16,8 @@ import org.springframework.core.convert.support.GenericConversionService;
  *
  * @author Jakub Jirutka <jakub@jirutka.cz>
  */
+@Slf4j
 public abstract class AutoRegisteredConverter<S, T> implements Converter<S, T> {
-
-    private static final Logger LOG = LoggerFactory.getLogger(AutoRegisteredConverter.class);
 
     private @Autowired ConversionService conversionService;
 
@@ -29,10 +28,10 @@ public abstract class AutoRegisteredConverter<S, T> implements Converter<S, T> {
      */
     private @PostConstruct void register() {
         if (conversionService instanceof GenericConversionService) {
-            LOG.debug("Registering converter: {}", this.getClass().getName());
+            log.debug("Registering converter: {}", this.getClass().getName());
             ((GenericConversionService) conversionService).addConverter(this);
         } else {
-            LOG.warn("Could not register converter, ConversionService is not instance of GenericConversionService");
+            log.warn("Could not register converter, ConversionService is not instance of GenericConversionService");
         }
     }
 

@@ -5,8 +5,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.util.JSON;
 import lombok.Setter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.core.io.Resource;
 import org.springframework.data.mongodb.core.MongoOperations;
@@ -20,9 +19,9 @@ import java.util.List;
 /**
  * @author Jakub Jirutka <jakub@jirutka.cz>
  */
+@Slf4j
 public class MongoSeedLoader {
 
-    private static final Logger LOG = LoggerFactory.getLogger(MongoSeedLoader.class);
     private static final Charset ENCODING = Charset.forName("UTF-8");
 
     private MongoOperations mongo;
@@ -46,7 +45,7 @@ public class MongoSeedLoader {
 
     @SuppressWarnings("unchecked")
     public void seed() throws IOException {
-        LOG.info("Loading seed data into database...");
+        log.info("Loading seed data into database...");
 
         if (dropAll) dropAll();
 
@@ -61,10 +60,10 @@ public class MongoSeedLoader {
             DBCollection collection = mongo.getCollection(collectionName);
 
             if (skipNonEmptyCollections && collection.count() != 0) {
-                LOG.info("Collection {} is not empty, skipping seed", collectionName);
+                log.info("Collection {} is not empty, skipping seed", collectionName);
                 continue;
             }
-            LOG.info("Seeding collection: {}", collectionName);
+            log.info("Seeding collection: {}", collectionName);
             Object entries = dbObject.get(collectionName);
 
             Assert.state(entries instanceof List,
@@ -77,7 +76,7 @@ public class MongoSeedLoader {
         for (String name : mongo.getCollectionNames()) {
             if (name.startsWith("system")) continue;
 
-            LOG.warn("Dropping collection: {}", name);
+            log.warn("Dropping collection: {}", name);
             mongo.dropCollection(name);
         }
     }
