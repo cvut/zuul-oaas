@@ -16,8 +16,8 @@ import org.springframework.security.core.GrantedAuthority;
 public class ExtendedUserDetails extends org.springframework.security.core.userdetails.User {
 
     private String email;
-    private String firstname;
-    private String lastname;
+    private String firstName;
+    private String lastName;
 
     public String getEmail() {
         return email;
@@ -27,27 +27,27 @@ public class ExtendedUserDetails extends org.springframework.security.core.userd
         this.email = email;
     }
     
-    public String getFirstname() {
-        return firstname;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public String getLastname() {
-        return lastname;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
-    public ExtendedUserDetails(String email, String firstname, String lastname, String username, String password, Collection<? extends GrantedAuthority> authorities) {
+    public ExtendedUserDetails(String email, String firstName, String lastName, String username, String password, Collection<? extends GrantedAuthority> authorities) {
         super(username, password, authorities);
         this.email = email;
-        this.firstname = firstname;
-        this.lastname = lastname;
+        this.firstName = firstName;
+        this.lastName = lastName;
     }
 
 }

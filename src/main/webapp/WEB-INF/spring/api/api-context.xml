@@ -23,8 +23,7 @@
           p:resourceService-ref="resourceService" />
 
     <bean id="tokensController" class="cz.cvut.zuul.oaas.api.resources.TokensController"
-          p:tokenDao-ref="accessTokenDAO"
-          p:clientsService-ref="clientsService"/>
+          p:tokensService-ref="tokensService" />
 
     <bean id="exceptionHandler" class="cz.cvut.zuul.oaas.api.resources.CommonExceptionHandler" />
 

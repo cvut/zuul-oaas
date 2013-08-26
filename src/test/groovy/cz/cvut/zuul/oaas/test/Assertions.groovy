@@ -49,7 +49,22 @@ class ObjectEqualsAssert {
         def properties = actual.properties.keySet() intersect expected.properties.keySet()
         properties.removeAll { it in excludedProperties + 'class' }
 
-        properties.each { String property ->
+        properties.each { prop -> assertProperties(prop) }
+    }
+
+    /**
+     * Asserts specified properties.
+     *
+     * @param includedProperties property names to assert
+     */
+    void inProperties(String... includedProperties) {
+        includedProperties.each { prop -> assertProperties(prop) }
+    }
+
+    private assertProperties(String property) {
+        if (actual[property] instanceof Set || expected[property] instanceof Set) {
+            assert actual[ property ] as Set == expected[ property ] as Set
+        } else {
             assert actual[ property ] == expected[ property ]
         }
     }
