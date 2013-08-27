@@ -183,11 +183,10 @@
     <beans profile="ldap">
         
         <!--context mapper to create FIT LDAP user object-->
-        <bean id="extendedFITUserDetailsContextMapper" class="cz.cvut.appsmanager.service.help.ExtendedUserDetailsContextMapper" 
-              p:firstnameAttributeName="${ldap.fit.attribute.name.fn}"
-              p:lastnameAttributeName="${ldap.fit.attribute.name.sn}"
-              p:emailAttributeName="${ldap.fit.attribute.name.email}"
-              p:passwordAttributeName="${ldap.fit.attribute.name.password}" />
+        <bean id="extendedFITUserDetailsContextMapper" class="cz.cvut.zuul.oaas.support.SimpleUserDetailsContextMapper"
+              p:firstNameAttrName="${ldap.fit.attribute.name.fn}"
+              p:lastNameAttrName="${ldap.fit.attribute.name.sn}"
+              p:emailAttrName="${ldap.fit.attribute.name.email}" />
         
         <jee:jndi-lookup id="ldapServerUri" jndi-name="java:comp/env/conf/ldapServerUri"
                          cache="true" default-value="ldap://localhost/ou=dummy" />
@@ -203,18 +202,16 @@
     <beans profile="ldap-2">
         
         <!--context mapper to create FIT LDAP user object-->
-        <bean id="extendedFITUserDetailsContextMapper" class="cz.cvut.zuul.oaas.support.ExtendedUserDetailsContextMapper"
-              p:firstnameAttributeName="${ldap.fit.attribute.name.fn}"
-              p:lastnameAttributeName="${ldap.fit.attribute.name.sn}"
-              p:emailAttributeName="${ldap.fit.attribute.name.email}"
-              p:passwordAttributeName="${ldap.fit.attribute.name.password}" />
+        <bean id="extendedFITUserDetailsContextMapper" class="cz.cvut.zuul.oaas.support.SimpleUserDetailsContextMapper"
+              p:firstNameAttrName="${ldap.fit.attribute.name.fn}"
+              p:lastNameAttrName="${ldap.fit.attribute.name.sn}"
+              p:emailAttrName="${ldap.fit.attribute.name.email}" />
 
         <!--context mapper to create FEL LDAP user object-->
-        <bean id="extendedFELUserDetailsContextMapper" class="cz.cvut.zuul.oaas.support.ExtendedUserDetailsContextMapper"
-              p:firstnameAttributeName="${ldap.fel.attribute.name.fn}"
-              p:lastnameAttributeName="${ldap.fel.attribute.name.sn}"
-              p:emailAttributeName="${ldap.fel.attribute.name.email}"
-              p:passwordAttributeName="${ldap.fel.attribute.name.password}" />
+        <bean id="extendedFELUserDetailsContextMapper" class="cz.cvut.zuul.oaas.support.SimpleUserDetailsContextMapper"
+              p:firstNameAttrName="${ldap.fel.attribute.name.fn}"
+              p:lastNameAttrName="${ldap.fel.attribute.name.sn}"
+              p:emailAttrName="${ldap.fel.attribute.name.email}" />
         
         <sec:ldap-server id="ldapFIT" url="${ldap.fit.server.uri}" />
         <sec:ldap-server id="ldapFEL" url="${ldap.fel.server.uri}" />

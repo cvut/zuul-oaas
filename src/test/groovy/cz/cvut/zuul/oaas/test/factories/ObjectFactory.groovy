@@ -3,9 +3,9 @@ package cz.cvut.zuul.oaas.test.factories
 import cz.cvut.oauth.provider.spring.TokenInfo
 import cz.cvut.zuul.oaas.api.models.ResourceDTO
 import cz.cvut.zuul.oaas.models.Client
-import cz.cvut.zuul.oaas.models.ExtendedUserDetails
 import cz.cvut.zuul.oaas.models.Resource
 import cz.cvut.zuul.oaas.models.Scope
+import cz.cvut.zuul.oaas.models.User
 import cz.cvut.zuul.oaas.models.enums.AuthorizationGrant
 import cz.cvut.zuul.oaas.models.enums.Visibility
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
@@ -146,16 +146,13 @@ class ObjectFactory {
         }
 
         registerBuilder(UsernamePasswordAuthenticationToken) { values ->
-            def user = build(ExtendedUserDetails, values)
+            def user = build(User, values)
             new UsernamePasswordAuthenticationToken(user, null, user.authorities)
         }
 
-        registerBuilder(ExtendedUserDetails) { values ->
+        registerBuilder(User) { values ->
             String username = values['username'] ?: anyLetterString(5, 10)
-
-            new ExtendedUserDetails(
-                    anyEmail(), anyLetterString(), anyLetterString(), username, 'empty', buildListOf(GrantedAuthority)
-            )
+            new User(username, anyEmail(), anyLetterString(), anyLetterString(), buildListOf(GrantedAuthority))
         }
 
         registerBuilder(SimpleGrantedAuthority) {

@@ -6,8 +6,8 @@ import cz.cvut.zuul.oaas.api.resources.exceptions.NoSuchTokenException;
 import cz.cvut.zuul.oaas.dao.AccessTokenDAO;
 import cz.cvut.zuul.oaas.dao.ClientDAO;
 import cz.cvut.zuul.oaas.models.Client;
-import cz.cvut.zuul.oaas.models.ExtendedUserDetails;
 import cz.cvut.zuul.oaas.models.PersistableAccessToken;
+import cz.cvut.zuul.oaas.models.User;
 import lombok.Setter;
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.MapperFactory;
@@ -82,8 +82,8 @@ public class TokensServiceImpl implements TokensService {
             o.setUserAuthorities( userAuth.getAuthorities() );
             o.setUserId( userAuth.getName() );
 
-            if (userAuth.getPrincipal() instanceof ExtendedUserDetails) {
-                ExtendedUserDetails user = (ExtendedUserDetails) userAuth.getPrincipal();
+            if (userAuth.getPrincipal() instanceof User) {
+                User user = (User) userAuth.getPrincipal();
                 o.setUserEmail( user.getEmail() );
             }
         }
@@ -113,7 +113,7 @@ public class TokensServiceImpl implements TokensService {
                 .byDefault()
         );
         factory.registerClassMap(factory
-                .classMap(ExtendedUserDetails.class, TokenDTO.UserAuthentication.class)
+                .classMap(User.class, TokenDTO.UserAuthentication.class)
                 .byDefault()
         );
         mapper = factory.getMapperFacade();
