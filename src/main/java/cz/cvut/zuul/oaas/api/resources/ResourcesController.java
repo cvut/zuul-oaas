@@ -1,7 +1,7 @@
 package cz.cvut.zuul.oaas.api.resources;
 
+import cz.cvut.zuul.oaas.api.models.ResourceDTO;
 import cz.cvut.zuul.oaas.api.resources.exceptions.NoSuchResourceException;
-import cz.cvut.zuul.oaas.models.Resource;
 import cz.cvut.zuul.oaas.services.ResourceService;
 import lombok.Setter;
 import org.springframework.http.ResponseEntity;
@@ -29,24 +29,24 @@ public class ResourcesController {
 
 
     @RequestMapping(method = GET)
-    public @ResponseBody List<Resource> getAllResources() {
+    public @ResponseBody List<ResourceDTO> getAllResources() {
         return resourceService.getAllResources();
     }
 
     @RequestMapping(value = "/public", method = GET)
-    public @ResponseBody List<Resource> getAllPublicResources() {
+    public @ResponseBody List<ResourceDTO> getAllPublicResources() {
         return resourceService.getAllPublicResources();
     }
 
     @ResponseBody
     @RequestMapping(value = "/{id}", method = GET)
-    public Resource getResource(@PathVariable String id) {
+    public ResourceDTO getResource(@PathVariable String id) {
         return resourceService.findResourceById(id);
     }
 
     @ResponseStatus(CREATED)
     @RequestMapping(method = POST)
-    public void createResource(@RequestBody Resource resource, HttpServletResponse response) {
+    public void createResource(@RequestBody ResourceDTO resource, HttpServletResponse response) {
         String resourceId = resourceService.createResource(resource);
 
         // send redirect to URI of the created resource (i.e. api/resources/{id}/)
@@ -55,7 +55,7 @@ public class ResourcesController {
 
     @ResponseStatus(NO_CONTENT)
     @RequestMapping(value = "/{id}", method = PUT)
-    public void updateResource(@PathVariable String id, @RequestBody Resource resource) {
+    public void updateResource(@PathVariable String id, @RequestBody ResourceDTO resource) {
         resourceService.updateResource(id, resource);
     }
 

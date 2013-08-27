@@ -1,7 +1,7 @@
 package cz.cvut.zuul.oaas.api.resources
 
+import cz.cvut.zuul.oaas.api.models.ResourceDTO
 import cz.cvut.zuul.oaas.api.resources.exceptions.NoSuchResourceException
-import cz.cvut.zuul.oaas.models.Resource
 import cz.cvut.zuul.oaas.services.ResourceService
 import org.hibernate.validator.method.MethodConstraintViolationException
 
@@ -35,12 +35,12 @@ class ResourcesControllerIT extends AbstractControllerIT {
                 json.size() == 3
             }
         where:
-            expected = [build(Resource)] * 3
+            expected = [build(ResourceDTO)] * 3
     }
 
     void 'GET: non existing resource'() {
         setup:
-           1 * service.findResourceById('666') >> { throw new NoSuchResourceException("") }
+           1 * service.findResourceById('666') >> { throw new NoSuchResourceException('') }
         when:
             perform GET('/v1/resources/666').with {
                 accept APPLICATION_JSON
@@ -51,7 +51,7 @@ class ResourcesControllerIT extends AbstractControllerIT {
 
     void 'GET: existing resource'() {
         setup:
-            1 * service.findResourceById(expected.id) >> expected
+            1 * service.findResourceById(expected.resourceId) >> expected
         when:
             perform GET('/v1/resources/123').with {
                 accept APPLICATION_JSON
@@ -61,17 +61,16 @@ class ResourcesControllerIT extends AbstractControllerIT {
                 status == 200
                 contentType == CONTENT_TYPE_JSON
 
-                json.resource_id        == expected.id
+                json.resource_id        == expected.resourceId
                 json.auth.scopes*.name  == expected.auth.scopes*.name
                 json.base_url           == expected.baseUrl
                 json.description        == expected.description
                 json.name               == expected.name
                 json.version            == expected.version
-                json.title              == expected.title
                 json.visibility         == expected.visibility
             }
         where:
-            expected = build(Resource, [id: '123'])
+            expected = build(ResourceDTO, [resourceId: '123'])
     }
 
 
@@ -89,7 +88,7 @@ class ResourcesControllerIT extends AbstractControllerIT {
 
     def 'POST: valid resource'() {
         setup:
-            Resource resource
+            ResourceDTO resource
             service.createResource({ resource = it }) >> '123'
         when:
             perform POST ('/v1/resources/').with {

@@ -1,7 +1,7 @@
 package cz.cvut.zuul.oaas.test.factories
 
 import cz.cvut.oauth.provider.spring.TokenInfo
-import cz.cvut.zuul.oaas.models.Auth
+import cz.cvut.zuul.oaas.api.models.ResourceDTO
 import cz.cvut.zuul.oaas.models.Client
 import cz.cvut.zuul.oaas.models.ExtendedUserDetails
 import cz.cvut.zuul.oaas.models.Resource
@@ -12,12 +12,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
-import org.springframework.security.oauth2.common.DefaultExpiringOAuth2RefreshToken
-import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken
-import org.springframework.security.oauth2.common.DefaultOAuth2RefreshToken
-import org.springframework.security.oauth2.common.ExpiringOAuth2RefreshToken
-import org.springframework.security.oauth2.common.OAuth2AccessToken
-import org.springframework.security.oauth2.common.OAuth2RefreshToken
+import org.springframework.security.oauth2.common.*
 import org.springframework.security.oauth2.provider.AuthorizationRequest
 import org.springframework.security.oauth2.provider.DefaultAuthorizationRequest
 import org.springframework.security.oauth2.provider.OAuth2Authentication
@@ -26,12 +21,12 @@ import static cz.cvut.zuul.oaas.test.factories.CustomGeneratorSamples.anyEmail
 import static net.java.quickcheck.generator.CombinedGeneratorSamples.anyMap
 import static net.java.quickcheck.generator.CombinedGeneratorSamples.anySet
 import static net.java.quickcheck.generator.PrimitiveGeneratorSamples.*
-import static net.java.quickcheck.generator.PrimitiveGenerators.enumValues
-import static net.java.quickcheck.generator.PrimitiveGenerators.integers
-import static net.java.quickcheck.generator.PrimitiveGenerators.letterStrings
+import static net.java.quickcheck.generator.PrimitiveGenerators.*
 
 /**
  * Factory for building testing (domain) objects.
+ *
+ * TODO refactor me!
  *
  * @author Jakub Jirutka <jakub@jirutka.cz>
  */
@@ -183,18 +178,27 @@ class ObjectFactory {
             return client
         }
 
-        registerBuilder(Resource) { values ->
-            def resource = new Resource(
-                    id: anyLetterString(5, 10),
+        registerBuilder(ResourceDTO) { values ->
+            def resource = new ResourceDTO(
+                    resourceId: anyLetterString(5, 10),
                     baseUrl: 'http://example.org',
                     description: anyLetterString(0, 255),
                     name: anyLetterString(5, 255),
                     version: anyLetterString(0, 255),
-                    title: anyLetterString(0, 255),
-                    visibility: anyEnumValue(Visibility).toString(),
-                    auth: new Auth(
-                            scopes: buildListOf(Scope, 0, 3)
+                    visibility: anyEnumValue(Visibility),
+                    auth: new ResourceDTO.Auth(
+                            scopes: buildListOf(ResourceDTO.Scope, 0, 3)
                     )
+            )
+            values.each { prop, value ->
+                resource[prop] = value
+            }
+            return resource
+        }
+
+        registerBuilder(Resource) { values ->
+            def resource = new Resource(
+                    scopes: buildListOf(Scope)
             )
             values.each { prop, value ->
                 resource[prop] = value

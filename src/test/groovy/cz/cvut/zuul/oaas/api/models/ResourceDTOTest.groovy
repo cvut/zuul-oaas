@@ -1,4 +1,4 @@
-package cz.cvut.zuul.oaas.models
+package cz.cvut.zuul.oaas.api.models
 
 import cz.cvut.zuul.oaas.test.ValidatorUtils
 import spock.lang.Specification
@@ -10,13 +10,13 @@ import static cz.cvut.zuul.oaas.test.ValidatorUtils.*
  * @author Jakub Jirutka <jakub@jirutka.cz>
  */
 @Unroll
-class ResourceTest extends Specification {
+class ResourceDTOTest extends Specification {
 
     @Delegate
-    static ValidatorUtils validator = createValidator(Resource.class)
+    static ValidatorUtils validator = createValidator(ResourceDTO)
 
 
-    void 'baseUrl should be #expected given #description URL'() {
+    def 'baseUrl should be #expected given #description URL'() {
         expect:
             validate 'baseUrl', value, expected
         where:
@@ -28,7 +28,7 @@ class ResourceTest extends Specification {
             'too long'           | "http://lo${ 'o' * 242 }ng.org".toString()  || invalid
     }
 
-    void 'description should be #expected given #description string'() {
+    def 'description should be #expected given #description string'() {
         expect:
             validate 'description', value, expected
         where:
@@ -38,7 +38,7 @@ class ResourceTest extends Specification {
             'too long'      | 'o' * 257         || invalid
     }
 
-    void 'name should be #expected given #description string'() {
+    def 'name should be #expected given #description string'() {
         expect:
             validate 'name', value, expected
         where:
@@ -48,7 +48,7 @@ class ResourceTest extends Specification {
             'too long'      | 'o' * 257         || invalid
     }
 
-    void 'version should be #expected given #description string'() {
+    def 'version should be #expected given #description string'() {
         expect:
             validate 'version', value, expected
         where:
@@ -58,7 +58,7 @@ class ResourceTest extends Specification {
             'too long'      | 'o' * 257         || invalid
     }
 
-    void 'visibility should be #expected given #description visibility'() {
+    def 'visibility should be #expected given #description visibility'() {
         expect:
             validate 'visibility', value, expected
         where:

@@ -1,11 +1,15 @@
 package cz.cvut.zuul.oaas.services
 
+import cz.cvut.zuul.oaas.api.models.ResourceDTO
 import cz.cvut.zuul.oaas.api.resources.exceptions.NoSuchResourceException
 import cz.cvut.zuul.oaas.dao.ResourceDAO
 import cz.cvut.zuul.oaas.generators.IdentifierGenerator
 import cz.cvut.zuul.oaas.models.Resource
+import cz.cvut.zuul.oaas.test.Assertions
 import cz.cvut.zuul.oaas.test.factories.ObjectFactory
 import spock.lang.Specification
+
+import static cz.cvut.zuul.oaas.test.Assertions.assertThat
 
 /**
  * @author Jakub Jirutka <jakub@jirutka.cz>
@@ -21,11 +25,15 @@ class ResourceServiceTest extends Specification {
             identifierGenerator: generator
     )
 
+    def setup() {
+        service.setupMapper()
+    }
+
 
     def 'create resource'() {
         given:
-            def resource = build(Resource).with {
-                it.id = 'irrelevant'; return it
+            def resource = build(ResourceDTO).with {
+                it.resourceId = 'irrelevant'; return it
             }
             def generatedId = 'foo-123'
         when:
@@ -41,7 +49,7 @@ class ResourceServiceTest extends Specification {
 
     def 'create resource and handle generation of already taken id'() {
         given:
-            def resource = build(Resource)
+            def resource = build(ResourceDTO)
             def generatedId = 'foo-123'
         when:
             service.createResource(resource)
@@ -57,7 +65,7 @@ class ResourceServiceTest extends Specification {
 
     def 'update non existing resource'() {
         when:
-            service.updateResource('non-existing', build(Resource))
+            service.updateResource('non-existing', build(ResourceDTO))
         then:
             resourceDao.exists('non-existing') >> false
             thrown(NoSuchResourceException)
@@ -79,5 +87,32 @@ class ResourceServiceTest extends Specification {
         then:
             resourceDao.exists('non-existing') >> false
             thrown(NoSuchResourceException)
+    }
+
+
+    def 'map Resource to ResourceDTO'() {
+        given:
+            def resource = build(Resource)
+        when:
+            def dto = service.mapper.map(resource, ResourceDTO)
+        then:
+            assertMapping resource, dto
+    }
+
+    def 'map ResourceDTO to Resource'() {
+        given:
+            def dto = build(ResourceDTO)
+        when:
+            def resource = service.mapper.map(dto, Resource)
+        then:
+            assertMapping resource, dto
+    }
+
+    private assertMapping(Resource entity, ResourceDTO dto) {
+        assertThat( entity ).equalsTo( dto ).inProperties(
+                'baseUrl', 'description', 'name', 'version'
+        )
+        entity.id == dto.resourceId
+        entity.scopes*.name == dto.auth.scopes*.name //TODO all fields
     }
 }

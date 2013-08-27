@@ -1,10 +1,9 @@
 package cz.cvut.zuul.oaas.dao
 
 import cz.cvut.zuul.oaas.models.Resource
+import cz.cvut.zuul.oaas.models.enums.Visibility
 import org.springframework.beans.factory.annotation.Autowired
 
-import static cz.cvut.zuul.oaas.models.enums.Visibility.HIDDEN
-import static cz.cvut.zuul.oaas.models.enums.Visibility.PUBLIC
 import static cz.cvut.zuul.oaas.test.Assertions.assertThat
 
 /**
@@ -15,14 +14,13 @@ class ResourceDAO_IT extends AbstractDAO_IT<Resource>{
     @Autowired ResourceDAO dao
 
     void assertIt(Resource actual, Resource expected) {
-        assertThat (actual) equalsTo (expected) inAllPropertiesExcept ('auth')
-        assert actual.auth.scopes == expected.auth.scopes
+        assertThat (actual) equalsTo (expected) inAllProperties()
     }
 
 
     def 'find all public resources'() {
         setup:
-            ([PUBLIC.toString()] * 3 + [HIDDEN.toString()] * 2).each { visibility ->
+            ([Visibility.PUBLIC] * 3 + [Visibility.HIDDEN] * 2).each { visibility ->
                 def entity = build(Resource, [visibility: visibility])
                 dao.save(entity)
             }

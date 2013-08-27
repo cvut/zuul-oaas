@@ -3,12 +3,8 @@ package cz.cvut.zuul.oaas.models;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.TypeAlias;
-import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 /**
@@ -25,19 +21,13 @@ import java.io.Serializable;
 @AllArgsConstructor
 
 @TypeAlias("Scope")
-@Document(collection = "scopes")
-
-@JsonIgnoreProperties(ignoreUnknown = true)
 
 public class Scope implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @Id
-    @Size(max=256)
     private String name;
     
-    @Size(max=256)
     private String description;
 
     private boolean secured = false;

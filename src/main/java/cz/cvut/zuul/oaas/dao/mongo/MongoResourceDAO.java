@@ -17,7 +17,7 @@ public class MongoResourceDAO extends AbstractMongoGenericDAO<Resource, String> 
 
     public List<Resource> findAllPublic() {
         return mongo().find(query(
-                where("visibility").is(Visibility.PUBLIC.toString())),
+                where("visibility").is(Visibility.PUBLIC)),
                 entityClass()
         );
     }
