@@ -65,9 +65,9 @@ class ResourceServiceTest extends Specification {
 
     def 'update non existing resource'() {
         when:
-            service.updateResource('non-existing', build(ResourceDTO))
+            service.updateResource(build(ResourceDTO))
         then:
-            resourceDao.exists('non-existing') >> false
+            resourceDao.exists(_) >> false
             thrown(NoSuchResourceException)
     }
 

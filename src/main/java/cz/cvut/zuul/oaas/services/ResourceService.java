@@ -28,11 +28,10 @@ public interface ResourceService {
     String createResource(@Valid ResourceDTO resource);
     
     /**
-     * @param id id of the resource to be updated
      * @param resource resource's content to be updated with
      * @throws NoSuchResourceException when no matching resource was found
      */
-    void updateResource(String id, @Valid ResourceDTO resource) throws NoSuchResourceException;
+    void updateResource(@Valid ResourceDTO resource) throws NoSuchResourceException;
 
     /**
      * @param id id of the resource to be deleted

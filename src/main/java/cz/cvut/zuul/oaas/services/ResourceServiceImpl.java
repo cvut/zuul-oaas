@@ -63,10 +63,10 @@ public class ResourceServiceImpl implements ResourceService {
         return resourceId;
     }
 
-    public void updateResource(String id, ResourceDTO resourceDTO) throws NoSuchResourceException{
+    public void updateResource(ResourceDTO resourceDTO) throws NoSuchResourceException{
         log.info("Updating resource [{}]", resourceDTO);
 
-        assertResourceExists(id);
+        assertResourceExists(resourceDTO.getResourceId());
         resourceDAO.save(mapper.map(resourceDTO, Resource.class));
     }
 

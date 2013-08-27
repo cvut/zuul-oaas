@@ -18,6 +18,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
  * API for authorization server resource's management.
  *
  * @author Tomas Mano <tomasmano@gmail.com>
+ * @author Jakub Jirutka <jakub@jirutka.cz>
  */
 @Controller
 @RequestMapping("/v1/resources/")
@@ -56,7 +57,8 @@ public class ResourcesController {
     @ResponseStatus(NO_CONTENT)
     @RequestMapping(value = "/{id}", method = PUT)
     public void updateResource(@PathVariable String id, @RequestBody ResourceDTO resource) {
-        resourceService.updateResource(id, resource);
+        resource.setResourceId(id);
+        resourceService.updateResource(resource);
     }
 
     @ResponseStatus(NO_CONTENT)
