@@ -4,7 +4,6 @@ import cz.cvut.zuul.oaas.api.models.ClientDTO;
 import cz.cvut.zuul.oaas.dao.AccessTokenDAO;
 import cz.cvut.zuul.oaas.dao.ClientDAO;
 import cz.cvut.zuul.oaas.dao.RefreshTokenDAO;
-import cz.cvut.zuul.oaas.generators.OAuth2ClientCredentialsGenerator;
 import cz.cvut.zuul.oaas.models.Client;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +11,7 @@ import ma.glasnost.orika.MapperFacade;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.crypto.keygen.StringKeyGenerator;
 import org.springframework.security.oauth2.provider.ClientAlreadyExistsException;
 import org.springframework.security.oauth2.provider.NoSuchClientException;
 import org.springframework.stereotype.Service;
@@ -35,8 +35,10 @@ public class ClientsServiceImpl implements ClientsService {
     private AccessTokenDAO accessTokenDAO;
     private RefreshTokenDAO refreshTokenDAO;
 
+    private StringKeyGenerator clientIdGenerator;
+    private StringKeyGenerator secretGenerator;
+
     private @Setter(NONE) MapperFacade mapper;
-    private OAuth2ClientCredentialsGenerator credentialsGenerator;
 
 
     //////////  Business methods  //////////
@@ -57,11 +59,11 @@ public class ClientsServiceImpl implements ClientsService {
 
         String clientId;
         do {
-            log.debug("Generating a new clientId");
-            clientId = credentialsGenerator.generateClientId();
+            log.debug("Generating unique clientId...");
+            clientId = clientIdGenerator.generateKey();
         } while (clientDAO.exists(clientId));
 
-        String clientSecret = credentialsGenerator.generateClientSecret();
+        String clientSecret = secretGenerator.generateKey();
 
         client.setClientId(clientId);
         client.setClientSecret(clientSecret);
@@ -100,7 +102,7 @@ public class ClientsServiceImpl implements ClientsService {
     public void resetClientSecret(String clientId) throws NoSuchClientException {
         log.info("Resetting secret for client: [{}]", clientId);
 
-        String newSecret = credentialsGenerator.generateClientSecret();
+        String newSecret = secretGenerator.generateKey();
         try {
             clientDAO.updateClientSecret(clientId, newSecret);
 

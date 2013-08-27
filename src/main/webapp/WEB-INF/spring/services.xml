@@ -19,7 +19,8 @@
           p:clientDAO-ref="clientDAO"
           p:accessTokenDAO-ref="accessTokenDAO"
           p:refreshTokenDAO-ref="refreshTokenDAO"
-          p:credentialsGenerator-ref="credentialsGenerator"
+          p:clientIdGenerator-ref="clientIdGenerator"
+          p:secretGenerator-ref="secretGenerator"
           p:mapperFacade-ref="mapperFacade" />
 
     <bean id="tokensService" class="cz.cvut.zuul.oaas.services.TokensServiceImpl"
@@ -59,7 +60,8 @@
 
     <!--///// Generators /////-->
 
-    <bean id="credentialsGenerator" class="cz.cvut.zuul.oaas.generators.OAuth2ClientCredentialsGeneratorImpl" />
+    <bean id="secretGenerator" class="cz.cvut.zuul.oaas.generators.SecurePasswordGenerator" />
+    <bean id="clientIdGenerator" class="cz.cvut.zuul.oaas.generators.UUIDStringGenerator" />
     <bean id="identifierGenerator" class="cz.cvut.zuul.oaas.generators.IdentifierGeneratorImpl" />
 
 </beans>

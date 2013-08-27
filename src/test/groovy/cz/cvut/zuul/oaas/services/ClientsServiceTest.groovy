@@ -4,11 +4,11 @@ import cz.cvut.zuul.oaas.api.models.ClientDTO
 import cz.cvut.zuul.oaas.dao.AccessTokenDAO
 import cz.cvut.zuul.oaas.dao.ClientDAO
 import cz.cvut.zuul.oaas.dao.RefreshTokenDAO
-import cz.cvut.zuul.oaas.generators.OAuth2ClientCredentialsGenerator
 import cz.cvut.zuul.oaas.models.Client
 import cz.cvut.zuul.oaas.test.factories.ObjectFactory
 import ma.glasnost.orika.MapperFacade
 import org.springframework.dao.EmptyResultDataAccessException
+import org.springframework.security.crypto.keygen.StringKeyGenerator
 import org.springframework.security.oauth2.provider.NoSuchClientException
 import spock.lang.Specification
 
@@ -21,14 +21,16 @@ class ClientsServiceTest extends Specification {
     def clientDao = Mock(ClientDAO)
     def accessTokenDao = Mock(AccessTokenDAO)
     def refreshTokenDao = Mock(RefreshTokenDAO)
-    def generator = Mock(OAuth2ClientCredentialsGenerator)
+    def clientIdGenerator = Mock(StringKeyGenerator)
+    def secretGenerator = Mock(StringKeyGenerator)
     def mapper = Mock(MapperFacade)
 
     def service = new ClientsServiceImpl(
             clientDAO: clientDao,
             accessTokenDAO: accessTokenDao,
             refreshTokenDAO: refreshTokenDao,
-            credentialsGenerator: generator,
+            clientIdGenerator: clientIdGenerator,
+            secretGenerator: secretGenerator,
             mapper: mapper
     )
 
@@ -54,8 +56,8 @@ class ClientsServiceTest extends Specification {
         when:
             def returnedId = service.createClient( build(ClientDTO) )
         then:
-            1 * generator.generateClientId() >> generatedId
-            1 * generator.generateClientSecret() >> generatedSecret
+            1 * clientIdGenerator.generateKey() >> generatedId
+            1 * secretGenerator.generateKey() >> generatedSecret
             1 * clientDao.save({ Client it ->
                 it.clientId == generatedId
                 it.clientSecret == generatedSecret
@@ -84,7 +86,7 @@ class ClientsServiceTest extends Specification {
         when:
             service.createClient( build(ClientDTO) ) == generatedId
         then: 'generate unique id at the third attempt'
-            3 * generator.generateClientId() >>> ['taken-id', 'still-bad', generatedId]
+            3 * clientIdGenerator.generateKey() >>> ['taken-id', 'still-bad', generatedId]
             3 * clientDao.exists(_) >>> [true, true, false]
         then:
             1 * clientDao.save({ Client it ->
@@ -127,7 +129,7 @@ class ClientsServiceTest extends Specification {
         when:
             service.resetClientSecret('client-123')
         then:
-            1 * generator.generateClientSecret() >> 'top-secret'
+            1 * secretGenerator.generateKey() >> 'top-secret'
             1 * clientDao.updateClientSecret('client-123', 'top-secret')
     }
 
