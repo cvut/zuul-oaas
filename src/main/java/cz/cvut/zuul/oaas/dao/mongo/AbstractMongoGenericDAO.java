@@ -1,7 +1,6 @@
 package cz.cvut.zuul.oaas.dao.mongo;
 
 import cz.cvut.zuul.oaas.utils.MongoUtils;
-import org.apache.commons.lang3.reflect.TypeUtils;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -11,8 +10,7 @@ import org.springframework.data.repository.CrudRepository;
 
 import javax.annotation.PostConstruct;
 import java.io.Serializable;
-import java.lang.reflect.Type;
-import java.lang.reflect.TypeVariable;
+import java.lang.reflect.ParameterizedType;
 
 /**
  * Abstract implementation of the {@link CrudRepository} for MongoDB that
@@ -28,9 +26,13 @@ public abstract class AbstractMongoGenericDAO<T, ID extends Serializable> implem
     private MongoRepository<T, ID> mongoRepository;
 
 
-    @PostConstruct
-    protected void initialize() {
-        entityClass = determineEntityClass();
+
+    @SuppressWarnings("unchecked")
+    protected AbstractMongoGenericDAO() {
+        this.entityClass = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+    }
+
+    @PostConstruct void initialize() {
         MongoEntityInformation<T, ID> entityInformation = MongoUtils.createEntityInformation(entityClass, mongoOperations);
         mongoRepository = new SimpleMongoRepository<>(entityInformation, mongoOperations);
     }
@@ -84,14 +86,6 @@ public abstract class AbstractMongoGenericDAO<T, ID extends Serializable> implem
 
 
     //////// Helpers ////////
-
-    @SuppressWarnings("unchecked")
-    private Class<T> determineEntityClass() {
-        TypeVariable<?> typeVarE = AbstractMongoGenericDAO.class.getTypeParameters()[0];
-        Type implType = this.getClass();
-
-        return (Class<T>) TypeUtils.getTypeArguments(implType, AbstractMongoGenericDAO.class).get(typeVarE);
-    }
 
     protected Class<T> entityClass() {
         return entityClass;
