@@ -12,7 +12,7 @@ import java.util.List;
  * @author Tomas Mano <tomasmano@gmail.com>
  */
 @Validated
-public interface ResourceService {
+public interface ResourcesService {
 
     /**
      * @param id resource's id

@@ -5,7 +5,6 @@ import cz.cvut.zuul.oaas.api.resources.exceptions.NoSuchResourceException
 import cz.cvut.zuul.oaas.dao.ResourceDAO
 import cz.cvut.zuul.oaas.generators.IdentifierGenerator
 import cz.cvut.zuul.oaas.models.Resource
-import cz.cvut.zuul.oaas.test.Assertions
 import cz.cvut.zuul.oaas.test.factories.ObjectFactory
 import spock.lang.Specification
 
@@ -15,12 +14,12 @@ import static cz.cvut.zuul.oaas.test.Assertions.assertThat
  * @author Jakub Jirutka <jakub@jirutka.cz>
  */
 @Mixin(ObjectFactory)
-class ResourceServiceTest extends Specification {
+class ResourcesServiceTest extends Specification {
 
     def resourceDao = Mock(ResourceDAO)
     def generator = Mock(IdentifierGenerator)
 
-    def service = new ResourceServiceImpl(
+    def service = new ResourcesServiceImpl(
             resourceDAO: resourceDao,
             identifierGenerator: generator
     )

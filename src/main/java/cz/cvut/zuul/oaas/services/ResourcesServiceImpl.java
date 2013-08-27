@@ -28,7 +28,7 @@ import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
  */
 @Service
 @Setter @Slf4j
-public class ResourceServiceImpl implements ResourceService {
+public class ResourcesServiceImpl implements ResourcesService {
 
     private ResourceDAO resourceDAO;
     private IdentifierGenerator identifierGenerator;

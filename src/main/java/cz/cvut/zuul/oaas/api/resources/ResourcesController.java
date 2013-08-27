@@ -2,7 +2,7 @@ package cz.cvut.zuul.oaas.api.resources;
 
 import cz.cvut.zuul.oaas.api.models.ResourceDTO;
 import cz.cvut.zuul.oaas.api.resources.exceptions.NoSuchResourceException;
-import cz.cvut.zuul.oaas.services.ResourceService;
+import cz.cvut.zuul.oaas.services.ResourcesService;
 import lombok.Setter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -26,7 +26,7 @@ public class ResourcesController {
 
     private static final String SELF_URI = "/v1/resources/";
 
-    private @Setter ResourceService resourceService;
+    private @Setter ResourcesService resourceService;
 
 
     @RequestMapping(method = GET)

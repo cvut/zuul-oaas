@@ -2,7 +2,7 @@ package cz.cvut.zuul.oaas.api.resources
 
 import cz.cvut.zuul.oaas.api.models.ResourceDTO
 import cz.cvut.zuul.oaas.api.resources.exceptions.NoSuchResourceException
-import cz.cvut.zuul.oaas.services.ResourceService
+import cz.cvut.zuul.oaas.services.ResourcesService
 import org.hibernate.validator.method.MethodConstraintViolationException
 
 import static java.util.Collections.emptySet
@@ -13,7 +13,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON
  */
 class ResourcesControllerIT extends AbstractControllerIT {
 
-    def service = Mock(ResourceService)
+    def service = Mock(ResourcesService)
 
     def initController() { new ResourcesController() }
     void setupController(_) { _.resourceService = service }
