@@ -3,7 +3,7 @@ package cz.cvut.zuul.oaas.services
 import cz.cvut.zuul.oaas.api.models.ResourceDTO
 import cz.cvut.zuul.oaas.api.resources.exceptions.NoSuchResourceException
 import cz.cvut.zuul.oaas.dao.ResourceDAO
-import cz.cvut.zuul.oaas.generators.IdentifierGenerator
+import cz.cvut.zuul.oaas.generators.StringEncoder
 import cz.cvut.zuul.oaas.models.Resource
 import cz.cvut.zuul.oaas.test.factories.ObjectFactory
 import spock.lang.Specification
@@ -17,11 +17,11 @@ import static cz.cvut.zuul.oaas.test.Assertions.assertThat
 class ResourcesServiceTest extends Specification {
 
     def resourceDao = Mock(ResourceDAO)
-    def generator = Mock(IdentifierGenerator)
+    def idEncoder = Mock(StringEncoder)
 
     def service = new ResourcesServiceImpl(
             resourceDAO: resourceDao,
-            identifierGenerator: generator
+            identifierEncoder: idEncoder
     )
 
     def setup() {
@@ -38,7 +38,7 @@ class ResourcesServiceTest extends Specification {
         when:
             def returnedId = service.createResource(resource)
         then:
-            1 * generator.generateArgBasedIdentifier(resource.name) >> generatedId
+            1 * idEncoder.encode(resource.name) >> generatedId
             1 * resourceDao.exists(generatedId) >> false
             1 * resourceDao.save({ Resource it ->
                 it.id == generatedId
@@ -53,7 +53,7 @@ class ResourcesServiceTest extends Specification {
         when:
             service.createResource(resource)
         then: 'generate unique id at the third attempt'
-            3 * generator.generateArgBasedIdentifier(resource.name) >>> ['taken-id', 'still-bad', generatedId]
+            3 * idEncoder.encode(resource.name) >>> ['taken-id', 'still-bad', generatedId]
             3 * resourceDao.exists(_) >>> [true, true, false]
         then:
             1 * resourceDao.save({ Resource it ->

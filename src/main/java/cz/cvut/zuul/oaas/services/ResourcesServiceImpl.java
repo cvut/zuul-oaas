@@ -3,7 +3,7 @@ package cz.cvut.zuul.oaas.services;
 import cz.cvut.zuul.oaas.api.models.ResourceDTO;
 import cz.cvut.zuul.oaas.api.resources.exceptions.NoSuchResourceException;
 import cz.cvut.zuul.oaas.dao.ResourceDAO;
-import cz.cvut.zuul.oaas.generators.IdentifierGenerator;
+import cz.cvut.zuul.oaas.generators.StringEncoder;
 import cz.cvut.zuul.oaas.models.Resource;
 import cz.cvut.zuul.oaas.models.Scope;
 import cz.cvut.zuul.oaas.support.CaseInsensitiveToEnumConverter;
@@ -31,7 +31,14 @@ import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
 public class ResourcesServiceImpl implements ResourcesService {
 
     private ResourceDAO resourceDAO;
-    private IdentifierGenerator identifierGenerator;
+
+    /**
+     * Encoder to be used to generate unique resourceId from the resource name.
+     * When the generated identifier already exists, then the encoder is
+     * invoked repeatedly until the identifier is unique.
+     */
+    private StringEncoder identifierEncoder;
+
     private MapperFactory mapperFactory;
 
     @Setter(NONE) @Getter(PACKAGE)
@@ -52,7 +59,7 @@ public class ResourcesServiceImpl implements ResourcesService {
         String resourceId;
         do {
             log.debug("Generating unique resourceId");
-            resourceId = identifierGenerator.generateArgBasedIdentifier(resource.getName());
+            resourceId = identifierEncoder.encode(resource.getName());
         } while (resourceDAO.exists(resourceId));
 
         resource.setId(resourceId);
