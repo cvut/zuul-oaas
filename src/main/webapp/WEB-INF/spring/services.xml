@@ -38,7 +38,7 @@
           p:messageSource-ref="validatorMessageSource" />
 
     <bean id="validatorMessageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource"
-          p:basename="/WEB-INF/i18n/validator-messages"
+          p:basename="classpath:/config/i18n/validator-messages"
           p:defaultEncoding="utf-8"
           p:cacheSeconds="0" />
 
