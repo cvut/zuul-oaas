@@ -61,7 +61,7 @@
           p:tokenStore-ref="tokenStore"
           p:clientDetailsService-ref="clientDetailsService" />
 
-    <bean id="clientDetailsService" class="cz.cvut.zuul.oaas.services.internal.ClientRegistrationServiceImpl"
+    <bean id="clientDetailsService" class="cz.cvut.zuul.oaas.services.internal.ClientDetailsServiceImpl"
           p:clientDAO-ref="clientDAO" />
 
     <!-- Replacement for org.springframework.security.oauth2.provider.client.ClientDetailsUserDetailsService -->
