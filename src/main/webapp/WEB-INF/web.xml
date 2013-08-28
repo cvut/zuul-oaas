@@ -13,7 +13,7 @@
     -->
     <context-param>
        <param-name>spring.profiles.default</param-name>
-       <param-value>ldap</param-value>
+       <param-value>production,ldap</param-value>
     </context-param>
 
     <!-- Spring’s parameter to identify root path of this webapp.

@@ -163,7 +163,9 @@
     </bean>
 
     <sec:authentication-manager id="clientAuthenticationManager">
-        <sec:authentication-provider user-service-ref="clientUserDetailsService" />
+        <sec:authentication-provider user-service-ref="clientUserDetailsService">
+            <sec:password-encoder ref="passwordEncoder" />
+        </sec:authentication-provider>
     </sec:authentication-manager>
 
 

@@ -9,6 +9,7 @@ import cz.cvut.zuul.oaas.test.factories.ObjectFactory
 import ma.glasnost.orika.MapperFacade
 import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.security.crypto.keygen.StringKeyGenerator
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.oauth2.provider.NoSuchClientException
 import spock.lang.Specification
 
@@ -23,6 +24,7 @@ class ClientsServiceTest extends Specification {
     def refreshTokenDao = Mock(RefreshTokenDAO)
     def clientIdGenerator = Mock(StringKeyGenerator)
     def secretGenerator = Mock(StringKeyGenerator)
+    def secretEncoder = Mock(PasswordEncoder)
     def mapper = Mock(MapperFacade)
 
     def service = new ClientsServiceImpl(
@@ -31,6 +33,7 @@ class ClientsServiceTest extends Specification {
             refreshTokenDAO: refreshTokenDao,
             clientIdGenerator: clientIdGenerator,
             secretGenerator: secretGenerator,
+            secretEncoder: secretEncoder,
             mapper: mapper
     )
 
@@ -50,17 +53,18 @@ class ClientsServiceTest extends Specification {
                 clientId = 'irrelevant'; clientSecret = 'whatever'; return it
             }
             def generatedId = 'client-123'
-            def generatedSecret = 'top-secret'
 
             mapper.map(_, Client) >> client
         when:
             def returnedId = service.createClient( build(ClientDTO) )
         then:
             1 * clientIdGenerator.generateKey() >> generatedId
-            1 * secretGenerator.generateKey() >> generatedSecret
+            1 * secretGenerator.generateKey() >> 'top-secret'
+            1 * secretEncoder.encode('top-secret') >> 'terces-pot'
+
             1 * clientDao.save({ Client it ->
                 it.clientId == generatedId
-                it.clientSecret == generatedSecret
+                it.clientSecret == 'terces-pot'
             })
             returnedId == generatedId
     }
@@ -130,7 +134,8 @@ class ClientsServiceTest extends Specification {
             service.resetClientSecret('client-123')
         then:
             1 * secretGenerator.generateKey() >> 'top-secret'
-            1 * clientDao.updateClientSecret('client-123', 'top-secret')
+            1 * secretEncoder.encode('top-secret') >> 'terces-pot'
+            1 * clientDao.updateClientSecret('client-123', 'terces-pot')
     }
 
     def 'reset client secret for non existing client'() {

@@ -12,6 +12,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.crypto.keygen.StringKeyGenerator;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.provider.ClientAlreadyExistsException;
 import org.springframework.security.oauth2.provider.NoSuchClientException;
 import org.springframework.stereotype.Service;
@@ -37,6 +38,7 @@ public class ClientsServiceImpl implements ClientsService {
 
     private StringKeyGenerator clientIdGenerator;
     private StringKeyGenerator secretGenerator;
+    private PasswordEncoder secretEncoder;
 
     private @Setter(NONE) MapperFacade mapper;
 
@@ -63,10 +65,11 @@ public class ClientsServiceImpl implements ClientsService {
             clientId = clientIdGenerator.generateKey();
         } while (clientDAO.exists(clientId));
 
-        String clientSecret = secretGenerator.generateKey();
+        String plainSecret = secretGenerator.generateKey();
+        String encodedSecret = secretEncoder.encode(plainSecret);
 
         client.setClientId(clientId);
-        client.setClientSecret(clientSecret);
+        client.setClientSecret(encodedSecret);
 
         if (isEmpty(client.getAuthorities())) {
             client.setAuthorities(DEFAULT_AUTHORITIES);
@@ -102,9 +105,11 @@ public class ClientsServiceImpl implements ClientsService {
     public void resetClientSecret(String clientId) throws NoSuchClientException {
         log.info("Resetting secret for client: [{}]", clientId);
 
-        String newSecret = secretGenerator.generateKey();
+        String plain = secretGenerator.generateKey();
+        String encoded = secretEncoder.encode(plain);
+
         try {
-            clientDAO.updateClientSecret(clientId, newSecret);
+            clientDAO.updateClientSecret(clientId, encoded);
 
         } catch (EmptyResultDataAccessException ex) {
             throw new NoSuchClientException(ex.getMessage(), ex);

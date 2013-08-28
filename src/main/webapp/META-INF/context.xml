@@ -4,11 +4,12 @@
     <!-- 
         Define Spring profiles to be activated.
         Available profiles:
+            - production: production profile
+            - dev: developer profile (insert seed data, use in-memory users etc.)
             - ldap: authenticate users via LDAP (FIT)
             - ldap-2: authenticate users via LDAPs (FIT, FEL)
-            - dev: developer profile (insert seed data, use in-memory users etc.)
     -->
-    <Environment name="spring.profiles.active" value="ldap-2"
+    <Environment name="spring.profiles.active" value="production,ldap-2"
                  type="java.lang.String" override="false" />
 
     <!-- URI of LDAP server for users authentication -->
