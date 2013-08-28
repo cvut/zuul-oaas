@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true">
+
+    <contextName>OAAS</contextName>
+    <jmxConfigurator />
+
+    <property name="logs" value="${catalina.base}/logs" />
+
+
+    <!--//////// Appenders ////////-->
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="LOGFILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${logs}/zuul-oaas.log</file>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- daily rollover -->
+            <fileNamePattern>${logs}/zuul-oaas.log-%d{yyyyMMdd}.gz</fileNamePattern>
+            <!-- keep 30 days' worth of history -->
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+
+    <!--//////// Loggers ////////-->
+
+    <logger name="cz.cvut.zuul.oaas" level="INFO" />
+
+    <logger name="org.springframework" level="INFO" />
+
+    <logger name="org.springframework.web" level="INFO" />
+
+    <logger name="org.springframework.security" level="INFO" />
+
+    <logger name="org.springframework.security.oauth2" level="INFO" />
+
+
+    <!--//////// Root ////////-->
+
+    <root level="INFO">
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="LOGFILE" />
+    </root>
+
+</configuration>
