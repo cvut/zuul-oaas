@@ -12,13 +12,13 @@
 
 
     <!-- Define MongoDB instance -->
-    <mongo:mongo host="${mongo.host}" port="${mongo.port}" />
+    <mongo:mongo host="${persistence.mongo.host}" port="${persistence.mongo.port}" />
 
     <!-- Configure database access -->
     <mongo:db-factory id="mongoDbFactory"
-                      username="${mongo.username}"
-                      password="${mongo.password}"
-                      dbname="${mongo.dbname}"
+                      dbname="${persistence.mongo.dbname}"
+                      username="${persistence.mongo.username}"
+                      password="${persistence.mongo.password}"
                       write-concern="SAFE" />
 
     <!-- Enable JMX MBeans export -->

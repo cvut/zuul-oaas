@@ -2,12 +2,10 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:p="http://www.springframework.org/schema/p"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:jee="http://www.springframework.org/schema/jee"
        xmlns:sec="http://www.springframework.org/schema/security"
        xmlns:oauth="http://www.springframework.org/schema/security/oauth2"
        xsi:schemaLocation="
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
-       http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.1.xsd
        http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd
        http://www.springframework.org/schema/security/oauth2 http://www.springframework.org/schema/security/spring-security-oauth2-1.0.xsd">
 
@@ -22,13 +20,13 @@
         Used by the clients to obtain an access token by presenting its authorization
         grant or refresh token.
     -->
-    <sec:http pattern="${token.endpoint}"
+    <sec:http pattern="${oaas.endpoint.token}"
               create-session="stateless"
               entry-point-ref="oauthAuthenticationEntryPoint"
               access-decision-manager-ref="accessDecisionManager"
               authentication-manager-ref="clientAuthenticationManager">
 
-        <sec:intercept-url pattern="${token.endpoint}" access="IS_AUTHENTICATED_FULLY" />
+        <sec:intercept-url pattern="${oaas.endpoint.token}" access="IS_AUTHENTICATED_FULLY" />
         <sec:anonymous enabled="false" />
         <sec:http-basic entry-point-ref="oauthAuthenticationEntryPoint" />
         <!-- include this only if you need to authenticate clients via request parameters -->
@@ -183,47 +181,23 @@
     </beans>
 
     <beans profile="ldap">
-        
-        <!--context mapper to create FIT LDAP user object-->
-        <bean id="extendedFITUserDetailsContextMapper" class="cz.cvut.zuul.oaas.support.SimpleUserDetailsContextMapper"
-              p:firstNameAttrName="${ldap.fit.attribute.name.fn}"
-              p:lastNameAttrName="${ldap.fit.attribute.name.sn}"
-              p:emailAttrName="${ldap.fit.attribute.name.email}" />
-        
-        <jee:jndi-lookup id="ldapServerUri" jndi-name="java:comp/env/conf/ldapServerUri"
-                         cache="true" default-value="ldap://localhost/ou=dummy" />
 
-        <sec:ldap-server url="${ldap.fit.server.uri}" />
+        <sec:ldap-server id="ldapServer"
+                         url="${auth.user.ldap.server.uri}/${auth.user.ldap.server.base_dn}" />
 
         <sec:authentication-manager id="userAuthenticationManager">
-            <!-- Remote users from LDAP -->
-            <sec:ldap-authentication-provider user-dn-pattern="uid={0},ou=People" />
+            <sec:ldap-authentication-provider
+                    user-dn-pattern="${auth.user.ldap.user_dn_pattern}"
+                    user-search-base="${auth.user.ldap.user_search_base}"
+                    user-search-filter="${auth.user.ldap.user_search_filter}"
+                    user-context-mapper-ref="userDetailsContextMapper" />
         </sec:authentication-manager>
-    </beans>
-    
-    <beans profile="ldap-2">
-        
-        <!--context mapper to create FIT LDAP user object-->
-        <bean id="extendedFITUserDetailsContextMapper" class="cz.cvut.zuul.oaas.support.SimpleUserDetailsContextMapper"
-              p:firstNameAttrName="${ldap.fit.attribute.name.fn}"
-              p:lastNameAttrName="${ldap.fit.attribute.name.sn}"
-              p:emailAttrName="${ldap.fit.attribute.name.email}" />
 
-        <!--context mapper to create FEL LDAP user object-->
-        <bean id="extendedFELUserDetailsContextMapper" class="cz.cvut.zuul.oaas.support.SimpleUserDetailsContextMapper"
-              p:firstNameAttrName="${ldap.fel.attribute.name.fn}"
-              p:lastNameAttrName="${ldap.fel.attribute.name.sn}"
-              p:emailAttrName="${ldap.fel.attribute.name.email}" />
-        
-        <sec:ldap-server id="ldapFIT" url="${ldap.fit.server.uri}" />
-        <sec:ldap-server id="ldapFEL" url="${ldap.fel.server.uri}" />
-
-        <sec:authentication-manager id="userAuthenticationManager">
-            <!-- Remote users from LDAP -->
-            <sec:ldap-authentication-provider server-ref="ldapFEL" user-dn-pattern="uid={0},ou=People" user-context-mapper-ref="extendedFELUserDetailsContextMapper"/>
-            <sec:ldap-authentication-provider server-ref="ldapFIT" user-dn-pattern="uid={0},ou=People" user-context-mapper-ref="extendedFITUserDetailsContextMapper"/>
-        </sec:authentication-manager>
+        <bean id="userDetailsContextMapper" class="cz.cvut.zuul.oaas.support.SimpleUserDetailsContextMapper"
+              p:firstNameAttrName="${auth.user.ldap.attribute.fist_name}"
+              p:lastNameAttrName="${auth.user.ldap.attribute.last_name}"
+              p:emailAttrName="${auth.user.ldap.attribute.email}"
+              p:defaultRoles="ROLE_USER" />
     </beans>
 
-    
 </beans>

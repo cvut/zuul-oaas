@@ -15,7 +15,7 @@
     -->
     <context:annotation-config />
 
-    <context:property-placeholder location="/WEB-INF/*.properties" />
+    <context:property-placeholder location="/WEB-INF/zuul-config.properties" />
 
     <!-- Export MBeans via JMX for monitoring -->
     <context:mbean-export />

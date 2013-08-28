@@ -17,8 +17,8 @@
         ! Change of endpoint URLs doesn't work in 1.0.0.RC2, we must use default ones !
     -->
     <oauth:authorization-server
-        authorization-endpoint-url="${authorization.endpoint}"
-        token-endpoint-url="${token.endpoint}"
+        authorization-endpoint-url="${oaas.endpoint.authorization}"
+        token-endpoint-url="${oaas.endpoint.token}"
         client-details-service-ref="clientDetailsService"
         token-services-ref="tokenServices"
         user-approval-handler-ref="lockableApprovalHandler">
@@ -56,8 +56,8 @@
     -->
     <bean id="tokenServices" class="org.springframework.security.oauth2.provider.token.DefaultTokenServices"
           p:supportRefreshToken="true"
-          p:accessTokenValiditySeconds="3600"
-          p:refreshTokenValiditySeconds="2592000"
+          p:accessTokenValiditySeconds="${oaas.access_token.validity}"
+          p:refreshTokenValiditySeconds="${oaas.refresh_token.validity}"
           p:tokenStore-ref="tokenStore"
           p:clientDetailsService-ref="clientDetailsService" />
 
