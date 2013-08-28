@@ -107,11 +107,11 @@ class ResourcesServiceTest extends Specification {
             assertMapping resource, dto
     }
 
-    private assertMapping(Resource entity, ResourceDTO dto) {
-        assertThat( entity ).equalsTo( dto ).inProperties(
-                'baseUrl', 'description', 'name', 'version'
-        )
-        entity.id == dto.resourceId
-        entity.scopes*.name == dto.auth.scopes*.name //TODO all fields
+    private void assertMapping(Resource entity, ResourceDTO dto) {
+        assertThat( entity ).equalsTo( dto ).inAllPropertiesExcept( 'auth', 'resourceId', 'visibility' )
+        assert entity.id == dto.resourceId
+        assert entity.visibility.toString() == dto.visibility
+
+        assertThat( entity.scopes ).equalsTo( dto.auth.scopes ).inAllProperties()
     }
 }

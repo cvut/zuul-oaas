@@ -1,5 +1,6 @@
 package cz.cvut.zuul.oaas.services
 
+import cz.cvut.zuul.oaas.api.models.TokenDTO
 import cz.cvut.zuul.oaas.api.resources.exceptions.NoSuchTokenException
 import cz.cvut.zuul.oaas.dao.AccessTokenDAO
 import cz.cvut.zuul.oaas.dao.ClientDAO
@@ -8,7 +9,6 @@ import cz.cvut.zuul.oaas.models.PersistableAccessToken
 import cz.cvut.zuul.oaas.test.factories.ObjectFactory
 import org.springframework.security.core.Authentication
 import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken
-import org.springframework.security.oauth2.common.OAuth2AccessToken
 import org.springframework.security.oauth2.common.exceptions.InvalidTokenException
 import org.springframework.security.oauth2.provider.AuthorizationRequest
 import org.springframework.security.oauth2.provider.OAuth2Authentication
@@ -39,36 +39,20 @@ class TokensServiceTest extends Specification {
 
     def 'get existing token'() {
         given:
-            def tokenVal = '123'
-            def clientAuth = build(AuthorizationRequest)
-            def userAuth = build(Authentication)
-            def accessToken = new PersistableAccessToken(
-                    build(OAuth2AccessToken),
-                    new OAuth2Authentication(clientAuth, userAuth)
-            )
+            def accessToken = build(PersistableAccessToken)
             def client = build(Client).with { it.locked = true; it }
         when:
-            def actual = service.getToken(tokenVal)
+            def actual = service.getToken('123')
         then:
-            1 * accessTokenDao.findOne(tokenVal) >> accessToken
+            1 * accessTokenDao.findOne('123') >> accessToken
             1 * clientDao.findOne(accessToken.authenticatedClientId) >> client
 
-            assertThat( actual ).equalsTo( accessToken ).inProperties(
-                    'expiration', 'scope', 'tokenType'
-            )
-            actual.tokenValue == accessToken.value
-
-            assertThat( actual.clientAuthentication ).equalsTo( clientAuth ).inProperties(
-                    'clientId', 'scope', 'redirectUri', 'resourceIds'
-            )
-            with (actual.clientAuthentication) {
+            actual instanceof TokenDTO
+            actual.clientAuthentication.with {
+                productName == client.productName
                 clientLocked == client.locked
-                productName  == client.productName
             }
-
-            assertThat( actual.userAuthentication ).equalsTo( userAuth.principal ).inProperties(
-                    'username', 'email', 'firstName', 'lastName'
-            )
+            // other fields are asserted in mapping test
     }
 
     def 'get non existing token'() {
@@ -156,5 +140,29 @@ class TokensServiceTest extends Specification {
         then:
             1 * clientDao.findOne('client-333') >> client
             thrown(InvalidTokenException)
+    }
+
+
+    def 'map PersistableAccessToken to TokenDTO'() {
+        given:
+            def client = build(PersistableAccessToken)
+        when:
+            def dto = service.mapper.map(client, TokenDTO)
+        then:
+            assertMapping client, dto
+    }
+
+    private void assertMapping(PersistableAccessToken entity, TokenDTO dto) {
+        assertThat( entity ).equalsTo( dto )
+                .inAllPropertiesExcept( 'clientAuthentication', 'tokenValue', 'userAuthentication' )
+        assert entity.value == dto.tokenValue
+
+        assertThat( entity.authentication.authorizationRequest )
+                .equalsTo( dto.clientAuthentication )
+                .inAllPropertiesExcept( 'productName', 'clientLocked' )
+
+        assertThat( entity.authentication.userAuthentication.principal )
+                .equalsTo( dto.userAuthentication )
+                .inAllProperties()
     }
 }

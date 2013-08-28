@@ -6,12 +6,13 @@ import cz.cvut.zuul.oaas.dao.ClientDAO
 import cz.cvut.zuul.oaas.dao.RefreshTokenDAO
 import cz.cvut.zuul.oaas.models.Client
 import cz.cvut.zuul.oaas.test.factories.ObjectFactory
-import ma.glasnost.orika.MapperFacade
 import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.security.crypto.keygen.StringKeyGenerator
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.oauth2.provider.NoSuchClientException
 import spock.lang.Specification
+
+import static cz.cvut.zuul.oaas.test.Assertions.assertThat
 
 /**
  * @author Jakub Jirutka <jakub@jirutka.cz>
@@ -25,7 +26,6 @@ class ClientsServiceTest extends Specification {
     def clientIdGenerator = Mock(StringKeyGenerator)
     def secretGenerator = Mock(StringKeyGenerator)
     def secretEncoder = Mock(PasswordEncoder)
-    def mapper = Mock(MapperFacade)
 
     def service = new ClientsServiceImpl(
             clientDAO: clientDao,
@@ -33,9 +33,12 @@ class ClientsServiceTest extends Specification {
             refreshTokenDAO: refreshTokenDao,
             clientIdGenerator: clientIdGenerator,
             secretGenerator: secretGenerator,
-            secretEncoder: secretEncoder,
-            mapper: mapper
+            secretEncoder: secretEncoder
     )
+
+    def setup() {
+        service.setupMapper()
+    }
 
 
     def 'find client by non existing id'() {
@@ -49,14 +52,12 @@ class ClientsServiceTest extends Specification {
 
     def 'create client'() {
         setup:
-            def client = build(Client).with {
+            def client = build(ClientDTO).with {
                 clientId = 'irrelevant'; clientSecret = 'whatever'; return it
             }
             def generatedId = 'client-123'
-
-            mapper.map(_, Client) >> client
         when:
-            def returnedId = service.createClient( build(ClientDTO) )
+            def returnedId = service.createClient(client)
         then:
             1 * clientIdGenerator.generateKey() >> generatedId
             1 * secretGenerator.generateKey() >> 'top-secret'
@@ -71,24 +72,22 @@ class ClientsServiceTest extends Specification {
 
     def 'create client with default authorities'() {
         setup:
-            def client = build(Client).with {
+            def client = build(ClientDTO).with {
                 it.authorities = []; return it
             }
-            mapper.map(_, Client) >> client
         when:
-            service.createClient( build(ClientDTO) )
+            service.createClient(client)
         then:
             1 * clientDao.save( { ! it.authorities?.isEmpty() } )
     }
 
     def 'create client and handle generation of already taken id'() {
         setup:
-            def client = build(Client)
+            def client = build(ClientDTO)
             def generatedId = 'client-123'
-
-            mapper.map(_, Client) >> client
         when:
-            service.createClient( build(ClientDTO) ) == generatedId
+            service.createClient(client) == generatedId
+
         then: 'generate unique id at the third attempt'
             3 * clientIdGenerator.generateKey() >>> ['taken-id', 'still-bad', generatedId]
             3 * clientDao.exists(_) >>> [true, true, false]
@@ -146,5 +145,31 @@ class ClientsServiceTest extends Specification {
                 throw new EmptyResultDataAccessException(1)
             }
             thrown(NoSuchClientException)
+    }
+
+
+    def 'map Client to ClientDTO'() {
+        given:
+            def client = build(Client)
+        when:
+            def dto = service.mapper.map(client, ClientDTO)
+        then:
+            assertMapping client, dto
+    }
+
+    def 'map ClientDTO to Client'() {
+        given:
+            def dto = build(ClientDTO)
+        when:
+            def client = service.mapper.map(dto, Client)
+        then:
+            assertMapping client, dto
+    }
+
+    private void assertMapping(Client entity, ClientDTO dto) {
+        assertThat( entity ).equalsTo( dto ).inAllPropertiesExcept( 'authorities' )
+
+        def entityAuthorities = entity.authorities ? entity.authorities*.toString() : []
+        assert entityAuthorities as Set == dto.authorities as Set
     }
 }

@@ -3,6 +3,7 @@ package cz.cvut.zuul.oaas.test.factories
 import cz.cvut.oauth.provider.spring.TokenInfo
 import cz.cvut.zuul.oaas.api.models.ResourceDTO
 import cz.cvut.zuul.oaas.models.Client
+import cz.cvut.zuul.oaas.models.PersistableAccessToken
 import cz.cvut.zuul.oaas.models.Resource
 import cz.cvut.zuul.oaas.models.Scope
 import cz.cvut.zuul.oaas.models.User
@@ -83,9 +84,8 @@ class ObjectFactory {
      * @return
      */
     def <T> List<T> buildListOf(Class<T> clazz, int minSize = 1, int maxSize = 3, Map<String, Object> values = [:]) {
-        new T[ anyInteger(minSize, maxSize) ].collect {
-            build(clazz, values)
-        }
+        def size = anyInteger(minSize, maxSize)
+        new T[ size ].collect { build(clazz, values) }
     }
 
     /**
@@ -120,6 +120,21 @@ class ObjectFactory {
             new DefaultExpiringOAuth2RefreshToken(anyLetterString(5, 10), anyDate())
         }
 
+        registerBuilder(PersistableAccessToken) {
+            new PersistableAccessToken(build(OAuth2AccessToken), build(OAuth2Authentication))
+        }
+
+        registerBuilder(TokenInfo) { values ->
+            def token = new TokenInfo(
+                    clientAuthorities: buildListOf(GrantedAuthority),
+                    userAuthorities: buildListOf(GrantedAuthority)
+            )
+            ObjectFeeder.populate(token)
+            values.each { prop, value ->
+                token[prop] = value
+            }
+            return token
+        }
 
         //////// Authentication ////////
 
@@ -175,6 +190,16 @@ class ObjectFactory {
             return client
         }
 
+        registerBuilder(Resource) { values ->
+            def resource = new Resource(
+                    scopes: buildListOf(Scope)
+            )
+            values.each { prop, value ->
+                resource[prop] = value
+            }
+            return resource
+        }
+
         registerBuilder(ResourceDTO) { values ->
             def resource = new ResourceDTO(
                     resourceId: anyLetterString(5, 10),
@@ -193,28 +218,9 @@ class ObjectFactory {
             return resource
         }
 
-        registerBuilder(Resource) { values ->
-            def resource = new Resource(
-                    scopes: buildListOf(Scope)
-            )
-            values.each { prop, value ->
-                resource[prop] = value
-            }
-            return resource
+        registerBuilder(Scope) {
+            new Scope(anyLetterString(5, 10), anyLetterString(0, 10), anyBoolean())
         }
-
-        registerBuilder(TokenInfo) { values ->
-            def token = new TokenInfo(
-                    clientAuthorities: buildListOf(GrantedAuthority),
-                    userAuthorities: buildListOf(GrantedAuthority)
-            )
-            ObjectFeeder.populate(token)
-            values.each { prop, value ->
-                token[prop] = value
-            }
-            return token
-        }
-
 
         //////// Superclasses ////////
 

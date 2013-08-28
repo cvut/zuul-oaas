@@ -5,9 +5,13 @@ import cz.cvut.zuul.oaas.dao.AccessTokenDAO;
 import cz.cvut.zuul.oaas.dao.ClientDAO;
 import cz.cvut.zuul.oaas.dao.RefreshTokenDAO;
 import cz.cvut.zuul.oaas.models.Client;
+import cz.cvut.zuul.oaas.support.GrantedAuthorityConverter;
+import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import ma.glasnost.orika.MapperFacade;
+import ma.glasnost.orika.MapperFactory;
+import ma.glasnost.orika.impl.DefaultMapperFactory.Builder;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -17,9 +21,12 @@ import org.springframework.security.oauth2.provider.ClientAlreadyExistsException
 import org.springframework.security.oauth2.provider.NoSuchClientException;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
 
 import static lombok.AccessLevel.NONE;
+import static lombok.AccessLevel.PACKAGE;
+import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
 import static org.springframework.util.CollectionUtils.isEmpty;
 
 /**
@@ -40,12 +47,19 @@ public class ClientsServiceImpl implements ClientsService {
     private StringKeyGenerator secretGenerator;
     private PasswordEncoder secretEncoder;
 
-    private @Setter(NONE) MapperFacade mapper;
+    /**
+     * Orika Mapper Factory to be configured and used for mapping between entity
+     * and DTO objects. If no factory is provided, then new one will be created.
+     *
+     * @see {@link #setupMapper()}
+     */
+    private MapperFactory mapperFactory;
+
+    @Setter(NONE) @Getter(PACKAGE)
+    private MapperFacade mapper;
 
 
-    //////////  Business methods  //////////
 
-    @Override
     public ClientDTO findClientById(String clientId) throws NoSuchClientException {
         Client client = clientDAO.findOne(clientId);
 
@@ -55,7 +69,6 @@ public class ClientsServiceImpl implements ClientsService {
         return mapper.map(client, ClientDTO.class);
     }
 
-    @Override
     public String createClient(ClientDTO clientDTO) throws ClientAlreadyExistsException {
         Client client = mapper.map(clientDTO, Client.class);
 
@@ -81,7 +94,6 @@ public class ClientsServiceImpl implements ClientsService {
         return clientId;
     }
 
-    @Override
     public void updateClient(ClientDTO clientDTO) throws NoSuchClientException {
         log.info("Updating client: [{}]", clientDTO);
 
@@ -89,7 +101,6 @@ public class ClientsServiceImpl implements ClientsService {
         clientDAO.save(mapper.map(clientDTO, Client.class));
     }
 
-    @Override
     public void removeClient(String clientId) throws NoSuchClientException {
         log.info("Removing client: [{}]", clientId);
         assertClientExists(clientId);
@@ -101,7 +112,6 @@ public class ClientsServiceImpl implements ClientsService {
         clientDAO.delete(clientId);
     }
 
-    @Override
     public void resetClientSecret(String clientId) throws NoSuchClientException {
         log.info("Resetting secret for client: [{}]", clientId);
 
@@ -116,14 +126,23 @@ public class ClientsServiceImpl implements ClientsService {
         }
     }
 
+
     private void assertClientExists(String clientId) {
         if (! clientDAO.exists(clientId)) {
             throw new NoSuchClientException("No such client with id = " + clientId);
         }
     }
 
+    @PostConstruct void setupMapper() {
+        MapperFactory factory = defaultIfNull(mapperFactory, new Builder().build());
 
-    public void setMapperFacade(MapperFacade mapperFacade) {
-        this.mapper = mapperFacade;
+        factory.getConverterFactory()
+                .registerConverter(new GrantedAuthorityConverter());
+
+        factory.registerClassMap(factory
+                .classMap(Client.class, ClientDTO.class)
+                .byDefault()
+        );
+        mapper = factory.getMapperFacade();
     }
 }

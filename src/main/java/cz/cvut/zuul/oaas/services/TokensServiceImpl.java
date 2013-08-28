@@ -8,6 +8,7 @@ import cz.cvut.zuul.oaas.dao.ClientDAO;
 import cz.cvut.zuul.oaas.models.Client;
 import cz.cvut.zuul.oaas.models.PersistableAccessToken;
 import cz.cvut.zuul.oaas.models.User;
+import lombok.Getter;
 import lombok.Setter;
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.MapperFactory;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 
 import static lombok.AccessLevel.NONE;
+import static lombok.AccessLevel.PACKAGE;
 import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
 
 /**
@@ -30,10 +32,20 @@ import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
 public class TokensServiceImpl implements TokensService {
 
     private AccessTokenDAO accessTokenDAO;
+
     private ClientDAO clientDAO;
+
+    /**
+     * Orika Mapper Factory to be configured and used for mapping between entity
+     * and DTO objects. If no factory is provided, then new one will be created.
+     *
+     * @see {@link #setupMapper()}
+     */
     private MapperFactory mapperFactory;
 
-    private @Setter(NONE) MapperFacade mapper;
+    @Setter(NONE) @Getter(PACKAGE)
+    private MapperFacade mapper;
+
 
 
     public TokenDTO getToken(String tokenValue) {

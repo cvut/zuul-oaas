@@ -1,5 +1,7 @@
 package cz.cvut.zuul.oaas.test
 
+import static cz.cvut.zuul.oaas.test.Assertions.assertThat
+
 /**
  * @author Jakub Jirutka <jakub@jirutka.cz>
  */
@@ -7,6 +9,10 @@ class Assertions {
 
     static ObjectAssert assertThat(actual) {
         new ObjectAssert(actual)
+    }
+
+    static CollectionAssert assertThat(Collection actual) {
+        new CollectionAssert(actual: actual)
     }
 }
 
@@ -20,6 +26,14 @@ class ObjectAssert {
 
     ObjectEqualsAssert equalsTo(expected) {
         new ObjectEqualsAssert(actual, expected)
+    }
+}
+
+class CollectionAssert {
+    private Collection actual
+
+    CollectionEqualsAssert equalsTo(Collection expected) {
+        new CollectionEqualsAssert(actual: actual, expected: expected)
     }
 }
 
@@ -40,13 +54,13 @@ class ObjectEqualsAssert {
     }
 
     /**
-     * Asserts all common properties of the actual and expected object, except
-     * the given excluded properties.
+     * Asserts all properties of the expected object against the actual object,
+     * except the given excluded properties.
      *
-     * @param excludedProperties property names to exclude from assertion
+     * @param excludedProperties Property names to exclude from assertion.
      */
     void inAllPropertiesExcept(String... excludedProperties) {
-        def properties = actual.properties.keySet() intersect expected.properties.keySet()
+        def properties = expected.properties.keySet()
         properties.removeAll { it in excludedProperties + 'class' }
 
         properties.each { prop -> assertProperties(prop) }
@@ -55,7 +69,7 @@ class ObjectEqualsAssert {
     /**
      * Asserts specified properties.
      *
-     * @param includedProperties property names to assert
+     * @param includedProperties Property names to assert.
      */
     void inProperties(String... includedProperties) {
         includedProperties.each { prop -> assertProperties(prop) }
@@ -66,6 +80,20 @@ class ObjectEqualsAssert {
             assert actual[ property ] as Set == expected[ property ] as Set
         } else {
             assert actual[ property ] == expected[ property ]
+        }
+    }
+}
+
+class CollectionEqualsAssert {
+    private Collection actual, expected
+
+    void inAllProperties() {
+        inAllPropertiesExcept()
+    }
+
+    void inAllPropertiesExcept(String... excludedProperties) {
+        [actual, expected].transpose().each { a, e ->
+            assertThat(a).equalsTo(e).inAllPropertiesExcept(excludedProperties)
         }
     }
 }

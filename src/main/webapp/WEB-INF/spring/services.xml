@@ -21,8 +21,7 @@
           p:refreshTokenDAO-ref="refreshTokenDAO"
           p:clientIdGenerator-ref="clientIdGenerator"
           p:secretGenerator-ref="secretGenerator"
-          p:secretEncoder-ref="passwordEncoder"
-          p:mapperFacade-ref="mapperFacade" />
+          p:secretEncoder-ref="passwordEncoder" />
 
     <bean id="tokensService" class="cz.cvut.zuul.oaas.services.TokensServiceImpl"
           p:accessTokenDAO-ref="accessTokenDAO"
@@ -46,17 +45,6 @@
     <!-- Enable method-level validation on annotated methods via JSR-303 -->
     <bean class="org.springframework.validation.beanvalidation.MethodValidationPostProcessor"
           p:validatorFactory-ref="validator" />
-
-
-    <!--///// DTO Mapping /////-->
-
-    <bean id="mapperFacade" class="cz.cvut.zuul.oaas.support.MapperFacadeFactoryBean"
-          p:converters-ref="mapperConverters" />
-
-    <util:list id="mapperConverters">
-        <bean class="cz.cvut.zuul.oaas.support.CaseInsensitiveToEnumConverter" />
-        <bean class="cz.cvut.zuul.oaas.support.GrantedAuthorityConverter" />
-    </util:list>
 
 
     <!--///// Generators and encoders /////-->

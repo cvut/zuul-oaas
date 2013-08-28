@@ -39,10 +39,17 @@ public class ResourcesServiceImpl implements ResourcesService {
      */
     private StringEncoder identifierEncoder;
 
+    /**
+     * Orika Mapper Factory to be configured and used for mapping between entity
+     * and DTO objects. If no factory is provided, then new one will be created.
+     *
+     * @see {@link #setupMapper()}
+     */
     private MapperFactory mapperFactory;
 
     @Setter(NONE) @Getter(PACKAGE)
     private MapperFacade mapper;
+
 
 
     public List<ResourceDTO> getAllResources() {
@@ -106,6 +113,7 @@ public class ResourcesServiceImpl implements ResourcesService {
 
         factory.registerClassMap(factory
                 .classMap(Resource.class, ResourceDTO.class)
+                .field("id", "resourceId")
                 .field("scopes", "auth.scopes")
                 .byDefault()
         );
