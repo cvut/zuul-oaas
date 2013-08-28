@@ -6,8 +6,8 @@ import org.apache.commons.httpclient.URIException;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import static org.apache.commons.lang.ArrayUtils.contains;
-import static org.apache.commons.lang.ArrayUtils.isEmpty;
+import static org.apache.commons.lang3.ArrayUtils.contains;
+import static org.apache.commons.lang3.ArrayUtils.isEmpty;
 
 /**
  * JSR-303 validator for {@link ValidURI} constraint.
