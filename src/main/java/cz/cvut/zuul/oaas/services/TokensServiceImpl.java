@@ -3,8 +3,8 @@ package cz.cvut.zuul.oaas.services;
 import cz.cvut.oauth.provider.spring.TokenInfo;
 import cz.cvut.zuul.oaas.api.models.TokenDTO;
 import cz.cvut.zuul.oaas.api.resources.exceptions.NoSuchTokenException;
-import cz.cvut.zuul.oaas.dao.AccessTokenDAO;
-import cz.cvut.zuul.oaas.dao.ClientDAO;
+import cz.cvut.zuul.oaas.dao.AccessTokensRepo;
+import cz.cvut.zuul.oaas.dao.ClientsRepo;
 import cz.cvut.zuul.oaas.models.Client;
 import cz.cvut.zuul.oaas.models.PersistableAccessToken;
 import cz.cvut.zuul.oaas.models.User;
@@ -31,9 +31,9 @@ import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
 @Service
 public class TokensServiceImpl implements TokensService {
 
-    private AccessTokenDAO accessTokenDAO;
+    private AccessTokensRepo accessTokensRepo;
 
-    private ClientDAO clientDAO;
+    private ClientsRepo clientsRepo;
 
     /**
      * Orika Mapper Factory to be configured and used for mapping between entity
@@ -49,10 +49,10 @@ public class TokensServiceImpl implements TokensService {
 
 
     public TokenDTO getToken(String tokenValue) {
-        PersistableAccessToken accessToken = accessTokenDAO.findOne(tokenValue);
+        PersistableAccessToken accessToken = accessTokensRepo.findOne(tokenValue);
         if (accessToken == null) throw new NoSuchTokenException();
 
-        Client client = clientDAO.findOne(accessToken.getAuthenticatedClientId());
+        Client client = clientsRepo.findOne(accessToken.getAuthenticatedClientId());
 
         TokenDTO dto = mapper.map(accessToken, TokenDTO.class);
         dto.getClientAuthentication().setClientLocked(client.isLocked());
@@ -62,7 +62,7 @@ public class TokensServiceImpl implements TokensService {
     }
 
     public TokenInfo getTokenInfo(String tokenValue) {
-        PersistableAccessToken accessToken = accessTokenDAO.findOne(tokenValue);
+        PersistableAccessToken accessToken = accessTokensRepo.findOne(tokenValue);
 
         // first check if token is recognized and if it is not expired
         if (accessToken == null) {
@@ -72,7 +72,7 @@ public class TokensServiceImpl implements TokensService {
             throw new InvalidTokenException("Token has expired");
         }
 
-        Client client = clientDAO.findOne(accessToken.getAuthenticatedClientId());
+        Client client = clientsRepo.findOne(accessToken.getAuthenticatedClientId());
         if (client == null) {
             throw new InvalidTokenException("Client doesn't exist anymore");
         }
@@ -103,10 +103,10 @@ public class TokensServiceImpl implements TokensService {
     }
 
     public void invalidateToken(String tokenValue) {
-        if (! accessTokenDAO.exists(tokenValue)) {
+        if (! accessTokensRepo.exists(tokenValue)) {
             throw new NoSuchTokenException();
         }
-        accessTokenDAO.delete(tokenValue);
+        accessTokensRepo.delete(tokenValue);
     }
 
 

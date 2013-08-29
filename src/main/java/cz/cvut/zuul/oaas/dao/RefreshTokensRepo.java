@@ -6,7 +6,7 @@ import org.springframework.data.repository.CrudRepository;
 /**
  * @author Jakub Jirutka <jakub@jirutka.cz>
  */
-public interface RefreshTokenDAO extends CrudRepository<PersistableRefreshToken, String> {
+public interface RefreshTokensRepo extends CrudRepository<PersistableRefreshToken, String> {
 
     void deleteByClientId(String clientId);
 }

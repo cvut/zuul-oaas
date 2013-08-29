@@ -1,9 +1,9 @@
 package cz.cvut.zuul.oaas.services;
 
 import cz.cvut.zuul.oaas.api.models.ClientDTO;
-import cz.cvut.zuul.oaas.dao.AccessTokenDAO;
-import cz.cvut.zuul.oaas.dao.ClientDAO;
-import cz.cvut.zuul.oaas.dao.RefreshTokenDAO;
+import cz.cvut.zuul.oaas.dao.AccessTokensRepo;
+import cz.cvut.zuul.oaas.dao.ClientsRepo;
+import cz.cvut.zuul.oaas.dao.RefreshTokensRepo;
 import cz.cvut.zuul.oaas.models.Client;
 import cz.cvut.zuul.oaas.support.GrantedAuthorityConverter;
 import lombok.Getter;
@@ -39,9 +39,9 @@ public class ClientsServiceImpl implements ClientsService {
 
     private static final List<GrantedAuthority> DEFAULT_AUTHORITIES =  AuthorityUtils.createAuthorityList("ROLE_CLIENT");
 
-    private ClientDAO clientDAO;
-    private AccessTokenDAO accessTokenDAO;
-    private RefreshTokenDAO refreshTokenDAO;
+    private ClientsRepo clientsRepo;
+    private AccessTokensRepo accessTokensRepo;
+    private RefreshTokensRepo refreshTokensRepo;
 
     private StringKeyGenerator clientIdGenerator;
     private StringKeyGenerator secretGenerator;
@@ -61,7 +61,7 @@ public class ClientsServiceImpl implements ClientsService {
 
 
     public ClientDTO findClientById(String clientId) throws NoSuchClientException {
-        Client client = clientDAO.findOne(clientId);
+        Client client = clientsRepo.findOne(clientId);
 
         if (client == null) {
             throw new NoSuchClientException(String.format("Client with id [%s] doesn't exists.", clientId));
@@ -76,7 +76,7 @@ public class ClientsServiceImpl implements ClientsService {
         do {
             log.debug("Generating unique clientId...");
             clientId = clientIdGenerator.generateKey();
-        } while (clientDAO.exists(clientId));
+        } while (clientsRepo.exists(clientId));
 
         String plainSecret = secretGenerator.generateKey();
         String encodedSecret = secretEncoder.encode(plainSecret);
@@ -89,7 +89,7 @@ public class ClientsServiceImpl implements ClientsService {
         }
 
         log.info("Saving a new client: [{}]", client);
-        clientDAO.save(client);
+        clientsRepo.save(client);
 
         return clientId;
     }
@@ -98,7 +98,7 @@ public class ClientsServiceImpl implements ClientsService {
         log.info("Updating client: [{}]", clientDTO);
 
         assertClientExists(clientDTO.getClientId());
-        clientDAO.save(mapper.map(clientDTO, Client.class));
+        clientsRepo.save(mapper.map(clientDTO, Client.class));
     }
 
     public void removeClient(String clientId) throws NoSuchClientException {
@@ -106,10 +106,10 @@ public class ClientsServiceImpl implements ClientsService {
         assertClientExists(clientId);
 
         //remove associated tokens
-        accessTokenDAO.deleteByClientId(clientId);
-        refreshTokenDAO.deleteByClientId(clientId);
+        accessTokensRepo.deleteByClientId(clientId);
+        refreshTokensRepo.deleteByClientId(clientId);
 
-        clientDAO.delete(clientId);
+        clientsRepo.delete(clientId);
     }
 
     public void resetClientSecret(String clientId) throws NoSuchClientException {
@@ -119,7 +119,7 @@ public class ClientsServiceImpl implements ClientsService {
         String encoded = secretEncoder.encode(plain);
 
         try {
-            clientDAO.updateClientSecret(clientId, encoded);
+            clientsRepo.updateClientSecret(clientId, encoded);
 
         } catch (EmptyResultDataAccessException ex) {
             throw new NoSuchClientException(ex.getMessage(), ex);
@@ -128,7 +128,7 @@ public class ClientsServiceImpl implements ClientsService {
 
 
     private void assertClientExists(String clientId) {
-        if (! clientDAO.exists(clientId)) {
+        if (! clientsRepo.exists(clientId)) {
             throw new NoSuchClientException("No such client with id = " + clientId);
         }
     }

@@ -12,9 +12,9 @@ import static cz.cvut.zuul.oaas.test.Assertions.assertThat
 /**
  * @author Jakub Jirutka <jakub@jirutka.cz>
  */
-class RefreshTokenDAO_IT extends AbstractDAO_IT<PersistableRefreshToken> {
+class RefreshTokensRepoIT extends AbstractRepoIT<PersistableRefreshToken> {
 
-    @Autowired RefreshTokenDAO dao
+    @Autowired RefreshTokensRepo repo
 
     PersistableRefreshToken buildEntity() {
         new PersistableRefreshToken(
@@ -34,9 +34,9 @@ class RefreshTokenDAO_IT extends AbstractDAO_IT<PersistableRefreshToken> {
                     build(ExpiringOAuth2RefreshToken),
                     build(OAuth2Authentication, [clientOnly: true])
             )
-            dao.save(expected)
+            repo.save(expected)
         when:
-            def actual = dao.findOne(expected.value)
+            def actual = repo.findOne(expected.value)
         then:
             assertIt actual, expected
             actual.isExpiring()
@@ -48,9 +48,9 @@ class RefreshTokenDAO_IT extends AbstractDAO_IT<PersistableRefreshToken> {
                     build(OAuth2RefreshToken),
                     build(OAuth2Authentication, [clientOnly: true])
             )
-            dao.save(expected)
+            repo.save(expected)
         when:
-            def actual = dao.findOne(expected.value)
+            def actual = repo.findOne(expected.value)
         then:
             assertIt actual, expected
     }
@@ -63,11 +63,11 @@ class RefreshTokenDAO_IT extends AbstractDAO_IT<PersistableRefreshToken> {
                     build(OAuth2Authentication, [clientId: clientId])
             )
 
-            dao.save(refreshToken)
-            assert dao.exists(refreshToken.value)
+            repo.save(refreshToken)
+            assert repo.exists(refreshToken.value)
         when:
-            dao.deleteByClientId(clientId)
+            repo.deleteByClientId(clientId)
         then:
-            ! dao.exists(refreshToken.value)
+            ! repo.exists(refreshToken.value)
     }
 }

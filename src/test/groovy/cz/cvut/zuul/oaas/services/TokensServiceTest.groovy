@@ -2,8 +2,8 @@ package cz.cvut.zuul.oaas.services
 
 import cz.cvut.zuul.oaas.api.models.TokenDTO
 import cz.cvut.zuul.oaas.api.resources.exceptions.NoSuchTokenException
-import cz.cvut.zuul.oaas.dao.AccessTokenDAO
-import cz.cvut.zuul.oaas.dao.ClientDAO
+import cz.cvut.zuul.oaas.dao.AccessTokensRepo
+import cz.cvut.zuul.oaas.dao.ClientsRepo
 import cz.cvut.zuul.oaas.models.Client
 import cz.cvut.zuul.oaas.models.PersistableAccessToken
 import cz.cvut.zuul.oaas.test.factories.ObjectFactory
@@ -24,12 +24,12 @@ import static cz.cvut.zuul.oaas.test.factories.CustomGeneratorSamples.anyPastDat
 @Mixin(ObjectFactory)
 class TokensServiceTest extends Specification {
 
-    def accessTokenDao = Mock(AccessTokenDAO)
-    def clientDao = Mock(ClientDAO)
+    def accessTokensRepo = Mock(AccessTokensRepo)
+    def clientsRepo = Mock(ClientsRepo)
 
     def service = new TokensServiceImpl(
-            accessTokenDAO: accessTokenDao,
-            clientDAO: clientDao
+            accessTokensRepo: accessTokensRepo,
+            clientsRepo: clientsRepo
     )
 
     def setup() {
@@ -44,8 +44,8 @@ class TokensServiceTest extends Specification {
         when:
             def actual = service.getToken('123')
         then:
-            1 * accessTokenDao.findOne('123') >> accessToken
-            1 * clientDao.findOne(accessToken.authenticatedClientId) >> client
+            1 * accessTokensRepo.findOne('123') >> accessToken
+            1 * clientsRepo.findOne(accessToken.authenticatedClientId) >> client
 
             actual instanceof TokenDTO
             actual.clientAuthentication.with {
@@ -59,25 +59,25 @@ class TokensServiceTest extends Specification {
         when:
             service.getToken('666')
         then:
-            1 * accessTokenDao.findOne('666') >> null
+            1 * accessTokensRepo.findOne('666') >> null
             thrown(NoSuchTokenException)
     }
 
 
     def 'invalidate existing token'() {
         setup:
-            accessTokenDao.exists(_) >> true
+            accessTokensRepo.exists(_) >> true
         when:
             service.invalidateToken('666')
         then:
-            1 * accessTokenDao.delete('666')
+            1 * accessTokensRepo.delete('666')
     }
 
     def 'invalidate non existing token'() {
         when:
             service.invalidateToken('666')
         then:
-            1 * accessTokenDao.exists('666')
+            1 * accessTokensRepo.exists('666')
             thrown(NoSuchTokenException)
     }
 
@@ -94,8 +94,8 @@ class TokensServiceTest extends Specification {
         when:
             def actual = service.getTokenInfo(tokenVal)
         then:
-            1 * accessTokenDao.findOne(tokenVal) >> accessToken
-            1 * clientDao.findOne(accessToken.authenticatedClientId) >> build(Client).with { it.locked = false; it }
+            1 * accessTokensRepo.findOne(tokenVal) >> accessToken
+            1 * clientsRepo.findOne(accessToken.authenticatedClientId) >> build(Client).with { it.locked = false; it }
 
             actual.expiresIn         == accessToken.expiresIn
             actual.scope             == accessToken.scope
@@ -110,7 +110,7 @@ class TokensServiceTest extends Specification {
         when:
             service.getTokenInfo('666')
         then:
-            accessTokenDao.findOne(_) >> null
+            accessTokensRepo.findOne(_) >> null
             thrown(InvalidTokenException)
     }
 
@@ -122,7 +122,7 @@ class TokensServiceTest extends Specification {
         when:
             service.getTokenInfo('666')
         then:
-            1 * accessTokenDao.findOne(_) >> accessToken
+            1 * accessTokensRepo.findOne(_) >> accessToken
             thrown(InvalidTokenException)
     }
 
@@ -134,11 +134,11 @@ class TokensServiceTest extends Specification {
             )
             def client = build(Client).with { it.locked = true; it }
 
-            accessTokenDao.findOne(_) >> accessToken
+            accessTokensRepo.findOne(_) >> accessToken
         when:
             service.getTokenInfo('123')
         then:
-            1 * clientDao.findOne('client-333') >> client
+            1 * clientsRepo.findOne('client-333') >> client
             thrown(InvalidTokenException)
     }
 

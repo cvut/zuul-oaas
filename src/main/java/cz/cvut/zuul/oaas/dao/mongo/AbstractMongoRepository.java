@@ -18,7 +18,7 @@ import java.lang.reflect.ParameterizedType;
  *
  * @author Jakub Jirutka <jakub@jirutka.cz>
  */
-public abstract class AbstractMongoGenericDAO<T, ID extends Serializable> implements CrudRepository<T, ID> {
+public abstract class AbstractMongoRepository<T, ID extends Serializable> implements CrudRepository<T, ID> {
 
     private MongoOperations mongoOperations;
 
@@ -28,7 +28,7 @@ public abstract class AbstractMongoGenericDAO<T, ID extends Serializable> implem
 
 
     @SuppressWarnings("unchecked")
-    protected AbstractMongoGenericDAO() {
+    protected AbstractMongoRepository() {
         this.entityClass = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
     }
 

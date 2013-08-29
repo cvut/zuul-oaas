@@ -1,6 +1,6 @@
 package cz.cvut.zuul.oaas.handlers;
 
-import cz.cvut.zuul.oaas.dao.ClientDAO;
+import cz.cvut.zuul.oaas.dao.ClientsRepo;
 import cz.cvut.zuul.oaas.models.Client;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Required;
@@ -22,7 +22,7 @@ import org.springframework.security.oauth2.provider.approval.UserApprovalHandler
 public class LockableClientUserApprovalHandler implements UserApprovalHandler {
 
     private UserApprovalHandler parentHandler = new DefaultUserApprovalHandler();
-    private ClientDAO clientDAO;
+    private ClientsRepo clientsRepo;
 
 
     public AuthorizationRequest updateBeforeApproval(AuthorizationRequest authorizationRequest,
@@ -32,7 +32,7 @@ public class LockableClientUserApprovalHandler implements UserApprovalHandler {
     }
 
     public boolean isApproved(AuthorizationRequest authorizationRequest, Authentication userAuthentication) {
-        Client client = clientDAO.findOne(authorizationRequest.getClientId());
+        Client client = clientsRepo.findOne(authorizationRequest.getClientId());
 
         if (client.isLocked()) {
             log.warn("Prevented authorization for locked client: [{}]", client.getClientId());
@@ -54,7 +54,7 @@ public class LockableClientUserApprovalHandler implements UserApprovalHandler {
     }
 
     @Required
-    public void setClientDAO(ClientDAO clientDAO) {
-        this.clientDAO = clientDAO;
+    public void setClientsRepo(ClientsRepo clientsRepo) {
+        this.clientsRepo = clientsRepo;
     }
 }

@@ -9,9 +9,9 @@ import static cz.cvut.zuul.oaas.test.Assertions.assertThat
 /**
  * @author Jakub Jirutka <jakub@jirutka.cz>
  */
-class ResourceDAO_IT extends AbstractDAO_IT<Resource>{
+class ResourcesRepoIT extends AbstractRepoIT<Resource>{
 
-    @Autowired ResourceDAO dao
+    @Autowired ResourcesRepo repo
 
     void assertIt(Resource actual, Resource expected) {
         assertThat (actual) equalsTo (expected) inAllProperties()
@@ -22,9 +22,9 @@ class ResourceDAO_IT extends AbstractDAO_IT<Resource>{
         setup:
             ([Visibility.PUBLIC] * 3 + [Visibility.HIDDEN] * 2).each { visibility ->
                 def entity = build(Resource, [visibility: visibility])
-                dao.save(entity)
+                repo.save(entity)
             }
         expect:
-            dao.findAllPublic().size() == 3
+            repo.findAllPublic().size() == 3
     }
 }

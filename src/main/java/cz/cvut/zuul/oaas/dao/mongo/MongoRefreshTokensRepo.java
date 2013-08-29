@@ -1,9 +1,7 @@
 package cz.cvut.zuul.oaas.dao.mongo;
 
-import cz.cvut.zuul.oaas.dao.RefreshTokenDAO;
+import cz.cvut.zuul.oaas.dao.RefreshTokensRepo;
 import cz.cvut.zuul.oaas.models.PersistableRefreshToken;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.query.Query.query;
@@ -12,8 +10,8 @@ import static org.springframework.data.mongodb.core.query.Query.query;
  *
  * @author Jakub Jirutka <jakub@jirutka.cz>
  */
-public class MongoRefreshTokenDAO
-        extends AbstractMongoGenericDAO<PersistableRefreshToken, String> implements RefreshTokenDAO {
+public class MongoRefreshTokensRepo
+        extends AbstractMongoRepository<PersistableRefreshToken, String> implements RefreshTokensRepo {
 
 
     public void deleteByClientId(String clientId) {

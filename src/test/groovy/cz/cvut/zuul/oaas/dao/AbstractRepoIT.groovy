@@ -17,7 +17,7 @@ import static cz.cvut.zuul.oaas.test.Assertions.assertThat
  * @author Jakub Jirutka <jakub@jirutka.cz>
  */
 @ContextConfiguration('classpath:dao-test.xml')
-abstract class AbstractDAO_IT<E> extends Specification {
+abstract class AbstractRepoIT<E> extends Specification {
 
     @Delegate ObjectFactory factory = new ObjectFactory()
 
@@ -44,7 +44,7 @@ abstract class AbstractDAO_IT<E> extends Specification {
 
     //////// Helper methods ////////
 
-    abstract CrudRepository<E, ? extends Serializable> getDao()
+    abstract CrudRepository<E, ? extends Serializable> getRepo()
 
 
     def E buildEntity() {
@@ -86,33 +86,33 @@ abstract class AbstractDAO_IT<E> extends Specification {
         given:
             def entity = buildEntity()
         when:
-            dao.save(entity)
+            repo.save(entity)
         then:
-            dao.count() == 1
+            repo.count() == 1
     }
 
     def 'save all given entities'() {
         given:
             def entities = buildEntities(3)
         when:
-            dao.save(entities)
+            repo.save(entities)
         then:
-            dao.count() == 3
+            repo.count() == 3
     }
 
     def 'try to retrieve an entity by non existing id'() {
         setup:
-            dao.save(seed())
+            repo.save(seed())
         expect:
-            ! dao.findOne('does-not-exist')
+            ! repo.findOne('does-not-exist')
     }
 
     def 'retrieve an entity by the id'() {
         setup:
             def expected = buildEntity()
-            dao.save(expected)
+            repo.save(expected)
         when:
-            def actual = dao.findOne(ID(expected))
+            def actual = repo.findOne(ID(expected))
         then:
             assertIt actual, expected
     }
@@ -120,10 +120,10 @@ abstract class AbstractDAO_IT<E> extends Specification {
     def 'retrieve entities by the ids'() {
         setup:
             def expected = buildEntities(3)
-            dao.save(expected)
-            dao.save(seed())
+            repo.save(expected)
+            repo.save(seed())
         when:
-            def actual = dao.findAll( expected.collect{ ID(it) } ).toList()
+            def actual = repo.findAll( expected.collect{ ID(it) } ).toList()
         then:
             actual.size() == expected.size()
     }
@@ -131,9 +131,9 @@ abstract class AbstractDAO_IT<E> extends Specification {
     def 'retrieve all entities'() {
         setup:
             def expected = buildEntities(3)
-            dao.save(expected)
+            repo.save(expected)
         when:
-            def actual = dao.findAll().toList()
+            def actual = repo.findAll().toList()
         then:
             actual.size() == expected.size()
     }
@@ -141,61 +141,61 @@ abstract class AbstractDAO_IT<E> extends Specification {
     def 'whether an entity with the id exists'() {
         setup:
             def expected = buildEntity()
-            dao.save(expected)
+            repo.save(expected)
         expect:
-            dao.exists(ID(expected))
+            repo.exists(ID(expected))
     }
 
     def 'try to delete entity by non existing id'() {
         setup:
-            dao.save(seed())
+            repo.save(seed())
         expect:
-            dao.delete('does-not-exist')
+            repo.delete('does-not-exist')
     }
 
     def 'delete entity by the id'() {
         setup:
             def expected = buildEntity()
-            dao.save(expected)
+            repo.save(expected)
 
-            assert dao.findOne( ID(expected) )
+            assert repo.findOne( ID(expected) )
         when:
-            dao.delete(ID(expected))
+            repo.delete(ID(expected))
         then:
-            ! dao.findOne(ID(expected))
+            ! repo.findOne(ID(expected))
     }
 
     def 'delete a given entity'() {
         setup:
             def expected = buildEntity()
-            dao.save(expected)
+            repo.save(expected)
 
-            assert dao.findOne(ID(expected))
+            assert repo.findOne(ID(expected))
         when:
-            dao.delete((E) expected)
+            repo.delete((E) expected)
         then:
-            ! dao.findOne(ID(expected))
+            ! repo.findOne(ID(expected))
     }
 
     def 'delete all given entities'() {
         setup:
             def toPreserve = buildEntities(3)
             def toDelete = buildEntities(4)
-            dao.save(toPreserve + toDelete)
+            repo.save(toPreserve + toDelete)
         when:
-            dao.delete((List<E>) toDelete)
+            repo.delete((List<E>) toDelete)
         then:
-            ! dao.findAll( toDelete.collect { ID(it) } )
-            dao.findAll( toPreserve.collect { ID(it) } )
+            ! repo.findAll( toDelete.collect { ID(it) } )
+            repo.findAll( toPreserve.collect { ID(it) } )
     }
 
     def 'delete all'() {
         setup:
-            dao.save(buildEntities(3))
-            assert dao.count() == 3
+            repo.save(buildEntities(3))
+            assert repo.count() == 3
         when:
-            dao.deleteAll()
+            repo.deleteAll()
         then:
-            dao.count() == 0
+            repo.count() == 0
     }
 }

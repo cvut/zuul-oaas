@@ -12,9 +12,9 @@ import static cz.cvut.zuul.oaas.test.Assertions.assertThat
 /**
  * @author Jakub Jirutka <jakub@jirutka.cz>
  */
-class AccessTokenDAO_IT extends AbstractDAO_IT<PersistableAccessToken> {
+class AccessTokensRepoIT extends AbstractRepoIT<PersistableAccessToken> {
 
-    @Autowired AccessTokenDAO dao
+    @Autowired AccessTokensRepo repo
 
     String idPropertyName = 'value'
 
@@ -37,9 +37,9 @@ class AccessTokenDAO_IT extends AbstractDAO_IT<PersistableAccessToken> {
                     build(OAuth2AccessToken),
                     build(OAuth2Authentication, [clientOnly: true])
             )
-            dao.save(expected)
+            repo.save(expected)
         when:
-            def actual = dao.findOne(expected.value)
+            def actual = repo.findOne(expected.value)
         then:
             assertIt actual, expected
     }
@@ -47,9 +47,9 @@ class AccessTokenDAO_IT extends AbstractDAO_IT<PersistableAccessToken> {
     def 'find token by non existing authentication'() {
         setup:
             def invalid = build(OAuth2Authentication)
-            dao.save(seed())
+            repo.save(seed())
         expect:
-            dao.findOneByAuthentication(invalid) == null
+            repo.findOneByAuthentication(invalid) == null
     }
 
     def 'find token by authentication'() {
@@ -57,41 +57,41 @@ class AccessTokenDAO_IT extends AbstractDAO_IT<PersistableAccessToken> {
             def expectedToken = build(OAuth2AccessToken)
             def authentication = build(OAuth2Authentication, [clientOnly: true])
 
-            dao.save(new PersistableAccessToken(expectedToken, authentication))
+            repo.save(new PersistableAccessToken(expectedToken, authentication))
         when:
-            def actualToken = dao.findOneByAuthentication(authentication)
+            def actualToken = repo.findOneByAuthentication(authentication)
         then:
             expectedToken == actualToken
     }
 
     def 'find tokens by clientId'() {
         setup:
-            dao.save(seed())
+            repo.save(seed())
             2.times {
                 def entity = new PersistableAccessToken(
                         build(OAuth2AccessToken),
                         build(OAuth2Authentication, [clientId: 'someClientId'])
                 )
-                dao.save(entity)
+                repo.save(entity)
             }
         when:
-            def result = dao.findByClientId('someClientId')
+            def result = repo.findByClientId('someClientId')
         then:
             result.size() == 2
     }
 
     def 'find tokens by username'() {
         setup:
-            dao.save(seed())
+            repo.save(seed())
             2.times {
                 def entity = new PersistableAccessToken(
                         build(OAuth2AccessToken),
                         build(OAuth2Authentication, [username: 'myName'])
                 )
-                dao.save(entity)
+                repo.save(entity)
             }
         when:
-            def result = dao.findByUserName('myName')
+            def result = repo.findByUserName('myName')
         then:
             result.size() == 2
     }
@@ -102,12 +102,12 @@ class AccessTokenDAO_IT extends AbstractDAO_IT<PersistableAccessToken> {
             def accessToken = build(OAuth2AccessToken, [refreshToken: refreshToken])
             def entity = new PersistableAccessToken(accessToken, build(OAuth2Authentication, [clientOnly: true]))
 
-            dao.save(entity)
-            assert dao.exists(accessToken.value)
+            repo.save(entity)
+            assert repo.exists(accessToken.value)
         when:
-            dao.deleteByRefreshToken(refreshToken)
+            repo.deleteByRefreshToken(refreshToken)
         then:
-            ! dao.exists(refreshToken.value)
+            ! repo.exists(refreshToken.value)
     }
 
     def 'delete token by clientId'() {
@@ -118,11 +118,11 @@ class AccessTokenDAO_IT extends AbstractDAO_IT<PersistableAccessToken> {
                     build(OAuth2Authentication, [clientId: clientId])
             )
 
-            dao.save(accessToken)
-            assert dao.exists(accessToken.value)
+            repo.save(accessToken)
+            assert repo.exists(accessToken.value)
         when:
-            dao.deleteByClientId(clientId)
+            repo.deleteByClientId(clientId)
         then:
-            ! dao.exists(accessToken.value)
+            ! repo.exists(accessToken.value)
     }
 }

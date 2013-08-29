@@ -1,6 +1,6 @@
 package cz.cvut.zuul.oaas.dao.mongo;
 
-import cz.cvut.zuul.oaas.dao.AccessTokenDAO;
+import cz.cvut.zuul.oaas.dao.AccessTokensRepo;
 import cz.cvut.zuul.oaas.models.PersistableAccessToken;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.mongodb.core.index.Index;
@@ -22,8 +22,8 @@ import static org.springframework.data.mongodb.core.query.Query.query;
  * @author Jakub Jirutka <jakub@jirutka.cz>
  */
 @Slf4j
-public class MongoAccessTokenDAO
-        extends AbstractMongoGenericDAO<PersistableAccessToken, String> implements AccessTokenDAO {
+public class MongoAccessTokensRepo
+        extends AbstractMongoRepository<PersistableAccessToken, String> implements AccessTokensRepo {
 
     private static final String
             CLIENT_ID = "authentication.authorization_request.client_id",

@@ -2,7 +2,7 @@ package cz.cvut.zuul.oaas.services;
 
 import cz.cvut.zuul.oaas.api.models.ResourceDTO;
 import cz.cvut.zuul.oaas.api.resources.exceptions.NoSuchResourceException;
-import cz.cvut.zuul.oaas.dao.ResourceDAO;
+import cz.cvut.zuul.oaas.dao.ResourcesRepo;
 import cz.cvut.zuul.oaas.generators.StringEncoder;
 import cz.cvut.zuul.oaas.models.Resource;
 import cz.cvut.zuul.oaas.models.Scope;
@@ -30,7 +30,7 @@ import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
 @Setter @Slf4j
 public class ResourcesServiceImpl implements ResourcesService {
 
-    private ResourceDAO resourceDAO;
+    private ResourcesRepo resourcesRepo;
 
     /**
      * Encoder to be used to generate unique resourceId from the resource name.
@@ -53,11 +53,11 @@ public class ResourcesServiceImpl implements ResourcesService {
 
 
     public List<ResourceDTO> getAllResources() {
-        return mapper.mapAsList(resourceDAO.findAll(), ResourceDTO.class);
+        return mapper.mapAsList(resourcesRepo.findAll(), ResourceDTO.class);
     }
 
     public List<ResourceDTO> getAllPublicResources() {
-        return mapper.mapAsList(resourceDAO.findAllPublic(), ResourceDTO.class);
+        return mapper.mapAsList(resourcesRepo.findAllPublic(), ResourceDTO.class);
     }
 
     public String createResource(ResourceDTO resourceDTO) {
@@ -67,12 +67,12 @@ public class ResourcesServiceImpl implements ResourcesService {
         do {
             log.debug("Generating unique resourceId");
             resourceId = identifierEncoder.encode(resource.getName());
-        } while (resourceDAO.exists(resourceId));
+        } while (resourcesRepo.exists(resourceId));
 
         resource.setId(resourceId);
 
         log.info("Creating new resource: [{}]", resource);
-        resourceDAO.save(resource);
+        resourcesRepo.save(resource);
 
         return resourceId;
     }
@@ -81,11 +81,11 @@ public class ResourcesServiceImpl implements ResourcesService {
         log.info("Updating resource [{}]", resourceDTO);
 
         assertResourceExists(resourceDTO.getResourceId());
-        resourceDAO.save(mapper.map(resourceDTO, Resource.class));
+        resourcesRepo.save(mapper.map(resourceDTO, Resource.class));
     }
 
     public ResourceDTO findResourceById(String id) throws NoSuchResourceException {
-        Resource resource = resourceDAO.findOne(id);
+        Resource resource = resourcesRepo.findOne(id);
 
         if (resource == null) {
             throw new NoSuchResourceException("No such resource with id = " + id);
@@ -95,12 +95,12 @@ public class ResourcesServiceImpl implements ResourcesService {
 
     public void deleteResourceById(String id) throws NoSuchResourceException {
         assertResourceExists(id);
-        resourceDAO.delete(id);
+        resourcesRepo.delete(id);
     }
 
 
     private void assertResourceExists(String resourceId) {
-        if (! resourceDAO.exists(resourceId)) {
+        if (! resourcesRepo.exists(resourceId)) {
             throw new NoSuchResourceException("No such resource with id = " + resourceId);
         }
     }

@@ -7,14 +7,14 @@ import org.springframework.dao.EmptyResultDataAccessException
 /**
  * @author Jakub Jirutka <jakub@jirutka.cz>
  */
-class ClientDAO_IT extends AbstractDAO_IT<Client> {
+class ClientsRepoIT extends AbstractRepoIT<Client> {
 
-    @Autowired ClientDAO dao
+    @Autowired ClientsRepo repo
 
 
     def 'update secret for non existing client'() {
         when:
-            dao.updateClientSecret('unknown-id', 'new-secret')
+            repo.updateClientSecret('unknown-id', 'new-secret')
         then:
             thrown(EmptyResultDataAccessException)
 
@@ -24,23 +24,23 @@ class ClientDAO_IT extends AbstractDAO_IT<Client> {
         setup:
             def client = build(Client)
             assert client.clientSecret != 'new-secret'
-            dao.save(client)
+            repo.save(client)
         when:
-            dao.updateClientSecret(client.clientId, 'new-secret')
+            repo.updateClientSecret(client.clientId, 'new-secret')
         then:
-            dao.findOne(client.clientId).clientSecret == 'new-secret'
+            repo.findOne(client.clientId).clientSecret == 'new-secret'
     }
 
     def 'update redirect URIs'() {
         setup:
             def client = build(Client, [registeredRedirectUri: ['http://example.org']])
-            dao.save(client)
+            repo.save(client)
         when:
-            def expected = dao.findOne(client.clientId)
+            def expected = repo.findOne(client.clientId)
             expected.registeredRedirectUri << 'https://cool.org'
-            dao.save(expected)
+            repo.save(expected)
         then:
-            def actual = dao.findOne(client.clientId)
+            def actual = repo.findOne(client.clientId)
             actual.registeredRedirectUri == expected.registeredRedirectUri
     }
 }

@@ -12,20 +12,20 @@
 
 
     <bean id="resourceService" class="cz.cvut.zuul.oaas.services.ResourcesServiceImpl"
-          p:resourceDAO-ref="resourceDAO"
+          p:resourcesRepo-ref="resourcesRepo"
           p:identifierEncoder-ref="identifierEncoder" />
 
     <bean id="clientsService" class="cz.cvut.zuul.oaas.services.ClientsServiceImpl"
-          p:clientDAO-ref="clientDAO"
-          p:accessTokenDAO-ref="accessTokenDAO"
-          p:refreshTokenDAO-ref="refreshTokenDAO"
+          p:clientsRepo-ref="clientsRepo"
+          p:accessTokensRepo-ref="accessTokensRepo"
+          p:refreshTokensRepo-ref="refreshTokensRepo"
           p:clientIdGenerator-ref="clientIdGenerator"
           p:secretGenerator-ref="secretGenerator"
           p:secretEncoder-ref="passwordEncoder" />
 
     <bean id="tokensService" class="cz.cvut.zuul.oaas.services.TokensServiceImpl"
-          p:accessTokenDAO-ref="accessTokenDAO"
-          p:clientDAO-ref="clientDAO" />
+          p:accessTokensRepo-ref="accessTokensRepo"
+          p:clientsRepo-ref="clientsRepo" />
 
 
     <!--///// Validators /////-->

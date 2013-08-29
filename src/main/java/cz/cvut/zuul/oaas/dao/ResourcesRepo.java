@@ -9,7 +9,7 @@ import java.util.List;
  *
  * @author Tomas Mano <tomasmano@gmail.com>
  */
-public interface ResourceDAO extends CrudRepository<Resource, String> {
+public interface ResourcesRepo extends CrudRepository<Resource, String> {
 
     /**
      * Returns all resources.

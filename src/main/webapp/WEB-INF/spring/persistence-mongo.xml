@@ -45,16 +45,16 @@
         <property name="writeResultChecking" value="EXCEPTION" />
     </bean>
 
-    <bean id="clientDAO" class="cz.cvut.zuul.oaas.dao.mongo.MongoClientDAO"
+    <bean id="clientsRepo" class="cz.cvut.zuul.oaas.dao.mongo.MongoClientsRepo"
           p:mongoOperations-ref="mongoTemplate" />
 
-    <bean id="accessTokenDAO" class="cz.cvut.zuul.oaas.dao.mongo.MongoAccessTokenDAO"
+    <bean id="accessTokensRepo" class="cz.cvut.zuul.oaas.dao.mongo.MongoAccessTokensRepo"
           p:mongoOperations-ref="mongoTemplate" />
 
-    <bean id="refreshTokenDAO" class="cz.cvut.zuul.oaas.dao.mongo.MongoRefreshTokenDAO"
+    <bean id="refreshTokensRepo" class="cz.cvut.zuul.oaas.dao.mongo.MongoRefreshTokensRepo"
           p:mongoOperations-ref="mongoTemplate" />
 
-    <bean id="resourceDAO" class="cz.cvut.zuul.oaas.dao.mongo.MongoResourceDAO"
+    <bean id="resourcesRepo" class="cz.cvut.zuul.oaas.dao.mongo.MongoResourcesRepo"
           p:mongoOperations-ref="mongoTemplate" />
 
 
@@ -65,7 +65,7 @@
         <bean class="cz.cvut.zuul.oaas.dao.mongo.support.MongoSeedLoader" lazy-init="false"
               init-method="seed"
               p:mongoTemplate-ref="mongoTemplate"
-              p:location="classpath:seeds.json" />
+              p:location="classpath:config/seeds.json" />
     </beans>
 
 </beans>

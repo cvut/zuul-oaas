@@ -2,7 +2,7 @@ package cz.cvut.zuul.oaas.services
 
 import cz.cvut.zuul.oaas.api.models.ResourceDTO
 import cz.cvut.zuul.oaas.api.resources.exceptions.NoSuchResourceException
-import cz.cvut.zuul.oaas.dao.ResourceDAO
+import cz.cvut.zuul.oaas.dao.ResourcesRepo
 import cz.cvut.zuul.oaas.generators.StringEncoder
 import cz.cvut.zuul.oaas.models.Resource
 import cz.cvut.zuul.oaas.test.factories.ObjectFactory
@@ -16,11 +16,11 @@ import static cz.cvut.zuul.oaas.test.Assertions.assertThat
 @Mixin(ObjectFactory)
 class ResourcesServiceTest extends Specification {
 
-    def resourceDao = Mock(ResourceDAO)
+    def resourcesRepo = Mock(ResourcesRepo)
     def idEncoder = Mock(StringEncoder)
 
     def service = new ResourcesServiceImpl(
-            resourceDAO: resourceDao,
+            resourcesRepo: resourcesRepo,
             identifierEncoder: idEncoder
     )
 
@@ -39,8 +39,8 @@ class ResourcesServiceTest extends Specification {
             def returnedId = service.createResource(resource)
         then:
             1 * idEncoder.encode(resource.name) >> generatedId
-            1 * resourceDao.exists(generatedId) >> false
-            1 * resourceDao.save({ Resource it ->
+            1 * resourcesRepo.exists(generatedId) >> false
+            1 * resourcesRepo.save({ Resource it ->
                 it.id == generatedId
             })
             returnedId == generatedId
@@ -54,9 +54,9 @@ class ResourcesServiceTest extends Specification {
             service.createResource(resource)
         then: 'generate unique id at the third attempt'
             3 * idEncoder.encode(resource.name) >>> ['taken-id', 'still-bad', generatedId]
-            3 * resourceDao.exists(_) >>> [true, true, false]
+            3 * resourcesRepo.exists(_) >>> [true, true, false]
         then:
-            1 * resourceDao.save({ Resource it ->
+            1 * resourcesRepo.save({ Resource it ->
                 it.id == generatedId
             })
     }
@@ -66,7 +66,7 @@ class ResourcesServiceTest extends Specification {
         when:
             service.updateResource(build(ResourceDTO))
         then:
-            resourceDao.exists(_) >> false
+            resourcesRepo.exists(_) >> false
             thrown(NoSuchResourceException)
     }
 
@@ -75,7 +75,7 @@ class ResourcesServiceTest extends Specification {
         when:
             service.findResourceById('foo-123')
         then:
-            1 * resourceDao.findOne('foo-123') >> null
+            1 * resourcesRepo.findOne('foo-123') >> null
             thrown(NoSuchResourceException)
     }
 
@@ -84,7 +84,7 @@ class ResourcesServiceTest extends Specification {
         when:
             service.deleteResourceById('non-existing')
         then:
-            resourceDao.exists('non-existing') >> false
+            resourcesRepo.exists('non-existing') >> false
             thrown(NoSuchResourceException)
     }
 

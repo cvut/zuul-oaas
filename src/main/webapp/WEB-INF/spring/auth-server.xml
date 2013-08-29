@@ -36,7 +36,7 @@
         without requesting token endpoint.
     -->
     <bean id="lockableApprovalHandler" class="cz.cvut.zuul.oaas.handlers.LockableClientUserApprovalHandler"
-          p:clientDAO-ref="clientDAO"
+          p:clientsRepo-ref="clientsRepo"
           p:parentHandler-ref="memorizingApprovalHandler" />
 
     <!--
@@ -62,14 +62,14 @@
           p:clientDetailsService-ref="clientDetailsService" />
 
     <bean id="clientDetailsService" class="cz.cvut.zuul.oaas.services.internal.ClientDetailsServiceImpl"
-          p:clientDAO-ref="clientDAO" />
+          p:clientsRepo-ref="clientsRepo" />
 
     <!-- Replacement for org.springframework.security.oauth2.provider.client.ClientDetailsUserDetailsService -->
     <bean id="clientUserDetailsService" class="cz.cvut.zuul.oaas.services.internal.LockableClientUserDetailsService"
-          p:clientDAO-ref="clientDAO" />
+          p:clientsRepo-ref="clientsRepo" />
 
     <bean id="tokenStore" class="cz.cvut.zuul.oaas.services.internal.TokenStoreImpl"
-          p:accessTokenDAO-ref="accessTokenDAO"
-          p:refreshTokenDAO-ref="refreshTokenDAO" />
+          p:accessTokensRepo-ref="accessTokensRepo"
+          p:refreshTokensRepo-ref="refreshTokensRepo" />
 
 </beans>

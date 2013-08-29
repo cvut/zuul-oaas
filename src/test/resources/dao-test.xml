@@ -32,16 +32,16 @@
     </bean>
 
 
-    <bean id="mongoAccessTokenDAO" class="cz.cvut.zuul.oaas.dao.mongo.MongoAccessTokenDAO"
+    <bean id="accessTokensRepo" class="cz.cvut.zuul.oaas.dao.mongo.MongoAccessTokensRepo"
           p:mongoOperations-ref="mongoTemplate" />
 
-    <bean id="mongoRefreshTokenDAO" class="cz.cvut.zuul.oaas.dao.mongo.MongoRefreshTokenDAO"
+    <bean id="refreshTokensRepo" class="cz.cvut.zuul.oaas.dao.mongo.MongoRefreshTokensRepo"
           p:mongoOperations-ref="mongoTemplate" />
 
-    <bean id="mongoClientDAO" class="cz.cvut.zuul.oaas.dao.mongo.MongoClientDAO"
+    <bean id="clientsRepo" class="cz.cvut.zuul.oaas.dao.mongo.MongoClientsRepo"
           p:mongoOperations-ref="mongoTemplate"  />
 
-    <bean id="mongoResourceDAO" class="cz.cvut.zuul.oaas.dao.mongo.MongoResourceDAO"
+    <bean id="resourcesRepo" class="cz.cvut.zuul.oaas.dao.mongo.MongoResourcesRepo"
           p:mongoOperations-ref="mongoTemplate"  />
 
 </beans>

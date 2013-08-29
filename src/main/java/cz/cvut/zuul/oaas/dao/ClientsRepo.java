@@ -7,7 +7,7 @@ import org.springframework.data.repository.CrudRepository;
 /**
  * @author Jakub Jirutka <jakub@jirutka.cz>
  */
-public interface ClientDAO extends CrudRepository<Client, String> {
+public interface ClientsRepo extends CrudRepository<Client, String> {
 
     void updateClientSecret(String clientId, String secret) throws EmptyResultDataAccessException;
 

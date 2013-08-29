@@ -11,7 +11,7 @@ import java.util.Collection;
 /**
  * @author Jakub Jirutka <jakub@jirutka.cz>
  */
-public interface AccessTokenDAO extends CrudRepository<PersistableAccessToken, String> {
+public interface AccessTokensRepo extends CrudRepository<PersistableAccessToken, String> {
 
     PersistableAccessToken findOneByAuthentication(OAuth2Authentication authentication);
 

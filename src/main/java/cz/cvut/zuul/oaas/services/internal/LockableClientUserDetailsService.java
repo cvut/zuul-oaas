@@ -1,6 +1,6 @@
 package cz.cvut.zuul.oaas.services.internal;
 
-import cz.cvut.zuul.oaas.dao.ClientDAO;
+import cz.cvut.zuul.oaas.dao.ClientsRepo;
 import cz.cvut.zuul.oaas.models.Client;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -25,12 +25,12 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 @Slf4j
 public class LockableClientUserDetailsService implements UserDetailsService {
 
-    private @Setter ClientDAO clientDAO;
+    private @Setter ClientsRepo clientsRepo;
     private String emptyPassword = "";
 
 
     public UserDetails loadUserByUsername(String clientId) throws UsernameNotFoundException {
-        Client client = clientDAO.findOne(clientId);
+        Client client = clientsRepo.findOne(clientId);
 
         String clientSecret = client.getClientSecret();
         if (isBlank(clientSecret)) {
