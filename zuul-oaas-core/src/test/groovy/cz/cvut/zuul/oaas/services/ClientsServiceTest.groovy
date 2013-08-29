@@ -1,5 +1,6 @@
 package cz.cvut.zuul.oaas.services
 
+import cz.cvut.zuul.oaas.api.exceptions.NoSuchClientException
 import cz.cvut.zuul.oaas.api.models.ClientDTO
 import cz.cvut.zuul.oaas.repos.AccessTokensRepo
 import cz.cvut.zuul.oaas.repos.ClientsRepo
@@ -9,7 +10,6 @@ import cz.cvut.zuul.oaas.test.factories.ObjectFactory
 import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.security.crypto.keygen.StringKeyGenerator
 import org.springframework.security.crypto.password.PasswordEncoder
-import org.springframework.security.oauth2.provider.NoSuchClientException
 import spock.lang.Specification
 
 import static cz.cvut.zuul.oaas.test.Assertions.assertThat

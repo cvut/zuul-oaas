@@ -1,8 +1,7 @@
 package cz.cvut.zuul.oaas.api.services;
 
+import cz.cvut.zuul.oaas.api.exceptions.NoSuchClientException;
 import cz.cvut.zuul.oaas.api.models.ClientDTO;
-import org.springframework.security.oauth2.provider.ClientAlreadyExistsException;
-import org.springframework.security.oauth2.provider.NoSuchClientException;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
@@ -17,7 +16,7 @@ public interface ClientsService {
     
     ClientDTO findClientById(String clientId) throws NoSuchClientException;
 
-    String createClient(@Valid ClientDTO client) throws ClientAlreadyExistsException;
+    String createClient(@Valid ClientDTO client);
 
     void updateClient(@Valid ClientDTO client) throws NoSuchClientException;
     

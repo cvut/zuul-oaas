@@ -51,7 +51,7 @@ public class TokensServiceImpl implements TokensService {
 
     public TokenDTO getToken(String tokenValue) {
         PersistableAccessToken accessToken = accessTokensRepo.findOne(tokenValue);
-        if (accessToken == null) throw new NoSuchTokenException();
+        if (accessToken == null) throw new NoSuchTokenException("No such token: %s", tokenValue);
 
         Client client = clientsRepo.findOne(accessToken.getAuthenticatedClientId());
 
@@ -105,7 +105,7 @@ public class TokensServiceImpl implements TokensService {
 
     public void invalidateToken(String tokenValue) {
         if (! accessTokensRepo.exists(tokenValue)) {
-            throw new NoSuchTokenException();
+            throw new NoSuchTokenException("No such token: %s", tokenValue);
         }
         accessTokensRepo.delete(tokenValue);
     }

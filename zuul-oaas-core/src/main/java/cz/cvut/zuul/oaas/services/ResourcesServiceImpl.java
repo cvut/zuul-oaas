@@ -1,13 +1,13 @@
 package cz.cvut.zuul.oaas.services;
 
-import cz.cvut.zuul.oaas.api.models.ResourceDTO;
 import cz.cvut.zuul.oaas.api.exceptions.NoSuchResourceException;
+import cz.cvut.zuul.oaas.api.models.ResourceDTO;
 import cz.cvut.zuul.oaas.api.services.ResourcesService;
-import cz.cvut.zuul.oaas.repos.ResourcesRepo;
-import cz.cvut.zuul.oaas.services.generators.StringEncoder;
 import cz.cvut.zuul.oaas.models.Resource;
 import cz.cvut.zuul.oaas.models.Scope;
+import cz.cvut.zuul.oaas.repos.ResourcesRepo;
 import cz.cvut.zuul.oaas.services.converters.CaseInsensitiveToEnumConverter;
+import cz.cvut.zuul.oaas.services.generators.StringEncoder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -78,23 +78,23 @@ public class ResourcesServiceImpl implements ResourcesService {
         return resourceId;
     }
 
-    public void updateResource(ResourceDTO resourceDTO) throws NoSuchResourceException{
+    public void updateResource(ResourceDTO resourceDTO) {
         log.info("Updating resource [{}]", resourceDTO);
 
         assertResourceExists(resourceDTO.getResourceId());
         resourcesRepo.save(mapper.map(resourceDTO, Resource.class));
     }
 
-    public ResourceDTO findResourceById(String id) throws NoSuchResourceException {
+    public ResourceDTO findResourceById(String id) {
         Resource resource = resourcesRepo.findOne(id);
 
         if (resource == null) {
-            throw new NoSuchResourceException("No such resource with id = " + id);
+            throw new NoSuchResourceException("No such resource with id = %s", id);
         }
         return mapper.map(resource, ResourceDTO.class);
     }
 
-    public void deleteResourceById(String id) throws NoSuchResourceException {
+    public void deleteResourceById(String id) {
         assertResourceExists(id);
         resourcesRepo.delete(id);
     }
@@ -102,7 +102,7 @@ public class ResourcesServiceImpl implements ResourcesService {
 
     private void assertResourceExists(String resourceId) {
         if (! resourcesRepo.exists(resourceId)) {
-            throw new NoSuchResourceException("No such resource with id = " + resourceId);
+            throw new NoSuchResourceException("No such resource with id = %s", resourceId);
         }
     }
 

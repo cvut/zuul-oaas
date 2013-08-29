@@ -1,9 +1,9 @@
 package cz.cvut.zuul.oaas.api.rest
 
+import cz.cvut.zuul.oaas.api.exceptions.NoSuchClientException
 import cz.cvut.zuul.oaas.api.models.ClientDTO
 import cz.cvut.zuul.oaas.api.services.ClientsService
 import org.hibernate.validator.method.MethodConstraintViolationException
-import org.springframework.security.oauth2.provider.NoSuchClientException
 
 import static java.util.Collections.emptySet
 import static org.springframework.http.MediaType.APPLICATION_JSON
@@ -21,7 +21,7 @@ class ClientsControllerIT extends AbstractControllerIT {
 
     void 'GET: non existing client'() {
         setup:
-            1 * service.findClientById('666') >> { throw new NoSuchClientException("") }
+            1 * service.findClientById('666') >> { throw new NoSuchClientException('') }
         when:
             perform GET('/v1/clients/666').with {
                 accept APPLICATION_JSON
@@ -92,7 +92,7 @@ class ClientsControllerIT extends AbstractControllerIT {
 
     def 'DELETE: non existing client'() {
         setup:
-            1 * service.removeClient('666') >> { throw new NoSuchClientException("") }
+            1 * service.removeClient('666') >> { throw new NoSuchClientException('') }
         when:
             perform DELETE('/v1/clients/666')
         then:

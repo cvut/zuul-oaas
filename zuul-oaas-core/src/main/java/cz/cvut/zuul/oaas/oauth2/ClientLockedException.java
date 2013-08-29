@@ -7,10 +7,19 @@ import org.springframework.security.oauth2.common.exceptions.ClientAuthenticatio
  * 
  * @author Tomas Mano <tomasmano@gmail.com>
  */
-public class ClientLockedException extends ClientAuthenticationException{
+public class ClientLockedException extends ClientAuthenticationException {
 
-    public ClientLockedException(String msg) {
-        super(msg);
+    /**
+     * Construct a {@code ClientLockedException} with the specified
+     * {@linkplain String#format(String, Object...) formatted string} as
+     * a detail message.
+     *
+     * @param message The formatted message.
+     * @param args Arguments referenced by the format specifiers in the
+     *             formatted message.
+     */
+    public ClientLockedException(String message, Object... args) {
+        super(String.format(message, args));
     }
   
     @Override
@@ -18,9 +27,7 @@ public class ClientLockedException extends ClientAuthenticationException{
         return 401;
     }
 
-    @Override
     public String getOAuth2ErrorCode() {
         return "locked_client";
     }
-    
 }

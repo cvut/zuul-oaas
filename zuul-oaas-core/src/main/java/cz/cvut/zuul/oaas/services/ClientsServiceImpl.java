@@ -1,11 +1,12 @@
 package cz.cvut.zuul.oaas.services;
 
+import cz.cvut.zuul.oaas.api.exceptions.NoSuchClientException;
 import cz.cvut.zuul.oaas.api.models.ClientDTO;
 import cz.cvut.zuul.oaas.api.services.ClientsService;
+import cz.cvut.zuul.oaas.models.Client;
 import cz.cvut.zuul.oaas.repos.AccessTokensRepo;
 import cz.cvut.zuul.oaas.repos.ClientsRepo;
 import cz.cvut.zuul.oaas.repos.RefreshTokensRepo;
-import cz.cvut.zuul.oaas.models.Client;
 import cz.cvut.zuul.oaas.services.converters.GrantedAuthorityConverter;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,8 +19,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.crypto.keygen.StringKeyGenerator;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.provider.ClientAlreadyExistsException;
-import org.springframework.security.oauth2.provider.NoSuchClientException;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -61,16 +60,16 @@ public class ClientsServiceImpl implements ClientsService {
 
 
 
-    public ClientDTO findClientById(String clientId) throws NoSuchClientException {
+    public ClientDTO findClientById(String clientId) {
         Client client = clientsRepo.findOne(clientId);
 
         if (client == null) {
-            throw new NoSuchClientException(String.format("Client with id [%s] doesn't exists.", clientId));
+            throw new NoSuchClientException("Client with id [%s] doesn't exists.", clientId);
         }
         return mapper.map(client, ClientDTO.class);
     }
 
-    public String createClient(ClientDTO clientDTO) throws ClientAlreadyExistsException {
+    public String createClient(ClientDTO clientDTO) {
         Client client = mapper.map(clientDTO, Client.class);
 
         String clientId;
@@ -95,14 +94,14 @@ public class ClientsServiceImpl implements ClientsService {
         return clientId;
     }
 
-    public void updateClient(ClientDTO clientDTO) throws NoSuchClientException {
+    public void updateClient(ClientDTO clientDTO) {
         log.info("Updating client: [{}]", clientDTO);
 
         assertClientExists(clientDTO.getClientId());
         clientsRepo.save(mapper.map(clientDTO, Client.class));
     }
 
-    public void removeClient(String clientId) throws NoSuchClientException {
+    public void removeClient(String clientId) {
         log.info("Removing client: [{}]", clientId);
         assertClientExists(clientId);
 
@@ -113,7 +112,7 @@ public class ClientsServiceImpl implements ClientsService {
         clientsRepo.delete(clientId);
     }
 
-    public void resetClientSecret(String clientId) throws NoSuchClientException {
+    public void resetClientSecret(String clientId) {
         log.info("Resetting secret for client: [{}]", clientId);
 
         String plain = secretGenerator.generateKey();

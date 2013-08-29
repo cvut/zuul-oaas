@@ -3,7 +3,6 @@ package cz.cvut.zuul.oaas.controllers;
 import cz.cvut.zuul.oaas.api.models.ClientDTO;
 import cz.cvut.zuul.oaas.api.services.ClientsService;
 import lombok.Setter;
-import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 import org.springframework.security.oauth2.provider.AuthorizationRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,7 +25,7 @@ public class AccessConfirmationController {
 
 
 	@RequestMapping("/oauth/confirm_access")
-	public ModelAndView getAccessConfirmation(Map<String, Object> model) throws OAuth2Exception {
+	public ModelAndView getAccessConfirmation(Map<String, Object> model) {
 		AuthorizationRequest clientAuth = (AuthorizationRequest) model.remove("authorizationRequest");
 
 		ClientDTO client = clientsService.findClientById(clientAuth.getClientId());

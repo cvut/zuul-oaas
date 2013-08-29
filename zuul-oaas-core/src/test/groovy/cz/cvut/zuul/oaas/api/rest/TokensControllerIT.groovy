@@ -63,7 +63,7 @@ class TokensControllerIT extends AbstractControllerIT {
 
     void 'GET: non existing token'() {
         setup:
-            1 * service.getToken('666') >> { throw new NoSuchTokenException() }
+            1 * service.getToken('666') >> { throw new NoSuchTokenException('') }
         when:
             perform GET('/v1/tokens/666').with {
                 accept APPLICATION_JSON
@@ -84,7 +84,7 @@ class TokensControllerIT extends AbstractControllerIT {
 
     void 'DELETE: non existing token'() {
         setup:
-            1 * service.invalidateToken('666') >> { throw new NoSuchTokenException() }
+            1 * service.invalidateToken('666') >> { throw new NoSuchTokenException('') }
         when:
             perform DELETE('/v1/tokens/666')
         then:

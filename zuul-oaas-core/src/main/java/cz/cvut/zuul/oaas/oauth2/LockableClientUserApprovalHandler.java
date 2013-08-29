@@ -1,7 +1,7 @@
 package cz.cvut.zuul.oaas.oauth2;
 
-import cz.cvut.zuul.oaas.repos.ClientsRepo;
 import cz.cvut.zuul.oaas.models.Client;
+import cz.cvut.zuul.oaas.repos.ClientsRepo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.security.core.Authentication;
@@ -36,8 +36,7 @@ public class LockableClientUserApprovalHandler implements UserApprovalHandler {
 
         if (client.isLocked()) {
             log.warn("Prevented authorization for locked client: [{}]", client.getClientId());
-            throw new ClientLockedException(String.format(
-                    "Client with id [%s] is locked", client.getClientId()));
+            throw new ClientLockedException("Client with id [%s] is locked", client.getClientId());
         }
         return parentHandler.isApproved(authorizationRequest, userAuthentication);
     }

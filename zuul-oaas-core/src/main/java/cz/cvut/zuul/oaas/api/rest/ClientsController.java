@@ -1,17 +1,15 @@
 package cz.cvut.zuul.oaas.api.rest;
 
+import cz.cvut.zuul.oaas.api.exceptions.NoSuchClientException;
 import cz.cvut.zuul.oaas.api.models.ClientDTO;
-import cz.cvut.zuul.oaas.models.ImplicitClientDetails;
 import cz.cvut.zuul.oaas.api.services.ClientsService;
+import cz.cvut.zuul.oaas.models.ImplicitClientDetails;
 import lombok.Setter;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.oauth2.provider.ClientAlreadyExistsException;
-import org.springframework.security.oauth2.provider.NoSuchClientException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 
 import static org.springframework.http.HttpStatus.*;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
@@ -63,7 +61,7 @@ public class ClientsController {
     
     @ResponseStatus(NO_CONTENT)
     @RequestMapping(value = "{clientId}/resources", method = PUT)
-    public void addResourceToClientDetails(@PathVariable String clientId, @Valid @RequestBody String resourceId) {
+    public void addResourceToClientDetails(@PathVariable String clientId, @RequestBody String resourceId) {
         ClientDTO client = clientsService.findClientById(clientId);
 
         if (client.getResourceIds().add(resourceId)) {
@@ -162,7 +160,7 @@ public class ClientsController {
 
     @ResponseStatus(NO_CONTENT)
     @RequestMapping(value = "{clientId}/implicit-client-details/type", method = PUT)
-    public void addImplicitClientDetailsToClientDetails(@PathVariable String clientId, @RequestBody String implicitClientType) throws Exception {
+    public void addImplicitClientDetailsToClientDetails(@PathVariable String clientId, @RequestBody String implicitClientType) {
         ClientDTO client = clientsService.findClientById(clientId);
 
         client.setImplicitClientDetails(new ImplicitClientDetails(implicitClientType));
@@ -184,10 +182,5 @@ public class ClientsController {
     @ExceptionHandler(NoSuchClientException.class)
     public ResponseEntity<Void> handleNoSuchClientException() {
         return new ResponseEntity<>(NOT_FOUND);
-    }
-
-    @ExceptionHandler(ClientAlreadyExistsException.class)
-    public ResponseEntity<Void> handleClientAlreadyExistsException() {
-        return new ResponseEntity<>(CONFLICT);
     }
 }
