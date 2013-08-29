@@ -1,17 +1,16 @@
 package cz.cvut.zuul.oaas.api.rest;
 
-import cz.cvut.zuul.oaas.api.exceptions.NoSuchClientException;
 import cz.cvut.zuul.oaas.api.models.ClientDTO;
 import cz.cvut.zuul.oaas.api.services.ClientsService;
 import cz.cvut.zuul.oaas.models.ImplicitClientDetails;
 import lombok.Setter;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 
-import static org.springframework.http.HttpStatus.*;
+import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 /**
@@ -174,13 +173,5 @@ public class ClientsController {
 
         client.setLocked(Boolean.parseBoolean(locked));
         clientsService.updateClient(client);
-    }
-
-
-    //////////  Exception Handlers  //////////
-
-    @ExceptionHandler(NoSuchClientException.class)
-    public ResponseEntity<Void> handleNoSuchClientException() {
-        return new ResponseEntity<>(NOT_FOUND);
     }
 }

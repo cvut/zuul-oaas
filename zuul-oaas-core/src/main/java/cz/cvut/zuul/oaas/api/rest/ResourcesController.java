@@ -1,17 +1,16 @@
 package cz.cvut.zuul.oaas.api.rest;
 
 import cz.cvut.zuul.oaas.api.models.ResourceDTO;
-import cz.cvut.zuul.oaas.api.exceptions.NoSuchResourceException;
 import cz.cvut.zuul.oaas.api.services.ResourcesService;
 import lombok.Setter;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
-import static org.springframework.http.HttpStatus.*;
+import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 /**
@@ -65,13 +64,5 @@ public class ResourcesController {
     @RequestMapping(value = "/{id}", method = DELETE)
     public void deleteResource(@PathVariable String id) {
         resourceService.deleteResourceById(id);
-    }
-
-
-    //////////  Exceptions Handling  //////////
-
-    @ExceptionHandler(NoSuchResourceException.class)
-    public ResponseEntity<Void> handleNoSuchResourceException() {
-        return new ResponseEntity<>(NOT_FOUND);
     }
 }
