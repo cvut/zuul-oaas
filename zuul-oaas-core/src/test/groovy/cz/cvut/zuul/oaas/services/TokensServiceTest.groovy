@@ -111,7 +111,7 @@ class TokensServiceTest extends Specification {
             service.getTokenInfo('666')
         then:
             accessTokensRepo.findOne(_) >> null
-            thrown(InvalidTokenException)
+            thrown(NoSuchTokenException)
     }
 
     def 'get token info for expired token'() {

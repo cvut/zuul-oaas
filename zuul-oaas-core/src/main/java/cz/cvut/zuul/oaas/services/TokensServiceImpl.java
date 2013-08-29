@@ -1,14 +1,14 @@
 package cz.cvut.zuul.oaas.services;
 
 import cz.cvut.oauth.provider.spring.TokenInfo;
-import cz.cvut.zuul.oaas.api.models.TokenDTO;
 import cz.cvut.zuul.oaas.api.exceptions.NoSuchTokenException;
+import cz.cvut.zuul.oaas.api.models.TokenDTO;
 import cz.cvut.zuul.oaas.api.services.TokensService;
-import cz.cvut.zuul.oaas.repos.AccessTokensRepo;
-import cz.cvut.zuul.oaas.repos.ClientsRepo;
 import cz.cvut.zuul.oaas.models.Client;
 import cz.cvut.zuul.oaas.models.PersistableAccessToken;
 import cz.cvut.zuul.oaas.models.User;
+import cz.cvut.zuul.oaas.repos.AccessTokensRepo;
+import cz.cvut.zuul.oaas.repos.ClientsRepo;
 import lombok.Getter;
 import lombok.Setter;
 import ma.glasnost.orika.MapperFacade;
@@ -67,7 +67,7 @@ public class TokensServiceImpl implements TokensService {
 
         // first check if token is recognized and if it is not expired
         if (accessToken == null) {
-            throw new InvalidTokenException("Token was not recognised");
+            throw new NoSuchTokenException("Token was not recognised");
         }
         if (accessToken.isExpired()) {
             throw new InvalidTokenException("Token has expired");
