@@ -29,7 +29,7 @@
 
     <!-- Register converters for mapping domain objects to Mongo and vice versa -->
     <mongo:mapping-converter id="mappingConverter" db-factory-ref="mongoDbFactory">
-        <mongo:custom-converters base-package="cz.cvut.zuul.oaas.dao.mongo.converters" />
+        <mongo:custom-converters base-package="cz.cvut.zuul.oaas.repos.mongo.converters" />
     </mongo:mapping-converter>
 
     <!-- ConversionService to which are converters automatically registered -->
@@ -45,16 +45,16 @@
         <property name="writeResultChecking" value="EXCEPTION" />
     </bean>
 
-    <bean id="clientsRepo" class="cz.cvut.zuul.oaas.dao.mongo.MongoClientsRepo"
+    <bean id="clientsRepo" class="cz.cvut.zuul.oaas.repos.mongo.MongoClientsRepo"
           p:mongoOperations-ref="mongoTemplate" />
 
-    <bean id="accessTokensRepo" class="cz.cvut.zuul.oaas.dao.mongo.MongoAccessTokensRepo"
+    <bean id="accessTokensRepo" class="cz.cvut.zuul.oaas.repos.mongo.MongoAccessTokensRepo"
           p:mongoOperations-ref="mongoTemplate" />
 
-    <bean id="refreshTokensRepo" class="cz.cvut.zuul.oaas.dao.mongo.MongoRefreshTokensRepo"
+    <bean id="refreshTokensRepo" class="cz.cvut.zuul.oaas.repos.mongo.MongoRefreshTokensRepo"
           p:mongoOperations-ref="mongoTemplate" />
 
-    <bean id="resourcesRepo" class="cz.cvut.zuul.oaas.dao.mongo.MongoResourcesRepo"
+    <bean id="resourcesRepo" class="cz.cvut.zuul.oaas.repos.mongo.MongoResourcesRepo"
           p:mongoOperations-ref="mongoTemplate" />
 
 
@@ -62,7 +62,7 @@
 
     <beans profile="dev">
         <!-- Insert seed data into database -->
-        <bean class="cz.cvut.zuul.oaas.dao.mongo.support.MongoSeedLoader" lazy-init="false"
+        <bean class="cz.cvut.zuul.oaas.repos.mongo.support.MongoSeedLoader" lazy-init="false"
               init-method="seed"
               p:mongoTemplate-ref="mongoTemplate"
               p:location="classpath:config/seeds.json" />

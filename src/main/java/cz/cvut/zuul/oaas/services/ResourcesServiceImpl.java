@@ -1,12 +1,13 @@
 package cz.cvut.zuul.oaas.services;
 
 import cz.cvut.zuul.oaas.api.models.ResourceDTO;
-import cz.cvut.zuul.oaas.api.resources.exceptions.NoSuchResourceException;
-import cz.cvut.zuul.oaas.dao.ResourcesRepo;
-import cz.cvut.zuul.oaas.generators.StringEncoder;
+import cz.cvut.zuul.oaas.api.exceptions.NoSuchResourceException;
+import cz.cvut.zuul.oaas.api.services.ResourcesService;
+import cz.cvut.zuul.oaas.repos.ResourcesRepo;
+import cz.cvut.zuul.oaas.services.generators.StringEncoder;
 import cz.cvut.zuul.oaas.models.Resource;
 import cz.cvut.zuul.oaas.models.Scope;
-import cz.cvut.zuul.oaas.support.CaseInsensitiveToEnumConverter;
+import cz.cvut.zuul.oaas.services.converters.CaseInsensitiveToEnumConverter;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;

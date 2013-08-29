@@ -2,9 +2,10 @@ package cz.cvut.zuul.oaas.services;
 
 import cz.cvut.oauth.provider.spring.TokenInfo;
 import cz.cvut.zuul.oaas.api.models.TokenDTO;
-import cz.cvut.zuul.oaas.api.resources.exceptions.NoSuchTokenException;
-import cz.cvut.zuul.oaas.dao.AccessTokensRepo;
-import cz.cvut.zuul.oaas.dao.ClientsRepo;
+import cz.cvut.zuul.oaas.api.exceptions.NoSuchTokenException;
+import cz.cvut.zuul.oaas.api.services.TokensService;
+import cz.cvut.zuul.oaas.repos.AccessTokensRepo;
+import cz.cvut.zuul.oaas.repos.ClientsRepo;
 import cz.cvut.zuul.oaas.models.Client;
 import cz.cvut.zuul.oaas.models.PersistableAccessToken;
 import cz.cvut.zuul.oaas.models.User;

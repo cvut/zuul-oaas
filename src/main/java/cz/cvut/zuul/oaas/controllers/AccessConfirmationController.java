@@ -1,7 +1,7 @@
 package cz.cvut.zuul.oaas.controllers;
 
 import cz.cvut.zuul.oaas.api.models.ClientDTO;
-import cz.cvut.zuul.oaas.services.ClientsService;
+import cz.cvut.zuul.oaas.api.services.ClientsService;
 import lombok.Setter;
 import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 import org.springframework.security.oauth2.provider.AuthorizationRequest;

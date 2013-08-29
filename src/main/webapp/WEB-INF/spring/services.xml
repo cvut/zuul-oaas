@@ -49,9 +49,9 @@
 
     <!--///// Generators and encoders /////-->
 
-    <bean id="secretGenerator" class="cz.cvut.zuul.oaas.generators.SecurePasswordGenerator" />
-    <bean id="clientIdGenerator" class="cz.cvut.zuul.oaas.generators.UUIDStringGenerator" />
-    <bean id="identifierEncoder" class="cz.cvut.zuul.oaas.generators.RandomizedIdentifierEncoder" />
+    <bean id="secretGenerator" class="cz.cvut.zuul.oaas.services.generators.SecurePasswordGenerator" />
+    <bean id="clientIdGenerator" class="cz.cvut.zuul.oaas.services.generators.UUIDStringGenerator" />
+    <bean id="identifierEncoder" class="cz.cvut.zuul.oaas.services.generators.RandomizedIdentifierEncoder" />
 
     <beans profile="dev">
         <bean id="passwordEncoder" class="org.springframework.security.crypto.password.NoOpPasswordEncoder" />

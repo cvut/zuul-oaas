@@ -1,9 +1,9 @@
 package cz.cvut.zuul.oaas.services
 
 import cz.cvut.zuul.oaas.api.models.ResourceDTO
-import cz.cvut.zuul.oaas.api.resources.exceptions.NoSuchResourceException
-import cz.cvut.zuul.oaas.dao.ResourcesRepo
-import cz.cvut.zuul.oaas.generators.StringEncoder
+import cz.cvut.zuul.oaas.api.exceptions.NoSuchResourceException
+import cz.cvut.zuul.oaas.repos.ResourcesRepo
+import cz.cvut.zuul.oaas.services.generators.StringEncoder
 import cz.cvut.zuul.oaas.models.Resource
 import cz.cvut.zuul.oaas.test.factories.ObjectFactory
 import spock.lang.Specification

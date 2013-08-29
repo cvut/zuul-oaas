@@ -35,7 +35,7 @@
         This is important especially for clients with implicit grant which are issued an access token directly
         without requesting token endpoint.
     -->
-    <bean id="lockableApprovalHandler" class="cz.cvut.zuul.oaas.handlers.LockableClientUserApprovalHandler"
+    <bean id="lockableApprovalHandler" class="cz.cvut.zuul.oaas.oauth2.LockableClientUserApprovalHandler"
           p:clientsRepo-ref="clientsRepo"
           p:parentHandler-ref="memorizingApprovalHandler" />
 
@@ -61,14 +61,14 @@
           p:tokenStore-ref="tokenStore"
           p:clientDetailsService-ref="clientDetailsService" />
 
-    <bean id="clientDetailsService" class="cz.cvut.zuul.oaas.services.internal.ClientDetailsServiceImpl"
+    <bean id="clientDetailsService" class="cz.cvut.zuul.oaas.oauth2.ClientDetailsServiceImpl"
           p:clientsRepo-ref="clientsRepo" />
 
     <!-- Replacement for org.springframework.security.oauth2.provider.client.ClientDetailsUserDetailsService -->
-    <bean id="clientUserDetailsService" class="cz.cvut.zuul.oaas.services.internal.LockableClientUserDetailsService"
+    <bean id="clientUserDetailsService" class="cz.cvut.zuul.oaas.oauth2.LockableClientUserDetailsService"
           p:clientsRepo-ref="clientsRepo" />
 
-    <bean id="tokenStore" class="cz.cvut.zuul.oaas.services.internal.TokenStoreImpl"
+    <bean id="tokenStore" class="cz.cvut.zuul.oaas.oauth2.TokenStoreImpl"
           p:accessTokensRepo-ref="accessTokensRepo"
           p:refreshTokensRepo-ref="refreshTokensRepo" />
 

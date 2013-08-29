@@ -1,6 +1,6 @@
 package cz.cvut.zuul.oaas.api.models
 
-import cz.cvut.zuul.oaas.models.enums.AuthorizationGrant
+import cz.cvut.zuul.oaas.models.AuthorizationGrant
 import cz.cvut.zuul.oaas.test.ValidatorUtils
 import spock.lang.Specification
 import spock.lang.Unroll

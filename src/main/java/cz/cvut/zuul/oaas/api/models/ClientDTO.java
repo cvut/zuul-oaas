@@ -5,7 +5,7 @@ import cz.cvut.zuul.oaas.api.validators.EachURI;
 import cz.cvut.zuul.oaas.api.validators.EnumValue;
 import cz.cvut.zuul.oaas.api.validators.ValidURI;
 import cz.cvut.zuul.oaas.models.ImplicitClientDetails;
-import cz.cvut.zuul.oaas.models.enums.AuthorizationGrant;
+import cz.cvut.zuul.oaas.models.AuthorizationGrant;
 import cz.jirutka.validator.collection.constraints.EachPattern;
 import cz.jirutka.validator.collection.constraints.EachSize;
 import cz.jirutka.validator.spring.SpELAssert;

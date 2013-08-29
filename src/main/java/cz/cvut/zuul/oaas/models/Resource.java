@@ -1,6 +1,5 @@
 package cz.cvut.zuul.oaas.models;
 
-import cz.cvut.zuul.oaas.models.enums.Visibility;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;

@@ -55,7 +55,7 @@
           p:clientsService-ref="clientsService" />
     
     <!-- Check Token Enpoint for Resource Servers -->
-    <bean id="checkTokenEndpoint" class="cz.cvut.zuul.oaas.controllers.CheckTokenEndpoint"
+    <bean id="checkTokenEndpoint" class="cz.cvut.zuul.oaas.api.rest.CheckTokenEndpoint"
           p:tokensService-ref="tokensService" />
 
 </beans>

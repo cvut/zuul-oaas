@@ -7,8 +7,8 @@ import cz.cvut.zuul.oaas.models.PersistableAccessToken
 import cz.cvut.zuul.oaas.models.Resource
 import cz.cvut.zuul.oaas.models.Scope
 import cz.cvut.zuul.oaas.models.User
-import cz.cvut.zuul.oaas.models.enums.AuthorizationGrant
-import cz.cvut.zuul.oaas.models.enums.Visibility
+import cz.cvut.zuul.oaas.models.AuthorizationGrant
+import cz.cvut.zuul.oaas.models.Visibility
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.GrantedAuthority

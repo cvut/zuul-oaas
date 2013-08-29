@@ -1,9 +1,9 @@
 package cz.cvut.zuul.oaas.services
 
 import cz.cvut.zuul.oaas.api.models.ClientDTO
-import cz.cvut.zuul.oaas.dao.AccessTokensRepo
-import cz.cvut.zuul.oaas.dao.ClientsRepo
-import cz.cvut.zuul.oaas.dao.RefreshTokensRepo
+import cz.cvut.zuul.oaas.repos.AccessTokensRepo
+import cz.cvut.zuul.oaas.repos.ClientsRepo
+import cz.cvut.zuul.oaas.repos.RefreshTokensRepo
 import cz.cvut.zuul.oaas.models.Client
 import cz.cvut.zuul.oaas.test.factories.ObjectFactory
 import org.springframework.dao.EmptyResultDataAccessException

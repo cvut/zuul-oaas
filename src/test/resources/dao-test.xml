@@ -20,7 +20,7 @@
     <mongo:db-factory mongo-ref="mongo" id="mongoDbFactory" dbname="authtest" write-concern="SAFE" />
 
     <mongo:mapping-converter id="mappingConverter" db-factory-ref="mongoDbFactory">
-        <mongo:custom-converters base-package="cz.cvut.zuul.oaas.dao.mongo.converters" />
+        <mongo:custom-converters base-package="cz.cvut.zuul.oaas.repos.mongo.converters" />
     </mongo:mapping-converter>
 
     <bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean" />
@@ -32,16 +32,16 @@
     </bean>
 
 
-    <bean id="accessTokensRepo" class="cz.cvut.zuul.oaas.dao.mongo.MongoAccessTokensRepo"
+    <bean id="accessTokensRepo" class="cz.cvut.zuul.oaas.repos.mongo.MongoAccessTokensRepo"
           p:mongoOperations-ref="mongoTemplate" />
 
-    <bean id="refreshTokensRepo" class="cz.cvut.zuul.oaas.dao.mongo.MongoRefreshTokensRepo"
+    <bean id="refreshTokensRepo" class="cz.cvut.zuul.oaas.repos.mongo.MongoRefreshTokensRepo"
           p:mongoOperations-ref="mongoTemplate" />
 
-    <bean id="clientsRepo" class="cz.cvut.zuul.oaas.dao.mongo.MongoClientsRepo"
+    <bean id="clientsRepo" class="cz.cvut.zuul.oaas.repos.mongo.MongoClientsRepo"
           p:mongoOperations-ref="mongoTemplate"  />
 
-    <bean id="resourcesRepo" class="cz.cvut.zuul.oaas.dao.mongo.MongoResourcesRepo"
+    <bean id="resourcesRepo" class="cz.cvut.zuul.oaas.repos.mongo.MongoResourcesRepo"
           p:mongoOperations-ref="mongoTemplate"  />
 
 </beans>

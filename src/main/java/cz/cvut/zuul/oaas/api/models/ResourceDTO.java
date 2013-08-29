@@ -2,7 +2,7 @@ package cz.cvut.zuul.oaas.api.models;
 
 import cz.cvut.zuul.oaas.api.validators.EnumValue;
 import cz.cvut.zuul.oaas.api.validators.ValidURI;
-import cz.cvut.zuul.oaas.models.enums.Visibility;
+import cz.cvut.zuul.oaas.models.Visibility;
 import lombok.Data;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.hibernate.validator.constraints.NotEmpty;
