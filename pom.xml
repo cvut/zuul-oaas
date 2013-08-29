@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>cz.cvut.zuul</groupId>
+        <artifactId>zuul-parent</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+
+    <!--//////////////////// DESCRIPTION ////////////////////-->
+
+    <groupId>cz.cvut.zuul.oaas</groupId>
+    <artifactId>zuul-oaas</artifactId>
+    <packaging>pom</packaging>
+
+    <name>Zuul OAAS</name>
+    <description>Standalone OAuth 2.0 Authorization Server</description>
+
+
+    <!--//////////////////// MODULES ////////////////////-->
+
+    <modules>
+        <module>zuul-oaas-core</module>
+    </modules>
+
+
+    <!--//////////////////// DISTRIBUTION ////////////////////-->
+
+    <scm>
+        <url>https://gitlab.fit.cvut.cz/cvut-oauth-server</url>
+        <connection>scm:git:ssh://git@gitlab.fit.cvut.cz/cvut-oauth-server.git</connection>
+        <developerConnection>scm:git:ssh://git@gitlab.fit.cvut.cz/cvut-oauth-server.git</developerConnection>
+    </scm>
+
+    <issueManagement>
+        <system>GitLab</system>
+        <url>https://gitlab.fit.cvut.cz/cvut-oauth-server/issues</url>
+    </issueManagement>
+
+    <ciManagement>
+        <system>jenkins</system>
+        <url>https://jenkins.fit.cvut.cz/job/zuul-oaas</url>
+    </ciManagement>
+
+
+    <!--//////////////////// PROPERTIES ////////////////////-->
+
+    <properties>
+        <spock.version>0.7-groovy-2.0</spock.version>
+        <lombok.version>0.11.8</lombok.version>
+        <groovy.version>2.1.5</groovy.version>
+        <groovy-compiler.version>2.7.0-01</groovy-compiler.version>
+    </properties>
+
+
+    <!--//////////////////// DEPENDENCIES ////////////////////-->
+
+    <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!--//// Test ////-->
+
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-all</artifactId>
+            <version>${groovy.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.spockframework</groupId>
+            <artifactId>spock-core</artifactId>
+            <version>${spock.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+
+    <!--//////////////////// BUILD ////////////////////-->
+
+    <build>
+        <plugins>
+            <!--
+                Compile all classes with Groovy compiler and Lombok processor
+            -->
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                    <compilerId>groovy-eclipse-compiler</compilerId>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                    <fork>true</fork>
+                    <compilerArguments>
+                        <javaAgentClass>lombok.core.Agent</javaAgentClass>
+                    </compilerArguments>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.codehaus.groovy</groupId>
+                        <artifactId>groovy-eclipse-compiler</artifactId>
+                        <version>${groovy-compiler.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.codehaus.groovy</groupId>
+                        <artifactId>groovy-eclipse-batch</artifactId>
+                        <version>${groovy.version}-03</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.projectlombok</groupId>
+                        <artifactId>lombok</artifactId>
+                        <version>${lombok.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+
+            <!--
+                Add groovy source directories to the build
+                see http://docs.codehaus.org/display/GROOVY/Groovy-Eclipse+compiler+plugin+for+Maven
+            -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.7</version>
+                <executions>
+                    <execution>
+                        <id>add-test-source</id>
+                        <phase>generate-test-sources</phase>
+                        <goals>
+                            <goal>add-test-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>src/test/groovy</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

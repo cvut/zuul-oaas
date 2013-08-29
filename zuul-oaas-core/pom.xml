@@ -6,88 +6,26 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>cz.cvut.fit.maven</groupId>
-        <artifactId>root-parent</artifactId>
-        <version>1.1</version>
+        <groupId>cz.cvut.zuul.oaas</groupId>
+        <artifactId>zuul-oaas</artifactId>
+        <version>1.0-SNAPSHOT</version>
     </parent>
 
     
-    <!--//////////////////// ARTIFACT DESCRIPTION ////////////////////-->
+    <!--//////////////////// DESCRIPTION ////////////////////-->
 
-    <groupId>cz.cvut.zuul.oaas</groupId>
     <artifactId>oaas-core</artifactId>
-    <version>1.0-SNAPSHOT</version>
     <packaging>war</packaging>
 
     <name>Zuul OAAS Core</name>
-    <description>OAuth2 Authorization Server</description>
-    <inceptionYear>2012</inceptionYear>
-    <url>https://gitlab.fit.cvut.cz/cvut-oauth-server</url>
-
-    <scm>
-        <url>https://gitlab.fit.cvut.cz/cvut-oauth-server</url>
-        <connection>scm:git:ssh://git@gitlab.fit.cvut.cz/cvut-oauth-server.git</connection>
-        <developerConnection>scm:git:ssh://git@gitlab.fit.cvut.cz/cvut-oauth-server.git</developerConnection>
-    </scm>
-
-    <issueManagement>
-        <system>GitLab</system>
-        <url>https://gitlab.fit.cvut.cz/cvut-oauth-server/issues</url>
-    </issueManagement>
-
-    <ciManagement>
-        <system>jenkins</system>
-        <url>https://jenkins.fit.cvut.cz/job/zuul-oaas</url>
-    </ciManagement>
-
-    <developers>
-        <developer>
-            <id>manotoma</id>
-            <name>Tomáš Maňo</name>
-            <email>tomasmano@gmail.com</email>
-            <organization>FEL CVUT</organization>
-            <organizationUrl>http://www.fel.cvut.cz</organizationUrl>
-        </developer>
-        <developer>
-            <id>jirutjak</id>
-            <name>Jakub Jirutka</name>
-            <email>jirutjak@fit.cvut.cz</email>
-            <organization>CVUT</organization>
-            <organizationUrl>http://www.cvut.cz</organizationUrl>
-        </developer>
-    </developers>
 
 
     <!--//////////////////// PROPERTIES ////////////////////-->
 
     <properties>
-        <spring.version>3.2.2.RELEASE</spring.version>
-        <spring.security.version>3.1.4.RELEASE</spring.security.version>
-        <spring.oauth.version>1.0.5.RELEASE</spring.oauth.version>
         <thymeleaf.version>2.0.17</thymeleaf.version>
         <aspectj.version>1.7.3</aspectj.version>
-        <spock.version>0.7-groovy-2.0</spock.version>
-        <lombok.version>0.11.8</lombok.version>
-        <groovy.version>2.1.5</groovy.version>
-        <groovy-compiler.version>2.7.0-01</groovy-compiler.version>
     </properties>
-
-
-    <!--//////////////////// REPOSITORIES ////////////////////-->
-            
-    <repositories>
-        <repository>
-            <id>cvut-local-repos</id>
-            <name>CVUT Repository Local</name>
-            <url>http://repository.fit.cvut.cz/maven/local-repos/</url>
-        </repository>
-
-        <repository>
-            <id>cvut-remote-repos</id>
-            <name>CVUT Repository Proxies</name>
-            <url>http://repository.fit.cvut.cz/maven/remote-repos/</url>
-        </repository>
-    </repositories>
 
 
     <!--//////////////////// DEPENDENCIES ////////////////////-->
@@ -104,49 +42,36 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
-            <version>${spring.version}</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>commons-logging</artifactId>
-                    <groupId>commons-logging</groupId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-beans</artifactId>
-            <version>${spring.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
-            <version>${spring.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-aop</artifactId>
-            <version>${spring.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
-            <version>${spring.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
-            <version>${spring.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-tx</artifactId>
-            <version>${spring.version}</version>
         </dependency>
 
         <dependency>
@@ -160,11 +85,10 @@
             <artifactId>spring-data-commons</artifactId>
             <version>1.5.1.RELEASE</version>
         </dependency>
-        
+
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-core</artifactId>
-            <version>${spring.security.version}</version>
         </dependency>
 
         <dependency>
@@ -182,7 +106,6 @@
         <dependency>
             <groupId>org.springframework.security.oauth</groupId>
             <artifactId>spring-security-oauth2</artifactId>
-            <version>${spring.oauth.version}</version>
         </dependency>
 
         <!--//// Thymeleaf ////-->
@@ -211,7 +134,6 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.1</version>
         </dependency>
 
         <dependency>
@@ -249,6 +171,11 @@
 
         <!--//// Validation ////-->
 
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+        </dependency>
+
         <!-- JSR-303 Validator -->
         <dependency>
             <groupId>org.hibernate</groupId>
@@ -275,13 +202,11 @@
         <dependency>
             <groupId>org.codehaus.jackson</groupId>
             <artifactId>jackson-core-asl</artifactId>
-            <version>1.9.12</version>
         </dependency>
 
         <dependency>
             <groupId>org.codehaus.jackson</groupId>
             <artifactId>jackson-mapper-asl</artifactId>
-            <version>1.9.12</version>
         </dependency>
 
         <dependency>
@@ -295,36 +220,24 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>jcl-over-slf4j</artifactId>
-            <version>${org.slf4j.version}</version>
         </dependency>
 
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.0.13</version>
-        </dependency>
-
-        <!--//// Java APIs ////-->
-
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <version>3.0.1</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>javax.validation</groupId>
-            <artifactId>validation-api</artifactId>
-            <version>1.0.0.GA</version>
         </dependency>
 
         <!--//// Others ////-->
 
         <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>11.0.2</version>
         </dependency>
 
         <dependency>
@@ -333,20 +246,12 @@
             <version>2.10.1</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>${lombok.version}</version>
-            <scope>provided</scope>
-        </dependency>
-
 
         <!--////////// Test Libraries //////////-->
 
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
-            <version>${spring.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -365,16 +270,9 @@
         </dependency>
 
         <dependency>
-            <groupId>org.codehaus.groovy</groupId>
-            <artifactId>groovy-all</artifactId>
-            <version>${groovy.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.spockframework</groupId>
-            <artifactId>spock-core</artifactId>
-            <version>${spock.version}</version>
+            <groupId>net.java.quickcheck</groupId>
+            <artifactId>quickcheck</artifactId>
+            <version>0.6</version>
             <scope>test</scope>
         </dependency>
 
@@ -384,79 +282,6 @@
             <version>${spock.version}</version>
             <scope>test</scope>
         </dependency>
-
-        <dependency>
-            <groupId>net.java.quickcheck</groupId>
-            <artifactId>quickcheck</artifactId>
-            <version>0.6</version>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 
-
-    <!--//////////////////// BUILD ////////////////////-->
-
-    <build>
-        <plugins>
-            <!--
-                Compile all classes with Groovy compiler and Lombok processor
-            -->
-            <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.1</version>
-                <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
-                    <compilerId>groovy-eclipse-compiler</compilerId>
-                    <encoding>${project.build.sourceEncoding}</encoding>
-                    <fork>true</fork>
-                    <compilerArguments>
-                        <javaAgentClass>lombok.core.Agent</javaAgentClass>
-                    </compilerArguments>
-                </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.codehaus.groovy</groupId>
-                        <artifactId>groovy-eclipse-compiler</artifactId>
-                        <version>${groovy-compiler.version}</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.codehaus.groovy</groupId>
-                        <artifactId>groovy-eclipse-batch</artifactId>
-                        <version>${groovy.version}-03</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.projectlombok</groupId>
-                        <artifactId>lombok</artifactId>
-                        <version>${lombok.version}</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
-
-            <!--
-                Add groovy source directories to the build
-                see http://docs.codehaus.org/display/GROOVY/Groovy-Eclipse+compiler+plugin+for+Maven
-            -->
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <version>1.7</version>
-                <executions>
-                    <execution>
-                        <id>add-test-source</id>
-                        <phase>generate-test-sources</phase>
-                        <goals>
-                            <goal>add-test-source</goal>
-                        </goals>
-                        <configuration>
-                            <sources>
-                                <source>src/test/groovy</source>
-                            </sources>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
-    
 </project>
