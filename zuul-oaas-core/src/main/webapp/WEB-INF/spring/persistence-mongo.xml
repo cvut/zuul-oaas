@@ -10,19 +10,19 @@
     
     <!--////////// Mongo DB Persistence //////////-->
 
+    <mongo:mongo id="mongo"
+            host="${persistence.mongo.host}"
+            port="${persistence.mongo.port}" />
 
-    <!-- Define MongoDB instance -->
-    <mongo:mongo host="${persistence.mongo.host}" port="${persistence.mongo.port}" />
-
-    <!-- Configure database access -->
     <mongo:db-factory id="mongoDbFactory"
-                      dbname="${persistence.mongo.dbname}"
-                      username="${persistence.mongo.username}"
-                      password="${persistence.mongo.password}"
-                      write-concern="SAFE" />
+            mongo-ref="mongo"
+            dbname="${persistence.mongo.dbname}"
+            username="${persistence.mongo.username}"
+            password="${persistence.mongo.password}"
+            write-concern="SAFE" />
 
     <!-- Enable JMX MBeans export -->
-    <mongo:jmx />
+    <mongo:jmx mongo-ref="mongo" />
 
 
     <!--//// Converters ////-->
