@@ -14,10 +14,9 @@
         initializes embedmongo.flapdoodle.de that is able to download original MongoDB binary for
         your platform and run it for your integration tests.
     -->
-    <bean id="mongo" class="cz.jirutka.mongo.embed.EmbeddedMongoFactoryBean"
-          p:version="2.2" />
+    <bean id="mongo" class="cz.jirutka.spring.embedmongo.EmbeddedMongoFactoryBean" />
 
-    <mongo:db-factory mongo-ref="mongo" id="mongoDbFactory" dbname="authtest" write-concern="SAFE" />
+    <mongo:db-factory mongo-ref="mongo" id="mongoDbFactory" dbname="oaas-test" write-concern="SAFE" />
 
     <mongo:mapping-converter id="mappingConverter" db-factory-ref="mongoDbFactory">
         <mongo:custom-converters base-package="cz.cvut.zuul.oaas.repos.mongo.converters" />
