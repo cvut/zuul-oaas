@@ -166,8 +166,9 @@ class ObjectFactory {
         }
 
         registerBuilder(User) { values ->
-            String username = values['username'] ?: anyLetterString(5, 10)
-            new User(username, anyEmail(), anyLetterString(), anyLetterString(), buildListOf(GrantedAuthority))
+            def username = values['username'] ?: anyLetterString(5, 10)
+            def authorities = values['authorities'] != null ? values['authorities'] : buildListOf(GrantedAuthority)
+            new User(username, anyEmail(), anyLetterString(), anyLetterString(), authorities)
         }
 
         registerBuilder(SimpleGrantedAuthority) {
