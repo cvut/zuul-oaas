@@ -6,14 +6,15 @@
         Available profiles:
             - production: production profile
             - dev: developer profile (insert seed data, use in-memory users etc.)
-            - ldap: authenticate users via LDAP (FIT)
-            - ldap-2: authenticate users via LDAPs (FIT, FEL)
+            - ldap: authenticate users via LDAP
     -->
-    <Environment name="spring.profiles.active" value="production,ldap-2"
+    <Environment name="spring.profiles.active" value="production,ldap"
                  type="java.lang.String" override="false" />
 
-    <!-- URI of LDAP server for users authentication -->
-    <Environment name="conf/ldapServerUri" value="ldap://localhost/ou=dummy"
+    <!--
+        Location of zuul-config.properties
+    -->
+    <Environment name="zuul.config.file" value="conf/zuul-config.properties"
                  type="java.lang.String" override="false" />
 
 </Context>
