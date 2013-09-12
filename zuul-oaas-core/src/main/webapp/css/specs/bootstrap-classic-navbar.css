@@ -34,13 +34,13 @@
     content: "";
 }
 
-.navbar-inner:after {
+/*.navbar-inner:after {
     clear: both;
 }
 
 .navbar .container {
     width: auto;
-}
+}*/
 
 .nav-collapse.collapse {
     height: auto;
@@ -170,7 +170,7 @@
     -moz-border-radius: 0;
     border-radius: 0;
 }
-
+/*
 .navbar-fixed-top,
 .navbar-fixed-bottom {
     position: fixed;
@@ -178,7 +178,7 @@
     left: 0;
     z-index: 1030;
     margin-bottom: 0;
-}
+}*/
 
 .navbar-fixed-top .navbar-inner,
 .navbar-static-top .navbar-inner {
