@@ -1,0 +1,92 @@
+//
+// Layout
+// --------------------------------------------------
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 5em; /* footer height */
+}
+
+img.center {
+  display: block;
+  margin: 3em auto;
+}
+
+// Headings
+// -------------------------
+
+h1, .h1 { font-size: floor(@font-size-base * 1.85); } // ~30px
+h2, .h2 { font-size:  ceil(@font-size-base * 1.50); } // ~24px
+h3, .h3 { font-size:  ceil(@font-size-base * 1.20); } // ~18px
+h4, .h4 { font-size:       @font-size-base; }
+h5, .h5,
+h6, .h6 { font-size:  ceil(@font-size-base * 0.75); } // ~12px
+
+section h1 { padding-bottom: 0.9em; }
+
+
+// Header
+// -------------------------
+
+header {
+  margin-bottom: 5em;
+  background: #264c6f;
+}
+
+header h1 {
+  min-height: 60px;
+  max-width: 16em;
+  margin: 0.8em 0;
+  padding-left: 110px;
+  
+  font-size: 22px;
+  line-height: 1.4;
+  text-align: left;
+  color: white;
+  
+  background: url("@{images-path}/cvut-logo-md.png") no-repeat top left;
+}
+
+// Footer
+// -------------------------
+
+footer {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 3em;
+  
+  text-align: center;
+  font-size: @font-size-small;
+}
+
+// Content
+// -------------------------
+
+.container {
+  max-width: 700px;
+  padding: 0 7%;
+}
+
+// Responsive
+// -------------------------
+
+@media(max-width: @screen-phone) {
+  header h1 {
+    min-height: 42px;
+    padding-left: 70px;
+    background: url("@{images-path}/cvut-logo-xs.png") no-repeat top left;
+    font-size: 16px;
+  }
+}
+
+@media(max-height: 600px) {
+  header {
+    margin-bottom: 1em;
+  }
+}

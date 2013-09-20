@@ -1,0 +1,70 @@
+//
+// Pretty buttons for Bootstrap 3.0
+// --------------------------------------------------
+
+// Function based on https://gist.github.com/claviska/6117193
+
+.pretty-buttons(@color, @background, @border) {
+
+  color: @color;
+  #gradient > .vertical(lighten(@background, 7%), darken(@background, 7%), 0%, 100%);
+  border-color: @border;
+  text-shadow: 1px 1px 0px lighten(@color, 50%);
+
+  &:hover,
+  &:focus,
+  &:active,
+  &.active {
+    border-color: darken(@background, 30%);
+  }
+
+  &:focus,
+  &:active,
+  &.active {
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.125) inset;
+    color: @color;
+  }
+
+  &.disabled,
+  &[disabled],
+  fieldset[disabled] & {
+    &,
+    &:hover,
+    &:focus,
+    &:active,
+    &.active {
+      background-color: @background;
+      border-color: darken(@background, 5%);
+    }
+  }
+}
+
+// Override default button styles
+
+.btn-default {
+  .pretty-buttons(@btn-default-color, @btn-default-bg, @btn-default-border);
+}
+
+.btn-primary {
+  .pretty-buttons(@btn-primary-color, @btn-primary-bg, @btn-primary-border);
+}
+
+.btn-success {
+  .pretty-buttons(@btn-success-color, @btn-success-bg, @btn-success-border);
+}
+
+.btn-info {
+  .pretty-buttons(@btn-info-color, @btn-info-bg, @btn-info-border);
+}
+
+.btn-warning {
+  .pretty-buttons(@btn-warning-color, @btn-warning-bg, @btn-warning-border);
+}
+
+.btn-danger {
+  .pretty-buttons(@btn-danger-color, @btn-danger-bg, @btn-danger-border);
+}
+
+.btn-inverse {
+  .pretty-buttons(white, #474949, black);
+}

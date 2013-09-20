@@ -25,7 +25,6 @@
           p:contentType="text/html;charset=UTF-8" />
 
     <bean id="templateEngine" class="org.thymeleaf.spring3.SpringTemplateEngine"
-          p:additionalDialects-ref="thymeleafDialects"
           p:templateResolver-ref="templateResolver"
           p:messageSource-ref="messageSource" />
 
@@ -41,9 +40,9 @@
           p:defaultEncoding="utf-8"
           p:cacheSeconds="0" />
 
-    <util:set id="thymeleafDialects">
+<!--    <util:set id="thymeleafDialects">
         <bean class="nz.net.ultraq.thymeleaf.LayoutDialect" />
-    </util:set>
+    </util:set>-->
 
 
     <!--///// Controllers /////-->

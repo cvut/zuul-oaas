@@ -1,154 +1,47 @@
 <!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}">
 
-<html lang="cs"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
-      layout:decorator="_layout">
-    <head>
-        <title th:text="#{page.title(#{page.login})}"></title>
+  <head th:replace="_layout::head (page.login)">
 
-        <link type="text/css" rel="stylesheet" href="../../css/bootstrap-cosmo.css" th:href="@{/css/bootstrap-cosmo.css}" />
-        <link type="text/css" rel="stylesheet" href="../../css/bootstrap-responsive.min.css" th:href="@{/css/bootstrap-responsive.min.css}" />
-        <link type="text/css" rel="stylesheet" href="../../css/specs/bootstrap-classic-navbar.css" th:href="@{/css/specs/bootstrap-classic-navbar.css}" />
-        <link type="text/css" rel="stylesheet" href="../../css/specs/login.css" th:href="@{/css/specs/login.css}" />
+    <!-- This is used only for prototyping, will be removed by Thymeleaf. -->
+    <link type="text/css" rel="stylesheet/less" href="../../../less/style.less" />
+    <script type="text/javascript" src="../../js/less.min.js"></script>
+  </head>
 
-        <link href='https://fonts.googleapis.com/css?family=Open+Sans:300&amp;subset=latin,latin-ext' rel='stylesheet' type='text/css'/>
+  <body>
+    <th:block th:replace="_layout::header" />
 
-        <!--        <script type="text/javascript" src="../../js/jquery-1.8.3.min.js" th:src="@{/js/jquery-1.8.3.min.js}"></script>
-                <script type="text/javascript" src="../../js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
-                <script type="text/javascript" src="../../js/jquery.validate.js" th:src="@{/js/jquery.validate.js}"></script>-->
-        <style>
-            .metro-font{
-                font-family: "Open Sans", Calibri, Candara, Arial, sans-serif;
-                font-weight: 100;
-            }
-        </style>
-    </head>
+    <section id="main" class="container">
+      <div th:if="${param.authentication_error}"
+           class="alert alert-danger">
 
+        <th:block th:text="#{login.error.authentication}">Username or password is wrong.</th:block>
+      </div>
 
-    <body onload="setFocus()" layout:fragment="body">
-        <div class="navbar navbar-fixed-top">
-            <div class="navbar-inner">
-                <div class="container">
-                    <!--<a class="brand" href="#" th:href="@{/}" th:text="#{project.title}">CTU Authorization Server</a>-->
-                    <div class="nav-collapse collapse">
-                        <ul class="nav">
-                            <li><a href="https://rozvoj.fit.cvut.cz/Main/OAuth2-Autorizacni-server" th:text="#{page.about}" target="_blank">About</a></li>
-                            <li><a href="#contact" th:text="#{page.contact}">Contact</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
+      <div th:if="${param.authorization_error}"
+           class="alert alert-danger">
 
-        <div id="wrap">
+        <th:block th:text="#{login.error.authorization}">You’re not allowed to access this resource.</th:block>
+      </div>
 
-            <div class="row" style="padding-top: 8%; padding-bottom: 20px">
-                <!--<div class="span2">-->
-                <!--<img class="oauth-logo" src="../../img/oauth2-logo_small.png" th:src="@{/img/oauth2-logo_small.png}" alt="OAuth logo" height="70" width="70" style="opacity: 0.5;float: left; padding-right: 15px; "/>-->
-                <!--</div>-->
-                <!--<div class="span6">-->
-                <!--</div>-->
-                <h1 class="metro-font" style="line-height: 110%; margin: 0 auto; " th:utext="#{project.title.formated}">CTU Authorization Server</h1>
-            </div>
+      <form th:action="@{/login.do}" method="post" class="form-login">
+        <input name="j_username"
+               type="text"
+               autofocus="autofocus"
+               class="form-control input-lg"
+               th:placeholder="#{login.form.name}" placeholder="Username" />
 
-            <div class="row">
-                <div th:if="${param.authentication_error}" class="alert alert-heading">
-                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <input name="j_password"
+               type="password"
+               class="form-control input-lg"
+               th:placeholder="#{login.form.password}" placeholder="Password" />
 
-                    <h4 th:text="#{login.error.title}">Oops…</h4>
-                    <span th:text="#{login.error.authentication}">Username or password is wrong.</span>
-                </div>
+        <button type="submit"
+                class="btn btn-lg btn-primary btn-block"
+                th:text="#{login.form.login}">Log-in</button>
+      </form>
+    </section>
 
-                <div th:if="${param.authorization_error}" class="alert alert-error">
-                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-
-                    <h4 th:text="#{login.error.title}">Oops…</h4>
-                    <span th:text="#{login.error.authorization}">You’re not allowed to access this resource.</span>
-                </div>
-
-                <!--                        <div class="alert alert-info">
-                                            <button type="button" class="close" data-dismiss="alert">&times;</button>
-                                            We've got a grand total of 1 user: <strong class="emphasis">tomy</strong>.
-                                            Go ahead and log in. tomy's password is <strong class="emphasis">best</strong>.
-                                        </div>-->
-            </div>
-
-            <br/>
-
-            <div class="row">
-                <form id="loginHere" class="form-inline" method='post' th:action="@{/login.do}">
-
-                    <fieldset>
-                        <legend class="muted metro-font" th:text="#{page.login}">Login</legend>
-                        <div class="control-group">
-                            <label class="control-label" for="user_name" th:text="#{login.form.name}">Name</label>
-                            <div class="controls">
-                                <input type="text" class="input-xlarge" id="user_name" name="j_username" rel="popover" data-content="Enter your name." data-original-title="Name"/>
-                            </div>
-                        </div>
-
-                        <div class="control-group">
-                            <label class="control-label" for="password" th:text="#{login.form.password}">Password</label>
-                            <div class="controls">
-                                <input type="password" class="input-xlarge" id="pwd" name="j_password" rel="popover" data-content="Enter your password" data-original-title="Password" />
-                            </div>
-                        </div>
-
-                        <div class="control-group">
-                            <label class="control-label" for="input01"></label>
-                            <div class="controls">
-                                <button type="submit" class="btn btn-large btn-success" rel="tooltip" title="Přihlásit se" th:text="#{login.form.login}">Login</button>
-                            </div>
-                        </div>
-                    </fieldset>
-
-                </form>
-            </div>
-        </div>
-
-        <img src="../../img/franklin.png" th:src="@{/img/franklin.png}" alt="background image" style="opacity: 0.5; position: absolute; bottom: 0px; width:100%;height: auto; z-index: -1"/>
-
-        <script type="text/javascript" src="../../js/jquery-1.8.3.min.js" th:src="@{/js/jquery-1.8.3.min.js}"></script>
-        <script type="text/javascript" src="../../js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
-        <script type="text/javascript" src="../../js/jquery.validate.js" th:src="@{/js/jquery.validate.js}"></script>
-        <script type="text/javascript">
-        $(document).ready(function() {
-            $("#loginHere").validate({
-                rules: {
-                    j_username: "required",
-                    user_email: {
-                        required: true,
-                        email: true
-                    },
-                    j_password: {
-                        required: true,
-                        minlength: 4
-                    }
-                },
-                messages: {
-                    j_username: "Zadejte prosím Váš login",
-                    j_password: {
-                        required: "Zadejte prosím Vaše heslo",
-                        minlength: "Heslo musí mít minímalně 6 znaků"
-                    }
-                },
-                errorClass: "help-inline",
-                errorElement: "span",
-                highlight: function(element, errorClass, validClass) {
-                    $(element).parents('.control-group').addClass('error');
-                },
-                unhighlight: function(element, errorClass, validClass) {
-                    $(element).parents('.control-group').removeClass('error');
-                }
-            });
-        });
-        </script>
-        <script type="text/javascript">
-            function setFocus()
-            {
-                document.getElementById("user_name").focus();
-            }
-        </script>
-    </body>
+    <th:block th:replace="_layout::footer" />
+  </body>
 </html>

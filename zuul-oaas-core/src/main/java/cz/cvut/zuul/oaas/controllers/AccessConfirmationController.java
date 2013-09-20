@@ -36,7 +36,7 @@ public class AccessConfirmationController {
 	}
 
 	@RequestMapping("/oauth/error")
-	public String handleError(Map<String,Object> model) {
+	public String handleError() {
 		return "oauth_error";
 	}
 }

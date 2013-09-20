@@ -1,64 +1,32 @@
 <!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}">
 
-<html lang="cs"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
-      layout:decorator="_layout">
+  <head th:replace="_layout::head (page.index)">
 
-    <head>
-        <title th:text="#{page.title(#{page.home})}"></title>
+    <!-- This is used only for prototyping, will be removed by Thymeleaf. -->
+    <link type="text/css" rel="stylesheet/less" href="../../../less/style.less" />
+    <script type="text/javascript" src="../../js/less.min.js"></script>
+  </head>
 
-        <link type="text/css" rel="stylesheet" href="../../css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" />
-        <link type="text/css" rel="stylesheet" href="../../css/bootstrap-responsive.min.css" th:href="@{/css/bootstrap-responsive.min.css}" />
-        <link type="text/css" rel="stylesheet" href="../../css/specs/welcome.css" th:href="@{/css/specs/welcome.css}" />
+  <body>
+    <th:block th:replace="_layout::header" />
 
-        <script type="text/javascript" src="../../js/jquery-1.8.3.min.js" th:src="@{/js/jquery-1.8.3.min.js}"></script>
-        <script type="text/javascript" src="../../js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
-    </head>
+    <section id="main" class="container">
+      <h1 th:text="#{index.title}">
+        There is no page, only Zuul…
+      </h1>
 
-    <body layout:fragment="body">
-        <div class="container marketing" style="padding-top: 9%">
+      <p th:utext="#{index.description}">
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore
+        magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo.
+      </p>
 
-            <!--            <div class="alert alert-info" style="margin-top: 40px">
-                            <button type="button" class="close" data-dismiss="alert">&times;</button>
-                            <h4>Chcete to skusit?</h4>
-                            - Na vyskusanie mozme zadat do prehliadaca:<br/>
-                            <a href="oauth/authorize?client_id=foodlovers&amp;redirect_uri=http%3A%2F%2Fexample.org&amp;response_type=code&amp;scope=read&amp;state=qB4ND7">priklad 1</a>
-                            <a href="http://localhost:8081/auth/oauth/authorize?client_id=92y75NqNqyO1eo3euGQcZY2qKjyVoq8T3aahuMTnzj4CxQBmir61pjkg504BIwm4&amp;redirect_uri=http://en.wikipedia.org/wiki/Broccoli&amp;response_type=code&amp;scope=read&amp;state=qB4ND7">priklad 2</a>
-                            <br />
-            
-                            - Zadanie takehto url do prehliadaca bude viest k chybe, pretoze client z id "veryverybadclient" neexistuje:<br/>
-                            <a href="oauth/authorize?client_id=veryverybadclient&amp;redirect_uri=http%3A%2F%2Fexample.org&amp;response_type=code&amp;scope=read&amp;state=qB4ND7">priklad 3</a>
-                            <br />
-                        </div>-->
+      <img th:src="@{/img/zuul-oauth-logo.png}" src="../../img/zuul-oauth-logo.png"
+           width="225" height="225"
+           alt="Zuul OAuth logo"
+           class="center" />
+    </section>
 
-            <!--<hr class="featurette-divider"/>-->
-
-            <div class="">
-
-
-                <div class="featurette">
-                    <a href="http://oauth.net/2/" target="_blank">
-                        <img class="featurette-image pull-left" src="../../img/oauth2-logo_big.png" th:src="@{/img/oauth2-logo_big.png}" height="512" width="512"/>
-                    </a>
-                    <h2 class="featurette-heading" >
-                        <span th:text="#{project.title}">CTU Authorization Server</span>
-                        <span class="muted" th:text="#{project.motto}">It’s simple!</span>
-                    </h2>
-                    <p class="lead" th:text="#{project.description}">
-                        Autorizační protokol OAuth 2.0 je standarem, který úspěšně používají společnosti jako je Google, Facebook, Microsoft a další. Umožňuje uživatelům sdílet data uložená jednom serveru, s jiným serverem, aniž by museli vyzradit svoje přístupové údaje
-                    </p>
-                </div>
-
-                <hr class="featurette-divider"/>
-
-                <!-- FOOTER -->
-                <footer>
-                    <p class="pull-right"><a href="#" th:text="#{common.backtotop}">Back to Top</a></p>
-                    <p><span th:text="#{project.copyright}">Copyright</span></p>
-                </footer>
-            </div>
-
-        </div>
-    </body>
+    <th:block th:replace="_layout::footer" />
+  </body>
 </html>

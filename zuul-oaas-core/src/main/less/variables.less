@@ -1,0 +1,73 @@
+//
+// Application-specific variables
+// --------------------------------------------------
+
+// Paths
+// -------------------------
+
+@images-path:           "../img/";
+
+// Brand colors
+// -------------------------
+/*ctu #007ac2*/
+/*header #264c6f */
+
+@brand-identity:		#007ac2;
+
+@brand-primary:         #ffbb4d;
+@brand-success:         #77d42a;
+@brand-warning:         #f0ad4e;
+@brand-danger:          #da382a;
+@brand-info:            #5bc0de;
+
+// Scaffolding
+// -------------------------
+
+@body-bg:               #eee;
+@text-color:            #1e2b32;
+
+// Links
+// -------------------------
+
+@link-color:            @brand-identity;
+@link-hover-color:      darken(@link-color, 15%);
+
+// Typography
+// -------------------------
+
+@font-size-base:          16px;
+@font-size-large:         ceil(@font-size-base * 1.20); // ~18px
+@font-size-small:         ceil(@font-size-base * 0.75); // ~12px
+
+@headings-font-weight:    bold;
+
+// Buttons
+// -------------------------
+
+@btn-font-weight:                bold;
+
+@btn-default-color:              #333;
+@btn-default-bg:                 #fff;
+@btn-default-border:             #ccc;
+
+@btn-primary-color:              darken(@btn-primary-bg, 43%);
+@btn-primary-bg:                 @brand-primary;
+@btn-primary-border:             darken(@btn-primary-bg, 15%);
+
+@btn-success-color:              darken(@btn-success-bg, 33%);
+@btn-success-bg:                 @brand-success;
+@btn-success-border:             darken(@btn-success-bg, 15%);
+
+@btn-warning-color:              darken(@brand-warning, 33%);
+@btn-warning-bg:                 @brand-warning;
+@btn-warning-border:             darken(@btn-warning-bg, 15%);
+
+@btn-danger-color:               darken(@btn-danger-bg, 33%);
+@btn-danger-bg:                  @brand-danger;
+@btn-danger-border:              darken(@btn-danger-bg, 15%);
+
+@btn-info-color:                 darken(@btn-info-bg, 33%);
+@btn-info-bg:                    @brand-info;
+@btn-info-border:                darken(@btn-info-bg, 15%);
+
+@btn-link-disabled-color:        @gray-light;

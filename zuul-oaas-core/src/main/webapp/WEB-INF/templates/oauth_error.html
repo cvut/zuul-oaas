@@ -1,54 +1,28 @@
 <!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}">
 
-<html lang="cs"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
-      layout:decorator="_layout">
+  <head th:replace="_layout::head (page.error)">
 
-    <head>
-        <title th:text="#{page.title(#{page.error})}"></title>
+    <!-- This is used only for prototyping, will be removed by Thymeleaf. -->
+    <link type="text/css" rel="stylesheet/less" href="../../../less/style.less" />
+    <script type="text/javascript" src="../../js/less.min.js"></script>
+  </head>
 
-        <link type="text/css" rel="stylesheet" href="../../css/bootstrap-cosmo.css" th:href="@{/css/bootstrap-cosmo.css}" />
-        <link type="text/css" rel="stylesheet" href="../../css/bootstrap-responsive.min.css" th:href="@{/css/bootstrap-responsive.min.css}" />
+  <body>
+    <th:block th:replace="_layout::header" />
 
-        <link href='https://fonts.googleapis.com/css?family=Open+Sans:300&amp;subset=latin-ext,latin' rel='stylesheet' type='text/css'/>
+    <section id="main" class="container">
+      <h1 th:text="#{oauth_error.title}">Houston, we have a problem…</h1>
 
-        <style type="text/css">
-            /* Override some defaults */
-            html, body {
-            }
-            footer {
-                position: absolute;
-                bottom: 0;
-                height: 60px;
-            }
-            body {
-                font-family: "Open Sans", Calibri, Candara, Arial, sans-serif;
-                font-weight: 100;
-            }
-        </style>
-    </head>
+      <div class="alert alert-danger" th:text="${error.summary}">
+        Error summary
+      </div>
 
-    <body layout:fragment="body">
-        <div class="container" style="padding-top: 5%">
+      <p th:utext="#{oauth_error.hint(@{/support})}">
+        Please try it later or let us know about it.
+      </p>
+    </section>
 
-            <h1 th:text="#{oauth_error.title}">We’re really sorry, there’s some problem…</h1>
-
-            <div id="content">
-                <h2 th:text="#{project.title}">CTU Authorization Server</h2>
-                <div>
-                    <div class="alert alert-block">
-                        <b>(<span th:text="${error.summary}">Error summary</span>)</b>
-                    </div>
-                </div>
-                <p th:utext="#{oauth_error.hint(@{/support})}">
-                    Please try it later or <a href="#">let us know</a> about it.
-                </p>
-            </div>
-
-            <footer style="font-size: 80%;">
-                <p><span th:text="#{project.copyright}">Copyright</span></p>
-            </footer>
-        </div>
-    </body>
+    <th:block th:replace="_layout::footer" />
+  </body>
 </html>

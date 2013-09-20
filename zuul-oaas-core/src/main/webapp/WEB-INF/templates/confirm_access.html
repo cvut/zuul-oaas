@@ -1,162 +1,45 @@
 <!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}">
 
-<html lang="cs"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
-      layout:decorator="_layout">
+  <head th:replace="_layout::head (page.confirm_access)">
 
-    <head>
-        <title th:text="#{page.title(#{page.confirm_access})}"></title>
+    <!-- This is used only for prototyping, will be removed by Thymeleaf. -->
+    <link type="text/css" rel="stylesheet/less" href="../../../less/style.less" />
+    <script type="text/javascript" src="../../js/less.min.js"></script>
+  </head>
 
-        <link type="text/css" rel="stylesheet" href="../../css/bootstrap-cosmo.css" th:href="@{/css/bootstrap-cosmo.css}" />
-        <link type="text/css" rel="stylesheet" href="../../css/bootstrap-responsive.min.css" th:href="@{/css/bootstrap-responsive.min.css}" />
-        <link type="text/css" rel="stylesheet" href="../../css/specs/bootstrap-classic-navbar.css" th:href="@{/css/specs/bootstrap-classic-navbar.css}" />
-        <link type="text/css" rel="stylesheet" href="../../font-awesome/css/font-awesome.css" th:href="@{/font-awesome/css/font-awesome.css}" />
+  <body>
+    <th:block th:replace="_layout::header" />
 
-        <script type="text/javascript" src="../../js/jquery-1.8.3.min.js" th:src="@{/js/jquery-1.8.3.min.js}"></script>
-        <script type="text/javascript" src="../../js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
+    <section id="main" class="container">
+      <h1 th:text="#{confirm_access.notice.title}">Allow access to your data?</h1>
 
-        <link href='https://fonts.googleapis.com/css?family=Just+Me+Again+Down+Here' rel='stylesheet' type='text/css'/>
-        <link href='https://fonts.googleapis.com/css?family=Open+Sans:300&amp;subset=latin-ext,latin' rel='stylesheet' type='text/css'/>
+      <p th:utext="#{confirm_access.notice.text(${client.productName})}">
+        Third-party application <strong>FooBar</strong> would like to access your account.
+      </p>
 
-        <style type="text/css">
-            /* Override some defaults */
-            html, body {
+      <ul th:each="scope : ${client.scope}">
+        <li th:text="${scope}">Read your timetable</li>
+      </ul>
 
-            }
-            body {
+      <form method="post" th:action="@{/oauth/authorize}" class="approval-form">
+        <button name="user_oauth_approval"
+                type="submit"
+                value="true"
+                class="btn btn-lg btn-primary">
 
-            }
+          <span th:text="#{confirm_access.form.authorize}">Yes, I agree</span>
+        </button>
 
-            .well {
-                /*padding-right: 20px;*/
-            }
+        <button name="user_oauth_denial"
+                type="submit"
+                class="btn btn-lg btn-default">
 
-            #container-main{
-                z-index: 100;
-                padding-top: 6%;
-            }
-            #form-approve{
-                padding-top: 7%;
-            }
-        </style>
-        <style>
-            .emphasis{
-                font-family: "Open Sans", Calibri, Candara, Arial, sans-serif; 
-                font-weight: normal;
-            }
-            body,
-            input,
-            select,
-            textarea,
-            .navbar-search .search-query {
-                /* font-family: sans-serif;
-                font-weight: 100;*/
-            }
-            h2{
-                font-family: 'Open Sans', Calibri, Candara, Arial, sans-serif;
-                font-weight: 100;
-            }
-            .metro-font{
-                font-family: 'Open Sans', Calibri, Candara, Arial, sans-serif;
-                font-weight: 100;
-            }
-            .label-bold{
-                font-weight: bold;
-                font-size: 90%;
-            }
-        </style>
-    </head>
+           <span th:text="#{confirm_access.form.deny}">No, I disagree</span>
+        </button>
+      </form>
+    </section>
 
-    <body layout:fragment="body">
-
-        <div class="navbar navbar-fixed-top">
-            <div class="navbar-inner">
-                <div class="container">
-                    <!--<a class="brand" href="#" th:href="@{/}" th:text="#{project.title}">CTU Authorization Server</a>-->
-                    <div class="nav-collapse collapse">
-                        <ul class="nav">
-                            <li>
-                                <a href="#about" th:text="#{page.about}">About</a>
-                            </li>
-                            <li>
-                                <a href="#contact" th:text="#{page.contact}">Contact</a>
-                            </li>
-                        </ul>
-                    </div><!--/.nav-collapse -->
-                </div>
-            </div>
-        </div>
-
-        <div id="container-main" class="container">
-
-            <div class="row">
-                <div class="span4" style="padding-top: 5%">
-                    <!--<img src="http://oauth.net/images/oauth-2-sm.png" alt="OAuth logo" style="padding-left: 30%; padding-bottom: 10%; opacity: 0.5"/>-->
-                    <!--<h3>Proč jsem se tady ocitnul?</h3>-->
-
-                    <div class="well" style="background-color: #efefef;">
-                        <i class="ficon-info-sign" style="color: white; opacity: 0.5; font-size: 5em; position: absolute;"></i>
-                        <ul style="font-family: 'Open Sans', sans-serif; font-size: 85%; font-weight: 100; margin-top: 14px; list-style-type: disk; z-index: 100; position: relative">
-                            <li><strong class="emphasis">Autorizace pomocí protokolu <span class="label label-inverse label-bold">OAuth 2.0</span></strong> umožňuje uživatelům sdílet data uložená na jednom zařízením, s jiným zařízením, <strong class="emphasis">aniž by ste museli vyzradit svoje přístupové údaje.</strong></li>
-                            <br/>
-                            <li>Protokol <span class="label label-inverse label-bold">OAuth 2.0</span> je standardem, který úspěšne používají společnosti jako je <strong class="emphasis">Google, Facebook, Twitter, Yahoo a další.</strong></li>
-                            <br/>
-                        </ul>
-                    </div>
-                </div>
-                <div class="span1"></div>
-                <div class="span7">
-                    <div id="form-approve">
-                        <!--<h2>OAuth 2.0 Autorizačňí server ČVUT</h2>-->
-                        <div class="row">
-                            <div class="span7">
-                                <h2 th:text="#{confirm_access.notice.title}">
-                                    Dear user, please confirm
-                                </h2>
-                                <br />
-                                <p class="lead metro-font" th:utext="#{confirm_access.notice.text(${client.productName})}">
-                                    Do you want to allow this AwesomeApp to access your some of yours data?
-                                </p>
-                            </div>
-
-                        </div>
-                        <div class="row">
-
-                            <br/>
-                            <div class="span6">
-                                <table>
-                                    <tr>
-                                        <td style="padding-right: 25px">
-                                            <form id="confirmationForm" name="confirmationForm" th:action="@{/oauth/authorize}" method="post" >
-                                                <input name="user_oauth_approval" value="true" type="hidden" />
-                                                <button name="authorize" type="submit" class="btn btn-large btn-success">
-                                                    <span class="icon-ok icon-white"></span>
-                                                    <span th:text="#{confirm_access.form.authorize}">Yes, I agree</span>
-                                                </button>
-                                            </form>
-                                        </td>
-
-                                        <td>
-                                            <form id="denialForm" name="denialForm" th:action="@{/oauth/authorize}" method="post">
-                                                <input name="user_oauth_approval" value="false" type="hidden" />
-                                                <button name="deny" type="submit" class="btn btn-large btn-danger">
-                                                    <span class="icon-ban-circle icon-white"></span>
-                                                    <span th:text="#{confirm_access.form.deny}">Yes, I don't agree</span>
-                                                </button>
-                                            </form>
-
-                                        </td>
-                                    </tr>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <img src="../../img/franklin.png" th:src="@{/img/franklin.png}" alt="background image" style="opacity: 0.5; position: absolute; bottom: 0px; width:100%;height: auto; z-index: -1"/>
-
-    </body>
+    <th:block th:replace="_layout::footer" />
+  </body>
 </html>
