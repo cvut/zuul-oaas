@@ -112,16 +112,14 @@ public class ResourcesServiceImpl implements ResourcesService {
         factory.getConverterFactory()
                 .registerConverter(new CaseInsensitiveToEnumConverter());
 
-        factory.registerClassMap(factory
-                .classMap(Resource.class, ResourceDTO.class)
+        factory.classMap(Resource.class, ResourceDTO.class)
                 .field("id", "resourceId")
                 .field("scopes", "auth.scopes")
-                .byDefault()
-        );
-        factory.registerClassMap(factory
-                .classMap(Scope.class, ResourceDTO.Scope.class)
-                .byDefault()
-        );
+                .byDefault().register();
+
+        factory.classMap(Scope.class, ResourceDTO.Scope.class)
+                .byDefault().register();
+
         mapper = factory.getMapperFacade();
     }
 }

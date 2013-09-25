@@ -139,10 +139,9 @@ public class ClientsServiceImpl implements ClientsService {
         factory.getConverterFactory()
                 .registerConverter(new GrantedAuthorityConverter());
 
-        factory.registerClassMap(factory
-                .classMap(Client.class, ClientDTO.class)
-                .byDefault()
-        );
+        factory.classMap(Client.class, ClientDTO.class)
+                .byDefault().register();
+
         mapper = factory.getMapperFacade();
     }
 }

@@ -114,21 +114,18 @@ public class TokensServiceImpl implements TokensService {
     @PostConstruct void setupMapper() {
         MapperFactory factory = defaultIfNull(mapperFactory, new Builder().build());
 
-        factory.registerClassMap(factory
-                .classMap(PersistableAccessToken.class, TokenDTO.class)
+        factory.classMap(PersistableAccessToken.class, TokenDTO.class)
                 .field("value", "tokenValue")
                 .field("authentication.authorizationRequest", "clientAuthentication")
                 .field("authentication.userAuthentication.principal", "userAuthentication")
-                .byDefault()
-        );
-        factory.registerClassMap(factory
-                .classMap(AuthorizationRequest.class, TokenDTO.ClientAuthentication.class)
-                .byDefault()
-        );
-        factory.registerClassMap(factory
-                .classMap(User.class, TokenDTO.UserAuthentication.class)
-                .byDefault()
-        );
+                .byDefault().register();
+
+        factory.classMap(AuthorizationRequest.class, TokenDTO.ClientAuthentication.class)
+                .byDefault().register();
+
+        factory.classMap(User.class, TokenDTO.UserAuthentication.class)
+                .byDefault().register();
+
         mapper = factory.getMapperFacade();
     }
 }
