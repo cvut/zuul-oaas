@@ -18,7 +18,6 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.crypto.keygen.StringKeyGenerator;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -45,7 +44,6 @@ public class ClientsServiceImpl implements ClientsService {
 
     private StringKeyGenerator clientIdGenerator;
     private StringKeyGenerator secretGenerator;
-    private PasswordEncoder secretEncoder;
 
     /**
      * Orika Mapper Factory to be configured and used for mapping between entity
@@ -79,10 +77,9 @@ public class ClientsServiceImpl implements ClientsService {
         } while (clientsRepo.exists(clientId));
 
         String plainSecret = secretGenerator.generateKey();
-        String encodedSecret = secretEncoder.encode(plainSecret);
 
         client.setClientId(clientId);
-        client.setClientSecret(encodedSecret);
+        client.setClientSecret(plainSecret);
 
         if (isEmpty(client.getAuthorities())) {
             client.setAuthorities(DEFAULT_AUTHORITIES);
@@ -115,11 +112,10 @@ public class ClientsServiceImpl implements ClientsService {
     public void resetClientSecret(String clientId) {
         log.info("Resetting secret for client: [{}]", clientId);
 
-        String plain = secretGenerator.generateKey();
-        String encoded = secretEncoder.encode(plain);
+        String newSecret = secretGenerator.generateKey();
 
         try {
-            clientsRepo.updateClientSecret(clientId, encoded);
+            clientsRepo.updateClientSecret(clientId, newSecret);
 
         } catch (EmptyResultDataAccessException ex) {
             throw new NoSuchClientException(ex.getMessage(), ex);

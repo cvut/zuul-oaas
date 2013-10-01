@@ -9,7 +9,6 @@ import cz.cvut.zuul.oaas.models.Client
 import cz.cvut.zuul.oaas.test.factories.ObjectFactory
 import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.security.crypto.keygen.StringKeyGenerator
-import org.springframework.security.crypto.password.PasswordEncoder
 import spock.lang.Specification
 
 import static cz.cvut.zuul.oaas.test.Assertions.assertThat
@@ -25,15 +24,13 @@ class ClientsServiceTest extends Specification {
     def refreshTokensRepo = Mock(RefreshTokensRepo)
     def clientIdGenerator = Mock(StringKeyGenerator)
     def secretGenerator = Mock(StringKeyGenerator)
-    def secretEncoder = Mock(PasswordEncoder)
 
     def service = new ClientsServiceImpl(
             clientsRepo: clientsRepo,
             accessTokensRepo: accessTokensRepo,
             refreshTokensRepo: refreshTokensRepo,
             clientIdGenerator: clientIdGenerator,
-            secretGenerator: secretGenerator,
-            secretEncoder: secretEncoder
+            secretGenerator: secretGenerator
     )
 
     def setup() {
@@ -61,11 +58,10 @@ class ClientsServiceTest extends Specification {
         then:
             1 * clientIdGenerator.generateKey() >> generatedId
             1 * secretGenerator.generateKey() >> 'top-secret'
-            1 * secretEncoder.encode('top-secret') >> 'terces-pot'
 
             1 * clientsRepo.save({ Client it ->
                 it.clientId == generatedId
-                it.clientSecret == 'terces-pot'
+                it.clientSecret == 'top-secret'
             })
             returnedId == generatedId
     }
@@ -133,8 +129,7 @@ class ClientsServiceTest extends Specification {
             service.resetClientSecret('client-123')
         then:
             1 * secretGenerator.generateKey() >> 'top-secret'
-            1 * secretEncoder.encode('top-secret') >> 'terces-pot'
-            1 * clientsRepo.updateClientSecret('client-123', 'terces-pot')
+            1 * clientsRepo.updateClientSecret('client-123', 'top-secret')
     }
 
     def 'reset client secret for non existing client'() {

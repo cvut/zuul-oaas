@@ -20,8 +20,7 @@
           p:accessTokensRepo-ref="accessTokensRepo"
           p:refreshTokensRepo-ref="refreshTokensRepo"
           p:clientIdGenerator-ref="clientIdGenerator"
-          p:secretGenerator-ref="secretGenerator"
-          p:secretEncoder-ref="passwordEncoder" />
+          p:secretGenerator-ref="secretGenerator" />
 
     <bean id="tokensService" class="cz.cvut.zuul.oaas.services.TokensServiceImpl"
           p:accessTokensRepo-ref="accessTokensRepo"
@@ -52,13 +51,5 @@
     <bean id="secretGenerator" class="cz.cvut.zuul.oaas.services.generators.SecurePasswordGenerator" />
     <bean id="clientIdGenerator" class="cz.cvut.zuul.oaas.services.generators.UUIDStringGenerator" />
     <bean id="identifierEncoder" class="cz.cvut.zuul.oaas.services.generators.RandomizedIdentifierEncoder" />
-
-    <beans profile="dev">
-        <bean id="passwordEncoder" class="org.springframework.security.crypto.password.NoOpPasswordEncoder" />
-    </beans>
-
-    <beans profile="production">
-        <bean id="passwordEncoder" class="org.springframework.security.crypto.password.StandardPasswordEncoder" />
-    </beans>
 
 </beans>
