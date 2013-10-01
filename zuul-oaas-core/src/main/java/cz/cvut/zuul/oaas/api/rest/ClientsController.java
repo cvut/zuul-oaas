@@ -2,7 +2,6 @@ package cz.cvut.zuul.oaas.api.rest;
 
 import cz.cvut.zuul.oaas.api.models.ClientDTO;
 import cz.cvut.zuul.oaas.api.services.ClientsService;
-import cz.cvut.zuul.oaas.models.ImplicitClientDetails;
 import lombok.Setter;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -162,7 +161,7 @@ public class ClientsController {
     public void addImplicitClientDetailsToClientDetails(@PathVariable String clientId, @RequestBody String implicitClientType) {
         ClientDTO client = clientsService.findClientById(clientId);
 
-        client.setImplicitClientDetails(new ImplicitClientDetails(implicitClientType));
+        client.setClientType(implicitClientType);
         clientsService.updateClient(client);
     }
 

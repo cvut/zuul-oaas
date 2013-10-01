@@ -49,6 +49,7 @@ class ClientsControllerIT extends AbstractControllerIT {
                 json.redirect_uri           == expected.registeredRedirectUri
                 json.access_token_validity  == expected.accessTokenValiditySeconds
                 json.refresh_token_validity == expected.refreshTokenValiditySeconds
+                json.client_type            == expected.clientType
             }
         where:
             expected = build(ClientDTO, [clientId: '42'])

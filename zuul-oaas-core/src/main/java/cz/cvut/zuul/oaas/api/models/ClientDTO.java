@@ -4,7 +4,6 @@ import cz.cvut.zuul.oaas.api.validators.EachEnum;
 import cz.cvut.zuul.oaas.api.validators.EachURI;
 import cz.cvut.zuul.oaas.api.validators.EnumValue;
 import cz.cvut.zuul.oaas.api.validators.ValidURI;
-import cz.cvut.zuul.oaas.models.ImplicitClientDetails;
 import cz.cvut.zuul.oaas.models.AuthorizationGrant;
 import cz.jirutka.validator.collection.constraints.EachPattern;
 import cz.jirutka.validator.collection.constraints.EachSize;
@@ -80,9 +79,8 @@ public class ClientDTO implements Serializable {
 
     @JsonProperty("client_locked")
     private boolean locked;
-    
-    private ImplicitClientDetails implicitClientDetails;
 
+    private String clientType;
 
 
     @SuppressWarnings("UnusedDeclaration")

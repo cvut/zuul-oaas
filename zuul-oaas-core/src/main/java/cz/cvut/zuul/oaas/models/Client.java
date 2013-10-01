@@ -31,7 +31,7 @@ public class Client implements ClientDetails {
     private static final String
             EXT_PRODUCT_NAME = "product_name",
             EXT_LOCKED = "locked",
-            EXT_IMPLICIT_CLIENT_DETAILS = "implicit_client_details";
+            EXT_CLIENT_TYPE = "client_type";
 
 	private @Id String clientId;
 	private String clientSecret;
@@ -45,7 +45,7 @@ public class Client implements ClientDetails {
 
     private String productName;
     private boolean locked = false;
-    private ImplicitClientDetails implicitClientDetails;
+    private String clientType;
 
 
     public Client(ClientDetails prototype) {
@@ -104,7 +104,7 @@ public class Client implements ClientDetails {
         return new HashMap<String, Object>() {{
             put(EXT_PRODUCT_NAME, productName);
             put(EXT_LOCKED, locked);
-            put(EXT_IMPLICIT_CLIENT_DETAILS, implicitClientDetails);
+            put(EXT_CLIENT_TYPE, clientType);
         }};
     }
 }
