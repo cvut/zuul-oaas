@@ -23,7 +23,7 @@ class ClientsControllerIT extends AbstractControllerIT {
         setup:
             1 * service.findClientById('666') >> { throw new NoSuchClientException('') }
         when:
-            perform GET('/v1/clients/666').with {
+            perform GET('/666').with {
                 accept APPLICATION_JSON
             }
         then:
@@ -34,7 +34,7 @@ class ClientsControllerIT extends AbstractControllerIT {
         setup:
             1 * service.findClientById(expected.clientId) >> expected
         when:
-            perform GET('/v1/clients/42').with {
+            perform GET('/42').with {
                 accept APPLICATION_JSON
             }
         then:
@@ -59,7 +59,7 @@ class ClientsControllerIT extends AbstractControllerIT {
         setup:
             1 * service.createClient(_) >> { throw new MethodConstraintViolationException(emptySet()) }
         when:
-            perform POST ('/v1/clients').with {
+            perform POST ('/').with {
                 content '{ "scope": "something" }'
                 contentType APPLICATION_JSON
             }
@@ -72,7 +72,7 @@ class ClientsControllerIT extends AbstractControllerIT {
             ClientDTO client
             service.createClient({ client = it }) >> '123'
         when:
-            perform POST ('/v1/clients').with {
+            perform POST ('/').with {
                 contentType APPLICATION_JSON
                 content """{
                     "authorities": [ "ROLE_CLIENT" ],
@@ -83,7 +83,7 @@ class ClientsControllerIT extends AbstractControllerIT {
             }
         then:
             response.status              == 201
-            response.redirectedUrl       == "/v1/clients/123"
+            response.redirectedUrl       == "${baseUri}/123"
 
             client.authorities           == [ 'ROLE_CLIENT' ] as Set
             client.authorizedGrantTypes  == [ "refresh_token", "authorization_code" ] as Set
@@ -95,14 +95,14 @@ class ClientsControllerIT extends AbstractControllerIT {
         setup:
             1 * service.removeClient('666') >> { throw new NoSuchClientException('') }
         when:
-            perform DELETE('/v1/clients/666')
+            perform DELETE('/666')
         then:
             response.status == 404
     }
 
     def 'DELETE: existing client'() {
         when:
-            perform DELETE('/v1/clients/123')
+            perform DELETE('/123')
         then:
             response.status == 204
             1 * service.removeClient('123')

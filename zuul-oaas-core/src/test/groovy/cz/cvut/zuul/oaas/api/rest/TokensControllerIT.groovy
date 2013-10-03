@@ -24,7 +24,7 @@ class TokensControllerIT extends AbstractControllerIT {
 
             1 * service.getToken('42') >> token
         when:
-            perform GET('/v1/tokens/42').with {
+            perform GET('/42').with {
                 accept APPLICATION_JSON
             }
         then:
@@ -65,7 +65,7 @@ class TokensControllerIT extends AbstractControllerIT {
         setup:
             1 * service.getToken('666') >> { throw new NoSuchTokenException('') }
         when:
-            perform GET('/v1/tokens/666').with {
+            perform GET('/666').with {
                 accept APPLICATION_JSON
             }
         then:
@@ -77,7 +77,7 @@ class TokensControllerIT extends AbstractControllerIT {
         setup:
             1 * service.invalidateToken('42')
         when:
-            perform DELETE('/v1/tokens/42')
+            perform DELETE('/42')
         then:
             response.status == 204
     }
@@ -86,7 +86,7 @@ class TokensControllerIT extends AbstractControllerIT {
         setup:
             1 * service.invalidateToken('666') >> { throw new NoSuchTokenException('') }
         when:
-            perform DELETE('/v1/tokens/666')
+            perform DELETE('/666')
         then:
             response.status == 404
     }

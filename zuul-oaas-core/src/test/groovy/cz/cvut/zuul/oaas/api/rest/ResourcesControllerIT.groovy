@@ -23,7 +23,7 @@ class ResourcesControllerIT extends AbstractControllerIT {
         setup:
             1 * service.getAllResources() >> expected
         when:
-            perform GET('/v1/resources/').with {
+            perform GET('/').with {
                 accept APPLICATION_JSON
             }
         then:
@@ -42,7 +42,7 @@ class ResourcesControllerIT extends AbstractControllerIT {
         setup:
            1 * service.findResourceById('666') >> { throw new NoSuchResourceException('') }
         when:
-            perform GET('/v1/resources/666').with {
+            perform GET('/666').with {
                 accept APPLICATION_JSON
             }
         then:
@@ -53,7 +53,7 @@ class ResourcesControllerIT extends AbstractControllerIT {
         setup:
             1 * service.findResourceById(expected.resourceId) >> expected
         when:
-            perform GET('/v1/resources/123').with {
+            perform GET('/123').with {
                 accept APPLICATION_JSON
             }
         then:
@@ -78,7 +78,7 @@ class ResourcesControllerIT extends AbstractControllerIT {
         setup:
             1 * service.createResource(_) >> { throw new MethodConstraintViolationException(emptySet()) }
         when:
-            perform POST ('/v1/resources/').with {
+            perform POST ('/').with {
                 content '{ "name": "something" }'
                 contentType APPLICATION_JSON
             }
@@ -91,7 +91,7 @@ class ResourcesControllerIT extends AbstractControllerIT {
             ResourceDTO resource
             service.createResource({ resource = it }) >> '123'
         when:
-            perform POST ('/v1/resources/').with {
+            perform POST ('/').with {
                 contentType APPLICATION_JSON
                 content """{
                         "auth": {
@@ -106,7 +106,7 @@ class ResourcesControllerIT extends AbstractControllerIT {
             }
         then:
             response.status         == 201
-            response.redirectedUrl  == '/v1/resources/123'
+            response.redirectedUrl  == "${baseUri}/123"
 
             resource.auth.scopes*.name  == [ 'urn:ctu:sample' ]
             resource.baseUrl            == 'http://example.org'
@@ -128,14 +128,14 @@ class ResourcesControllerIT extends AbstractControllerIT {
         setup:
             1 * service.deleteResourceById('666') >> { throw new NoSuchResourceException("") }
         when:
-            perform DELETE('/v1/resources/666')
+            perform DELETE('/666')
         then:
             response.status == 404
     }
 
     def 'DELETE: existing resource'() {
         when:
-            perform DELETE('/v1/resources/123')
+            perform DELETE('/123')
         then:
             response.status == 204
             1 * service.deleteResourceById('123')

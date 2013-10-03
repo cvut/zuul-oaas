@@ -5,10 +5,13 @@ import cz.cvut.zuul.oaas.test.factories.ObjectFactory
 import groovy.json.JsonSlurper
 import org.codehaus.jackson.map.ObjectMapper
 import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter
+import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.mock.web.MockHttpServletResponse
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
+import org.springframework.test.web.servlet.request.RequestPostProcessor
+import org.springframework.web.bind.annotation.RequestMapping
 import spock.lang.Shared
 import spock.lang.Specification
 
@@ -27,6 +30,8 @@ abstract class AbstractControllerIT extends Specification {
     @Shared MockMvc mockMvc
     @Shared controller
     ResponseWrapper response
+
+    def baseUri
 
     def GET = MockMvcRequestBuilders.&get
     def POST = MockMvcRequestBuilders.&post
@@ -53,12 +58,29 @@ abstract class AbstractControllerIT extends Specification {
 
     def setup() {
         setupController(controller)
+
+        baseUri = getBaseUri() ?: determineBaseUri()
+        assert baseUri, 'baseUri was not found, must be specified explicitly'
     }
 
 
     def perform(MockHttpServletRequestBuilder requestBuilder) {
+        requestBuilder.with(new RequestPostProcessor() {
+            MockHttpServletRequest postProcessRequest(MockHttpServletRequest request) {
+                request.requestURI = "${getBaseUri()}/${request.requestURI}"
+                return request
+            }
+        })
         def result = mockMvc.perform(requestBuilder).andReturn()
-        response = new ResponseWrapper(result.getResponse());
+        response = new ResponseWrapper(result.getResponse())
+    }
+
+    private determineBaseUri() {
+        def requestMapping = controller.class.getAnnotation(RequestMapping)
+        if (requestMapping) {
+            def uri = requestMapping.value()[0]
+            return uri.endsWith('/') ? uri[0..-2] : uri
+        }
     }
 
 

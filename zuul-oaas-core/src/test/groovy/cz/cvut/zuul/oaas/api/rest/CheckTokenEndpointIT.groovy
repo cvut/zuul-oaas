@@ -1,8 +1,6 @@
 package cz.cvut.zuul.oaas.api.rest
 
 import cz.cvut.oauth.provider.spring.TokenInfo
-import cz.cvut.zuul.oaas.api.rest.AbstractControllerIT
-import cz.cvut.zuul.oaas.api.rest.CheckTokenEndpoint
 import cz.cvut.zuul.oaas.api.services.TokensService
 import org.springframework.security.oauth2.common.exceptions.InvalidTokenException
 
@@ -13,6 +11,7 @@ class CheckTokenEndpointIT extends AbstractControllerIT {
 
     def service = Mock(TokensService)
 
+    def baseUri = '/check-token'
     def initController() { new CheckTokenEndpoint() }
     void setupController(_) { _.tokensService = service }
 
@@ -21,7 +20,7 @@ class CheckTokenEndpointIT extends AbstractControllerIT {
         setup:
             1 * service.getTokenInfo('123') >> { throw new InvalidTokenException('foo') }
         when:
-            perform GET('/check-token?access_token={value}', '123')
+            perform GET('/?access_token={value}', '123')
         then:
             response.status == 409
     }
@@ -30,7 +29,7 @@ class CheckTokenEndpointIT extends AbstractControllerIT {
         setup:
             1 * service.getTokenInfo('123') >> expected
         when:
-            perform GET('/check-token?access_token={value}', '123')
+            perform GET('/?access_token={value}', '123')
         then:
             with(response) {
                 status == 200
