@@ -1,5 +1,6 @@
 package cz.cvut.zuul.oaas.api.rest;
 
+import cz.cvut.zuul.oaas.api.exceptions.ConflictException;
 import cz.cvut.zuul.oaas.api.exceptions.NotFoundException;
 import org.hibernate.validator.method.MethodConstraintViolationException;
 import org.springframework.http.ResponseEntity;
@@ -10,9 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
-import static org.springframework.http.HttpStatus.UNAUTHORIZED;
+import static org.springframework.http.HttpStatus.*;
 
 /**
  * Exception handlers shared across all controllers.
@@ -40,5 +39,12 @@ public class CommonExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(NotFoundException.class)
     ErrorResponse handleNotFoundException(NotFoundException ex) {
         return ErrorResponse.from(NOT_FOUND, ex);
+    }
+
+    @ResponseBody
+    @ResponseStatus(CONFLICT)
+    @ExceptionHandler(ConflictException.class)
+    ErrorResponse handleConflictException(ConflictException ex) {
+        return ErrorResponse.from(CONFLICT, ex);
     }
 }

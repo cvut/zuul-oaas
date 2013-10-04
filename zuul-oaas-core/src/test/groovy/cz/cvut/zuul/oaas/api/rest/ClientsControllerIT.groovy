@@ -55,11 +55,12 @@ class ClientsControllerIT extends AbstractControllerIT {
             expected = build(ClientDTO, [clientId: '42'])
     }
 
+
     def 'POST: invalid client'() {
         setup:
             1 * service.createClient(_) >> { throw new MethodConstraintViolationException(emptySet()) }
         when:
-            perform POST ('/').with {
+            perform POST('/').with {
                 content '{ "scope": "something" }'
                 contentType APPLICATION_JSON
             }
@@ -72,7 +73,7 @@ class ClientsControllerIT extends AbstractControllerIT {
             ClientDTO client
             service.createClient({ client = it }) >> '123'
         when:
-            perform POST ('/').with {
+            perform POST('/').with {
                 contentType APPLICATION_JSON
                 content """{
                     "authorities": [ "ROLE_CLIENT" ],
@@ -90,6 +91,51 @@ class ClientsControllerIT extends AbstractControllerIT {
             client.registeredRedirectUri == [ "http://example.org" ] as Set
             client.scope                 == [ "urn:ctu:oauth:dummy", "urn:ctu:oauth:oaas:check-token" ] as Set
     }
+
+
+    def 'PUT: non existing client'() {
+        setup:
+            1 * service.updateClient(_) >> { throw new NoSuchClientException('') }
+        when:
+            perform PUT('/666').with {
+                contentType APPLICATION_JSON
+                content """{
+                        "client_id": "666"
+                    }"""
+            }
+        then:
+            response.status == 404
+    }
+
+    def 'PUT: client with changed clientId'() {
+        when:
+            perform PUT('/123').with {
+                contentType APPLICATION_JSON
+                content """{
+                    "client_id": "666"
+                }"""
+            }
+        then:
+            response.status == 409
+    }
+
+    def 'PUT: valid client'() {
+        setup:
+            1 * service.updateClient({
+                it.productName == 'Skynet'
+            })
+        when:
+            perform PUT('/123').with {
+                contentType APPLICATION_JSON
+                content """{
+                        "client_id": "123",
+                        "product_name": "Skynet"
+                    }"""
+            }
+        then:
+            response.status == 204
+    }
+
 
     def 'DELETE: non existing client'() {
         setup:

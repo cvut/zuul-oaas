@@ -1,5 +1,6 @@
 package cz.cvut.zuul.oaas.api.rest;
 
+import cz.cvut.zuul.oaas.api.exceptions.ConflictException;
 import cz.cvut.zuul.oaas.api.models.ClientDTO;
 import cz.cvut.zuul.oaas.api.services.ClientsService;
 import lombok.Setter;
@@ -31,146 +32,31 @@ public class ClientsController {
 
     @ResponseBody
     @RequestMapping(value = "{clientId}", method = GET)
-    public ClientDTO getClientDetails(@PathVariable String clientId) {
-        ClientDTO dto = clientsService.findClientById(clientId);
-        return dto;
+    public ClientDTO getClient(@PathVariable String clientId) {
+        return clientsService.findClientById(clientId);
     }
 
     @ResponseStatus(CREATED)
     @RequestMapping(method = POST)
-    public void createClientDetails(@RequestBody ClientDTO client, HttpServletResponse response) {
+    public void createClient(@RequestBody ClientDTO client, HttpServletResponse response) {
         String clientId = clientsService.createClient(client);
 
         // send redirect to URI of the created client (i.e. api/clients/{clientId}/)
         response.setHeader("Location", SELF_URI + clientId);
     }
+
+    @ResponseStatus(NO_CONTENT)
+    @RequestMapping(value = "/{clientId}", method = PUT)
+    public void updateClient(@PathVariable String clientId, @RequestBody ClientDTO client) {
+        if (! clientId.equals(client.getClientId())) {
+            throw new ConflictException("clientId could not be changed");
+        }
+        clientsService.updateClient(client);
+    }
     
     @ResponseStatus(NO_CONTENT)
     @RequestMapping(value = "{clientId}", method = DELETE)
-    public void removeClientDetails(@PathVariable String clientId) {
+    public void removeClient(@PathVariable String clientId) {
         clientsService.removeClient(clientId);
-    }
-
-    @ResponseStatus(NO_CONTENT)
-    @RequestMapping(value = "{clientId}/secret", method = PUT)
-    public void resetClientSecret(@PathVariable String clientId) {
-        clientsService.resetClientSecret(clientId);
-    }
-    
-    @ResponseStatus(NO_CONTENT)
-    @RequestMapping(value = "{clientId}/resources", method = PUT)
-    public void addResourceToClientDetails(@PathVariable String clientId, @RequestBody String resourceId) {
-        ClientDTO client = clientsService.findClientById(clientId);
-
-        if (client.getResourceIds().add(resourceId)) {
-            clientsService.updateClient(client);
-        }
-    }
-
-    @ResponseStatus(NO_CONTENT)
-    @RequestMapping(value = "{clientId}/resources/{resourceId}", method = DELETE)
-    public void deleteResourceFromClientDetails(@PathVariable String clientId, @PathVariable String resourceId) {
-        ClientDTO client = clientsService.findClientById(clientId);
-
-        if (client.getResourceIds().remove(resourceId)) {
-            clientsService.updateClient(client);
-        }
-    }
-
-    @ResponseStatus(NO_CONTENT)
-    @RequestMapping(value = "{clientId}/scopes", method = PUT)
-    public void addScopeToClientDetails(@PathVariable String clientId, @RequestBody String scope) {
-        ClientDTO client = clientsService.findClientById(clientId);
-
-        if (client.getScope().add(scope)) {
-            clientsService.updateClient(client);
-        }
-    }
-
-    @ResponseStatus(NO_CONTENT)
-    @RequestMapping(value = "{clientId}/scopes/{scope}", method = DELETE)
-    public void deleteScopeFromClientDetails(@PathVariable String clientId, @PathVariable String scope) {
-        ClientDTO client = clientsService.findClientById(clientId);
-
-        if (client.getScope().remove(scope)) {
-            clientsService.updateClient(client);
-        }
-    }
-
-    @ResponseStatus(NO_CONTENT)
-    @RequestMapping(value = "{clientId}/grants", method = PUT)
-    public void addGrantToClientDetails(@PathVariable String clientId, @RequestBody String grantType) {
-        ClientDTO client = clientsService.findClientById(clientId);
-
-        if (client.getAuthorizedGrantTypes().add(grantType)) {
-            clientsService.updateClient(client);
-        }
-    }
-
-    @ResponseStatus(NO_CONTENT)
-    @RequestMapping(value = "{clientId}/grants/{grantType}", method = DELETE)
-    public void deleteGrantFromClientDetails(@PathVariable String clientId, @PathVariable String grantType) {
-        ClientDTO client = clientsService.findClientById(clientId);
-
-        if (client.getAuthorizedGrantTypes().remove(grantType)) {
-            clientsService.updateClient(client);
-        }
-    }
-
-    @ResponseStatus(NO_CONTENT)
-    @RequestMapping(value = "{clientId}/roles", method = PUT)
-    public void addRoleToClientDetails(@PathVariable String clientId, @RequestBody String role) {
-        ClientDTO client = clientsService.findClientById(clientId);
-
-        if (client.getAuthorities().add(role)) {
-            clientsService.updateClient(client);
-        }
-    }
-
-    @ResponseStatus(NO_CONTENT)
-    @RequestMapping(value = "{clientId}/roles/{role}", method = DELETE)
-    public void deleteRoleFromClientDetails(@PathVariable String clientId, @PathVariable String role) {
-        ClientDTO client = clientsService.findClientById(clientId);
-
-        if (client.getAuthorities().remove(role)) {
-            clientsService.updateClient(client);
-        }
-    }
-
-    @ResponseStatus(NO_CONTENT)
-    @RequestMapping(value = "{clientId}/redirect-url", method = PUT)
-    public void addRedirectUriToClientDetails(@PathVariable String clientId, @RequestBody String redirectUri) {
-        ClientDTO client = clientsService.findClientById(clientId);
-
-        client.getRegisteredRedirectUri().clear();
-        client.getRegisteredRedirectUri().add(redirectUri);
-        clientsService.updateClient(client);
-    }
-   
-    @ResponseStatus(NO_CONTENT)
-    @RequestMapping(value = "{clientId}/product-name", method = PUT)
-    public void addProductNameToClientDetails(@PathVariable String clientId, @RequestBody String productName) {
-        ClientDTO client = clientsService.findClientById(clientId);
-
-        client.setProductName(productName);
-        clientsService.updateClient(client);
-    }
-
-    @ResponseStatus(NO_CONTENT)
-    @RequestMapping(value = "{clientId}/implicit-client-details/type", method = PUT)
-    public void addImplicitClientDetailsToClientDetails(@PathVariable String clientId, @RequestBody String implicitClientType) {
-        ClientDTO client = clientsService.findClientById(clientId);
-
-        client.setClientType(implicitClientType);
-        clientsService.updateClient(client);
-    }
-
-    @ResponseStatus(NO_CONTENT)
-    @RequestMapping(value = "{clientId}/locked", method = PUT)
-    public void addLockedToClientDetails(@PathVariable String clientId, @RequestBody String locked) {
-        ClientDTO client = clientsService.findClientById(clientId);
-
-        client.setLocked(Boolean.parseBoolean(locked));
-        clientsService.updateClient(client);
     }
 }

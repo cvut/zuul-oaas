@@ -35,8 +35,4 @@
 
     <bean id="exceptionHandler" class="cz.cvut.zuul.oaas.api.rest.CommonExceptionHandler" />
 
-    
-    <!-- Import additional configuration files -->
-    <import resource="aspects.xml" />
-
 </beans>
