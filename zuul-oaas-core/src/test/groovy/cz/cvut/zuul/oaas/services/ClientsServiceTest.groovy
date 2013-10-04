@@ -94,6 +94,34 @@ class ClientsServiceTest extends Specification {
     }
 
 
+    def 'update existing client given empty secret'() {
+        setup:
+            clientsRepo.exists(_) >> true
+        when:
+            service.updateClient(client)
+        then:
+            1 * secretGenerator.generateKey() >> 'new-secret'
+
+            1 * clientsRepo.save({ Client it ->
+                it.clientSecret == 'new-secret'
+            })
+        where:
+            client = build(ClientDTO).with { it.clientSecret = ''; it }
+    }
+
+    def 'update existing client given empty authorities'() {
+        setup:
+            clientsRepo.exists(_) >> true
+        when:
+            service.updateClient(client)
+        then:
+            1 * clientsRepo.save({ Client it ->
+                ! it.authorities?.isEmpty()
+            })
+        where:
+            client = build(ClientDTO).with { it.authorities = []; it }
+    }
+
     def 'update non existing client'() {
         when:
             service.updateClient( build(ClientDTO) )

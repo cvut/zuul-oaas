@@ -26,6 +26,7 @@ import java.util.List;
 import static lombok.AccessLevel.NONE;
 import static lombok.AccessLevel.PACKAGE;
 import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.springframework.util.CollectionUtils.isEmpty;
 
 /**
@@ -93,9 +94,18 @@ public class ClientsServiceImpl implements ClientsService {
 
     public void updateClient(ClientDTO clientDTO) {
         log.info("Updating client: [{}]", clientDTO);
-
         assertClientExists(clientDTO.getClientId());
-        clientsRepo.save(mapper.map(clientDTO, Client.class));
+
+        Client client = mapper.map(clientDTO, Client.class);
+
+        if (isBlank(client.getClientSecret())) {
+            log.info("Resetting secret for client: [{}]", client.getClientId());
+            client.setClientSecret(secretGenerator.generateKey());
+        }
+        if (isEmpty(client.getAuthorities())) {
+            client.setAuthorities(DEFAULT_AUTHORITIES);
+        }
+        clientsRepo.save(client);
     }
 
     public void removeClient(String clientId) {

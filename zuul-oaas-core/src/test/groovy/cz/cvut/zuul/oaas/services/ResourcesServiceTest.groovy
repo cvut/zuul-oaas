@@ -62,6 +62,15 @@ class ResourcesServiceTest extends Specification {
     }
 
 
+    def 'update existing resource'() {
+        setup:
+            resourcesRepo.exists(_) >> true
+        when:
+            service.updateResource( build(ResourceDTO) )
+        then:
+            1 * resourcesRepo.save(_ as Resource)
+    }
+
     def 'update non existing resource'() {
         when:
             service.updateResource(build(ResourceDTO))
