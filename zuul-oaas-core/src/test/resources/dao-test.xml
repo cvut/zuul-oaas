@@ -10,11 +10,15 @@
 
     <!--
         Embedded MongoDB
+
         It's not truly embedded 'cause there's no Java implementation of the MongoDB. This factory
         initializes embedmongo.flapdoodle.de that is able to download original MongoDB binary for
         your platform and run it for your integration tests.
+
+        Version 2.4+ doesn't work on Gentoo due to https://jira.mongodb.org/browse/SERVER-9248.
     -->
-    <bean id="mongo" class="cz.jirutka.spring.embedmongo.EmbeddedMongoFactoryBean" />
+    <bean id="mongo" class="cz.jirutka.spring.embedmongo.EmbeddedMongoFactoryBean"
+          p:version="2.2.6" />
 
     <mongo:db-factory mongo-ref="mongo" id="mongoDbFactory" dbname="oaas-test" write-concern="SAFE" />
 
