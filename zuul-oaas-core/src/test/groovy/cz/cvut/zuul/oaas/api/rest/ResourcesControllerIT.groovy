@@ -1,7 +1,7 @@
 package cz.cvut.zuul.oaas.api.rest
 
-import cz.cvut.zuul.oaas.api.models.ResourceDTO
 import cz.cvut.zuul.oaas.api.exceptions.NoSuchResourceException
+import cz.cvut.zuul.oaas.api.models.ResourceDTO
 import cz.cvut.zuul.oaas.api.services.ResourcesService
 import org.hibernate.validator.method.MethodConstraintViolationException
 
@@ -24,11 +24,9 @@ class ResourcesControllerIT extends AbstractControllerIT {
         when:
             perform GET('/')
         then:
-            with(response) {
+            with (response) {
                 status      == 200
                 contentType == CONTENT_TYPE_JSON
-
-                json instanceof List
                 json.size() == 3
             }
         where:
@@ -50,17 +48,10 @@ class ResourcesControllerIT extends AbstractControllerIT {
         when:
             perform GET('/123')
         then:
-            with(response) {
+            with (response) {
                 status == 200
                 contentType == CONTENT_TYPE_JSON
-
-                json.resource_id        == expected.resourceId
-                json.auth.scopes*.name  == expected.auth.scopes*.name
-                json.base_url           == expected.baseUrl
-                json.description        == expected.description
-                json.name               == expected.name
-                json.version            == expected.version
-                json.visibility         == expected.visibility
+                ! json.isEmpty()
             }
         where:
             expected = build(ResourceDTO, [resourceId: '123'])
@@ -80,31 +71,14 @@ class ResourcesControllerIT extends AbstractControllerIT {
 
     def 'POST: valid resource'() {
         setup:
-            ResourceDTO resource
-            service.createResource({ resource = it }) >> '123'
+            service.createResource(_ as ResourceDTO) >> '123'
         when:
             perform POST ('/').with {
-                content """{
-                        "auth": {
-                            "scopes":   [ { "name": "urn:ctu:sample" } ]
-                        },
-                        "base_url":     "http://example.org",
-                        "description":  "Lorem ipsum",
-                        "name":         "Sample app",
-                        "version":      "1.0",
-                        "visibility":   "public"
-                    }"""
+                content '{ "name": "Sample app" }'
             }
         then:
-            response.status         == 201
-            response.redirectedUrl  == "${baseUri}/123"
-
-            resource.auth.scopes*.name  == [ 'urn:ctu:sample' ]
-            resource.baseUrl            == 'http://example.org'
-            resource.description        == 'Lorem ipsum'
-            resource.name               == 'Sample app'
-            resource.version            == '1.0'
-            resource.visibility         == 'public'
+            response.status        == 201
+            response.redirectedUrl == "${baseUri}/123"
     }
 
     def 'PUT: invalid update'() {
@@ -125,10 +99,11 @@ class ResourcesControllerIT extends AbstractControllerIT {
     }
 
     def 'DELETE: existing resource'() {
+        setup:
+            1 * service.deleteResourceById('123')
         when:
             perform DELETE('/123')
         then:
             response.status == 204
-            1 * service.deleteResourceById('123')
     }
 }

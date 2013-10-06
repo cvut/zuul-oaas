@@ -2,19 +2,55 @@ package cz.cvut.zuul.oaas.api.models
 
 import cz.cvut.zuul.oaas.models.AuthorizationGrant
 import cz.cvut.zuul.oaas.test.ValidatorUtils
+import cz.cvut.zuul.oaas.test.factories.ObjectFactory
+import groovy.json.JsonSlurper
+import org.codehaus.jackson.map.ObjectMapper
+import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
 
+import static cz.cvut.zuul.oaas.test.Assertions.assertThat
 import static cz.cvut.zuul.oaas.test.ValidatorUtils.*
+import static org.codehaus.jackson.map.PropertyNamingStrategy.CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES
 
 /**
  * @author Jakub Jirutka <jakub@jirutka.cz>
  */
 @Unroll
+@Mixin(ObjectFactory)
 class ClientDTOTest extends Specification {
 
     @Delegate
     static ValidatorUtils validator = createValidator(ClientDTO.class)
+
+    @Shared mapper = new ObjectMapper(propertyNamingStrategy: CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES)
+
+
+    void 'should marshall to JSON and vice versa'() {
+        when:
+            def output = mapper.writeValueAsString(input)
+        then:
+            with(new JsonSlurper().parseText(output)) {
+                client_id              == input.clientId
+                client_secret          == input.clientSecret
+                scope                  == input.scope
+                resource_ids           == input.resourceIds
+                authorized_grant_types == input.authorizedGrantTypes
+                redirect_uri           == input.registeredRedirectUri
+                authorities            == input.authorities
+                access_token_validity  == input.accessTokenValiditySeconds
+                refresh_token_validity == input.refreshTokenValiditySeconds
+                product_name           == input.productName
+                client_locked          == input.locked
+                client_type            == input.clientType
+            }
+        when:
+            def readed = mapper.readValue(output, ClientDTO)
+        then:
+            assertThat( readed ).equalsTo( input ).inAllProperties()
+        where:
+            input = build(ClientDTO)
+    }
 
 
     void 'scope should be #expected given #description scopes'() {

@@ -1,19 +1,53 @@
 package cz.cvut.zuul.oaas.api.models
 
 import cz.cvut.zuul.oaas.test.ValidatorUtils
+import cz.cvut.zuul.oaas.test.factories.ObjectFactory
+import groovy.json.JsonSlurper
+import org.codehaus.jackson.map.ObjectMapper
+import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
 
+import static cz.cvut.zuul.oaas.test.Assertions.assertThat
 import static cz.cvut.zuul.oaas.test.ValidatorUtils.*
+import static org.codehaus.jackson.map.PropertyNamingStrategy.CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES
 
 /**
  * @author Jakub Jirutka <jakub@jirutka.cz>
  */
 @Unroll
+@Mixin(ObjectFactory)
 class ResourceDTOTest extends Specification {
 
     @Delegate
     static ValidatorUtils validator = createValidator(ResourceDTO)
+
+    @Shared mapper = new ObjectMapper(propertyNamingStrategy: CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES)
+
+
+    void 'should marshall to JSON and vice versa'() {
+        when:
+            def output = mapper.writeValueAsString(input)
+        then:
+            with(new JsonSlurper().parseText(output)) {
+                resource_id  == input.resourceId
+                base_url     == input.baseUrl
+                description  == input.description
+                name         == input.name
+                version      == input.version
+                visibility   == input.visibility
+
+                auth.scopes*.name         == input.auth.scopes*.name
+                auth.scopes*.description  == input.auth.scopes*.description
+                auth.scopes*.secured      == input.auth.scopes*.secured
+            }
+        when:
+            def readed = mapper.readValue(output, ResourceDTO)
+        then:
+            assertThat( readed ).equalsTo( input ).inAllProperties()
+        where:
+            input = build(ResourceDTO)
+    }
 
 
     def 'baseUrl should be #expected given #description URL'() {

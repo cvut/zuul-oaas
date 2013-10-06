@@ -33,18 +33,10 @@ class ClientsControllerIT extends AbstractControllerIT {
         when:
             perform GET('/42')
         then:
-            with(response) {
+            with (response) {
                 status == 200
                 contentType == CONTENT_TYPE_JSON
-
-                json.client_id              == expected.clientId
-                json.client_secret          == expected.clientSecret
-                json.resource_ids           == expected.resourceIds
-                json.authorized_grant_types == expected.authorizedGrantTypes
-                json.redirect_uri           == expected.registeredRedirectUri
-                json.access_token_validity  == expected.accessTokenValiditySeconds
-                json.refresh_token_validity == expected.refreshTokenValiditySeconds
-                json.client_type            == expected.clientType
+                ! json.isEmpty()
             }
         where:
             expected = build(ClientDTO, [clientId: '42'])
@@ -64,25 +56,14 @@ class ClientsControllerIT extends AbstractControllerIT {
 
     def 'POST: valid client'() {
         setup:
-            ClientDTO client
-            service.createClient({ client = it }) >> '123'
+            1 * service.createClient(_ as ClientDTO) >> '123'
         when:
             perform POST('/').with {
-                content """{
-                    "authorities": [ "ROLE_CLIENT" ],
-                    "authorized_grant_types": [ "refresh_token", "authorization_code" ],
-                    "redirect_uri": [ "http://example.org" ],
-                    "scope": [ "urn:ctu:oauth:dummy", "urn:ctu:oauth:oaas:check-token" ]
-                }"""
+                content '{ "redirect_uri": "http://example.org" }'
             }
         then:
-            response.status              == 201
-            response.redirectedUrl       == "${baseUri}/123"
-
-            client.authorities           == [ 'ROLE_CLIENT' ] as Set
-            client.authorizedGrantTypes  == [ "refresh_token", "authorization_code" ] as Set
-            client.registeredRedirectUri == [ "http://example.org" ] as Set
-            client.scope                 == [ "urn:ctu:oauth:dummy", "urn:ctu:oauth:oaas:check-token" ] as Set
+            response.status        == 201
+            response.redirectedUrl == "${baseUri}/123"
     }
 
 
@@ -91,9 +72,7 @@ class ClientsControllerIT extends AbstractControllerIT {
             1 * service.updateClient(_) >> { throw new NoSuchClientException('') }
         when:
             perform PUT('/666').with {
-                content """{
-                        "client_id": "666"
-                    }"""
+                content '{ "client_id": "666" }'
             }
         then:
             response.status == 404
@@ -102,9 +81,7 @@ class ClientsControllerIT extends AbstractControllerIT {
     def 'PUT: client with changed clientId'() {
         when:
             perform PUT('/123').with {
-                content """{
-                    "client_id": "666"
-                }"""
+                content '{ "client_id": "666" }'
             }
         then:
             response.status == 409
@@ -137,10 +114,11 @@ class ClientsControllerIT extends AbstractControllerIT {
     }
 
     def 'DELETE: existing client'() {
+        setup:
+            1 * service.removeClient('123')
         when:
             perform DELETE('/123')
         then:
             response.status == 204
-            1 * service.removeClient('123')
     }
 }
