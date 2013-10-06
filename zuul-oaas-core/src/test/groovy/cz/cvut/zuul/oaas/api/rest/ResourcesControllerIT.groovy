@@ -81,13 +81,32 @@ class ResourcesControllerIT extends AbstractControllerIT {
             response.redirectedUrl == "${baseUri}/123"
     }
 
-    def 'PUT: invalid update'() {
-        //TODO
+
+    def 'PUT: resource with changed resourceId'() {
+        when:
+            perform PUT('/123').with {
+                content '{ "resource_id": "666" }'
+            }
+        then:
+            response.status == 409
     }
 
-    def 'PUT: valid update'() {
-        //TODO
+    def 'PUT: valid resource'() {
+        setup:
+            1 * service.updateResource({
+                it.name == 'Foobar'
+            })
+        when:
+            perform PUT('123').with {
+                content """{
+                        "resource_id": "123",
+                        "name": "Foobar"
+                    }"""
+            }
+        then:
+            response.status == 204
     }
+
 
     def 'DELETE: non existing resource'() {
         setup:

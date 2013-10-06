@@ -1,5 +1,6 @@
 package cz.cvut.zuul.oaas.api.rest;
 
+import cz.cvut.zuul.oaas.api.exceptions.ConflictException;
 import cz.cvut.zuul.oaas.api.models.ResourceDTO;
 import cz.cvut.zuul.oaas.api.services.ResourcesService;
 import lombok.Setter;
@@ -54,9 +55,11 @@ public class ResourcesController {
     }
 
     @ResponseStatus(NO_CONTENT)
-    @RequestMapping(value = "/{id}", method = PUT)
-    public void updateResource(@PathVariable String id, @RequestBody ResourceDTO resource) {
-        resource.setResourceId(id);
+    @RequestMapping(value = "/{resourceId}", method = PUT)
+    public void updateResource(@PathVariable String resourceId, @RequestBody ResourceDTO resource) {
+        if (! resourceId.equals(resource.getResourceId())) {
+            throw new ConflictException("resourceId could not be changed");
+        }
         resourceService.updateResource(resource);
     }
 
