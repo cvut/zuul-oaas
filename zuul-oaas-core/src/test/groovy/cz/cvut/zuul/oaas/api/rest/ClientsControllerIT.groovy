@@ -6,7 +6,6 @@ import cz.cvut.zuul.oaas.api.services.ClientsService
 import org.hibernate.validator.method.MethodConstraintViolationException
 
 import static java.util.Collections.emptySet
-import static org.springframework.http.MediaType.APPLICATION_JSON
 
 /**
  * @author Jakub Jirutka <jakub@jirutka.cz>
@@ -23,9 +22,7 @@ class ClientsControllerIT extends AbstractControllerIT {
         setup:
             1 * service.findClientById('666') >> { throw new NoSuchClientException('') }
         when:
-            perform GET('/666').with {
-                accept APPLICATION_JSON
-            }
+            perform GET('/666')
         then:
             response.status == 404
     }
@@ -34,9 +31,7 @@ class ClientsControllerIT extends AbstractControllerIT {
         setup:
             1 * service.findClientById(expected.clientId) >> expected
         when:
-            perform GET('/42').with {
-                accept APPLICATION_JSON
-            }
+            perform GET('/42')
         then:
             with(response) {
                 status == 200
@@ -62,7 +57,6 @@ class ClientsControllerIT extends AbstractControllerIT {
         when:
             perform POST('/').with {
                 content '{ "scope": "something" }'
-                contentType APPLICATION_JSON
             }
         then:
             response.status == 400
@@ -74,7 +68,6 @@ class ClientsControllerIT extends AbstractControllerIT {
             service.createClient({ client = it }) >> '123'
         when:
             perform POST('/').with {
-                contentType APPLICATION_JSON
                 content """{
                     "authorities": [ "ROLE_CLIENT" ],
                     "authorized_grant_types": [ "refresh_token", "authorization_code" ],
@@ -98,7 +91,6 @@ class ClientsControllerIT extends AbstractControllerIT {
             1 * service.updateClient(_) >> { throw new NoSuchClientException('') }
         when:
             perform PUT('/666').with {
-                contentType APPLICATION_JSON
                 content """{
                         "client_id": "666"
                     }"""
@@ -110,7 +102,6 @@ class ClientsControllerIT extends AbstractControllerIT {
     def 'PUT: client with changed clientId'() {
         when:
             perform PUT('/123').with {
-                contentType APPLICATION_JSON
                 content """{
                     "client_id": "666"
                 }"""
@@ -126,7 +117,6 @@ class ClientsControllerIT extends AbstractControllerIT {
             })
         when:
             perform PUT('/123').with {
-                contentType APPLICATION_JSON
                 content """{
                         "client_id": "123",
                         "product_name": "Skynet"

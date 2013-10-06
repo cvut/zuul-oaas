@@ -6,7 +6,6 @@ import cz.cvut.zuul.oaas.api.services.ResourcesService
 import org.hibernate.validator.method.MethodConstraintViolationException
 
 import static java.util.Collections.emptySet
-import static org.springframework.http.MediaType.APPLICATION_JSON
 
 /**
  * @author Jakub Jirutka <jakub@jirutka.cz>
@@ -23,9 +22,7 @@ class ResourcesControllerIT extends AbstractControllerIT {
         setup:
             1 * service.getAllResources() >> expected
         when:
-            perform GET('/').with {
-                accept APPLICATION_JSON
-            }
+            perform GET('/')
         then:
             with(response) {
                 status      == 200
@@ -42,9 +39,7 @@ class ResourcesControllerIT extends AbstractControllerIT {
         setup:
            1 * service.findResourceById('666') >> { throw new NoSuchResourceException('') }
         when:
-            perform GET('/666').with {
-                accept APPLICATION_JSON
-            }
+            perform GET('/666')
         then:
             response.status == 404
     }
@@ -53,9 +48,7 @@ class ResourcesControllerIT extends AbstractControllerIT {
         setup:
             1 * service.findResourceById(expected.resourceId) >> expected
         when:
-            perform GET('/123').with {
-                accept APPLICATION_JSON
-            }
+            perform GET('/123')
         then:
             with(response) {
                 status == 200
@@ -80,7 +73,6 @@ class ResourcesControllerIT extends AbstractControllerIT {
         when:
             perform POST ('/').with {
                 content '{ "name": "something" }'
-                contentType APPLICATION_JSON
             }
         then:
             response.status == 400
@@ -92,7 +84,6 @@ class ResourcesControllerIT extends AbstractControllerIT {
             service.createResource({ resource = it }) >> '123'
         when:
             perform POST ('/').with {
-                contentType APPLICATION_JSON
                 content """{
                         "auth": {
                             "scopes":   [ { "name": "urn:ctu:sample" } ]

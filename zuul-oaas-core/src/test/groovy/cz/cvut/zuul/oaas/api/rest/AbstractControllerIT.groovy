@@ -16,6 +16,7 @@ import spock.lang.Shared
 import spock.lang.Specification
 
 import static org.codehaus.jackson.map.PropertyNamingStrategy.CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES
+import static org.springframework.http.MediaType.APPLICATION_JSON
 
 /**
  * @author Jakub Jirutka <jakub@jirutka.cz>
@@ -33,10 +34,10 @@ abstract class AbstractControllerIT extends Specification {
 
     def baseUri
 
-    def GET = MockMvcRequestBuilders.&get
-    def POST = MockMvcRequestBuilders.&post
-    def PUT = MockMvcRequestBuilders.&put
-    def DELETE = MockMvcRequestBuilders.&delete
+    static GET = MockMvcRequestBuilders.&get
+    static POST = MockMvcRequestBuilders.&post
+    static PUT = MockMvcRequestBuilders.&put
+    static DELETE = MockMvcRequestBuilders.&delete
 
 
     abstract def initController()
@@ -53,6 +54,9 @@ abstract class AbstractControllerIT extends Specification {
         mockMvc = new AdvicedStandaloneMockMvcBuilder(controller)
                 .setControllerAdvices(new CommonExceptionHandler())
                 .setMessageConverters(messageConverter)
+                .defaultRequest(GET('/')
+                    .accept( APPLICATION_JSON )
+                    .contentType( APPLICATION_JSON) )
                 .build()
     }
 

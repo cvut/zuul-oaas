@@ -1,10 +1,8 @@
 package cz.cvut.zuul.oaas.api.rest
 
-import cz.cvut.zuul.oaas.api.models.TokenDTO
 import cz.cvut.zuul.oaas.api.exceptions.NoSuchTokenException
+import cz.cvut.zuul.oaas.api.models.TokenDTO
 import cz.cvut.zuul.oaas.api.services.TokensService
-
-import static org.springframework.http.MediaType.APPLICATION_JSON
 
 /**
  * @author Jakub Jirutka <jakub@jirutka.cz>
@@ -24,9 +22,7 @@ class TokensControllerIT extends AbstractControllerIT {
 
             1 * service.getToken('42') >> token
         when:
-            perform GET('/42').with {
-                accept APPLICATION_JSON
-            }
+            perform GET('/42')
         then:
             with (response) {
                 status == 200
@@ -65,9 +61,7 @@ class TokensControllerIT extends AbstractControllerIT {
         setup:
             1 * service.getToken('666') >> { throw new NoSuchTokenException('') }
         when:
-            perform GET('/666').with {
-                accept APPLICATION_JSON
-            }
+            perform GET('/666')
         then:
             response.status == 404
     }
