@@ -1,11 +1,7 @@
 package cz.cvut.zuul.oaas.api.rest
 
-import cz.cvut.zuul.oaas.api.exceptions.NoSuchClientException
 import cz.cvut.zuul.oaas.api.models.ClientDTO
 import cz.cvut.zuul.oaas.api.services.ClientsService
-import org.hibernate.validator.method.MethodConstraintViolationException
-
-import static java.util.Collections.emptySet
 
 /**
  * @author Jakub Jirutka <jakub@jirutka.cz>
@@ -18,18 +14,9 @@ class ClientsControllerIT extends AbstractControllerIT {
     void setupController(_) { _.clientsService = service }
 
 
-    void 'GET: non existing client'() {
+    def 'GET client'() {
         setup:
-            1 * service.findClientById('666') >> { throw new NoSuchClientException('') }
-        when:
-            perform GET('/666')
-        then:
-            response.status == 404
-    }
-
-    void 'GET: existing client'() {
-        setup:
-            1 * service.findClientById(expected.clientId) >> expected
+            1 * service.findClientById('42') >> build(ClientDTO)
         when:
             perform GET('/42')
         then:
@@ -38,23 +25,9 @@ class ClientsControllerIT extends AbstractControllerIT {
                 contentType == CONTENT_TYPE_JSON
                 ! json.isEmpty()
             }
-        where:
-            expected = build(ClientDTO, [clientId: '42'])
     }
 
-
-    def 'POST: invalid client'() {
-        setup:
-            1 * service.createClient(_) >> { throw new MethodConstraintViolationException(emptySet()) }
-        when:
-            perform POST('/').with {
-                content '{ "scope": "something" }'
-            }
-        then:
-            response.status == 400
-    }
-
-    def 'POST: valid client'() {
+    def 'POST client'() {
         setup:
             1 * service.createClient(_ as ClientDTO) >> '123'
         when:
@@ -66,19 +39,7 @@ class ClientsControllerIT extends AbstractControllerIT {
             response.redirectedUrl == "${baseUri}/123"
     }
 
-
-    def 'PUT: non existing client'() {
-        setup:
-            1 * service.updateClient(_) >> { throw new NoSuchClientException('') }
-        when:
-            perform PUT('/666').with {
-                content '{ "client_id": "666" }'
-            }
-        then:
-            response.status == 404
-    }
-
-    def 'PUT: client with changed clientId'() {
+    def 'PUT client with changed clientId'() {
         when:
             perform PUT('/123').with {
                 content '{ "client_id": "666" }'
@@ -87,7 +48,7 @@ class ClientsControllerIT extends AbstractControllerIT {
             response.status == 409
     }
 
-    def 'PUT: valid client'() {
+    def 'PUT client'() {
         setup:
             1 * service.updateClient({
                 it.productName == 'Skynet'
@@ -103,17 +64,7 @@ class ClientsControllerIT extends AbstractControllerIT {
             response.status == 204
     }
 
-
-    def 'DELETE: non existing client'() {
-        setup:
-            1 * service.removeClient('666') >> { throw new NoSuchClientException('') }
-        when:
-            perform DELETE('/666')
-        then:
-            response.status == 404
-    }
-
-    def 'DELETE: existing client'() {
+    def 'DELETE client'() {
         setup:
             1 * service.removeClient('123')
         when:

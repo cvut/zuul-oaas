@@ -1,11 +1,7 @@
 package cz.cvut.zuul.oaas.api.rest
 
-import cz.cvut.zuul.oaas.api.exceptions.NoSuchResourceException
 import cz.cvut.zuul.oaas.api.models.ResourceDTO
 import cz.cvut.zuul.oaas.api.services.ResourcesService
-import org.hibernate.validator.method.MethodConstraintViolationException
-
-import static java.util.Collections.emptySet
 
 /**
  * @author Jakub Jirutka <jakub@jirutka.cz>
@@ -18,9 +14,9 @@ class ResourcesControllerIT extends AbstractControllerIT {
     void setupController(_) { _.resourceService = service }
 
 
-    void 'GET: all resources'() {
+    def 'GET all resources'() {
         setup:
-            1 * service.getAllResources() >> expected
+            1 * service.getAllResources() >> [ build(ResourceDTO) ] * 3
         when:
             perform GET('/')
         then:
@@ -29,22 +25,11 @@ class ResourcesControllerIT extends AbstractControllerIT {
                 contentType == CONTENT_TYPE_JSON
                 json.size() == 3
             }
-        where:
-            expected = [build(ResourceDTO)] * 3
     }
 
-    void 'GET: non existing resource'() {
+    def 'GET resource'() {
         setup:
-           1 * service.findResourceById('666') >> { throw new NoSuchResourceException('') }
-        when:
-            perform GET('/666')
-        then:
-            response.status == 404
-    }
-
-    void 'GET: existing resource'() {
-        setup:
-            1 * service.findResourceById(expected.resourceId) >> expected
+            1 * service.findResourceById('123') >> build(ResourceDTO)
         when:
             perform GET('/123')
         then:
@@ -53,23 +38,9 @@ class ResourcesControllerIT extends AbstractControllerIT {
                 contentType == CONTENT_TYPE_JSON
                 ! json.isEmpty()
             }
-        where:
-            expected = build(ResourceDTO, [resourceId: '123'])
     }
 
-
-    def 'POST: invalid resource'() {
-        setup:
-            1 * service.createResource(_) >> { throw new MethodConstraintViolationException(emptySet()) }
-        when:
-            perform POST ('/').with {
-                content '{ "name": "something" }'
-            }
-        then:
-            response.status == 400
-    }
-
-    def 'POST: valid resource'() {
+    def 'POST resource'() {
         setup:
             service.createResource(_ as ResourceDTO) >> '123'
         when:
@@ -81,8 +52,7 @@ class ResourcesControllerIT extends AbstractControllerIT {
             response.redirectedUrl == "${baseUri}/123"
     }
 
-
-    def 'PUT: resource with changed resourceId'() {
+    def 'PUT resource with changed resourceId'() {
         when:
             perform PUT('/123').with {
                 content '{ "resource_id": "666" }'
@@ -91,7 +61,7 @@ class ResourcesControllerIT extends AbstractControllerIT {
             response.status == 409
     }
 
-    def 'PUT: valid resource'() {
+    def 'PUT resource'() {
         setup:
             1 * service.updateResource({
                 it.name == 'Foobar'
@@ -107,17 +77,7 @@ class ResourcesControllerIT extends AbstractControllerIT {
             response.status == 204
     }
 
-
-    def 'DELETE: non existing resource'() {
-        setup:
-            1 * service.deleteResourceById('666') >> { throw new NoSuchResourceException("") }
-        when:
-            perform DELETE('/666')
-        then:
-            response.status == 404
-    }
-
-    def 'DELETE: existing resource'() {
+    def 'DELETE resource'() {
         setup:
             1 * service.deleteResourceById('123')
         when:

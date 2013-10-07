@@ -25,8 +25,8 @@ abstract class AbstractControllerIT extends Specification {
 
     protected static final CONTENT_TYPE_JSON = "application/json;charset=UTF-8"
 
-    @Delegate @Shared
-    ObjectFactory factory = new ObjectFactory()
+    @Delegate
+    static ObjectFactory factory = new ObjectFactory()
 
     @Shared MockMvc mockMvc
     @Shared controller

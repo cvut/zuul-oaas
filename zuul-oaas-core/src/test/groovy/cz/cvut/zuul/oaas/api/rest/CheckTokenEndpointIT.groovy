@@ -16,7 +16,7 @@ class CheckTokenEndpointIT extends AbstractControllerIT {
     void setupController(_) { _.tokensService = service }
 
 
-    def 'GET: invalid token info'() {
+    def 'GET invalid token info'() {
         setup:
             1 * service.getTokenInfo('123') >> { throw new InvalidTokenException('foo') }
         when:
@@ -25,7 +25,7 @@ class CheckTokenEndpointIT extends AbstractControllerIT {
             response.status == 409
     }
 
-    def 'GET: valid token info'() {
+    def 'GET valid token info'() {
         setup:
             1 * service.getTokenInfo('123') >> expected
         when:

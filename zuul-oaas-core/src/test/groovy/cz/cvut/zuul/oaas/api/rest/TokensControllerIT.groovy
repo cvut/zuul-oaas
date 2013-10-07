@@ -1,6 +1,5 @@
 package cz.cvut.zuul.oaas.api.rest
 
-import cz.cvut.zuul.oaas.api.exceptions.NoSuchTokenException
 import cz.cvut.zuul.oaas.api.models.TokenDTO
 import cz.cvut.zuul.oaas.api.services.TokensService
 
@@ -15,9 +14,9 @@ class TokensControllerIT extends AbstractControllerIT {
     void setupController(_) { _.tokensService = service }
 
 
-    void 'GET: existing token'() {
+    def 'GET token'() {
         setup:
-            1 * service.getToken('42') >> token
+            1 * service.getToken('42') >> build(TokenDTO)
         when:
             perform GET('/42')
         then:
@@ -26,35 +25,14 @@ class TokensControllerIT extends AbstractControllerIT {
                 contentType == CONTENT_TYPE_JSON
                 ! json.isEmpty()
             }
-        where:
-            token = build(TokenDTO)
     }
 
-    void 'GET: non existing token'() {
-        setup:
-            1 * service.getToken('666') >> { throw new NoSuchTokenException('') }
-        when:
-            perform GET('/666')
-        then:
-            response.status == 404
-    }
-
-
-    void 'DELETE: existing token'() {
+    def 'DELETE token'() {
         setup:
             1 * service.invalidateToken('42')
         when:
             perform DELETE('/42')
         then:
             response.status == 204
-    }
-
-    void 'DELETE: non existing token'() {
-        setup:
-            1 * service.invalidateToken('666') >> { throw new NoSuchTokenException('') }
-        when:
-            perform DELETE('/666')
-        then:
-            response.status == 404
     }
 }
