@@ -36,6 +36,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>oaas-api</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>cz.cvut.oauth.support</groupId>
             <artifactId>provider-spring-support</artifactId>
             <version>1.0-SNAPSHOT</version>
@@ -45,7 +50,7 @@
 
         <dependency>
             <groupId>org.springframework</groupId>
-            <artifactId>spring-core</artifactId>
+            <artifactId>spring-aop</artifactId>
         </dependency>
 
         <dependency>
@@ -55,12 +60,17 @@
 
         <dependency>
             <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
         </dependency>
 
         <dependency>
             <groupId>org.springframework</groupId>
-            <artifactId>spring-aop</artifactId>
+            <artifactId>spring-tx</artifactId>
         </dependency>
 
         <dependency>
@@ -71,11 +81,6 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-tx</artifactId>
         </dependency>
 
         <dependency>
@@ -126,25 +131,6 @@
             <version>${thymeleaf.version}</version>
         </dependency>
 
-        <!--//// Apache Commons ////-->
-
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>commons-httpclient</groupId>
-            <artifactId>commons-httpclient</artifactId>
-            <version>3.1</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>commons-logging</groupId>
-                    <artifactId>commons-logging</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
         <!--//// AOP ////-->
 
         <dependency>
@@ -166,44 +152,11 @@
             <scope>runtime</scope>
         </dependency>
 
-        <!--//// Validation ////-->
-
-        <dependency>
-            <groupId>javax.validation</groupId>
-            <artifactId>validation-api</artifactId>
-        </dependency>
-
-        <!-- JSR-303 Validator -->
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-validator</artifactId>
-            <version>4.3.0.Final</version>
-        </dependency>
-
-        <!-- Collection validators for JSR-303 -->
-        <dependency>
-            <groupId>cz.jirutka.validator</groupId>
-            <artifactId>validator-collection</artifactId>
-            <version>1.0</version>
-        </dependency>
-
-        <!-- Spring EL powered validator for JSR-303 -->
-        <dependency>
-            <groupId>cz.jirutka.validator</groupId>
-            <artifactId>validator-spring</artifactId>
-            <version>1.0</version>
-        </dependency>
-
         <!--//// Mappers ////-->
 
         <dependency>
             <groupId>org.codehaus.jackson</groupId>
             <artifactId>jackson-core-asl</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-mapper-asl</artifactId>
         </dependency>
 
         <dependency>
@@ -226,10 +179,16 @@
 
         <!--//// Others ////-->
 
+        <!-- JSR-303 Validator -->
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <scope>provided</scope>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>4.3.0.Final</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
         </dependency>
 
         <dependency>
@@ -243,8 +202,20 @@
             <version>2.11.2</version>
         </dependency>
 
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
 
         <!--////////// Test Libraries //////////-->
+
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>oaas-common</artifactId>
+            <type>test-jar</type>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework</groupId>

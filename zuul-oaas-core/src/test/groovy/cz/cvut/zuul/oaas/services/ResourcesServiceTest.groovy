@@ -5,7 +5,7 @@ import cz.cvut.zuul.oaas.api.exceptions.NoSuchResourceException
 import cz.cvut.zuul.oaas.repos.ResourcesRepo
 import cz.cvut.zuul.oaas.services.generators.StringEncoder
 import cz.cvut.zuul.oaas.models.Resource
-import cz.cvut.zuul.oaas.test.factories.ObjectFactory
+import cz.cvut.zuul.oaas.test.CoreObjectFactory
 import spock.lang.Specification
 
 import static cz.cvut.zuul.oaas.test.Assertions.assertThat
@@ -13,7 +13,7 @@ import static cz.cvut.zuul.oaas.test.Assertions.assertThat
 /**
  * @author Jakub Jirutka <jakub@jirutka.cz>
  */
-@Mixin(ObjectFactory)
+@Mixin(CoreObjectFactory)
 class ResourcesServiceTest extends Specification {
 
     def resourcesRepo = Mock(ResourcesRepo)

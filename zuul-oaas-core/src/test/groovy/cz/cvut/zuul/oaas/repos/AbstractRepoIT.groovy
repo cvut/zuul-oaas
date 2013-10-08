@@ -1,6 +1,6 @@
 package cz.cvut.zuul.oaas.repos
 
-import cz.cvut.zuul.oaas.test.factories.ObjectFactory
+import cz.cvut.zuul.oaas.test.CoreObjectFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.MongoTemplate
@@ -19,7 +19,7 @@ import static cz.cvut.zuul.oaas.test.Assertions.assertThat
 @ContextConfiguration('classpath:dao-test.xml')
 abstract class AbstractRepoIT<E> extends Specification {
 
-    @Delegate ObjectFactory factory = new ObjectFactory()
+    @Delegate CoreObjectFactory factory = new CoreObjectFactory()
 
     @Autowired MongoTemplate mongoTemplate
 

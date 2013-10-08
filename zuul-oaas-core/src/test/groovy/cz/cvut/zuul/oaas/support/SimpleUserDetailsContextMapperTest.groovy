@@ -1,7 +1,7 @@
 package cz.cvut.zuul.oaas.support
 
 import cz.cvut.zuul.oaas.models.User
-import cz.cvut.zuul.oaas.test.factories.ObjectFactory
+import cz.cvut.zuul.oaas.test.CoreObjectFactory
 import org.springframework.ldap.core.DirContextOperations
 import spock.lang.Specification
 
@@ -11,7 +11,7 @@ import static org.springframework.security.core.authority.AuthorityUtils.createA
 /**
  * @author Jakub Jirutka <jakub@jirutka.cz>
  */
-@Mixin(ObjectFactory)
+@Mixin(CoreObjectFactory)
 class SimpleUserDetailsContextMapperTest extends Specification {
 
     def dirContext = Mock(DirContextOperations)

@@ -25,6 +25,8 @@
     <!--//////////////////// MODULES ////////////////////-->
 
     <modules>
+        <module>zuul-oaas-api</module>
+        <module>zuul-oaas-common</module>
         <module>zuul-oaas-core</module>
     </modules>
 
@@ -68,6 +70,11 @@
             <scope>provided</scope>
         </dependency>
 
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+        </dependency>
+
         <!--//// Test ////-->
 
         <dependency>
@@ -83,7 +90,30 @@
             <version>${spock.version}</version>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>oaas-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>oaas-common</artifactId>
+                <version>${project.version}</version>
+                <type>test-jar</type>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
 
     <!--//////////////////// BUILD ////////////////////-->
@@ -91,7 +121,7 @@
     <build>
         <plugins>
             <!--
-                Compile all classes with Groovy compiler and Lombok processor
+                Compile all classes with Groovy compiler and Lombok processor.
             -->
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -126,7 +156,7 @@
             </plugin>
 
             <!--
-                Add groovy source directories to the build
+                Add groovy source directories to the build.
                 see http://docs.codehaus.org/display/GROOVY/Groovy-Eclipse+compiler+plugin+for+Maven
             -->
             <plugin>
@@ -149,6 +179,26 @@
                 </executions>
             </plugin>
         </plugins>
+
+        <pluginManagement>
+            <plugins>
+                <!--
+                    Build a JAR of the test classes.
+                -->
+                <plugin>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>2.4</version>
+                    <executions>
+                        <execution>
+                            <id>test-jar</id>
+                            <goals>
+                                <goal>test-jar</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
     </build>
 
 </project>

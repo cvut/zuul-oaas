@@ -6,7 +6,7 @@ import cz.cvut.zuul.oaas.repos.AccessTokensRepo
 import cz.cvut.zuul.oaas.repos.ClientsRepo
 import cz.cvut.zuul.oaas.repos.RefreshTokensRepo
 import cz.cvut.zuul.oaas.models.Client
-import cz.cvut.zuul.oaas.test.factories.ObjectFactory
+import cz.cvut.zuul.oaas.test.CoreObjectFactory
 import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.security.crypto.keygen.StringKeyGenerator
 import spock.lang.Specification
@@ -16,7 +16,7 @@ import static cz.cvut.zuul.oaas.test.Assertions.assertThat
 /**
  * @author Jakub Jirutka <jakub@jirutka.cz>
  */
-@Mixin(ObjectFactory)
+@Mixin(CoreObjectFactory)
 class ClientsServiceTest extends Specification {
 
     def clientsRepo = Mock(ClientsRepo)
