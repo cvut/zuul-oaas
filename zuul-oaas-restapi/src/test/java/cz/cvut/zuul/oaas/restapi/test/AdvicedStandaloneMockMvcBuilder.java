@@ -1,4 +1,4 @@
-package cz.cvut.zuul.oaas.api.test;
+package cz.cvut.zuul.oaas.restapi.test;
 
 import org.springframework.beans.factory.support.StaticListableBeanFactory;
 import org.springframework.context.ApplicationContext;

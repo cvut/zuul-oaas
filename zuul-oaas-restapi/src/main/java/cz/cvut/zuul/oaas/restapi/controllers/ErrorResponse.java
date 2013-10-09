@@ -1,4 +1,4 @@
-package cz.cvut.zuul.oaas.api.rest;
+package cz.cvut.zuul.oaas.restapi.controllers;
 
 import com.google.common.collect.Iterables;
 import lombok.Getter;

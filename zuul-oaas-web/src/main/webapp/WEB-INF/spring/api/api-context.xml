@@ -24,15 +24,15 @@
 
     <!--///// Controllers /////-->
 
-    <bean id="clientsController" class="cz.cvut.zuul.oaas.api.rest.ClientsController"
+    <bean id="clientsController" class="cz.cvut.zuul.oaas.restapi.controllers.ClientsController"
           p:clientsService-ref="clientsService" />
 
-    <bean id="resourcesController" class="cz.cvut.zuul.oaas.api.rest.ResourcesController"
+    <bean id="resourcesController" class="cz.cvut.zuul.oaas.restapi.controllers.ResourcesController"
           p:resourceService-ref="resourceService" />
 
-    <bean id="tokensController" class="cz.cvut.zuul.oaas.api.rest.TokensController"
+    <bean id="tokensController" class="cz.cvut.zuul.oaas.restapi.controllers.TokensController"
           p:tokensService-ref="tokensService" />
 
-    <bean id="exceptionHandler" class="cz.cvut.zuul.oaas.api.rest.CommonExceptionHandler" />
+    <bean id="exceptionHandler" class="cz.cvut.zuul.oaas.restapi.controllers.CommonExceptionHandler" />
 
 </beans>

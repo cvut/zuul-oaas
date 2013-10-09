@@ -1,4 +1,4 @@
-package cz.cvut.zuul.oaas.api.rest
+package cz.cvut.zuul.oaas.restapi.controllers
 
 import cz.cvut.zuul.oaas.api.models.ClientDTO
 import cz.cvut.zuul.oaas.api.services.ClientsService

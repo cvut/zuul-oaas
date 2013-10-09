@@ -155,11 +155,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
         </dependency>
@@ -202,7 +197,6 @@
         <dependency>
             <groupId>net.java.quickcheck</groupId>
             <artifactId>quickcheck</artifactId>
-            <version>0.6</version>
             <scope>test</scope>
         </dependency>
 

@@ -1,7 +1,8 @@
-package cz.cvut.zuul.oaas.api.rest
+package cz.cvut.zuul.oaas.restapi.controllers
 
-import cz.cvut.zuul.oaas.api.test.AdvicedStandaloneMockMvcBuilder
 import cz.cvut.zuul.oaas.api.test.ApiObjectFactory
+import cz.cvut.zuul.oaas.restapi.controllers.CommonExceptionHandler
+import cz.cvut.zuul.oaas.restapi.test.AdvicedStandaloneMockMvcBuilder
 import groovy.json.JsonSlurper
 import org.codehaus.jackson.map.ObjectMapper
 import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter

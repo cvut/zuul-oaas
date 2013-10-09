@@ -44,6 +44,11 @@
             <artifactId>zuul-oaas-core</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>zuul-oaas-restapi</artifactId>
+        </dependency>
+
         <!--//// Spring Framework ////-->
 
         <dependency>
