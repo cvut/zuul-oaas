@@ -1,4 +1,4 @@
-package cz.cvut.zuul.oaas.controllers;
+package cz.cvut.zuul.oaas.web.controllers;
 
 import cz.cvut.zuul.oaas.api.models.ClientDTO;
 import cz.cvut.zuul.oaas.api.services.ClientsService;

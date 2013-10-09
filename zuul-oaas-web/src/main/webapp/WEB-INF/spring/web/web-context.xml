@@ -47,10 +47,10 @@
 
     <!--///// Controllers /////-->
 
-    <bean id="mainController" class="cz.cvut.zuul.oaas.controllers.MainController" />
+    <bean id="mainController" class="cz.cvut.zuul.oaas.web.controllers.MainController" />
 
     <!-- Override the default mappings for approval and error pages -->
-    <bean id="accessConfirmationController" class="cz.cvut.zuul.oaas.controllers.AccessConfirmationController"
+    <bean id="accessConfirmationController" class="cz.cvut.zuul.oaas.web.controllers.AccessConfirmationController"
           p:clientsService-ref="clientsService" />
     
     <!-- Check Token Enpoint for Resource Servers -->
