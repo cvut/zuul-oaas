@@ -14,7 +14,7 @@
     
     <!--//////////////////// DESCRIPTION ////////////////////-->
 
-    <artifactId>oaas-common</artifactId>
+    <artifactId>zuul-oaas-common</artifactId>
     <packaging>jar</packaging>
 
     <name>Zuul OAAS Common</name>

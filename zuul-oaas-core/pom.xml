@@ -14,7 +14,7 @@
     
     <!--//////////////////// DESCRIPTION ////////////////////-->
 
-    <artifactId>oaas-core</artifactId>
+    <artifactId>zuul-oaas-core</artifactId>
     <packaging>war</packaging>
 
     <name>Zuul OAAS Core</name>
@@ -37,7 +37,7 @@
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>oaas-api</artifactId>
+            <artifactId>zuul-oaas-api</artifactId>
         </dependency>
 
         <dependency>
@@ -213,7 +213,7 @@
 
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>oaas-common</artifactId>
+            <artifactId>zuul-oaas-common</artifactId>
             <type>test-jar</type>
         </dependency>
 

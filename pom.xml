@@ -102,13 +102,13 @@
         <dependencies>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>oaas-api</artifactId>
+                <artifactId>zuul-oaas-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>oaas-common</artifactId>
+                <artifactId>zuul-oaas-common</artifactId>
                 <version>${project.version}</version>
                 <type>test-jar</type>
             </dependency>

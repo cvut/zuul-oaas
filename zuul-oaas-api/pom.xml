@@ -14,7 +14,7 @@
     
     <!--//////////////////// DESCRIPTION ////////////////////-->
 
-    <artifactId>oaas-api</artifactId>
+    <artifactId>zuul-oaas-api</artifactId>
     <packaging>jar</packaging>
 
     <name>Zuul OAAS API</name>
@@ -133,7 +133,7 @@
 
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>oaas-common</artifactId>
+            <artifactId>zuul-oaas-common</artifactId>
             <type>test-jar</type>
         </dependency>
 
