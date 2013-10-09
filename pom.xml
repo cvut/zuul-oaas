@@ -80,8 +80,7 @@
 
         <dependency>
             <groupId>org.codehaus.groovy</groupId>
-            <artifactId>groovy-all</artifactId>
-            <version>${groovy.version}</version>
+            <artifactId>groovy</artifactId>
             <scope>test</scope>
         </dependency>
 
@@ -89,6 +88,12 @@
             <groupId>org.spockframework</groupId>
             <artifactId>spock-core</artifactId>
             <version>${spock.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.codehaus.groovy</groupId>
+                    <artifactId>groovy-all</artifactId>
+                </exclusion>
+            </exclusions>
             <scope>test</scope>
         </dependency>
 
@@ -118,6 +123,12 @@
                 <artifactId>zuul-oaas-common</artifactId>
                 <version>${project.version}</version>
                 <type>test-jar</type>
+            </dependency>
+
+            <dependency>
+                <groupId>org.codehaus.groovy</groupId>
+                <artifactId>groovy</artifactId>
+                <version>${groovy.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
