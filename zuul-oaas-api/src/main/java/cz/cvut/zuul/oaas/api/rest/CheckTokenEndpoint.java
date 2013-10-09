@@ -1,6 +1,6 @@
 package cz.cvut.zuul.oaas.api.rest;
 
-import cz.cvut.oauth.provider.spring.TokenInfo;
+import cz.cvut.zuul.oaas.api.models.TokenInfo;
 import cz.cvut.zuul.oaas.api.services.TokensService;
 import lombok.Setter;
 import org.springframework.security.oauth2.common.exceptions.InvalidTokenException;

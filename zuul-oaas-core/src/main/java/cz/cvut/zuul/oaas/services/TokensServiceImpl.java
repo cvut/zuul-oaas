@@ -1,6 +1,6 @@
 package cz.cvut.zuul.oaas.services;
 
-import cz.cvut.oauth.provider.spring.TokenInfo;
+import cz.cvut.zuul.oaas.api.models.TokenInfo;
 import cz.cvut.zuul.oaas.api.exceptions.NoSuchTokenException;
 import cz.cvut.zuul.oaas.api.models.TokenDTO;
 import cz.cvut.zuul.oaas.api.services.TokensService;

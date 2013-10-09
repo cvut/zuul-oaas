@@ -1,6 +1,6 @@
 package cz.cvut.zuul.oaas.api.test
 
-import cz.cvut.oauth.provider.spring.TokenInfo
+import cz.cvut.zuul.oaas.api.models.TokenInfo
 import cz.cvut.zuul.oaas.api.models.ResourceDTO
 import cz.cvut.zuul.oaas.test.ObjectFactory
 import cz.cvut.zuul.oaas.test.ObjectFeeder
