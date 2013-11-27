@@ -44,6 +44,7 @@
             <artifactId>spring-security-oauth2</artifactId>
         </dependency>
 
+        <!-- Used in ValidURIConstraintValidator -->
         <dependency>
             <groupId>commons-httpclient</groupId>
             <artifactId>commons-httpclient</artifactId>
@@ -60,6 +61,7 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-validator</artifactId>
+            <optional>true</optional>
         </dependency>
 
         <!-- Collection validators for JSR-303 -->
@@ -67,6 +69,13 @@
             <groupId>cz.jirutka.validator</groupId>
             <artifactId>validator-collection</artifactId>
             <version>1.0</version>
+            <exclusions>
+                <!-- Make it optional -->
+                <exclusion>
+                    <groupId>org.hibernate</groupId>
+                    <artifactId>hibernate-validator</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- Spring EL powered validator for JSR-303 -->
