@@ -2,7 +2,6 @@ package cz.cvut.zuul.oaas.api.models;
 
 import cz.cvut.zuul.oaas.api.validators.ValidURI;
 import lombok.Data;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.Pattern;
@@ -16,7 +15,6 @@ import static javax.validation.constraints.Pattern.Flag.CASE_INSENSITIVE;
  * @author Jakub Jirutka <jakub@jirutka.cz>
  */
 @Data
-@JsonIgnoreProperties(ignoreUnknown=true)
 public class ResourceDTO implements Serializable {
 
     private String resourceId;

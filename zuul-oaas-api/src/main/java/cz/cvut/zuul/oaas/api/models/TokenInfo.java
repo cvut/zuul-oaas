@@ -2,7 +2,6 @@ package cz.cvut.zuul.oaas.api.models;
 
 import lombok.Data;
 import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.springframework.security.core.GrantedAuthority;
@@ -22,7 +21,6 @@ import static java.util.Collections.emptySet;
  * @author Jakub Jirutka <jakub@jirutka.cz>
  */
 @Data
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class TokenInfo {
 
     private String clientId;

@@ -6,11 +6,8 @@ import cz.jirutka.validator.collection.constraints.EachPattern;
 import cz.jirutka.validator.collection.constraints.EachSize;
 import cz.jirutka.validator.spring.SpELAssert;
 import lombok.Data;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.security.oauth2.provider.BaseClientDetails.ArrayOrStringDeserializer;
 import org.springframework.security.oauth2.provider.ClientDetails;
@@ -30,8 +27,6 @@ import static javax.validation.constraints.Pattern.Flag.CASE_INSENSITIVE;
 @Data
 @SpELAssert(value = "hasRedirectUri()", applyIf = "authorizedGrantTypes.contains('authorization_code')",
             message = "{validator.missing_redirect_uri}")
-@JsonSerialize(include = Inclusion.NON_DEFAULT)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class ClientDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
