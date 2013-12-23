@@ -36,7 +36,7 @@
           p:cacheable="false" />
 
     <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource"
-          p:basename="classpath:/config/i18n/web-messages"
+          p:basename="classpath:/config/web/i18n/web-messages"
           p:defaultEncoding="utf-8"
           p:cacheSeconds="0" />
 

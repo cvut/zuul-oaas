@@ -25,11 +25,12 @@
     <!--//////////////////// MODULES ////////////////////-->
 
     <modules>
-        <module>zuul-oaas-api</module>
         <module>zuul-oaas-common</module>
         <module>zuul-oaas-core</module>
+        <module>zuul-oaas-api</module>
         <module>zuul-oaas-restapi</module>
         <module>zuul-oaas-web</module>
+        <module>zuul-oaas-war</module>
     </modules>
 
 
@@ -110,6 +111,20 @@
                 <groupId>${project.groupId}</groupId>
                 <artifactId>zuul-oaas-restapi</artifactId>
                 <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>zuul-oaas-web</artifactId>
+                <version>${project.version}</version>
+                <classifier>classes</classifier>
+            </dependency>
+
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>zuul-oaas-web</artifactId>
+                <version>${project.version}</version>
+                <type>war</type>
             </dependency>
 
             <dependency>
