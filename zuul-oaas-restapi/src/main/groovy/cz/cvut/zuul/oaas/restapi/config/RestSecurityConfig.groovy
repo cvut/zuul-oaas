@@ -19,7 +19,7 @@ import static org.springframework.http.HttpMethod.GET
  * This configuration must be loaded in the root context!
  */
 @Configuration
-@EnableWebSecurity @Order(2)
+@EnableWebSecurity @Order(1)
 class RestSecurityConfig extends WebSecurityConfigurerAdapter {
 
     // external services

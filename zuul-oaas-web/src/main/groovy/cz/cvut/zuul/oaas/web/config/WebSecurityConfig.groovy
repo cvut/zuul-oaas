@@ -10,11 +10,13 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 
 import javax.inject.Inject
 
+import static org.springframework.core.Ordered.LOWEST_PRECEDENCE
+
 /**
  * This configuration must be loaded in the root context!
  */
 @Configuration
-@EnableWebSecurity @Order(1)
+@EnableWebSecurity @Order(LOWEST_PRECEDENCE)
 class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     // external service
@@ -27,7 +29,8 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     void configure(HttpSecurity http) {
-        http.formLogin()
+        http.antMatcher('/**')
+            .formLogin()
                 .loginPage('/login.html')
                 .loginProcessingUrl('/login.do')
                 .defaultSuccessUrl('/')
