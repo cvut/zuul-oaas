@@ -50,24 +50,14 @@
             <type>war</type>
         </dependency>
 
-        <!--//// Logging ////-->
-
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>jcl-over-slf4j</artifactId>
-        </dependency>
-
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
         </dependency>
 
-        <!--//// Others ////-->
-
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
-            <scope>provided</scope>
         </dependency>
     </dependencies>
 

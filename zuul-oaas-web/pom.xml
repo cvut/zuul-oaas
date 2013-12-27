@@ -39,13 +39,6 @@
             <artifactId>zuul-oaas-api</artifactId>
         </dependency>
 
-        <!--//// Spring Framework ////-->
-
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-beans</artifactId>
-        </dependency>
-
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
@@ -62,28 +55,9 @@
         </dependency>
 
         <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-core</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-ldap</artifactId>
-            <version>${spring.security.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.ldap</groupId>
-            <artifactId>spring-ldap-core</artifactId>
-            <version>1.3.1.RELEASE</version>
-        </dependency>
-
-        <dependency>
             <groupId>org.springframework.security.oauth</groupId>
             <artifactId>spring-security-oauth2</artifactId>
         </dependency>
-
-        <!--//// Thymeleaf ////-->
 
         <dependency>
             <groupId>org.thymeleaf</groupId>
