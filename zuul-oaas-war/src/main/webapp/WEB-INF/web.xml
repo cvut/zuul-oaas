@@ -16,23 +16,30 @@
        <param-value>production,ldap</param-value>
     </context-param>
 
-    <!-- Spring’s parameter to identify root path of this webapp.
+    <!-- Spring's parameter to identify root path of this webapp.
          This value must be unique per Servlet Container. -->
     <context-param>
         <param-name>webAppRootKey</param-name>
         <param-value>webapp.root.oaas</param-value>
     </context-param>
 
-    <!-- The definition of the root Spring Container shared by all Servlets and Filters -->
+    <!-- The definition of the root context shared by all servlets and filters. -->
     <context-param>
         <param-name>contextConfigLocation</param-name>
-        <param-value>/WEB-INF/spring/root-context.xml</param-value>
+        <param-value>/WEB-INF/root-context.xml</param-value>
     </context-param>
+
+    <!--
+        Note for servlet (dispatcher) contexts
+
+        Servlet contexts are automatically initialized via WebApplicationInitializer(es) and
+        therefore aren't defined here.
+    -->
 
 
     <!--//// Listeners ////-->
 
-    <!-- Creates the Spring Container shared by all Servlets and Filters -->
+    <!-- Creates the root context shared by all servlets and filters. -->
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
@@ -55,45 +62,4 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
-
-    <!--//// Servlets ////-->
-
-    <servlet>
-        <servlet-name>api-dispatcher</servlet-name>
-        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
-        <init-param>
-            <param-name>contextConfigLocation</param-name>
-            <param-value>classpath:/config/restapi/restapi-context.xml</param-value>
-        </init-param>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-
-    <servlet>
-        <servlet-name>web-dispatcher</servlet-name>
-        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
-        <init-param>
-            <param-name>contextConfigLocation</param-name>
-            <param-value>classpath:/config/web/web-context.xml</param-value>
-        </init-param>
-        <load-on-startup>2</load-on-startup>
-    </servlet>
-
-
-    <servlet-mapping>
-        <servlet-name>api-dispatcher</servlet-name>
-        <url-pattern>/api/*</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>web-dispatcher</servlet-name>
-        <url-pattern>/</url-pattern>
-    </servlet-mapping>
-
-    
-    <!--//// Session ////-->
-    
-    <session-config>
-        <session-timeout>30</session-timeout>
-    </session-config>
-    
 </web-app>

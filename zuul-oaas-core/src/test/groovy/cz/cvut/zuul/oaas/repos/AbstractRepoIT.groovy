@@ -1,5 +1,6 @@
 package cz.cvut.zuul.oaas.repos
 
+import cz.cvut.zuul.oaas.config.TestMongoPersistenceConfig
 import cz.cvut.zuul.oaas.test.CoreObjectFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.annotation.Id
@@ -16,7 +17,7 @@ import static cz.cvut.zuul.oaas.test.Assertions.assertThat
 /**
  * @author Jakub Jirutka <jakub@jirutka.cz>
  */
-@ContextConfiguration('classpath:dao-test.xml')
+@ContextConfiguration(classes=TestMongoPersistenceConfig)
 abstract class AbstractRepoIT<E> extends Specification {
 
     @Delegate CoreObjectFactory factory = new CoreObjectFactory()

@@ -8,7 +8,7 @@
             - dev: developer profile (insert seed data, use in-memory users etc.)
             - ldap: authenticate users via LDAP
     -->
-    <Environment name="spring.profiles.active" value="production,ldap"
+    <Environment name="spring.profiles.active" value="dev"
                  type="java.lang.String" override="false" />
 
     <!--

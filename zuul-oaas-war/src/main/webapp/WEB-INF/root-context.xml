@@ -31,11 +31,20 @@
     <!-- Exports MBeans via JMX for monitoring -->
     <context:mbean-export />
 
+    <!--
+        Find and load all configs inside the core module.
+    -->
+    <context:component-scan base-package="cz.cvut.zuul.oaas.config" />
 
-    <!--//// Imports ////-->
+    <!--
+        Find and load security configs (annotated by @EnableWebSecurity) from all modules into the
+        root context. Spring Security cannot be initialized across more contexts. :(
+    -->
+    <context:component-scan base-package="cz.cvut.zuul.oaas" use-default-filters="false">
+        <context:include-filter type="annotation"
+                expression="org.springframework.security.config.annotation.web.configuration.EnableWebSecurity" />
+        <context:include-filter type="annotation"
+                expression="org.springframework.security.config.annotation.web.servlet.configuration.EnableWebMvcSecurity" />
+    </context:component-scan>
 
-    <import resource="services.xml" />
-    <import resource="auth-server.xml"/>
-    <import resource="security.xml"/>
-    <import resource="persistence-mongo.xml"/>
 </beans>
