@@ -35,8 +35,7 @@
 
         <dependency>
             <groupId>cz.cvut.zuul</groupId>
-            <artifactId>zuul-oauth-provider-spring</artifactId>
-            <version>${project.version}</version>
+            <artifactId>zuul-spring-support</artifactId>
         </dependency>
 
         <!--//// Spring Framework ////-->
