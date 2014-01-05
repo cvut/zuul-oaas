@@ -31,6 +31,9 @@ class TokenEndpointSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Inject ClientAuthenticationBeans clientAuthentication
 
+    TokenEndpointSecurityConfig() {
+        super(true) // disable defaults
+    }
 
     AuthenticationManager authenticationManager() {
         clientAuthentication.clientAuthenticationManager()
@@ -52,7 +55,7 @@ class TokenEndpointSecurityConfig extends WebSecurityConfigurerAdapter {
     /**
      * Filter that supports client authentication with credentials in request body (parameters
      * client_id and client_secret). Note: This method of authentication is not recommended by
-     * OAuth specification (draft-ietf-oauth-v2-31, 16)! Clients shoud use HTTP Basic scheme
+     * OAuth specification (draft-ietf-oauth-v2-31, 16)! Clients should use HTTP Basic scheme
      * instead.
      */
     @Bean clientCredentialsTokenEndpointFilter() {
@@ -68,17 +71,20 @@ class TokenEndpointSecurityConfig extends WebSecurityConfigurerAdapter {
 
     void configure(HttpSecurity http) {
         http.antMatcher( $('oaas.endpoint.token') )
-            .sessionManagement()
-                .sessionCreationPolicy( STATELESS )
-                .and()
-            .anonymous()
-                .disable()
-            .httpBasic()
-                .authenticationEntryPoint( oauthAuthenticationEntryPoint() )
-                .and()
             .exceptionHandling()
                 .authenticationEntryPoint( oauthAuthenticationEntryPoint() )
                 .accessDeniedHandler( accessDeniedHandler() )
+                .and()
+            .headers()
+                .cacheControl()
+                .and()
+            .sessionManagement()
+                .sessionCreationPolicy( STATELESS )
+                .and()
+            .servletApi()
+                .and()
+            .httpBasic()
+                .authenticationEntryPoint( oauthAuthenticationEntryPoint() )
                 .and()
             .authorizeRequests()
                 .antMatchers( $('oaas.endpoint.token') ).fullyAuthenticated()
