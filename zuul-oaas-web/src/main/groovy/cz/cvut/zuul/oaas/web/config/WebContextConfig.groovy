@@ -1,6 +1,9 @@
 package cz.cvut.zuul.oaas.web.config
 
 import cz.cvut.zuul.oaas.common.config.ConfigurationSupport
+import org.springframework.beans.factory.config.BeanFactoryPostProcessor
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory
+import org.springframework.beans.factory.config.PlaceholderConfigurerSupport
 import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -22,6 +25,17 @@ class WebContextConfig extends WebMvcConfigurerAdapter {
     // Initialize mixed in ConfigurationSupport
     @Inject initSupport(ApplicationContext ctx) { _initSupport(ctx) }
 
+    /**
+     * {@code BeanFactoryPostProcessor} that inherits existing property
+     * placeholder resolver from the parent context in this context.
+     */
+    @Bean static BeanFactoryPostProcessor parentPlaceholderConfigurerPostProcessor() {
+        new BeanFactoryPostProcessor() {
+            void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) {
+                beanFactory.getBean(PlaceholderConfigurerSupport).postProcessBeanFactory(beanFactory)
+            }
+        }
+    }
 
     void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
         configurer.enable()
