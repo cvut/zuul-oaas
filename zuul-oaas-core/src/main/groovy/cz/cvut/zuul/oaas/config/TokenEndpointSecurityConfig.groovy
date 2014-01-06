@@ -4,6 +4,7 @@ import cz.cvut.zuul.oaas.common.config.ConfigurationSupport
 import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Lazy
 import org.springframework.core.annotation.Order
 import org.springframework.security.access.vote.AuthenticatedVoter
 import org.springframework.security.access.vote.UnanimousBased
@@ -58,7 +59,7 @@ class TokenEndpointSecurityConfig extends WebSecurityConfigurerAdapter {
      * OAuth specification (draft-ietf-oauth-v2-31, 16)! Clients should use HTTP Basic scheme
      * instead.
      */
-    @Bean clientCredentialsTokenEndpointFilter() {
+    @Bean @Lazy clientCredentialsTokenEndpointFilter() {
         new ClientCredentialsTokenEndpointFilter (
             filterProcessesUrl: $('oaas.endpoint.token'),
             authenticationManager: authenticationManager()
@@ -89,8 +90,9 @@ class TokenEndpointSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
             .authorizeRequests()
                 .antMatchers( $('oaas.endpoint.token') ).fullyAuthenticated()
-                .and()
-            // include this only if you need to authenticate clients via request parameters
-            .addFilterBefore( clientCredentialsTokenEndpointFilter(), BasicAuthenticationFilter )
+
+        if ( $('auth.client.authentication_scheme.form.allow', boolean) ) {
+            http.addFilterBefore( clientCredentialsTokenEndpointFilter(), BasicAuthenticationFilter )
+        }
     }
 }
