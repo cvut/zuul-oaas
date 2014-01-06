@@ -60,6 +60,7 @@ class TokenEndpointSecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Bean clientCredentialsTokenEndpointFilter() {
         new ClientCredentialsTokenEndpointFilter (
+            filterProcessesUrl: $('oaas.endpoint.token'),
             authenticationManager: authenticationManager()
         )
     }
