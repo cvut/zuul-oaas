@@ -92,7 +92,7 @@ class TokenEndpointSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers( $('oaas.endpoint.token') ).fullyAuthenticated()
 
         if ( $('auth.client.authentication_scheme.form.allow', boolean) ) {
-            http.addFilterBefore( clientCredentialsTokenEndpointFilter(), BasicAuthenticationFilter )
+            http.addFilterAfter( clientCredentialsTokenEndpointFilter(), BasicAuthenticationFilter )
         }
     }
 }
