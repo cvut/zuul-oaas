@@ -1,10 +1,13 @@
 package cz.cvut.zuul.oaas.common.config;
 
 import org.springframework.beans.factory.FactoryBean;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.core.convert.ConversionService;
+import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.DefaultResourceLoader;
@@ -22,6 +25,8 @@ public class ConfigurationSupport implements ApplicationContextAware {
     private ConfigurableApplicationContext applicationContext;
 
     private ResourceLoader resourceLoader;
+
+    private ConversionService conversionService = new DefaultConversionService();
 
 
     public ConfigurableApplicationContext getApplicationContext() {
@@ -48,20 +53,24 @@ public class ConfigurationSupport implements ApplicationContextAware {
     }
 
     public <T> T initialize(FactoryBean<T> factoryBean) throws Exception {
-        applicationContext.getBeanFactory().initializeBean(factoryBean, null);
+        beanFactory().initializeBean(factoryBean, null);
 
         return factoryBean.getObject();
     }
 
     public String $(String propertyKey) {
+        return $(propertyKey, String.class);
+    }
+
+    public <T> T $(String propertyKey, Class<T> type) {
         Environment env = applicationContext.getEnvironment();
 
         if (env.containsProperty(propertyKey)) {
-            return env.getProperty(propertyKey);
+            return env.getProperty(propertyKey, type);
 
         } else {
-            return applicationContext.getBeanFactory()
-                    .resolveEmbeddedValue(String.format("${%s}", propertyKey));
+            String value = beanFactory().resolveEmbeddedValue(String.format("${%s}", propertyKey));
+            return conversionService.convert(value, type);
         }
     }
 
@@ -91,7 +100,11 @@ public class ConfigurationSupport implements ApplicationContextAware {
         if (! props.isEmpty()) {
             PropertyPlaceholderConfigurer configurer = new PropertyPlaceholderConfigurer();
             configurer.setProperties(props);
-            configurer.postProcessBeanFactory(applicationContext.getBeanFactory());
+            configurer.postProcessBeanFactory(beanFactory());
         }
+    }
+
+    private ConfigurableListableBeanFactory beanFactory() {
+        return applicationContext.getBeanFactory();
     }
 }
