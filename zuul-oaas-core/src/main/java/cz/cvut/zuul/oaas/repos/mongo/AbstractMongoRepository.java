@@ -19,8 +19,6 @@ import java.lang.reflect.ParameterizedType;
 /**
  * Abstract implementation of the {@link CrudRepository} for MongoDB that
  * delegates all common methods to Spring’s {@link SimpleMongoRepository}.
- *
- * @author Jakub Jirutka <jakub@jirutka.cz>
  */
 public abstract class AbstractMongoRepository<T, ID extends Serializable> implements CrudRepository<T, ID> {
 

@@ -6,10 +6,6 @@ import cz.cvut.zuul.oaas.models.PersistableRefreshToken;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.query.Query.query;
 
-/**
- *
- * @author Jakub Jirutka <jakub@jirutka.cz>
- */
 public class MongoRefreshTokensRepo
         extends AbstractMongoRepository<PersistableRefreshToken, String> implements RefreshTokensRepo {
 

@@ -2,8 +2,6 @@ package cz.cvut.zuul.oaas.repos.mongo.converters;
 
 /**
  * Names of collections and fields in Mongo database.
- *
- * @author Jakub Jirutka <jakub@jirutka.cz>
  */
 public final class MongoDbConstants {
 

@@ -7,9 +7,6 @@ import org.springframework.security.crypto.keygen.StringKeyGenerator;
 import java.security.SecureRandom;
 import java.util.Random;
 
-/**
- * @author Jakub Jirutka <jakub@jirutka.cz>
- */
 @Setter
 public class SecurePasswordGenerator implements StringKeyGenerator {
 

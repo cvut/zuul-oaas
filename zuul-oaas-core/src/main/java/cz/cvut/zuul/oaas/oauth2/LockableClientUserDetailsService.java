@@ -18,9 +18,6 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
  *
  * This replaces the default implementation {@link org.springframework.security.oauth2.provider.client.ClientDetailsUserDetailsService}
  * for OAuth2 and adds support for lockable Clients.
- *
- * @author Tomas Mano <tomasmano@gmail.com>
- * @author Jakub Jirutka <jakub@jirutka.cz>
  */
 @Slf4j
 public class LockableClientUserDetailsService implements UserDetailsService {

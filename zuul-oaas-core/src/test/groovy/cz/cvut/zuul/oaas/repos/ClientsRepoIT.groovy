@@ -4,9 +4,6 @@ import cz.cvut.zuul.oaas.models.Client
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.EmptyResultDataAccessException
 
-/**
- * @author Jakub Jirutka <jakub@jirutka.cz>
- */
 class ClientsRepoIT extends AbstractRepoIT<Client> {
 
     @Autowired ClientsRepo repo

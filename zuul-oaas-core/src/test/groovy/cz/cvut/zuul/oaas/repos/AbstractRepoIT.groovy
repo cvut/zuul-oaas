@@ -14,9 +14,6 @@ import java.lang.reflect.ParameterizedType
 
 import static cz.cvut.zuul.oaas.test.Assertions.assertThat
 
-/**
- * @author Jakub Jirutka <jakub@jirutka.cz>
- */
 @ContextConfiguration(classes=TestMongoPersistenceConfig)
 abstract class AbstractRepoIT<E> extends Specification {
 

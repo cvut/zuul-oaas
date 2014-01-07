@@ -1,8 +1,5 @@
 package cz.cvut.zuul.oaas.test
 
-/**
- * @author Jakub Jirutka <jakub@jirutka.cz>
- */
 class CustomGeneratorSamples {
 
     static String anyEmail() { CustomGenerators.emails().next() }

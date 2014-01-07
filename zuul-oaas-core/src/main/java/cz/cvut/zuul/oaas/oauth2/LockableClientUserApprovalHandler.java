@@ -14,9 +14,6 @@ import org.springframework.security.oauth2.provider.approval.UserApprovalHandler
  * locked. If so then the {@link ClientLockedException} is thrown, otherwise
  * the decorated parent handler is asked for approve. When no parent handler
  * was set, then {@link DefaultUserApprovalHandler} is used.
- *
- * @author Tomas Mano <tomasmano@gmail.com>
- * @author Jakub Jirutka <jakub@jirutka.cz>
  */
 @Slf4j
 public class LockableClientUserApprovalHandler implements UserApprovalHandler {

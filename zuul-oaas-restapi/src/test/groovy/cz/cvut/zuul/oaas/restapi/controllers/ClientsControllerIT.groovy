@@ -3,9 +3,6 @@ package cz.cvut.zuul.oaas.restapi.controllers
 import cz.cvut.zuul.oaas.api.models.ClientDTO
 import cz.cvut.zuul.oaas.api.services.ClientsService
 
-/**
- * @author Jakub Jirutka <jakub@jirutka.cz>
- */
 class ClientsControllerIT extends AbstractControllerIT {
 
     def service = Mock(ClientsService)

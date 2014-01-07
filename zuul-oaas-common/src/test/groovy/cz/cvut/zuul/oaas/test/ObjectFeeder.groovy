@@ -17,8 +17,6 @@ import static net.java.quickcheck.generator.PrimitiveGenerators.*
  * values according to its properties types.
  *
  * Inspired by https://github.com/bodiam/objectmother
- *
- * @author Jakub Jirutka <jakub@jirutka.cz>
  */
 @Slf4j
 class ObjectFeeder {

@@ -13,8 +13,6 @@ import java.io.Serializable;
  * and token endpoints. The value of the scope parameter is expressed as a list
  * of space-delimited, case sensitive strings (%x21 / %x23-5B / %x5D-7E). The
  * strings are defined by the authorization server.
- *
- * @author Tomas Mano <tomasmano@gmail.com>
  */
 @Data
 @NoArgsConstructor

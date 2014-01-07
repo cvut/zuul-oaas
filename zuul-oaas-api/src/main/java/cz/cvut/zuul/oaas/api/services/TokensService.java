@@ -3,9 +3,6 @@ package cz.cvut.zuul.oaas.api.services;
 import cz.cvut.zuul.oaas.api.models.TokenInfo;
 import cz.cvut.zuul.oaas.api.models.TokenDTO;
 
-/**
- * @author Jakub Jirutka <jakub@jirutka.cz>
- */
 public interface TokensService {
 
     TokenDTO getToken(String tokenValue);

@@ -13,8 +13,6 @@ import javax.annotation.PostConstruct;
  *
  * Converters that extends this class are auto-registered to the autowired
  * instance of the {@link ConversionService}.
- *
- * @author Jakub Jirutka <jakub@jirutka.cz>
  */
 @Slf4j
 public abstract class AutoRegisteredConverter<S, T> implements Converter<S, T> {

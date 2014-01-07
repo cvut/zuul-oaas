@@ -10,11 +10,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority
 import static net.java.quickcheck.generator.PrimitiveGeneratorSamples.anyFixedValue
 import static net.java.quickcheck.generator.PrimitiveGeneratorSamples.anyLetterString
 
-/**
- * TODO refactor me!
- *
- * @author Jakub Jirutka <jakub@jirutka.cz>
- */
+// TODO refactor me!
 class ApiObjectFactory extends ObjectFactory {
 
     ApiObjectFactory() {

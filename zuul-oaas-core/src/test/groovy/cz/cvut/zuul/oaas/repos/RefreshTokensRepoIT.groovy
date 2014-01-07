@@ -9,9 +9,6 @@ import org.springframework.security.oauth2.provider.OAuth2Authentication
 
 import static cz.cvut.zuul.oaas.test.Assertions.assertThat
 
-/**
- * @author Jakub Jirutka <jakub@jirutka.cz>
- */
 class RefreshTokensRepoIT extends AbstractRepoIT<PersistableRefreshToken> {
 
     @Autowired RefreshTokensRepo repo

@@ -15,8 +15,6 @@ import static org.springframework.http.HttpStatus.*;
 
 /**
  * Exception handlers shared across all controllers.
- *
- * @author Jakub Jirutka <jakub@jirutka.cz>
  */
 @ControllerAdvice
 public class CommonExceptionHandler extends ResponseEntityExceptionHandler {

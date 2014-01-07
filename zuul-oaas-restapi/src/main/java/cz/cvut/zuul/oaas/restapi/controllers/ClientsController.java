@@ -15,9 +15,6 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 /**
  * API for authorization server client's management.
- * 
- * @author Tomáš Maňo <tomasmano@gmail.com>
- * @author Jakub Jirutka <jakub@jirutka.cz>
  */
 @Controller
 @RequestMapping("/v1/clients")

@@ -14,8 +14,6 @@ import javax.validation.MessageInterpolator;
  * {@linkplain FactoryBean} that creates {@link ValueFormatterMessageInterpolator}
  * with underlying {@link ResourceBundleMessageInterpolator} that uses the given
  * {@link MessageSource}.
- *
- * @author Jakub Jirutka <jakub@jirutka.cz>
  */
 public class ValueFormatterMessageInterpolatorFactoryBean implements FactoryBean<MessageInterpolator> {
 

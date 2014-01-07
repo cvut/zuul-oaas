@@ -3,9 +3,6 @@ package cz.cvut.zuul.oaas.restapi.controllers
 import cz.cvut.zuul.oaas.api.models.TokenDTO
 import cz.cvut.zuul.oaas.api.services.TokensService
 
-/**
- * @author Jakub Jirutka <jakub@jirutka.cz>
- */
 class TokensControllerIT extends AbstractControllerIT {
 
     def service = Mock(TokensService)

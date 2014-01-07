@@ -19,9 +19,6 @@ import spock.lang.Specification
 import static org.codehaus.jackson.map.PropertyNamingStrategy.CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES
 import static org.springframework.http.MediaType.APPLICATION_JSON
 
-/**
- * @author Jakub Jirutka <jakub@jirutka.cz>
- */
 abstract class AbstractControllerIT extends Specification {
 
     protected static final CONTENT_TYPE_JSON = "application/json;charset=UTF-8"

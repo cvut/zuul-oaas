@@ -29,10 +29,6 @@ import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.springframework.util.CollectionUtils.isEmpty;
 
-/**
- * @author Tomas Mano <tomasmano@gmail.com>
- * @author Jakub Jirutka <jakub@jirutka.cz>
- */
 @Service
 @Setter @Slf4j
 public class ClientsServiceImpl implements ClientsService {

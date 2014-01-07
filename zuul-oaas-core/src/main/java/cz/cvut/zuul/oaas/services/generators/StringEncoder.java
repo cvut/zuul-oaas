@@ -1,8 +1,5 @@
 package cz.cvut.zuul.oaas.services.generators;
 
-/**
- * @author Jakub Jirutka <jakub@jirutka.cz>
- */
 public interface StringEncoder {
 
     /**

@@ -2,9 +2,6 @@ package cz.cvut.zuul.oaas.test
 
 import static cz.cvut.zuul.oaas.test.Assertions.assertThat
 
-/**
- * @author Jakub Jirutka <jakub@jirutka.cz>
- */
 class Assertions {
 
     static ObjectAssert assertThat(actual) {

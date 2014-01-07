@@ -11,10 +11,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.io.Serializable;
 import java.util.List;
 
-/**
- * @author Tomas Mano <tomasmano@gmail.com>
- * @author Jakub Jirutka <jakub@jirutka.cz>
- */
 @Data
 @EqualsAndHashCode(of="id")
 @ToString(of={"id", "name", "version"})

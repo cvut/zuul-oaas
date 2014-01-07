@@ -12,9 +12,6 @@ import static cz.cvut.zuul.oaas.test.Assertions.assertThat
 import static cz.cvut.zuul.oaas.api.test.ValidatorUtils.*
 import static org.codehaus.jackson.map.PropertyNamingStrategy.CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES
 
-/**
- * @author Jakub Jirutka <jakub@jirutka.cz>
- */
 @Unroll
 @Mixin(ApiObjectFactory)
 class ClientDTOTest extends Specification {

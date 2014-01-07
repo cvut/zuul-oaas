@@ -2,8 +2,6 @@ package cz.cvut.zuul.oaas.models;
 
 /**
  * Value indicating Resource visibility
- * 
- * @author Tomas Mano <tomasmano@gmail.com>
  */
 public enum Visibility {
     

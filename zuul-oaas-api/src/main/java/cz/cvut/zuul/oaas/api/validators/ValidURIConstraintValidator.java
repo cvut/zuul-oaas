@@ -11,8 +11,6 @@ import static org.apache.commons.lang3.ArrayUtils.isEmpty;
 
 /**
  * JSR-303 validator for {@link ValidURI} constraint.
- *
- * @author Jakub Jirutka <jakub@jirutka.cz>
  */
 public class ValidURIConstraintValidator implements ConstraintValidator <ValidURI, String> {
 

@@ -17,9 +17,6 @@ import org.springframework.core.io.ResourceLoader;
 import java.util.Map;
 import java.util.Properties;
 
-/**
- * @author Jakub Jirutka <jakub@jirutka.cz>
- */
 public class ConfigurationSupport implements ApplicationContextAware {
 
     private ConfigurableApplicationContext applicationContext;

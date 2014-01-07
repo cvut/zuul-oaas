@@ -13,10 +13,6 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 
-/**
- *
- * @author Jakub Jirutka <jakub@jirutka.cz>
- */
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(of="clientId")

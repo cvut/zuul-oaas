@@ -3,9 +3,6 @@ package cz.cvut.zuul.oaas.services.converters
 import ma.glasnost.orika.metadata.TypeFactory
 import spock.lang.Specification
 
-/**
- * @author Jakub Jirutka <jakub@jirutka.cz>
- */
 class CaseInsensitiveToEnumConverterTest extends Specification {
 
     def converter = new CaseInsensitiveToEnumConverter()

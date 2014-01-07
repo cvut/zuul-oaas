@@ -11,10 +11,6 @@ import org.springframework.security.oauth2.provider.token.AuthenticationKeyGener
 import org.springframework.security.oauth2.provider.token.DefaultAuthenticationKeyGenerator;
 import org.springframework.util.Assert;
 
-/**
- *
- * @author Jakub Jirutka <jakub@jirutka.cz>
- */
 @TypeAlias("AccessToken")
 @Document(collection = "access_tokens")
 public class PersistableAccessToken extends DefaultOAuth2AccessToken {

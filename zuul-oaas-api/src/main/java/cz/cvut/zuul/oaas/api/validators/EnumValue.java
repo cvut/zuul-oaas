@@ -11,8 +11,6 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * JSR-303 constraint for String validation against given enumeration class.
- * 
- * @author Jakub Jirutka <jakub@jirutka.cz>
  */
 @Documented
 @Retention(RUNTIME)

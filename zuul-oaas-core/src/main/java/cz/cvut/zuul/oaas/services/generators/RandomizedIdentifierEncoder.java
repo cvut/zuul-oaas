@@ -5,10 +5,6 @@ import lombok.Setter;
 import static org.apache.commons.lang3.RandomStringUtils.randomNumeric;
 import static org.apache.commons.lang3.StringUtils.stripAccents;
 
-/**
- * @author Tomas Mano <tomasmano@gmail.com>
- * @author Jakub Jirutka <jakub@jirutka.cz>
- */
 public class RandomizedIdentifierEncoder implements StringEncoder {
     
     private @Setter int numericSuffixLength = 4;

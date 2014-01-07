@@ -17,8 +17,6 @@ import static java.util.Collections.emptySet;
 
 /**
  * Authentication info about OAuth2 Token from remote authorization server.
- *
- * @author Jakub Jirutka <jakub@jirutka.cz>
  */
 @Data
 public class TokenInfo {

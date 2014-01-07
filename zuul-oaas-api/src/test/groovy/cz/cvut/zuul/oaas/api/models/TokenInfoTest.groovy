@@ -8,9 +8,6 @@ import spock.lang.Specification
 
 import static org.codehaus.jackson.map.PropertyNamingStrategy.CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES
 
-/**
- * @author Jakub Jirutka <jakub@jirutka.cz>
- */
 @Mixin(ApiObjectFactory)
 class TokenInfoTest extends Specification {
 

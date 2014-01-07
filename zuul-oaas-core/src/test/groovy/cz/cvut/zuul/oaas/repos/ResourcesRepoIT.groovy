@@ -6,9 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired
 
 import static cz.cvut.zuul.oaas.test.Assertions.assertThat
 
-/**
- * @author Jakub Jirutka <jakub@jirutka.cz>
- */
 class ResourcesRepoIT extends AbstractRepoIT<Resource>{
 
     @Autowired ResourcesRepo repo

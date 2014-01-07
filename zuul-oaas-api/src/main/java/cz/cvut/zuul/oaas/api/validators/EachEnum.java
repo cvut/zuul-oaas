@@ -13,8 +13,6 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * JSR-303 collection wrapper constraint for {@link ValidURI}.
- *
- * @author Jakub Jirutka <jakub@jirutka.cz>
  */
 @Documented
 @Retention(RUNTIME)

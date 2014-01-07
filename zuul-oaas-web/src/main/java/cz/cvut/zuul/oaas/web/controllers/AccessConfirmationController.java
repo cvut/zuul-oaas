@@ -14,9 +14,6 @@ import java.util.Map;
 
 /**
  * Controller for retrieving the model for and displaying the confirmation page for access to a protected resource.
- *
- * @author Tomas Mano <tomasmano@gmail.com>
- * @author Jakub Jirutka <jakub@jirutka.cz>
  */
 @Controller
 @SessionAttributes("authorizationRequest")

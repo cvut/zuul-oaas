@@ -9,10 +9,6 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.query.Query.query;
 import static org.springframework.data.mongodb.core.query.Update.update;
 
-/**
- *
- * @author Jakub Jirutka <jakub@jirutka.cz>
- */
 public class MongoClientsRepo extends AbstractMongoRepository<Client, String> implements ClientsRepo {
 
 

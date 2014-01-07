@@ -14,10 +14,6 @@ import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import java.io.Serializable;
 import java.util.Date;
 
-/**
- *
- * @author Jakub Jirutka <jakub@jirutka.cz>
- */
 @EqualsAndHashCode(of="value")
 @TypeAlias("RefreshToken")
 @Document(collection = "refresh_tokens")

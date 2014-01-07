@@ -8,9 +8,6 @@ import spock.lang.Specification
 import static cz.cvut.zuul.oaas.test.Assertions.assertThat
 import static org.springframework.security.core.authority.AuthorityUtils.createAuthorityList
 
-/**
- * @author Jakub Jirutka <jakub@jirutka.cz>
- */
 @Mixin(CoreObjectFactory)
 class SimpleUserDetailsContextMapperTest extends Specification {
 

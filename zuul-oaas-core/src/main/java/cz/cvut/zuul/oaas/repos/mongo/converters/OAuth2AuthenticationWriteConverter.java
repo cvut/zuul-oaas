@@ -16,8 +16,6 @@ import static org.springframework.security.core.authority.AuthorityUtils.authori
 
 /**
  * Converter from {@link OAuth2Authentication} to MongoDB object.
- *
- * @author Jakub Jirutka <jakub@jirutka.cz>
  */
 @Component
 public class OAuth2AuthenticationWriteConverter extends AutoRegisteredConverter<OAuth2Authentication, DBObject> {

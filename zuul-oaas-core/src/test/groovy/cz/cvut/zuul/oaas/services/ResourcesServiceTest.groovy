@@ -10,9 +10,6 @@ import spock.lang.Specification
 
 import static cz.cvut.zuul.oaas.test.Assertions.assertThat
 
-/**
- * @author Jakub Jirutka <jakub@jirutka.cz>
- */
 @Mixin(CoreObjectFactory)
 class ResourcesServiceTest extends Specification {
 

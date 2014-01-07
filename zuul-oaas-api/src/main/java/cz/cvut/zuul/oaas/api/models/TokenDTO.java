@@ -6,9 +6,6 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 
-/**
- * @author Jakub Jirutka <jakub@jirutka.cz>
- */
 @Data
 public class TokenDTO implements Serializable {
 

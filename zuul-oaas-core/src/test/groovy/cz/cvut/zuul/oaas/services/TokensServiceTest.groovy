@@ -18,9 +18,6 @@ import static cz.cvut.zuul.oaas.test.Assertions.assertThat
 import static cz.cvut.zuul.oaas.test.CustomGeneratorSamples.anyFutureDate
 import static cz.cvut.zuul.oaas.test.CustomGeneratorSamples.anyPastDate
 
-/**
- * @author Jakub Jirutka <jakub@jirutka.cz>
- */
 @Mixin(CoreObjectFactory)
 class TokensServiceTest extends Specification {
 

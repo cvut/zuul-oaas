@@ -23,10 +23,6 @@ import static lombok.AccessLevel.NONE;
 import static lombok.AccessLevel.PACKAGE;
 import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
 
-/**
- *
- * @author Tomas Mano <tomasmano@gmail.com>
- */
 @Service
 @Setter @Slf4j
 public class ResourcesServiceImpl implements ResourcesService {

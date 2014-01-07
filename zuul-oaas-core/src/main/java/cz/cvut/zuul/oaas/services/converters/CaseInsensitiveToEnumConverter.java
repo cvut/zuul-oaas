@@ -3,9 +3,6 @@ package cz.cvut.zuul.oaas.services.converters;
 import ma.glasnost.orika.CustomConverter;
 import ma.glasnost.orika.metadata.Type;
 
-/**
- * @author Jakub Jirutka <jakub@jirutka.cz>
- */
 public class CaseInsensitiveToEnumConverter extends CustomConverter<String, Enum> {
 
     public boolean canConvert(Type<?> sourceType, Type<?> destinationType) {

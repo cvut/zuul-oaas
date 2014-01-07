@@ -8,9 +8,6 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.handler.HandlerExceptionResolverComposite;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 
-/**
- * @author Jakub Jirutka <jakub@jirutka.cz>
- */
 public class AdvicedStandaloneMockMvcBuilder extends StandaloneMockMvcBuilder {
 
     private Object[] advices = {};

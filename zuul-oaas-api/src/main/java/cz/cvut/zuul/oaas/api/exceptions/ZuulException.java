@@ -4,8 +4,6 @@ import org.springframework.core.NestedRuntimeException;
 
 /**
  * Base exception for Zuul exceptions.
- *
- * @author Jakub Jirutka <jakub@jirutka.cz>
  */
 public class ZuulException extends NestedRuntimeException {
 

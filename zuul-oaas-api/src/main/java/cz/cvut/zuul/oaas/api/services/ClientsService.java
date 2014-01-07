@@ -6,11 +6,6 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
 
-/**
- *
- * @author Tomas Mano <tomasmano@gmail.com>
- * @author Jakub Jirutka <jakub@jirutka.cz>
- */
 @Validated
 public interface ClientsService {
     

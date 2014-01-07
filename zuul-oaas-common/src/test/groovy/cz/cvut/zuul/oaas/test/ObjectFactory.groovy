@@ -6,8 +6,6 @@ import static net.java.quickcheck.generator.PrimitiveGeneratorSamples.anyInteger
  * Factory for building testing (domain) objects.
  *
  * TODO refactor me!
- *
- * @author Jakub Jirutka <jakub@jirutka.cz>
  */
 class ObjectFactory {
 

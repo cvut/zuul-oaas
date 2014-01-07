@@ -11,8 +11,6 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * JSR-303 constraint for URI validation.
- * 
- * @author Jakub Jirutka <jakub@jirutka.cz>
  */
 @Documented
 @Retention(RUNTIME)

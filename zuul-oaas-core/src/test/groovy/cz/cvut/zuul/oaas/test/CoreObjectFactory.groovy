@@ -21,8 +21,6 @@ import static net.java.quickcheck.generator.PrimitiveGenerators.*
  * Factory for building testing (domain) objects.
  *
  * TODO refactor me!
- *
- * @author Jakub Jirutka <jakub@jirutka.cz>
  */
 class CoreObjectFactory extends ObjectFactory {
 

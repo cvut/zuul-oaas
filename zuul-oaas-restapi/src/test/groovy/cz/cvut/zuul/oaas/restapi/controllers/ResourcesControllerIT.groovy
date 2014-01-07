@@ -3,9 +3,6 @@ package cz.cvut.zuul.oaas.restapi.controllers
 import cz.cvut.zuul.oaas.api.models.ResourceDTO
 import cz.cvut.zuul.oaas.api.services.ResourcesService
 
-/**
- * @author Jakub Jirutka <jakub@jirutka.cz>
- */
 class ResourcesControllerIT extends AbstractControllerIT {
 
     def service = Mock(ResourcesService)

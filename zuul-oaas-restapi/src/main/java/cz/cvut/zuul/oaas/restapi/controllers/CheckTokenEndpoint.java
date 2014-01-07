@@ -9,9 +9,6 @@ import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.http.HttpStatus.CONFLICT;
 
-/**
- * @author Jakub Jirutka <jakub@jirutka.cz>
- */
 @Controller
 public class CheckTokenEndpoint {
 

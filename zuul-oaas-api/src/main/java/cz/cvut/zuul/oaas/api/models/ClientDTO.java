@@ -21,8 +21,6 @@ import static javax.validation.constraints.Pattern.Flag.CASE_INSENSITIVE;
 
 /**
  * DTO for {@link ClientDetails}.
- *
- * @author Jakub Jirutka <jakub@jirutka.cz>
  */
 @Data
 @SpELAssert(value = "hasRedirectUri()", applyIf = "authorizedGrantTypes.contains('authorization_code')",

@@ -16,9 +16,6 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 /**
  * API for authorization server tokens' management.
- * 
- * @author Tomas Mano <tomasmano@gmail.com>
- * @author Jakub Jirutka <jakub@jirutka.cz>
  */
 @Controller
 @RequestMapping("/v1/tokens")

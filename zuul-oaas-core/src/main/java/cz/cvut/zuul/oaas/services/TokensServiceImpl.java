@@ -25,9 +25,6 @@ import static lombok.AccessLevel.NONE;
 import static lombok.AccessLevel.PACKAGE;
 import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
 
-/**
- * @author Jakub Jirutka <jakub@jirutka.cz>
- */
 @Setter
 @Service
 public class TokensServiceImpl implements TokensService {

@@ -10,8 +10,6 @@ import org.springframework.security.oauth2.provider.ClientDetailsService;
 /**
  * This is implementation of {@link ClientDetailsService} interface that
  * basically delegates calls to {@link cz.cvut.zuul.oaas.repos.ClientsRepo}.
- *
- * @author Jakub Jirutka <jakub@jirutka.cz>
  */
 @Slf4j
 public class ClientDetailsServiceImpl implements ClientDetailsService {

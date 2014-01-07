@@ -13,8 +13,6 @@ import org.springframework.util.StringUtils;
 /**
  * This is a {@link DBObject} wrapper with typed {@linkplain #get(String)}
  * methods for some ordinary types (explicit casting is used).
- *
- * @author Jakub Jirutka <jakub@jirutka.cz>
  */
 public class DBObjectWrapper implements DBObject {
 

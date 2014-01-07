@@ -17,10 +17,6 @@ import java.util.Collection;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.query.Query.query;
 
-/**
- *
- * @author Jakub Jirutka <jakub@jirutka.cz>
- */
 @Slf4j
 public class MongoAccessTokensRepo
         extends AbstractMongoRepository<PersistableAccessToken, String> implements AccessTokensRepo {

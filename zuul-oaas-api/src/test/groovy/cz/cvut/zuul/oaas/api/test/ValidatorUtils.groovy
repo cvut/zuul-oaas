@@ -3,9 +3,6 @@ package cz.cvut.zuul.oaas.api.test
 import javax.validation.Validation
 import javax.validation.Validator
 
-/**
- * @author Jakub Jirutka <jakub@jirutka.cz>
- */
 class ValidatorUtils {
 
     public static final valid = 'valid'

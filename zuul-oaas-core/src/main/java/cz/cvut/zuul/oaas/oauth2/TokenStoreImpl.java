@@ -17,8 +17,6 @@ import java.util.Collection;
 /**
  * This is a façade for the {@link AccessTokensRepo} and {@link RefreshTokensRepo}
  * that implements {@linkplain TokenStore} interface.
- *
- * @author Jakub Jirutka <jakub@jirutka.cz>
  */
 @Setter @Slf4j
 public class TokenStoreImpl implements TokenStore {

@@ -11,9 +11,6 @@ import java.util.List;
 
 import static javax.validation.constraints.Pattern.Flag.CASE_INSENSITIVE;
 
-/**
- * @author Jakub Jirutka <jakub@jirutka.cz>
- */
 @Data
 public class ResourceDTO implements Serializable {
 

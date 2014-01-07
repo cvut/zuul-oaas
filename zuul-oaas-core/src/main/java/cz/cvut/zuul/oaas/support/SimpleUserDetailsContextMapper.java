@@ -21,8 +21,6 @@ import static lombok.AccessLevel.NONE;
 /**
  * The context mapper used by the LDAP authentication provider to create an
  * LDAP user object of type {@link User}.
- *
- * @author Jakub Jirutka <jakub@jirutka.cz>
  */
 @Setter @Slf4j
 public class SimpleUserDetailsContextMapper implements UserDetailsContextMapper {

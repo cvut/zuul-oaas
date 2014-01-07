@@ -8,9 +8,6 @@ import org.springframework.security.oauth2.provider.OAuth2Authentication;
 
 import java.util.Collection;
 
-/**
- * @author Jakub Jirutka <jakub@jirutka.cz>
- */
 public interface AccessTokensRepo extends CrudRepository<PersistableAccessToken, String> {
 
     PersistableAccessToken findOneByAuthentication(OAuth2Authentication authentication);

@@ -15,9 +15,6 @@ import java.io.Serializable;
 
 import static lombok.AccessLevel.PRIVATE;
 
-/**
- * @author Jakub Jirutka <jakub@jirutka.cz>
- */
 @Getter
 @NoArgsConstructor(access=PRIVATE)
 @JsonPropertyOrder({"status", "message", "more_info"})

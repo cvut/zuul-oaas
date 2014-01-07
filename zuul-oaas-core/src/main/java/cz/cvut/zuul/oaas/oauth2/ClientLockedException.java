@@ -4,8 +4,6 @@ import org.springframework.security.oauth2.common.exceptions.ClientAuthenticatio
 
 /**
  * Exception thrown when a client is locked.
- * 
- * @author Tomas Mano <tomasmano@gmail.com>
  */
 public class ClientLockedException extends ClientAuthenticationException {
 

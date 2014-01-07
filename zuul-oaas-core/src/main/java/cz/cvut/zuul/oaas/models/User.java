@@ -11,9 +11,6 @@ import java.util.Collection;
 
 import static java.util.Collections.unmodifiableCollection;
 
-/**
- * @author Jakub Jirutka <jakub@jirutka.cz>
- */
 @Getter
 @ToString
 @AllArgsConstructor

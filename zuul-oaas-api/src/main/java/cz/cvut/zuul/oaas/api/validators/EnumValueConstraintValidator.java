@@ -7,8 +7,6 @@ import java.util.List;
 
 /**
  * JSR-303 validator for {@link EnumValue} constraint.
- *
- * @author Jakub Jirutka <jakub@jirutka.cz>
  */
 public class EnumValueConstraintValidator implements ConstraintValidator<EnumValue, String> {
 

@@ -4,9 +4,6 @@ import org.springframework.security.oauth2.provider.OAuth2Authentication
 
 import static cz.cvut.zuul.oaas.test.Assertions.assertThat
 
-/**
- * @author Jakub Jirutka <jakub@jirutka.cz>
- */
 class SharedAsserts {
 
     static isEqual(OAuth2Authentication actual, OAuth2Authentication expected) {

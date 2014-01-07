@@ -5,9 +5,6 @@ import net.java.quickcheck.Generator
 import static net.java.quickcheck.generator.PrimitiveGeneratorSamples.anyDate
 import static net.java.quickcheck.generator.PrimitiveGeneratorSamples.anyLetterString
 
-/**
- * @author Jakub Jirutka <jakub@jirutka.cz>
- */
 class CustomGenerators {
 
     static Generator<String> emails() {
