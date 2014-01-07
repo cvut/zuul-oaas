@@ -5,22 +5,23 @@
     <jmxConfigurator />
 
     <property name="logs" value="${catalina.base}/logs" />
+    <property name="name" value="zuul-oaas" />
 
 
     <!--//////// Appenders ////////-->
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+            <pattern>%d{HH:mm:ss.SSS} [${name}] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
     </appender>
 
     <appender name="LOGFILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${logs}/zuul-oaas.log</file>
+        <file>${logs}/${name}.log</file>
 
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- daily rollover -->
-            <fileNamePattern>${logs}/zuul-oaas.log-%d{yyyyMMdd}.gz</fileNamePattern>
+            <fileNamePattern>${logs}/${name}.log-%d{yyyyMMdd}.gz</fileNamePattern>
             <!-- keep 30 days' worth of history -->
             <maxHistory>30</maxHistory>
         </rollingPolicy>

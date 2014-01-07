@@ -32,43 +32,13 @@ class TokenEndpointSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Inject ClientAuthenticationBeans clientAuthentication
 
+
     TokenEndpointSecurityConfig() {
         super(true) // disable defaults
     }
 
     AuthenticationManager authenticationManager() {
         clientAuthentication.clientAuthenticationManager()
-    }
-
-    /**
-     * Client authentication with HTTP Basic scheme. This is the recommended way by specification.
-     */
-    @Bean oauthAuthenticationEntryPoint() {
-        new OAuth2AuthenticationEntryPoint (
-            realmName: 'Zuul OAAS'
-        )
-    }
-
-    @Bean accessDeniedHandler() {
-        new OAuth2AccessDeniedHandler()
-    }
-
-    /**
-     * Filter that supports client authentication with credentials in request body (parameters
-     * client_id and client_secret). Note: This method of authentication is not recommended by
-     * OAuth specification (draft-ietf-oauth-v2-31, 16)! Clients should use HTTP Basic scheme
-     * instead.
-     */
-    @Bean @Lazy clientCredentialsTokenEndpointFilter() {
-        new ClientCredentialsTokenEndpointFilter (
-            filterProcessesUrl: $('oaas.endpoint.token'),
-            authenticationManager: authenticationManager()
-        )
-    }
-
-    //TODO ??
-    @Bean accessDecisionManager() {
-        new UnanimousBased([ new ScopeVoter(), new AuthenticatedVoter() ])
     }
 
     void configure(HttpSecurity http) {
@@ -94,5 +64,36 @@ class TokenEndpointSecurityConfig extends WebSecurityConfigurerAdapter {
         if ( $('auth.client.authentication_scheme.form.allow', boolean) ) {
             http.addFilterAfter( clientCredentialsTokenEndpointFilter(), BasicAuthenticationFilter )
         }
+    }
+
+    /**
+     * Client authentication with HTTP Basic scheme. This is the recommended way by specification.
+     */
+    @Bean oauthAuthenticationEntryPoint() {
+        new OAuth2AuthenticationEntryPoint (
+            realmName: 'Zuul OAAS'
+        )
+    }
+
+    /**
+     * Filter that supports client authentication with credentials in request body (parameters
+     * client_id and client_secret). Note: This method of authentication is not recommended by
+     * OAuth specification (draft-ietf-oauth-v2-31, 16)! Clients should use HTTP Basic scheme
+     * instead.
+     */
+    @Bean @Lazy clientCredentialsTokenEndpointFilter() {
+        new ClientCredentialsTokenEndpointFilter (
+            filterProcessesUrl: $('oaas.endpoint.token'),
+            authenticationManager: authenticationManager()
+        )
+    }
+
+    @Bean accessDeniedHandler() {
+        new OAuth2AccessDeniedHandler()
+    }
+
+    //TODO ??
+    @Bean accessDecisionManager() {
+        new UnanimousBased([ new ScopeVoter(), new AuthenticatedVoter() ])
     }
 }

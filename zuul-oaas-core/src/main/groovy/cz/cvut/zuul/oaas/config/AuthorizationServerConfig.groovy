@@ -7,6 +7,7 @@ import cz.cvut.zuul.oaas.oauth2.TokenStoreImpl
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Lazy
 import org.springframework.security.oauth2.provider.CompositeTokenGranter
 import org.springframework.security.oauth2.provider.DefaultAuthorizationRequestManager
 import org.springframework.security.oauth2.provider.approval.TokenServicesUserApprovalHandler
@@ -99,13 +100,11 @@ class AuthorizationServerConfig extends ConfigurationSupport {
         new CompositeTokenGranter(granters)
     }
 
-    @Bean authorizationCodeTokenGranter() {
-        isAuthCodeGrant ?
-            new AuthorizationCodeTokenGranter(tokenServices(), authorizationCodeServices(), clientDetailsService())
-        : null
+    @Bean @Lazy authorizationCodeTokenGranter() {
+        new AuthorizationCodeTokenGranter(tokenServices(), authorizationCodeServices(), clientDetailsService())
     }
 
-    @Bean authorizationCodeServices() {
+    @Bean @Lazy authorizationCodeServices() {
         new InMemoryAuthorizationCodeServices()
     }
 

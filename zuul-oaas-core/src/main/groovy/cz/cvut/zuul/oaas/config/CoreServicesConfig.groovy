@@ -78,7 +78,7 @@ class CoreServicesConfig extends ConfigurationSupport {
         new ReloadableResourceBundleMessageSource (
             basename:           'classpath:/config/i18n/validator-messages',
             defaultEncoding:    'utf-8',
-            cacheSeconds:       profileDev ? 120 : 0
+            cacheSeconds:       profileDev ? 5 : 0
         )
     }
 
