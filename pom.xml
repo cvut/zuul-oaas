@@ -21,6 +21,22 @@
     <name>Zuul OAAS</name>
     <description>Standalone OAuth 2.0 Authorization Server</description>
 
+    <developers>
+        <developer>
+            <name>Jakub Jirutka</name>
+            <email>jirutjak@fit.cvut.cz</email>
+            <organization>CTU in Prague</organization>
+            <organizationUrl>http://www.cvut.cz</organizationUrl>
+        </developer>
+
+        <developer>
+            <name>Tomas Mano</name>
+            <email>tomasmano@gmail.com</email>
+            <organization>CTU in Prague</organization>
+            <organizationUrl>http://www.cvut.cz</organizationUrl>
+        </developer>
+    </developers>
+
 
     <!--//////////////////// MODULES ////////////////////-->
 
@@ -37,20 +53,36 @@
     <!--//////////////////// DISTRIBUTION ////////////////////-->
 
     <scm>
-        <url>https://gitlab.fit.cvut.cz/cvut-oauth-server</url>
-        <connection>scm:git:ssh://git@gitlab.fit.cvut.cz/cvut-oauth-server.git</connection>
-        <developerConnection>scm:git:ssh://git@gitlab.fit.cvut.cz/cvut-oauth-server.git</developerConnection>
+		<url>https://github.com/cvut/zuul-oaas</url>
+		<connection>scm:git:ssh://git@github.com:cvut/zuul-oaas.git</connection>
     </scm>
 
     <issueManagement>
-        <system>GitLab</system>
-        <url>https://gitlab.fit.cvut.cz/cvut-oauth-server/issues</url>
+        <system>GitHub</system>
+		<url>https://github.com/cvut/zuul-oaas/issues</url>
     </issueManagement>
 
     <ciManagement>
-        <system>jenkins</system>
-        <url>https://jenkins.fit.cvut.cz/job/zuul-oaas</url>
+        <system>Travis</system>
+		<url>https://travis-ci.org/cvut/zuul-oaas</url>
     </ciManagement>
+
+
+    <!--//////////////////// REPOSITORIES ////////////////////-->
+
+    <repositories>
+        <repository>
+            <id>cvut-local-repos</id>
+            <name>CVUT Repository Local</name>
+            <url>http://repository.fit.cvut.cz/maven/local-repos/</url>
+        </repository>
+
+        <repository>
+            <id>cvut-remote-repos</id>
+            <name>CVUT Repository Proxies</name>
+            <url>http://repository.fit.cvut.cz/maven/remote-repos/</url>
+        </repository>
+    </repositories>
 
 
     <!--//////////////////// DEPENDENCIES ////////////////////-->
