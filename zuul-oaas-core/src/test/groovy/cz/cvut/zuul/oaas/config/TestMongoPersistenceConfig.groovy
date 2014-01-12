@@ -24,10 +24,12 @@
 package cz.cvut.zuul.oaas.config
 
 import com.mongodb.Mongo
-import cz.jirutka.spring.embedmongo.EmbeddedMongoFactoryBean
+import cz.jirutka.spring.embedmongo.EmbeddedMongoBuilder
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.data.authentication.UserCredentials
+
+import javax.annotation.PreDestroy
 
 @Configuration
 class TestMongoPersistenceConfig extends MongoPersistenceConfig {
@@ -41,13 +43,17 @@ class TestMongoPersistenceConfig extends MongoPersistenceConfig {
     /**
      * Embedded MongoDB
      *
-     * It's not truly embedded 'cause there's no Java implementation of the MongoDB. This factory
+     * It's not truly embedded 'cause there's no Java implementation of the MongoDB. This
      * initializes embedmongo.flapdoodle.de that is able to download original MongoDB binary for
      * your platform and run it for your integration tests.
      */
-    @Bean EmbeddedMongoFactoryBean getMongoFactoryBean() {
-        new EmbeddedMongoFactoryBean(version: '2.2.6')
+    @Bean Mongo mongo() {
+        new EmbeddedMongoBuilder()
+            .version('2.2.6')
+            .build()
     }
 
-    Mongo mongo() { mongoFactoryBean.object }
+    @PreDestroy stopMongo() {
+        mongo().close()
+    }
 }
