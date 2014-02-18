@@ -21,21 +21,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package cz.cvut.zuul.oaas.restapi.config
+package cz.cvut.zuul.oaas.api.support;
 
-import cz.cvut.zuul.oaas.api.support.JsonMapperFactory
-import org.springframework.context.annotation.Configuration
-import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter
-import org.springframework.web.servlet.config.annotation.EnableWebMvc
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
+import org.codehaus.jackson.map.ObjectMapper;
 
-@Configuration
-@EnableWebMvc
-class RestContextConfig extends WebMvcConfigurerAdapter {
+import static org.codehaus.jackson.map.PropertyNamingStrategy.CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES;
 
-    void configureMessageConverters(List converters) {
-        converters << new MappingJacksonHttpMessageConverter (
-            objectMapper: JsonMapperFactory.getInstance()
-        )
+public final class JsonMapperFactory {
+
+    /**
+     * Should not be instantiated.
+     */
+    private JsonMapperFactory() {}
+
+    /**
+     * Creates instance of a configured {@link ObjectMapper}.
+     */
+    public static ObjectMapper getInstance() {
+        ObjectMapper mapper = new ObjectMapper();
+
+        mapper.setPropertyNamingStrategy(CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES);
+
+        return mapper;
     }
 }

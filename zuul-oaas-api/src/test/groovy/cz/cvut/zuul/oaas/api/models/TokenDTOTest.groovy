@@ -24,17 +24,15 @@
 package cz.cvut.zuul.oaas.api.models
 
 import cz.cvut.zuul.oaas.api.test.ApiObjectFactory
+import cz.cvut.zuul.oaas.api.support.JsonMapperFactory
 import groovy.json.JsonSlurper
-import org.codehaus.jackson.map.ObjectMapper
 import spock.lang.Shared
 import spock.lang.Specification
-
-import static org.codehaus.jackson.map.PropertyNamingStrategy.CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES
 
 @Mixin(ApiObjectFactory)
 class TokenDTOTest extends Specification {
 
-    @Shared mapper = new ObjectMapper(propertyNamingStrategy: CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES)
+    @Shared mapper = JsonMapperFactory.getInstance()
 
 
     def 'should marshall to JSON'() {

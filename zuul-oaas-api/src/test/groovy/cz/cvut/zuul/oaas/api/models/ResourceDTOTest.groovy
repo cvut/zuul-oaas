@@ -23,17 +23,16 @@
  */
 package cz.cvut.zuul.oaas.api.models
 
-import cz.cvut.zuul.oaas.api.test.ValidatorUtils
 import cz.cvut.zuul.oaas.api.test.ApiObjectFactory
+import cz.cvut.zuul.oaas.api.test.ValidatorUtils
+import cz.cvut.zuul.oaas.api.support.JsonMapperFactory
 import groovy.json.JsonSlurper
-import org.codehaus.jackson.map.ObjectMapper
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
 
-import static cz.cvut.zuul.oaas.test.Assertions.assertThat
 import static cz.cvut.zuul.oaas.api.test.ValidatorUtils.*
-import static org.codehaus.jackson.map.PropertyNamingStrategy.CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES
+import static cz.cvut.zuul.oaas.test.Assertions.assertThat
 
 @Unroll
 @Mixin(ApiObjectFactory)
@@ -42,7 +41,7 @@ class ResourceDTOTest extends Specification {
     @Delegate
     static ValidatorUtils validator = createValidator(ResourceDTO)
 
-    @Shared mapper = new ObjectMapper(propertyNamingStrategy: CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES)
+    @Shared mapper = JsonMapperFactory.getInstance()
 
 
     void 'should marshall to JSON and vice versa'() {
