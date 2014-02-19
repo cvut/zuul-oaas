@@ -150,7 +150,7 @@ class ObjectFeeder {
                 return notNull ? anyEnumValue(type) : anyNullsAnd(enumValues(type), 5)
 
             case Date:
-                return notNull ? anyDate() : anyNullsAnd(dates())
+                return notNull ? anyDate(946684800, 1577836800) : anyNullsAnd(dates(946684800, 1577836800))
 
             default:
                 log.warn("Cannot generate value for property {}.{} of type {}",

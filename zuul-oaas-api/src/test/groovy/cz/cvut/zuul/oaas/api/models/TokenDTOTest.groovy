@@ -26,6 +26,7 @@ package cz.cvut.zuul.oaas.api.models
 import cz.cvut.zuul.oaas.api.test.ApiObjectFactory
 import cz.cvut.zuul.oaas.api.support.JsonMapperFactory
 import groovy.json.JsonSlurper
+import org.codehaus.jackson.map.util.ISO8601Utils
 import spock.lang.Shared
 import spock.lang.Specification
 
@@ -40,7 +41,7 @@ class TokenDTOTest extends Specification {
             def output = mapper.writeValueAsString(token)
         then:
             with (new JsonSlurper().parseText(output)) {
-                expiration  == token.expiration?.time
+                expiration  == (token.expiration ? ISO8601Utils.format(token.expiration) : null)
                 scope       == token.scope as List
                 token_type  == token.tokenType
                 token_value == token.tokenValue

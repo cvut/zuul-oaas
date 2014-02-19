@@ -24,6 +24,7 @@
 package cz.cvut.zuul.oaas.api.support;
 
 import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.util.ISO8601DateFormat;
 
 import static org.codehaus.jackson.map.PropertyNamingStrategy.CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES;
 
@@ -41,6 +42,7 @@ public final class JsonMapperFactory {
         ObjectMapper mapper = new ObjectMapper();
 
         mapper.setPropertyNamingStrategy(CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES);
+        mapper.setDateFormat(new ISO8601DateFormat());
 
         return mapper;
     }

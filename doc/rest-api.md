@@ -256,7 +256,7 @@ This resource provides an extra information about the assigned [access tokens](h
 
     ```json
     {
-        "expiration": "2013-12-11T10:09:08.000",
+        "expiration": "2013-12-11T10:09:08Z",
         "scope": [ "urn:zuul:scope:sample.read" ],
         "token_type": "bearer_type",
         "token_value": "a62b78c4-e32f-4bd5-80bc-a6e441144930",
