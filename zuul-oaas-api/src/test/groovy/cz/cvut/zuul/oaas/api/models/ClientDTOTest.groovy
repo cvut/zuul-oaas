@@ -101,7 +101,7 @@ class ClientDTOTest extends Specification {
         where:
             description     | value                                     || expected
             'empty'         | []                                        || valid
-            'valid'         | ['http://cvut.cz', 'urn:ctu:oauth']       || valid
+            'valid'         | ['http://cvut.cz', 'urn:zuul:oauth']       || valid
             'invalid'       | ['foo', 'baaaar']                         || invalid
             'relative'      | ['/relative/url', '../another/relative']  || invalid
             'with fragment' | ['http://cvut.cz/cool#fragment']          || invalid

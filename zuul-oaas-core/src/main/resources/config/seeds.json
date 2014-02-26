@@ -5,58 +5,46 @@
             "_id": "apps-manager",
             "authorities": [ "ROLE_BIG_BOSS" ],
             "authorizedGrantTypes": [ "client_credentials" ],
-            "clientSecret": "change-me",
+            "clientSecret": "top-secret",
             "locked": false,
             "productName": "AppsManager",
-            "scope": [ "urn:ctu:oauth:oaas:manager", "urn:ctu:oauth:oaas:check-token" ],
-            "resourceIds": [ "ctu-oauth-server" ],
+            "scope": [ "urn:zuul:oauth:oaas:manager", "urn:zuul:oauth:oaas:tokeninfo" ],
+            "resourceIds": [ "zuul-oaas" ],
             "registeredRedirectUri": []
         },
         {
             "_class": "Client",
-            "_id": "simple-client",
+            "_id": "quotes-client",
             "authorities": [ "ROLE_CLIENT" ],
             "authorizedGrantTypes": [ "client_credentials" ],
-            "clientSecret": "change-me",
+            "clientSecret": "top-secret",
             "locked": false,
-            "productName": "Simple Client",
+            "productName": "Quotes Client",
             "registeredRedirectUri": [],
             "resourceIds": [],
-            "scope": [ "urn:ctu:oauth:sample.read" ]
+            "scope": [ "urn:zuul:oauth:quotes.read" ]
         },
         {
             "_class": "Client",
-            "_id": "better-client",
-            "authorities": [ "ROLE_CLIENT" ],
-            "authorizedGrantTypes": [ "refresh_token", "authorization_code" ],
-            "clientSecret": "change-me",
-            "locked": false,
-            "productName": "Better Client",
-            "registeredRedirectUri": [ "http://localhost:8080/client" ],
-            "resourceIds": [],
-            "scope": [ "urn:ctu:oauth:sample.read", "urn:ctu:oauth:sample.write" ]
-        },
-        {
-            "_class": "Client",
-            "_id": "simple-provider",
+            "_id": "quotes-provider",
             "authorities": [ "ROLE_RESOURCE_SERVER" ],
             "authorizedGrantTypes": [ "client_credentials" ],
-            "clientSecret": "change-me",
+            "clientSecret": "top-secret",
             "locked": false,
             "registeredRedirectUri": [],
             "resourceIds": [],
-            "scope": [ "urn:ctu:oauth:oaas:check-token" ]
+            "scope": [ "urn:zuul:oauth:oaas:tokeninfo" ]
         },
         {
             "_class": "Client",
             "_id": "dummy-client",
             "authorities": [ "ROLE_CLIENT" ],
-            "authorizedGrantTypes": [ "refresh_token", "authorization_code" ],
-            "clientSecret": "change-me",
+            "authorizedGrantTypes": [ "client_credentials", "refresh_token", "authorization_code" ],
+            "clientSecret": "top-secret",
             "locked": false,
             "registeredRedirectUri": [ "http://example.org" ],
             "resourceIds": [],
-            "scope": [ "urn:ctu:oauth:dummy", "urn:ctu:oauth:oaas:check-token" ]
+            "scope": [ "urn:zuul:oauth:dummy", "urn:zuul:oauth:oaas:tokeninfo" ]
         }
     ],
 
@@ -71,8 +59,8 @@
                     "approved": true,
                     "authorities": [  "ROLE_CLIENT" ],
                     "authorization_parameters": {
-                        "scope": "urn:ctu:oauth:dummy urn:ctu:oauth:oaas:check-token",
-                        "client_secret": "change-me",
+                        "scope": "urn:zuul:oauth:dummy urn:zuul:oauth:oaas:tokeninfo",
+                        "client_secret": "top-secret",
                         "grant_type": "refresh_token authorization_code",
                         "client_id": "dummy-client"
                     },
@@ -84,7 +72,7 @@
             "expiration": "2099-01-01T0:00:00.000Z",
             "tokenType" : "bearer",
             "refreshToken" : "dummy-refresh-token",
-            "scope" : [ "urn:ctu:oauth:dummy", "urn:ctu:oauth:oaas:check-token" ],
+            "scope" : [ "urn:zuul:oauth:dummy", "urn:zuul:oauth:oaas:tokeninfo" ],
             "additionalInformation" : {}
         }
     ],
@@ -99,8 +87,8 @@
                     "approved": true,
                     "authorities": [  "ROLE_CLIENT" ],
                     "authorization_parameters": {
-                        "scope": "urn:ctu:oauth:dummy urn:ctu:oauth:oaas:check-token",
-                        "client_secret": "change-me",
+                        "scope": "urn:zuul:oauth:dummy urn:zuul:oauth:oaas:tokeninfo",
+                        "client_secret": "top-secret",
                         "grant_type": "refresh_token authorization_code",
                         "client_id": "dummy-client"
                     },

@@ -52,8 +52,8 @@ class RestSecurityConfig extends OAuth2ResourceServerConfigurerAdapter {
                 .antMatchers(GET, '/api/v1/resources/**')
                     .permitAll()
                 .antMatchers('/api/v1/tokeninfo')
-                    .access('#oauth2.hasScope("urn:ctu:oauth:oaas:check-token") and #oauth2.isClient()')
+                    .access('#oauth2.hasScope("urn:zuul:oauth:oaas:tokeninfo") and #oauth2.isClient()')
                 .antMatchers('/api/v1/**')
-                    .access('#oauth2.hasScope("urn:ctu:oauth:oaas:manager") and #oauth2.isClient()')
+                    .access('#oauth2.hasScope("urn:zuul:oauth:oaas:manager") and #oauth2.isClient()')
     }
 }
