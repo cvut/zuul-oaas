@@ -31,17 +31,19 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.http.HttpStatus.CONFLICT;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 @Controller
+@RequestMapping("/check-token")
 public class CheckTokenEndpoint {
 
     private @Setter TokensService tokensService;
 
 
     @ResponseBody
-    @RequestMapping("/check-token")
-    TokenInfo checkToken(@RequestParam("access_token") String value) {
-        return tokensService.getTokenInfo(value);
+    @RequestMapping(method=GET)
+    TokenInfo checkToken(@RequestParam String token) {
+        return tokensService.getTokenInfo(token);
     }
 
 

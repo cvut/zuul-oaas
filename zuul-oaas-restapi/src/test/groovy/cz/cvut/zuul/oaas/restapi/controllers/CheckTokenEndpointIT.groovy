@@ -40,16 +40,16 @@ class CheckTokenEndpointIT extends AbstractControllerIT {
         setup:
             1 * service.getTokenInfo('123') >> { throw new InvalidTokenException('foo') }
         when:
-            perform GET('/?access_token={value}', '123')
+            perform GET('/?token={value}', '123')
         then:
             response.status == 409
     }
 
     def 'GET valid token info'() {
         setup:
-            1 * service.getTokenInfo('123') >> expected
+            1 * service.getTokenInfo('123') >> build(TokenInfo)
         when:
-            perform GET('/?access_token={value}', '123')
+            perform request
         then:
             with (response) {
                 status == 200
@@ -57,6 +57,10 @@ class CheckTokenEndpointIT extends AbstractControllerIT {
                 ! json.isEmpty()
             }
         where:
-            expected = build(TokenInfo)
+            request << [
+                GET('/?token=123'),
+                GET('/?token=123').header('Authorization', 'Bearer 987'),
+                GET('/?token=123&access_token=987')
+            ]
     }
 }
