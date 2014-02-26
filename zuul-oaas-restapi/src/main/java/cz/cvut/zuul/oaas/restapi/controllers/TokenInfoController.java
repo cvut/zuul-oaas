@@ -34,15 +34,15 @@ import static org.springframework.http.HttpStatus.CONFLICT;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 @Controller
-@RequestMapping("/check-token")
-public class CheckTokenEndpoint {
+@RequestMapping("/v1/tokeninfo")
+public class TokenInfoController {
 
     private @Setter TokensService tokensService;
 
 
     @ResponseBody
     @RequestMapping(method=GET)
-    TokenInfo checkToken(@RequestParam String token) {
+    TokenInfo getTokenInfo(@RequestParam String token) {
         return tokensService.getTokenInfo(token);
     }
 

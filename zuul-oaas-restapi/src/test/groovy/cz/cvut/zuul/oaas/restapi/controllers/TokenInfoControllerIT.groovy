@@ -27,12 +27,12 @@ import cz.cvut.zuul.oaas.api.models.TokenInfo
 import cz.cvut.zuul.oaas.api.services.TokensService
 import org.springframework.security.oauth2.common.exceptions.InvalidTokenException
 
-class CheckTokenEndpointIT extends AbstractControllerIT {
+class TokenInfoControllerIT extends AbstractControllerIT {
 
     def service = Mock(TokensService)
 
-    def baseUri = '/check-token'
-    def initController() { new CheckTokenEndpoint() }
+    def baseUri = '/v1/tokeninfo'
+    def initController() { new TokenInfoController() }
     void setupController(_) { _.tokensService = service }
 
 

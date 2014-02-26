@@ -60,8 +60,8 @@ class RestControllersConfig extends ConfigurationSupport {
         )
     }
 
-    @Bean CheckTokenEndpoint checkTokenController() {
-        new CheckTokenEndpoint (
+    @Bean TokenInfoController tokenInfoController() {
+        new TokenInfoController (
             tokensService: tokensService
         )
     }
