@@ -23,12 +23,12 @@
  */
 package cz.cvut.zuul.oaas.repos.mongo;
 
-import cz.cvut.zuul.oaas.repos.AccessTokensRepo;
 import cz.cvut.zuul.oaas.models.PersistableAccessToken;
+import cz.cvut.zuul.oaas.repos.AccessTokensRepo;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.mongodb.core.index.Index;
 import org.springframework.data.mongodb.core.index.IndexDefinition;
-import org.springframework.data.mongodb.core.query.Order;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2RefreshToken;
@@ -49,10 +49,10 @@ public class MongoAccessTokensRepo
             USER_NAME = "authentication.user_authentication.user_name";
 
     private static final IndexDefinition[] INDEXES = {
-        new Index().on("authenticationKey", Order.ASCENDING),
-        new Index().on("refreshToken", Order.ASCENDING),
-        new Index().on(CLIENT_ID, Order.ASCENDING),
-        new Index().on(USER_NAME, Order.ASCENDING)
+        new Index("authenticationKey", Direction.ASC),
+        new Index("refreshToken", Direction.ASC),
+        new Index(CLIENT_ID, Direction.ASC),
+        new Index(USER_NAME, Direction.ASC)
     };
 
 
