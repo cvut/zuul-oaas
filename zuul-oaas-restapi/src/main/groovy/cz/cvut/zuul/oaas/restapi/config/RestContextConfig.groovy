@@ -24,6 +24,10 @@
 package cz.cvut.zuul.oaas.restapi.config
 
 import cz.cvut.zuul.oaas.api.support.JsonMapperFactory
+import org.springframework.beans.factory.config.BeanFactoryPostProcessor
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory
+import org.springframework.beans.factory.config.PlaceholderConfigurerSupport
+import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter
 import org.springframework.web.servlet.config.annotation.EnableWebMvc
@@ -32,6 +36,18 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 @Configuration
 @EnableWebMvc
 class RestContextConfig extends WebMvcConfigurerAdapter {
+
+    /**
+     * {@code BeanFactoryPostProcessor} that inherits existing property
+     * placeholder resolver from the parent context in this context.
+     */
+    @Bean static BeanFactoryPostProcessor parentPlaceholderConfigurerPostProcessor() {
+        new BeanFactoryPostProcessor() {
+            void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) {
+                beanFactory.getBean(PlaceholderConfigurerSupport).postProcessBeanFactory(beanFactory)
+            }
+        }
+    }
 
     void configureMessageConverters(List converters) {
         converters << new MappingJacksonHttpMessageConverter (
