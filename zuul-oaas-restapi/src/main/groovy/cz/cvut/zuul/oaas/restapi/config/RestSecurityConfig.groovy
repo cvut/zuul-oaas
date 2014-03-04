@@ -23,7 +23,6 @@
  */
 package cz.cvut.zuul.oaas.restapi.config
 
-import cz.cvut.zuul.oarp.spring.config.OAuth2ResourceServerConfigurerAdapter
 import cz.cvut.zuul.support.spring.provider.OAuth2ResourceServerConfigurerAdapter
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.annotation.Order

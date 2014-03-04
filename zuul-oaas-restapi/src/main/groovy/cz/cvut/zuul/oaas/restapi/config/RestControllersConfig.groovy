@@ -62,7 +62,8 @@ class RestControllersConfig extends ConfigurationSupport {
 
     @Bean TokenInfoController tokenInfoController() {
         new TokenInfoController (
-            tokensService: tokensService
+            tokensService: tokensService,
+            cacheMaxAge:   $('restapi.tokeninfo.cache.maxage') as int
         )
     }
 

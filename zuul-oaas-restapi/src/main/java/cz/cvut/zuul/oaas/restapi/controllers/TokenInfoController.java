@@ -26,11 +26,15 @@ package cz.cvut.zuul.oaas.restapi.controllers;
 import cz.cvut.zuul.oaas.api.models.TokenInfo;
 import cz.cvut.zuul.oaas.api.services.TokensService;
 import lombok.Setter;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.common.exceptions.InvalidTokenException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import static java.lang.Math.min;
 import static org.springframework.http.HttpStatus.CONFLICT;
+import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 @Controller
@@ -39,11 +43,17 @@ public class TokenInfoController {
 
     private @Setter TokensService tokensService;
 
+    private @Setter int cacheMaxAge = 120;
+
 
     @ResponseBody
     @RequestMapping(method=GET)
-    TokenInfo getTokenInfo(@RequestParam String token) {
-        return tokensService.getTokenInfo(token);
+    ResponseEntity<TokenInfo> getTokenInfo(@RequestParam String token) {
+
+        TokenInfo body = tokensService.getTokenInfo(token);
+        HttpHeaders headers = buildHeaders(body);
+
+        return new ResponseEntity<>(body, headers, OK);
     }
 
 
@@ -52,5 +62,15 @@ public class TokenInfoController {
     @ExceptionHandler(InvalidTokenException.class)
     ErrorResponse handleInvalidTokenException(InvalidTokenException ex) {
         return ErrorResponse.from(CONFLICT, ex);
+    }
+
+
+    private HttpHeaders buildHeaders(TokenInfo tokenInfo) {
+        HttpHeaders headers = new HttpHeaders();
+
+        int maxAge = min(tokenInfo.getExpiresIn(), cacheMaxAge);
+        headers.setCacheControl("private,max-age=" + maxAge);
+
+        return headers;
     }
 }
