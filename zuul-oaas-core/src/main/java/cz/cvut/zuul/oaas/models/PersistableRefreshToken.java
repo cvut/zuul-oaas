@@ -31,6 +31,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.security.oauth2.common.ExpiringOAuth2RefreshToken;
 import org.springframework.security.oauth2.common.OAuth2RefreshToken;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
@@ -50,10 +51,11 @@ public class PersistableRefreshToken implements ExpiringOAuth2RefreshToken, Seri
     @Id
     private String value;
 
+    @Field("exp")
     @Indexed(expireAfterSeconds=0)
     private Date expiration;
 
-    @Getter
+    @Field("auth") @Getter
     private OAuth2Authentication authentication;
 
 

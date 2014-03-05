@@ -38,7 +38,7 @@ public class MongoClientsRepo extends AbstractMongoRepository<Client, String> im
     public void updateClientSecret(String clientId, String secret) throws EmptyResultDataAccessException {
         WriteResult result = mongo().updateFirst(
                 query(where("_id").is(clientId)),
-                update("clientSecret", secret),
+                update("secret", secret),
                 entityClass());
 
         if (result.getN() == 0) {

@@ -30,6 +30,7 @@ import lombok.ToString;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.provider.ClientDetails;
 import org.springframework.util.CollectionUtils;
@@ -52,18 +53,38 @@ public class Client implements ClientDetails {
             EXT_LOCKED = "locked",
             EXT_CLIENT_TYPE = "client_type";
 
-    private @Id String clientId;
+    @Id
+    private String clientId;
+
+    @Field("secret")
     private String clientSecret;
+
+    @Field("scopes")
     private Set<String> scope = new LinkedHashSet<>(0);
+
+    @Field("resources")
     private Set<String> resourceIds = new LinkedHashSet<>(0);
+
+    @Field("grants")
     private Set<String> authorizedGrantTypes = new LinkedHashSet<>(0);
+
+    @Field("redirects")
     private Set<String> registeredRedirectUri = new LinkedHashSet<>(0);
+
     private Set<GrantedAuthority> authorities = new LinkedHashSet<>(0);
+
+    @Field("acsTokenExp")
     private Integer accessTokenValiditySeconds;
+
+    @Field("refTokenExp")
     private Integer refreshTokenValiditySeconds;
 
+    @Field("name")
     private String productName;
+
     private boolean locked = false;
+
+    @Field("type")
     private String clientType;
 
 

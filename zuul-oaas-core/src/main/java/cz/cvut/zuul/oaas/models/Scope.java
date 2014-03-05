@@ -27,6 +27,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.TypeAlias;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.io.Serializable;
 
@@ -48,7 +49,8 @@ public class Scope implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private String name;
-    
+
+    @Field("desc")
     private String description;
 
     private boolean secured = false;

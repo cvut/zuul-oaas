@@ -35,7 +35,7 @@ public class MongoRefreshTokensRepo
 
     public void deleteByClientId(String clientId) {
         mongo().remove(query(
-                where("authentication.authorization_request.client_id").is(clientId)),
+                where("auth.authorization_request.client_id").is(clientId)),
                 entityClass());
     }
 }

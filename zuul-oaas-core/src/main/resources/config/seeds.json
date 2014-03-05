@@ -4,47 +4,47 @@
             "_class": "Client",
             "_id": "apps-manager",
             "authorities": [ "ROLE_BIG_BOSS" ],
-            "authorizedGrantTypes": [ "client_credentials" ],
-            "clientSecret": "top-secret",
+            "grants": [ "client_credentials" ],
+            "secret": "top-secret",
             "locked": false,
-            "productName": "AppsManager",
-            "scope": [ "urn:zuul:oauth:oaas:manager", "urn:zuul:oauth:oaas:tokeninfo" ],
-            "resourceIds": [ "zuul-oaas" ],
-            "registeredRedirectUri": []
+            "name": "AppsManager",
+            "scopes": [ "urn:zuul:oauth:oaas:manager", "urn:zuul:oauth:oaas:tokeninfo" ],
+            "resources": [ "zuul-oaas" ],
+            "redirects": []
         },
         {
             "_class": "Client",
             "_id": "quotes-client",
             "authorities": [ "ROLE_CLIENT" ],
-            "authorizedGrantTypes": [ "client_credentials" ],
-            "clientSecret": "top-secret",
+            "grants": [ "client_credentials" ],
+            "secret": "top-secret",
             "locked": false,
-            "productName": "Quotes Client",
-            "registeredRedirectUri": [],
-            "resourceIds": [],
-            "scope": [ "urn:zuul:oauth:quotes.read" ]
+            "name": "Quotes Client",
+            "redirects": [],
+            "resources": [],
+            "scopes": [ "urn:zuul:oauth:quotes.read" ]
         },
         {
             "_class": "Client",
             "_id": "quotes-provider",
             "authorities": [ "ROLE_RESOURCE_SERVER" ],
-            "authorizedGrantTypes": [ "client_credentials" ],
-            "clientSecret": "top-secret",
+            "grants": [ "client_credentials" ],
+            "secret": "top-secret",
             "locked": false,
-            "registeredRedirectUri": [],
-            "resourceIds": [],
-            "scope": [ "urn:zuul:oauth:oaas:tokeninfo" ]
+            "redirects": [],
+            "resources": [],
+            "scopes": [ "urn:zuul:oauth:oaas:tokeninfo" ]
         },
         {
             "_class": "Client",
             "_id": "dummy-client",
             "authorities": [ "ROLE_CLIENT" ],
-            "authorizedGrantTypes": [ "client_credentials", "refresh_token", "authorization_code" ],
-            "clientSecret": "top-secret",
+            "grants": [ "client_credentials", "refresh_token", "authorization_code" ],
+            "secret": "top-secret",
             "locked": false,
-            "registeredRedirectUri": [ "http://example.org" ],
-            "resourceIds": [],
-            "scope": [ "urn:zuul:oauth:dummy", "urn:zuul:oauth:oaas:tokeninfo" ]
+            "redirects": [ "http://example.org" ],
+            "resources": [],
+            "scopes": [ "urn:zuul:oauth:dummy", "urn:zuul:oauth:oaas:tokeninfo" ]
         }
     ],
 
@@ -81,7 +81,7 @@
         {
             "_class": "RefreshToken",
             "_id": "dummy-refresh-token",
-            "authentication": {
+            "auth": {
                 "authorization_request": {
                     "approval_parameters": {  },
                     "approved": true,

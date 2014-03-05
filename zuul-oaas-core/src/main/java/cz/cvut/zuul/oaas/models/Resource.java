@@ -30,6 +30,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.io.Serializable;
 import java.util.List;
@@ -49,11 +50,12 @@ public class Resource implements Serializable {
     private String id;
 
     private String baseUrl;
-    
+
+    @Field("desc")
     private String description;
     
     private String name;
-    
+
     private String version;
 
     private List<Scope> scopes;
