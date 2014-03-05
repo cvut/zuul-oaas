@@ -25,6 +25,7 @@ package cz.cvut.zuul.oaas.repos.mongo;
 
 import cz.cvut.zuul.oaas.models.PersistableAccessToken;
 import cz.cvut.zuul.oaas.repos.AccessTokensRepo;
+import cz.cvut.zuul.oaas.repos.mongo.support.TTLIndex;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.mongodb.core.index.Index;
@@ -52,7 +53,8 @@ public class MongoAccessTokensRepo
         new Index("authenticationKey", Direction.ASC),
         new Index("refreshToken", Direction.ASC),
         new Index(CLIENT_ID, Direction.ASC),
-        new Index(USER_NAME, Direction.ASC)
+        new Index(USER_NAME, Direction.ASC),
+        new TTLIndex("expiration", Direction.ASC)
     };
 
 

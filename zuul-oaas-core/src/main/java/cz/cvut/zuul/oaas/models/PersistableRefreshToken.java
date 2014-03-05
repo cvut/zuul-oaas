@@ -29,6 +29,7 @@ import org.codehaus.jackson.annotate.JsonCreator;
 import org.codehaus.jackson.annotate.JsonValue;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.TypeAlias;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.oauth2.common.ExpiringOAuth2RefreshToken;
 import org.springframework.security.oauth2.common.OAuth2RefreshToken;
@@ -46,9 +47,14 @@ public class PersistableRefreshToken implements ExpiringOAuth2RefreshToken, Seri
 
     public static final Date NON_EXPIRING_DATE = new Date(Long.MAX_VALUE);
 
-    private @Id String value;
+    @Id
+    private String value;
+
+    @Indexed(expireAfterSeconds=0)
     private Date expiration;
-    private @Getter OAuth2Authentication authentication;
+
+    @Getter
+    private OAuth2Authentication authentication;
 
 
     protected PersistableRefreshToken() {
