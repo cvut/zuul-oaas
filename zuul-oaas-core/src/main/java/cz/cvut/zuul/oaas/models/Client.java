@@ -52,15 +52,15 @@ public class Client implements ClientDetails {
             EXT_LOCKED = "locked",
             EXT_CLIENT_TYPE = "client_type";
 
-	private @Id String clientId;
-	private String clientSecret;
-	private Set<String> scope = new LinkedHashSet<>(0);
-	private Set<String> resourceIds = new LinkedHashSet<>(0);
-	private Set<String> authorizedGrantTypes = new LinkedHashSet<>(0);
-	private Set<String> registeredRedirectUri = new LinkedHashSet<>(0);
-	private Set<GrantedAuthority> authorities = new LinkedHashSet<>(0);
-	private Integer accessTokenValiditySeconds;
-	private Integer refreshTokenValiditySeconds;
+    private @Id String clientId;
+    private String clientSecret;
+    private Set<String> scope = new LinkedHashSet<>(0);
+    private Set<String> resourceIds = new LinkedHashSet<>(0);
+    private Set<String> authorizedGrantTypes = new LinkedHashSet<>(0);
+    private Set<String> registeredRedirectUri = new LinkedHashSet<>(0);
+    private Set<GrantedAuthority> authorities = new LinkedHashSet<>(0);
+    private Integer accessTokenValiditySeconds;
+    private Integer refreshTokenValiditySeconds;
 
     private String productName;
     private boolean locked = false;

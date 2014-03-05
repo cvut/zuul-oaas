@@ -42,25 +42,25 @@ import java.util.Map;
 @SessionAttributes("authorizationRequest")
 public class AccessConfirmationController {
 
-	private @Setter ClientsService clientsService;
+    private @Setter ClientsService clientsService;
 
     @Value("${oaas.endpoint.authorization}") String authorizationUri;
 
 
-	@RequestMapping("/oauth/confirm_access")
-	public ModelAndView getAccessConfirmation(Map<String, Object> model) {
-		AuthorizationRequest clientAuth = (AuthorizationRequest) model.remove("authorizationRequest");
+    @RequestMapping("/oauth/confirm_access")
+    public ModelAndView getAccessConfirmation(Map<String, Object> model) {
+        AuthorizationRequest clientAuth = (AuthorizationRequest) model.remove("authorizationRequest");
 
-		ClientDTO client = clientsService.findClientById(clientAuth.getClientId());
-		model.put("auth_request", clientAuth);
-		model.put("client", client);
+        ClientDTO client = clientsService.findClientById(clientAuth.getClientId());
+        model.put("auth_request", clientAuth);
+        model.put("client", client);
         model.put("authorization_uri", authorizationUri);
 
-		return new ModelAndView("confirm_access", model);
-	}
+        return new ModelAndView("confirm_access", model);
+    }
 
-	@RequestMapping("/oauth/error")
-	public String handleError() {
-		return "oauth_error";
-	}
+    @RequestMapping("/oauth/error")
+    public String handleError() {
+        return "oauth_error";
+    }
 }

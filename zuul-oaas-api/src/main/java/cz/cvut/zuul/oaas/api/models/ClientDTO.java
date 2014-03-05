@@ -52,46 +52,46 @@ public class ClientDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-	private String clientId;
+    private String clientId;
 
-	private String clientSecret;
+    private String clientSecret;
 
     @EachSize( @Size(min = 5, max = 255) )
     @EachPattern( @Pattern(regexp = "[\\x21\\x23-\\x5B\\x5D-\\x7E]+",
         message = "{validator.invalid_scope}" )) // see http://tools.ietf.org/html/rfc6749#section-3.3
-	@JsonDeserialize(using = ArrayOrStringDeserializer.class)
-	private Collection<String> scope;
+    @JsonDeserialize(using = ArrayOrStringDeserializer.class)
+    private Collection<String> scope;
 
     //TODO
-	@JsonDeserialize(using = ArrayOrStringDeserializer.class)
-	private Collection<String> resourceIds;
+    @JsonDeserialize(using = ArrayOrStringDeserializer.class)
+    private Collection<String> resourceIds;
 
     @NotEmpty
     @EachPattern( @Pattern( // see http://tools.ietf.org/html/rfc6749#section-1.3
         regexp = "(client_credentials|implicit|authorization_code|resource_owner|refresh_token)",
         flags = CASE_INSENSITIVE, message = "{validator.invalid_grant_type}"))
-	@JsonDeserialize(using = ArrayOrStringDeserializer.class)
-	private Collection<String> authorizedGrantTypes;
+    @JsonDeserialize(using = ArrayOrStringDeserializer.class)
+    private Collection<String> authorizedGrantTypes;
 
     @EachSize( @Size(min = 5, max = 255) )
     @EachURI( @ValidURI(relative = false, fragment = false,
         message = "{validator.invalid_redirect_uri}"))
-	@JsonProperty("redirect_uri")
-	@JsonDeserialize(using = ArrayOrStringDeserializer.class)
-	private Collection<String> registeredRedirectUri;
+    @JsonProperty("redirect_uri")
+    @JsonDeserialize(using = ArrayOrStringDeserializer.class)
+    private Collection<String> registeredRedirectUri;
 
     @JsonDeserialize(using = ArrayOrStringDeserializer.class)
-	private Collection<String> authorities;
+    private Collection<String> authorities;
 
     //TODO
-	@JsonProperty("access_token_validity")
-	private Integer accessTokenValiditySeconds;
+    @JsonProperty("access_token_validity")
+    private Integer accessTokenValiditySeconds;
 
     //TODO
-	@JsonProperty("refresh_token_validity")
-	private Integer refreshTokenValiditySeconds;
+    @JsonProperty("refresh_token_validity")
+    private Integer refreshTokenValiditySeconds;
 
-	private String productName;
+    private String productName;
 
     @JsonProperty("client_locked")
     private boolean locked;

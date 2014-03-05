@@ -53,18 +53,18 @@
     <!--//////////////////// DISTRIBUTION ////////////////////-->
 
     <scm>
-		<url>https://github.com/cvut/zuul-oaas</url>
-		<connection>scm:git:ssh://git@github.com:cvut/zuul-oaas.git</connection>
+        <url>https://github.com/cvut/zuul-oaas</url>
+        <connection>scm:git:ssh://git@github.com:cvut/zuul-oaas.git</connection>
     </scm>
 
     <issueManagement>
         <system>GitHub</system>
-		<url>https://github.com/cvut/zuul-oaas/issues</url>
+        <url>https://github.com/cvut/zuul-oaas/issues</url>
     </issueManagement>
 
     <ciManagement>
         <system>Travis</system>
-		<url>https://travis-ci.org/cvut/zuul-oaas</url>
+        <url>https://travis-ci.org/cvut/zuul-oaas</url>
     </ciManagement>
 
 
