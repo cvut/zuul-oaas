@@ -52,8 +52,8 @@
         {
             "_class": "AccessToken",
             "_id": "dummy-access-token",
-            "authenticationKey": "cc76a58c5418860277a6b19d0a40a068",
-            "authentication": {
+            "authKey": "cc76a58c5418860277a6b19d0a40a068",
+            "auth": {
                 "authorization_request": {
                     "approval_parameters": {},
                     "approved": true,
@@ -69,11 +69,11 @@
                 },
                 "user_authentication": null
             },
-            "expiration": "2099-01-01T0:00:00.000Z",
-            "tokenType" : "bearer",
-            "refreshToken" : "dummy-refresh-token",
-            "scope" : [ "urn:zuul:oauth:dummy", "urn:zuul:oauth:oaas:tokeninfo" ],
-            "additionalInformation" : {}
+            "exp": "2099-01-01T0:00:00.000Z",
+            "type": "bearer",
+            "refToken": "dummy-refresh-token",
+            "scopes": [ "urn:zuul:oauth:dummy", "urn:zuul:oauth:oaas:tokeninfo" ],
+            "addl": {}
         }
     ],
 

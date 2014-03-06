@@ -25,17 +25,12 @@ package cz.cvut.zuul.oaas.repos.mongo;
 
 import cz.cvut.zuul.oaas.models.PersistableAccessToken;
 import cz.cvut.zuul.oaas.repos.AccessTokensRepo;
-import cz.cvut.zuul.oaas.repos.mongo.support.TTLIndex;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Sort.Direction;
-import org.springframework.data.mongodb.core.index.Index;
-import org.springframework.data.mongodb.core.index.IndexDefinition;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2RefreshToken;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 
-import javax.annotation.PostConstruct;
 import java.util.Collection;
 
 import static org.springframework.data.mongodb.core.query.Criteria.where;
@@ -46,24 +41,8 @@ public class MongoAccessTokensRepo
         extends AbstractMongoRepository<PersistableAccessToken, String> implements AccessTokensRepo {
 
     private static final String
-            CLIENT_ID = "authentication.authorization_request.client_id",
-            USER_NAME = "authentication.user_authentication.user_name";
-
-    private static final IndexDefinition[] INDEXES = {
-        new Index("authenticationKey", Direction.ASC),
-        new Index("refreshToken", Direction.ASC),
-        new Index(CLIENT_ID, Direction.ASC),
-        new Index(USER_NAME, Direction.ASC),
-        new TTLIndex("expiration", Direction.ASC)
-    };
-
-
-    @PostConstruct
-    protected void ensureIndexes() {
-        for (IndexDefinition index : INDEXES) {
-            mongo().indexOps(entityClass()).ensureIndex(index);
-        }
-    }
+            CLIENT_ID = "auth.authorization_request.client_id",
+            USER_NAME = "auth.user_authentication.user_name";
 
 
     public PersistableAccessToken findOneByAuthentication(OAuth2Authentication authentication) {

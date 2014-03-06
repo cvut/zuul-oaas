@@ -23,26 +23,72 @@
  */
 package cz.cvut.zuul.oaas.models;
 
-import lombok.Getter;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.TypeAlias;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
+import org.springframework.data.mongodb.core.index.CompoundIndexes;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
+import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
+import org.springframework.security.oauth2.common.OAuth2RefreshToken;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.token.AuthenticationKeyGenerator;
 import org.springframework.security.oauth2.provider.token.DefaultAuthenticationKeyGenerator;
 import org.springframework.util.Assert;
 
-@TypeAlias("AccessToken")
-@Document(collection = "access_tokens")
-public class PersistableAccessToken extends DefaultOAuth2AccessToken {
+import java.io.Serializable;
+import java.util.*;
 
-    private static final long serialVersionUID = 1L;
+import static java.lang.System.currentTimeMillis;
+import static lombok.AccessLevel.NONE;
+
+@Data
+@EqualsAndHashCode(of="value")
+
+@CompoundIndexes({
+    @CompoundIndex(name="clientId", def="{auth.authorization_request.client_id: 1}"),
+    @CompoundIndex(name="username", def="{auth.user_authentication.user_name: 1}")
+})
+@TypeAlias("AccessToken")
+@Document(collection="access_tokens")
+
+public class PersistableAccessToken implements OAuth2AccessToken, Serializable {
+
+    private static final long serialVersionUID = 2L;
+
     private static final AuthenticationKeyGenerator AUTH_KEY_GENERATOR = new DefaultAuthenticationKeyGenerator();
 
+
+    @Id @Setter(NONE)
+    private String value;
+
+    @Field("exp")
+    @Indexed(expireAfterSeconds=0)
+    private Date expiration;
+
+    @Field("type")
+    private String tokenType = BEARER_TYPE.toLowerCase();
+
+    @Indexed
+    @Field("refToken")
+    private OAuth2RefreshToken refreshToken;
+
+    @Field("scopes")
+    private Set<String> scope;
+
+    @Field("addl")
+    private Map<String, Object> additionalInformation = Collections.emptyMap();
+
+    @Indexed
+    @Field("authKey") @Setter(NONE)
     private String authenticationKey;
-    private @Getter OAuth2Authentication authentication;
+
+    @Field("auth") @Setter(NONE)
+    private OAuth2Authentication authentication;
 
 
     public static String extractAuthenticationKey(OAuth2Authentication authentication) {
@@ -50,34 +96,45 @@ public class PersistableAccessToken extends DefaultOAuth2AccessToken {
     }
 
 
+    /**
+     * Private constructor for persistence and other serialization tools.
+     */
     private PersistableAccessToken() {
-        super((String)null);
+        this(null);
     }
 
     public PersistableAccessToken(String value) {
-        super(value);
+        this.value = value;
     }
 
     public PersistableAccessToken(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
-        super(accessToken);
+        this(accessToken.getValue());
+
+        this.additionalInformation = accessToken.getAdditionalInformation();
+        this.refreshToken = accessToken.getRefreshToken();
+        this.expiration = accessToken.getExpiration();
+        this.scope = accessToken.getScope();
+        this.tokenType = accessToken.getTokenType();
+
         this.authentication = authentication;
         this.authenticationKey = authentication != null ? extractAuthenticationKey(authentication) : null;
     }
 
 
-    @Id @Override
-    public String getValue() {
-        return super.getValue();
+    public int getExpiresIn() {
+        return expiration != null
+                ? Long.valueOf((expiration.getTime() - currentTimeMillis()) / 1000L).intValue()
+                : 0;
+    }
+
+    public boolean isExpired() {
+        return expiration != null && expiration.before(currentDate());
     }
 
     public void setAuthentication(OAuth2Authentication authentication) {
         Assert.notNull(authentication);
         this.authentication = authentication;
         this.authenticationKey = extractAuthenticationKey(authentication);
-    }
-
-    public String getAuthenticationKey() {
-        return authenticationKey;
     }
 
     public String getAuthenticatedClientId() {
@@ -95,6 +152,15 @@ public class PersistableAccessToken extends DefaultOAuth2AccessToken {
     }
 
     public String getRefreshTokenValue() {
-        return getRefreshToken() != null ? getRefreshToken().getValue() : null;
+        return refreshToken != null ? refreshToken.getValue() : null;
+    }
+
+    @Override
+    public String toString() {
+        return value;
+    }
+
+    private Date currentDate() {
+        return new Date();
     }
 }
