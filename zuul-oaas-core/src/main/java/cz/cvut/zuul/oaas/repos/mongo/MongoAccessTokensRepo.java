@@ -41,8 +41,8 @@ public class MongoAccessTokensRepo
         extends AbstractMongoRepository<PersistableAccessToken, String> implements AccessTokensRepo {
 
     private static final String
-            CLIENT_ID = "auth.authorization_request.client_id",
-            USER_NAME = "auth.user_authentication.user_name";
+            CLIENT_ID = "auth.authzReq.client",
+            USER_NAME = "auth.userAuth.uname";
 
 
     public PersistableAccessToken findOneByAuthentication(OAuth2Authentication authentication) {

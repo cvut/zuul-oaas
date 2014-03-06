@@ -89,8 +89,8 @@ public final class MongoDbConstants {
     public static final class authentication {
 
         public static final String
-                AUTHORIZATION_REQUEST = "authorization_request",
-                USER_AUTHENTICATION = "user_authentication";
+                AUTHORIZATION_REQUEST = "authzReq",
+                USER_AUTHENTICATION = "userAuth";
 
         private authentication() { /* do not initialize */ }
     }
@@ -98,11 +98,12 @@ public final class MongoDbConstants {
     public static final class authz_request {
 
         public static final String
-                APPROVAL_PARAMS = "approval_parameters",
+                APPROVAL_PARAMS = "approval",
                 APPROVED = "approved",
                 AUTHORITIES = "authorities",
-                AUTHZ_PARAMS = "authorization_parameters",
-                RESOURCE_IDS = "resource_ids";
+                AUTHZ_PARAMS = "authz",
+                RESOURCE_IDS = "resources",
+                CLIENT_ID = "client";
 
         private authz_request() { /* do not initialize */ }
     }
@@ -111,8 +112,8 @@ public final class MongoDbConstants {
 
         //TODO incomplete!
         public static final String
-                USER_NAME = "user_name",
-                USER_EMAIL = "user_email",
+                USER_NAME = "uname",
+                USER_EMAIL = "email",
                 AUTHORITIES = "authorities";
 
         private user_auth() { /* do not initialize */ }

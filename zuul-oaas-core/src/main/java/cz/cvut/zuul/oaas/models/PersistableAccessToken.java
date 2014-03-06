@@ -50,8 +50,8 @@ import static lombok.AccessLevel.NONE;
 @EqualsAndHashCode(of="value")
 
 @CompoundIndexes({
-    @CompoundIndex(name="clientId", def="{auth.authorization_request.client_id: 1}"),
-    @CompoundIndex(name="username", def="{auth.user_authentication.user_name: 1}")
+    @CompoundIndex(name="clientId", def="{auth.authzReq.client: 1}"),
+    @CompoundIndex(name="username", def="{auth.userAuth.uname: 1}")
 })
 @TypeAlias("AccessToken")
 @Document(collection="access_tokens")

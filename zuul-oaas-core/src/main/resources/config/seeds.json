@@ -54,20 +54,20 @@
             "_id": "dummy-access-token",
             "authKey": "cc76a58c5418860277a6b19d0a40a068",
             "auth": {
-                "authorization_request": {
-                    "approval_parameters": {},
+                "authzReq": {
+                    "approval": {},
                     "approved": true,
                     "authorities": [  "ROLE_CLIENT" ],
-                    "authorization_parameters": {
+                    "authz": {
                         "scope": "urn:zuul:oauth:dummy urn:zuul:oauth:oaas:tokeninfo",
                         "client_secret": "top-secret",
                         "grant_type": "refresh_token authorization_code",
                         "client_id": "dummy-client"
                     },
-                    "resource_ids": [],
-                    "client_id": "dummy-client"
+                    "resources": [],
+                    "client": "dummy-client"
                 },
-                "user_authentication": null
+                "userAuth": null
             },
             "exp": "2099-01-01T0:00:00.000Z",
             "type": "bearer",
@@ -82,20 +82,20 @@
             "_class": "RefreshToken",
             "_id": "dummy-refresh-token",
             "auth": {
-                "authorization_request": {
-                    "approval_parameters": {  },
+                "authzReq": {
+                    "approval": {  },
                     "approved": true,
                     "authorities": [  "ROLE_CLIENT" ],
-                    "authorization_parameters": {
+                    "authz": {
                         "scope": "urn:zuul:oauth:dummy urn:zuul:oauth:oaas:tokeninfo",
                         "client_secret": "top-secret",
                         "grant_type": "refresh_token authorization_code",
                         "client_id": "dummy-client"
                     },
-                    "resource_ids": [ ],
-                    "client_id": "dummy-client"
+                    "resources": [ ],
+                    "client": "dummy-client"
                 },
-                "user_authentication": null
+                "userAuth": null
             }
         }
     ]
