@@ -143,6 +143,7 @@
         <dependency>
             <groupId>org.codehaus.groovy</groupId>
             <artifactId>groovy</artifactId>
+            <scope>compile</scope>
         </dependency>
 
         <!--////////// Test Libraries //////////-->
