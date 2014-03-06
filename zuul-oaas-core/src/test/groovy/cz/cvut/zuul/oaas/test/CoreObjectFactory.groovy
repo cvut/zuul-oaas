@@ -23,6 +23,7 @@
  */
 package cz.cvut.zuul.oaas.test
 
+import cz.cvut.zuul.oaas.api.models.ClientDTO
 import cz.cvut.zuul.oaas.api.models.ResourceDTO
 import cz.cvut.zuul.oaas.models.*
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
@@ -122,7 +123,7 @@ class CoreObjectFactory extends ObjectFactory {
             def client = new Client(
                 clientId: anyLetterString(5, 10),
                 authorizedGrantTypes: anySet(enumValues(AuthorizationGrant), 1, 2),
-                authorities: buildListOf(GrantedAuthority, 0, 3)
+                authorities: buildListOf(GrantedAuthority, 1, 3)
             )
             ObjectFeeder.populate(client)
             values.each { prop, value ->
@@ -157,6 +158,13 @@ class CoreObjectFactory extends ObjectFactory {
                 resource[prop] = value
             }
             return resource
+        }
+
+        registerBuilder(ClientDTO) { values ->
+            ObjectFeeder.populate(new ClientDTO()).with {
+                authorities: buildListOf(GrantedAuthority, 0)*.authority
+                return it
+            }
         }
 
         registerBuilder(Scope) {
