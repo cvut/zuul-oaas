@@ -33,6 +33,7 @@ import org.springframework.data.mongodb.core.index.CompoundIndexes;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.security.oauth2.common.DefaultOAuth2RefreshToken;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2RefreshToken;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
@@ -58,7 +59,7 @@ import static lombok.AccessLevel.NONE;
 
 public class PersistableAccessToken implements OAuth2AccessToken, Serializable {
 
-    private static final long serialVersionUID = 2L;
+    private static final long serialVersionUID = 3L;
 
     private static final AuthenticationKeyGenerator AUTH_KEY_GENERATOR = new DefaultAuthenticationKeyGenerator();
 
@@ -75,7 +76,7 @@ public class PersistableAccessToken implements OAuth2AccessToken, Serializable {
 
     @Indexed
     @Field("refToken")
-    private OAuth2RefreshToken refreshToken;
+    private String refreshTokenValue;
 
     @Field("scopes")
     private Set<String> scope;
@@ -111,7 +112,8 @@ public class PersistableAccessToken implements OAuth2AccessToken, Serializable {
         this(accessToken.getValue());
 
         this.additionalInformation = accessToken.getAdditionalInformation();
-        this.refreshToken = accessToken.getRefreshToken();
+        this.refreshTokenValue = accessToken.getRefreshToken() != null
+                ? accessToken.getRefreshToken().getValue() : null;
         this.expiration = accessToken.getExpiration();
         this.scope = accessToken.getScope();
         this.tokenType = accessToken.getTokenType();
@@ -129,6 +131,10 @@ public class PersistableAccessToken implements OAuth2AccessToken, Serializable {
 
     public boolean isExpired() {
         return expiration != null && expiration.before(currentDate());
+    }
+
+    public OAuth2RefreshToken getRefreshToken() {
+        return refreshTokenValue != null ? new DefaultOAuth2RefreshToken(refreshTokenValue) : null;
     }
 
     public void setAuthentication(OAuth2Authentication authentication) {
@@ -151,9 +157,6 @@ public class PersistableAccessToken implements OAuth2AccessToken, Serializable {
         return null;
     }
 
-    public String getRefreshTokenValue() {
-        return refreshToken != null ? refreshToken.getValue() : null;
-    }
 
     @Override
     public String toString() {

@@ -97,9 +97,7 @@ class MongoPersistenceConfig extends AbstractMongoConfiguration implements Persi
             new GrantedAuthorityReaderConverter(),
             new GrantedAuthorityWriteConverter(),
             new OAuth2AuthenticationReadConverter(),
-            new OAuth2AuthenticationWriteConverter(),
-            new RefreshTokenReaderConverter(),
-            new RefreshTokenWriterConverter()
+            new OAuth2AuthenticationWriteConverter()
         ])
     }
 

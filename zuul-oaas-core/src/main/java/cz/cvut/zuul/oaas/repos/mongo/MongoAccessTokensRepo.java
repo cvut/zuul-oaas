@@ -75,7 +75,7 @@ public class MongoAccessTokensRepo
 
     public void deleteByRefreshToken(OAuth2RefreshToken refreshToken) {
         mongo().remove(query(
-                where("refreshToken").is(refreshToken.getValue())),
+                where("refreshTokenValue").is(refreshToken.getValue())),
                 entityClass());
     }
 
