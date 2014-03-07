@@ -23,9 +23,7 @@
  */
 package cz.cvut.zuul.oaas.config
 
-import com.mongodb.Mongo
-import com.mongodb.MongoClient
-import com.mongodb.ServerAddress
+import com.mongodb.*
 import cz.cvut.zuul.oaas.common.config.ConfigurationSupport
 import cz.cvut.zuul.oaas.models.Resource
 import cz.cvut.zuul.oaas.repos.AccessTokensRepo
@@ -36,7 +34,10 @@ import cz.cvut.zuul.oaas.repos.mongo.MongoAccessTokensRepo
 import cz.cvut.zuul.oaas.repos.mongo.MongoClientsRepo
 import cz.cvut.zuul.oaas.repos.mongo.MongoRefreshTokensRepo
 import cz.cvut.zuul.oaas.repos.mongo.MongoResourcesRepo
-import cz.cvut.zuul.oaas.repos.mongo.converters.*
+import cz.cvut.zuul.oaas.repos.mongo.converters.GrantedAuthorityReaderConverter
+import cz.cvut.zuul.oaas.repos.mongo.converters.GrantedAuthorityWriteConverter
+import cz.cvut.zuul.oaas.repos.mongo.converters.OAuth2AuthenticationReadConverter
+import cz.cvut.zuul.oaas.repos.mongo.converters.OAuth2AuthenticationWriteConverter
 import cz.cvut.zuul.oaas.repos.mongo.support.MongoSeedLoader
 import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.Bean
@@ -83,13 +84,18 @@ class MongoPersistenceConfig extends AbstractMongoConfiguration implements Persi
     @Bean Mongo mongo() {
         def servers = $('persistence.mongo.servers').split(',')
 
+        def opts = MongoClientOptions.builder()
+        opts.writeConcern(WriteConcern.valueOf( $('persistence.mongo.write_concern')) )
+
         // replica set
         if (servers.length > 1) {
-            new MongoClient( servers.collect { parseServerAddress(it) } )
+            opts.readPreference(ReadPreference.valueOf( $('persistence.mongo.read_preference')) )
+
+            new MongoClient( servers.collect { parseServerAddress(it) }, opts.build() )
 
         // single node
         } else {
-            new MongoClient( parseServerAddress(servers[0]) )
+            new MongoClient( parseServerAddress(servers[0]), opts.build() )
         }
     }
 
