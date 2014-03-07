@@ -25,13 +25,13 @@ package cz.cvut.zuul.oaas.repos.mongo.converters;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
+import cz.cvut.zuul.oaas.models.User;
 import cz.cvut.zuul.oaas.repos.mongo.converters.MongoDbConstants.authz_request;
 import cz.cvut.zuul.oaas.repos.mongo.converters.MongoDbConstants.user_auth;
-import cz.cvut.zuul.oaas.models.User;
+import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.provider.AuthorizationRequest;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
-import org.springframework.stereotype.Component;
 
 import static cz.cvut.zuul.oaas.repos.mongo.converters.MongoDbConstants.authentication.AUTHORIZATION_REQUEST;
 import static cz.cvut.zuul.oaas.repos.mongo.converters.MongoDbConstants.authentication.USER_AUTHENTICATION;
@@ -40,8 +40,7 @@ import static org.springframework.security.core.authority.AuthorityUtils.authori
 /**
  * Converter from {@link OAuth2Authentication} to MongoDB object.
  */
-@Component
-public class OAuth2AuthenticationWriteConverter extends AutoRegisteredConverter<OAuth2Authentication, DBObject> {
+public class OAuth2AuthenticationWriteConverter implements Converter<OAuth2Authentication, DBObject> {
 
     public DBObject convert(OAuth2Authentication source) {
         DBObject target = new BasicDBObject();

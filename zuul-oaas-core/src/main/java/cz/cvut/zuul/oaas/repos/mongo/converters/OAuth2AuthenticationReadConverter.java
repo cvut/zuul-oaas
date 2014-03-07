@@ -24,16 +24,16 @@
 package cz.cvut.zuul.oaas.repos.mongo.converters;
 
 import com.mongodb.DBObject;
+import cz.cvut.zuul.oaas.models.User;
 import cz.cvut.zuul.oaas.repos.mongo.converters.MongoDbConstants.authz_request;
 import cz.cvut.zuul.oaas.repos.mongo.converters.MongoDbConstants.user_auth;
-import cz.cvut.zuul.oaas.models.User;
+import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.provider.AuthorizationRequest;
 import org.springframework.security.oauth2.provider.DefaultAuthorizationRequest;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
-import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 
@@ -44,8 +44,7 @@ import static org.springframework.security.core.authority.AuthorityUtils.createA
 /**
  * Converter from MongoDB object to {@link OAuth2Authentication}.
  */
-@Component
-public class OAuth2AuthenticationReadConverter extends AutoRegisteredConverter<DBObject, OAuth2Authentication> {
+public class OAuth2AuthenticationReadConverter implements Converter<DBObject, OAuth2Authentication> {
 
     public OAuth2Authentication convert(DBObject source) {
         DBObjectWrapper dbo = new DBObjectWrapper(source);
