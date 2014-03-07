@@ -25,6 +25,7 @@ package cz.cvut.zuul.oaas.config
 
 import com.mongodb.Mongo
 import com.mongodb.MongoClient
+import com.mongodb.ServerAddress
 import cz.cvut.zuul.oaas.common.config.ConfigurationSupport
 import cz.cvut.zuul.oaas.models.Resource
 import cz.cvut.zuul.oaas.repos.AccessTokensRepo
@@ -44,6 +45,7 @@ import org.springframework.data.authentication.UserCredentials
 import org.springframework.data.mongodb.config.AbstractMongoConfiguration
 import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.data.mongodb.core.convert.CustomConversions
+import org.springframework.util.Assert
 
 import javax.annotation.PostConstruct
 import javax.inject.Inject
@@ -79,10 +81,16 @@ class MongoPersistenceConfig extends AbstractMongoConfiguration implements Persi
 
 
     @Bean Mongo mongo() {
-        new MongoClient(
-            $('persistence.mongo.host'),
-            $('persistence.mongo.port') as int
-        )
+        def servers = $('persistence.mongo.servers').split(',')
+
+        // replica set
+        if (servers.length > 1) {
+            new MongoClient( servers.collect { parseServerAddress(it) } )
+
+        // single node
+        } else {
+            new MongoClient( parseServerAddress(servers[0]) )
+        }
     }
 
     @Bean MongoTemplate mongoTemplate() {
@@ -124,5 +132,16 @@ class MongoPersistenceConfig extends AbstractMongoConfiguration implements Persi
         new MongoResourcesRepo (
             mongoOperations: mongoTemplate()
         )
+    }
+
+
+    private parseServerAddress(String value) {
+        Assert.hasText(value, "server address must not be empty")
+
+        def tokens = value.split(':', 2)
+        def host = tokens[0].trim()
+        def port = tokens.length > 1 ? tokens[1].trim().toInteger() : ServerAddress.defaultPort()
+
+        new ServerAddress(host, port)
     }
 }
