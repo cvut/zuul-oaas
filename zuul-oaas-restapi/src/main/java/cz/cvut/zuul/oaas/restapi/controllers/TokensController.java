@@ -45,8 +45,8 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 public class TokensController {
 
     private @Setter TokensService tokensService;
-    
-    
+
+
     @ResponseBody
     @RequestMapping(value = "{tokenValue}", method = GET)
     TokenDTO getTokenDetails(@PathVariable String tokenValue) {

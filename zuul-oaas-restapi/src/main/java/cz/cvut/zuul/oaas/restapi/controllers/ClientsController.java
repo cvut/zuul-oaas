@@ -47,7 +47,7 @@ public class ClientsController {
 
     private @Setter ClientsService clientsService;
 
-    
+
     //////////  API methods  //////////
 
     @ResponseBody
@@ -73,7 +73,7 @@ public class ClientsController {
         }
         clientsService.updateClient(client);
     }
-    
+
     @ResponseStatus(NO_CONTENT)
     @RequestMapping(value = "{clientId}", method = DELETE)
     public void removeClient(@PathVariable String clientId) {

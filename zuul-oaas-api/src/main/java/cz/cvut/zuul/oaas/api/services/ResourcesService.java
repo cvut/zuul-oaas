@@ -39,13 +39,13 @@ public interface ResourcesService {
      * @throws NoSuchResourceException when no matching resource was found
      */
     ResourceDTO findResourceById(String id) throws NoSuchResourceException;
-    
+
     /**
      * @param resource resource to be created
      * @return id of the created resource
      */
     String createResource(@Valid ResourceDTO resource);
-    
+
     /**
      * @param resource resource's content to be updated with
      * @throws NoSuchResourceException when no matching resource was found
@@ -57,7 +57,7 @@ public interface ResourcesService {
      * @throws NoSuchResourceException when no matching resource was found
      */
     void deleteResourceById(String id) throws NoSuchResourceException;
-    
+
     /**
      * @return all resources
      */

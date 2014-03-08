@@ -118,7 +118,7 @@ public final class MongoDbConstants {
 
         private user_auth() { /* do not initialize */ }
     }
-    
+
 
     private MongoDbConstants() { /* do not initialize */ }
 }

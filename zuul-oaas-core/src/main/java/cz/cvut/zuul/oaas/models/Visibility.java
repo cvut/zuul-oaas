@@ -27,7 +27,7 @@ package cz.cvut.zuul.oaas.models;
  * Value indicating Resource visibility
  */
 public enum Visibility {
-    
+
     PUBLIC,
     HIDDEN;
 

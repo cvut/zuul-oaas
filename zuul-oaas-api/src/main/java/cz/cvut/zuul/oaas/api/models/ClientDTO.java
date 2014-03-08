@@ -33,7 +33,6 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.security.oauth2.provider.BaseClientDetails.ArrayOrStringDeserializer;
-import org.springframework.security.oauth2.provider.ClientDetails;
 
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -43,7 +42,7 @@ import java.util.Collection;
 import static javax.validation.constraints.Pattern.Flag.CASE_INSENSITIVE;
 
 /**
- * DTO for {@link ClientDetails}.
+ * DTO for {@link org.springframework.security.oauth2.provider.ClientDetails}.
  */
 @Data
 @SpELAssert(value = "hasRedirectUri()", applyIf = "authorizedGrantTypes.contains('authorization_code')",

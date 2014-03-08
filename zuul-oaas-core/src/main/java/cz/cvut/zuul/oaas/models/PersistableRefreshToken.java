@@ -72,11 +72,11 @@ public class PersistableRefreshToken implements ExpiringOAuth2RefreshToken, Seri
         this.value = value;
         this.expiration = expiration;
     }
-    
+
     public PersistableRefreshToken(OAuth2RefreshToken refreshToken, OAuth2Authentication authentication) {
         this.value = refreshToken.getValue();
         this.authentication = authentication;
-        
+
         if (refreshToken instanceof ExpiringOAuth2RefreshToken) {
             this.expiration = ((ExpiringOAuth2RefreshToken) refreshToken).getExpiration();
         }
@@ -91,7 +91,7 @@ public class PersistableRefreshToken implements ExpiringOAuth2RefreshToken, Seri
     public Date getExpiration() {
         return expiration != null ? expiration : NON_EXPIRING_DATE;
     }
-    
+
     public boolean isExpiring() {
         return expiration != null;
     }

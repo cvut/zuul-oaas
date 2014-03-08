@@ -50,7 +50,7 @@ public class OAuth2AuthenticationWriteConverter implements Converter<OAuth2Authe
 
         return target;
     }
-    
+
 
     private DBObject convertAuthorizationRequest(AuthorizationRequest source) {
         DBObject target = new BasicDBObject();
@@ -76,7 +76,7 @@ public class OAuth2AuthenticationWriteConverter implements Converter<OAuth2Authe
 
         return target;
     }
-    
+
     private String getEmailFromPrincipal(Object principal) {
         if (principal instanceof User) {
             return ((User) principal).getEmail();

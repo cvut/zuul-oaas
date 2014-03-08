@@ -42,7 +42,7 @@ public class ClientLockedException extends ClientAuthenticationException {
     public ClientLockedException(String message, Object... args) {
         super(String.format(message, args));
     }
-  
+
     @Override
     public int getHttpErrorCode() {
         return 401;

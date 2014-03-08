@@ -92,11 +92,6 @@ public class PersistableAccessToken implements OAuth2AccessToken, Serializable {
     private OAuth2Authentication authentication;
 
 
-    public static String extractAuthenticationKey(OAuth2Authentication authentication) {
-        return AUTH_KEY_GENERATOR.extractKey(authentication);
-    }
-
-
     /**
      * Private constructor for persistence and other serialization tools.
      */
@@ -120,6 +115,11 @@ public class PersistableAccessToken implements OAuth2AccessToken, Serializable {
 
         this.authentication = authentication;
         this.authenticationKey = authentication != null ? extractAuthenticationKey(authentication) : null;
+    }
+
+
+    public static String extractAuthenticationKey(OAuth2Authentication authentication) {
+        return AUTH_KEY_GENERATOR.extractKey(authentication);
     }
 
 

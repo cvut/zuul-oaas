@@ -48,7 +48,7 @@ public class TokenStoreImpl implements TokenStore {
     private RefreshTokensRepo refreshTokensRepo;
 
 
-    
+
     //////// Delegate to AccessTokens Repository ////////
 
     public void storeAccessToken(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
@@ -67,7 +67,7 @@ public class TokenStoreImpl implements TokenStore {
         log.debug("Reading access token: [{}]", tokenValue);
         return accessTokensRepo.findOne(tokenValue);
     }
-    
+
     public void removeAccessToken(OAuth2AccessToken token) {
         log.debug("Removing access token: [{}]", token);
         accessTokensRepo.delete(token.getValue());

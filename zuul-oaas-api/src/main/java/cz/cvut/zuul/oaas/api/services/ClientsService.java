@@ -31,15 +31,15 @@ import javax.validation.Valid;
 
 @Validated
 public interface ClientsService {
-    
+
     ClientDTO findClientById(String clientId) throws NoSuchClientException;
 
     String createClient(@Valid ClientDTO client);
 
     void updateClient(@Valid ClientDTO client) throws NoSuchClientException;
-    
+
     void removeClient(String clientId) throws NoSuchClientException;
-    
+
     void resetClientSecret(String clientId) throws NoSuchClientException;
 
 }

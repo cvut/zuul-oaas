@@ -51,7 +51,7 @@ public class OAuth2AuthenticationReadConverter implements Converter<DBObject, OA
 
         AuthorizationRequest authzReq = convertAuthorizationRequest( dbo.getDBObject(AUTHORIZATION_REQUEST) );
         Authentication userAuth = convertUserAuthentication( dbo.getDBObject(USER_AUTHENTICATION) );
-        
+
         return new OAuth2Authentication(authzReq, userAuth);
     }
 

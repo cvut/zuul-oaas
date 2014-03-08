@@ -53,7 +53,7 @@ public class Resource implements Serializable {
 
     @Field("desc")
     private String description;
-    
+
     private String name;
 
     private String version;
