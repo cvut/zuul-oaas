@@ -132,6 +132,17 @@ class CoreObjectFactory extends ObjectFactory {
             return client
         }
 
+        registerBuilder(ClientDTO) { values ->
+            def client = ObjectFeeder.populate(new ClientDTO()).with {
+                authorities: buildListOf(GrantedAuthority, 1)*.authority
+                return it
+            }
+            values.each { prop, value ->
+                client[prop] = value
+            }
+            return client
+        }
+
         registerBuilder(Resource) { values ->
             def resource = new Resource(
                     scopes: buildListOf(Scope)
@@ -158,13 +169,6 @@ class CoreObjectFactory extends ObjectFactory {
                 resource[prop] = value
             }
             return resource
-        }
-
-        registerBuilder(ClientDTO) { values ->
-            ObjectFeeder.populate(new ClientDTO()).with {
-                authorities: buildListOf(GrantedAuthority, 0)*.authority
-                return it
-            }
         }
 
         registerBuilder(Scope) {
