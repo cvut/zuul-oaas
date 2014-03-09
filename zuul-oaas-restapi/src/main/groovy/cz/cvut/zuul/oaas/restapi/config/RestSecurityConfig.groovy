@@ -23,7 +23,9 @@
  */
 package cz.cvut.zuul.oaas.restapi.config
 
+import cz.cvut.zuul.oaas.common.config.ConfigurationSupport
 import cz.cvut.zuul.support.spring.provider.OAuth2ResourceServerConfigurerAdapter
+import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.annotation.Order
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -39,20 +41,24 @@ import static org.springframework.http.HttpMethod.GET
  */
 @Configuration
 @EnableWebSecurity @Order(1)
+@Mixin(ConfigurationSupport)
 class RestSecurityConfig extends OAuth2ResourceServerConfigurerAdapter {
+
+    // Initialize mixed in ConfigurationSupport
+    @Inject initSupport(ApplicationContext ctx) { _initSupport(ctx) }
 
     // external service
     @Inject ResourceServerTokenServices resourceServerTokenServices
 
 
     void configure(HttpSecurity http) {
-        http.antMatcher('/api/v1/**')
+        http.antMatcher( '/api/v1/**' )
             .authorizeRequests()
-                .antMatchers(GET, '/api/v1/resources/**')
+                .antMatchers( GET, '/api/v1/resources/public/**' )
                     .permitAll()
-                .antMatchers('/api/v1/tokeninfo')
-                    .access('#oauth2.hasScope("urn:zuul:oauth:oaas:tokeninfo") and #oauth2.isClient()')
-                .antMatchers('/api/v1/**')
-                    .access('#oauth2.hasScope("urn:zuul:oauth:oaas:manager") and #oauth2.isClient()')
+                .antMatchers( '/api/v1/tokeninfo' )
+                    .access( $('restapi.tokeninfo.security.access') )
+                .antMatchers( '/api/v1/**' )
+                    .access( $('restapi.security.access') )
     }
 }
