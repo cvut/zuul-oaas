@@ -37,7 +37,7 @@ class LdapUserAuthenticationConfig extends AbstractAuthenticationManagerConfig i
     @Bean @Qualifier('user')
     AuthenticationManager userAuthenticationManager() {
         builder.ldapAuthentication().with {
-            contextSource().url         $('auth.user.ldap.server.uri}') +'/'+ $('auth.user.ldap.server.base_dn')
+            contextSource().url         $('auth.user.ldap.server.uri') +'/'+ $('auth.user.ldap.server.base_dn')
             userDnPatterns              $('auth.user.ldap.user_dn_pattern')
             userSearchBase              $('auth.user.ldap.user_search_base')
             userSearchFilter            $('auth.user.ldap.user_search_filter')
