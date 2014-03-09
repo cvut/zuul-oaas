@@ -34,8 +34,6 @@ import org.springframework.security.oauth2.provider.token.ResourceServerTokenSer
 
 import javax.inject.Inject
 
-import static org.springframework.http.HttpMethod.GET
-
 /**
  * This configuration must be loaded in the root context!
  */
@@ -54,8 +52,6 @@ class RestSecurityConfig extends OAuth2ResourceServerConfigurerAdapter {
     void configure(HttpSecurity http) {
         http.antMatcher( '/api/v1/**' )
             .authorizeRequests()
-                .antMatchers( GET, '/api/v1/resources/public/**' )
-                    .permitAll()
                 .antMatchers( '/api/v1/tokeninfo' )
                     .access( $('restapi.tokeninfo.security.access') )
                 .antMatchers( '/api/v1/**' )
