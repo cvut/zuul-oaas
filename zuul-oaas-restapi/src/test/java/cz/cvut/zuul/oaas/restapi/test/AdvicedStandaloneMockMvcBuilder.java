@@ -45,8 +45,8 @@ public class AdvicedStandaloneMockMvcBuilder extends StandaloneMockMvcBuilder {
     }
 
     @Override
-    protected void initWebAppContext(WebApplicationContext cxt) {
-        super.initWebAppContext(cxt);
+    protected WebApplicationContext initWebAppContext() {
+        WebApplicationContext cxt = super.initWebAppContext();
 
         StaticListableBeanFactory beanFactory = (StaticListableBeanFactory) cxt.getAutowireCapableBeanFactory();
 
@@ -54,6 +54,8 @@ public class AdvicedStandaloneMockMvcBuilder extends StandaloneMockMvcBuilder {
             beanFactory.addBean(advice.getClass().getSimpleName(), advice);
         }
         refreshExceptionResolvers(cxt);
+
+        return cxt;
     }
 
     protected void refreshExceptionResolvers(ApplicationContext cxt) {
