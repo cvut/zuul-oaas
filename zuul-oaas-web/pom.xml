@@ -21,9 +21,6 @@
     <!--//////////////////// PROPERTIES ////////////////////-->
 
     <properties>
-        <thymeleaf.version>2.1.2.RELEASE</thymeleaf.version>
-        <bootstrap.version>3.0.0</bootstrap.version>
-
         <build.webjarsDirectory>${project.build.directory}/webjars</build.webjarsDirectory>
         <build.lessOutputDirectory>${project.build.directory}/less</build.lessOutputDirectory>
     </properties>
@@ -89,13 +86,11 @@
         <dependency>
             <groupId>org.thymeleaf</groupId>
             <artifactId>thymeleaf</artifactId>
-            <version>${thymeleaf.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.thymeleaf</groupId>
             <artifactId>thymeleaf-spring3</artifactId>
-            <version>${thymeleaf.version}</version>
         </dependency>
 
         <dependency>

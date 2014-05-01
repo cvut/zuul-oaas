@@ -68,13 +68,11 @@
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-mongodb</artifactId>
-            <version>1.4.2.RELEASE</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-commons</artifactId>
-            <version>1.7.2.RELEASE</version>
         </dependency>
 
         <dependency>
@@ -117,14 +115,12 @@
         <dependency>
             <groupId>ma.glasnost.orika</groupId>
             <artifactId>orika-core</artifactId>
-            <version>1.4.3</version>
         </dependency>
 
         <!-- JSR-303 Validator -->
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-validator</artifactId>
-            <version>4.3.0.Final</version>
         </dependency>
 
         <dependency>
@@ -135,7 +131,6 @@
         <dependency>
             <groupId>org.mongodb</groupId>
             <artifactId>mongo-java-driver</artifactId>
-            <version>2.12.1</version>
         </dependency>
 
         <dependency>
@@ -161,14 +156,12 @@
         <dependency>
             <groupId>de.flapdoodle.embed</groupId>
             <artifactId>de.flapdoodle.embed.mongo</artifactId>
-            <version>1.44</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>cz.jirutka.spring</groupId>
             <artifactId>embedmongo-spring</artifactId>
-            <version>1.2.1</version>
             <scope>test</scope>
         </dependency>
 
