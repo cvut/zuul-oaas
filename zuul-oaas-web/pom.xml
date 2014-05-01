@@ -21,7 +21,7 @@
     <!--//////////////////// PROPERTIES ////////////////////-->
 
     <properties>
-        <thymeleaf.version>2.1.0-m3</thymeleaf.version>
+        <thymeleaf.version>2.1.2.RELEASE</thymeleaf.version>
         <bootstrap.version>3.0.0</bootstrap.version>
 
         <build.webjarsDirectory>${project.build.directory}/webjars</build.webjarsDirectory>
