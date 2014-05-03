@@ -90,7 +90,7 @@
 
         <dependency>
             <groupId>org.thymeleaf</groupId>
-            <artifactId>thymeleaf-spring3</artifactId>
+            <artifactId>thymeleaf-spring4</artifactId>
         </dependency>
 
         <dependency>
