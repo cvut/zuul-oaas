@@ -13,7 +13,7 @@
     <!--//////////////////// DESCRIPTION ////////////////////-->
 
     <artifactId>zuul-oaas-web</artifactId>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
 
     <name>Zuul OAAS Web</name>
 
@@ -105,17 +105,6 @@
 
     <build>
         <plugins>
-            <!-- Build a WAR artifact without classes and libs, and JAR artifact with classes only -->
-            <plugin>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>2.4</version>
-                <configuration>
-                    <packagingExcludes>WEB-INF/lib/**,WEB-INF/classes/**,WEB-INF/templates/.local/**</packagingExcludes>
-                    <failOnMissingWebXml>false</failOnMissingWebXml>
-                    <attachClasses>true</attachClasses>
-                </configuration>
-            </plugin>
-
             <!-- Get and unpack Bootstrap -->
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
@@ -173,7 +162,7 @@
                 <version>1.3.3</version>
                 <configuration>
                     <sourceDirectory>${build.lessOutputDirectory}</sourceDirectory>
-                    <outputDirectory>${project.build.directory}/${project.build.finalName}/css</outputDirectory>
+                    <outputDirectory>${project.build.outputDirectory}/static/css</outputDirectory>
                     <compress>true</compress>
                     <includes>
                         <include>style.less</include>

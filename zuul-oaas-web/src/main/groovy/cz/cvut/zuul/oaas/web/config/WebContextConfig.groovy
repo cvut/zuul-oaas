@@ -33,10 +33,11 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.context.support.ReloadableResourceBundleMessageSource
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer
 import org.springframework.web.servlet.config.annotation.EnableWebMvc
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import org.thymeleaf.spring4.SpringTemplateEngine
+import org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver
 import org.thymeleaf.spring4.view.ThymeleafViewResolver
-import org.thymeleaf.templateresolver.ServletContextTemplateResolver
 
 import javax.inject.Inject
 
@@ -64,6 +65,10 @@ class WebContextConfig extends WebMvcConfigurerAdapter {
         configurer.enable()
     }
 
+    void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler('/**')
+                .addResourceLocations('classpath:/static/')
+    }
 
     @Bean thymeleafViewResolver() {
         new ThymeleafViewResolver (
@@ -80,8 +85,8 @@ class WebContextConfig extends WebMvcConfigurerAdapter {
     }
 
     @Bean templateResolver() {
-        new ServletContextTemplateResolver (
-            prefix:             '/WEB-INF/templates/',
+        new SpringResourceTemplateResolver (
+            prefix:             'classpath:/templates/',
             suffix:             '.html',
             characterEncoding:  'utf-8',
             templateMode:       'HTML5',
