@@ -23,7 +23,7 @@
  */
 package cz.cvut.zuul.oaas.repos.mongo.support;
 
-import com.google.common.io.Files;
+import com.google.common.io.Resources;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.util.JSON;
@@ -34,8 +34,8 @@ import org.springframework.core.io.Resource;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.util.Assert;
 
-import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.List;
 
@@ -45,19 +45,15 @@ public class MongoSeedLoader {
     private static final Charset ENCODING = Charset.forName("UTF-8");
 
     private MongoOperations mongo;
-    private File location;
+    private URL location;
 
     /**
      * Drop all collections before seeding? Default is <tt>false</tt>.
-     *
-     * @param dropAll
      */
     private @Setter boolean dropAll = false;
 
     /**
      * Skip import for collections that already exists? Default is <tt>true</tt>.
-     *
-     * @param skipNonEmptyCollections
      */
     private @Setter boolean skipNonEmptyCollections = true;
 
@@ -69,7 +65,7 @@ public class MongoSeedLoader {
 
         if (dropAll) dropAll();
 
-        String content = Files.toString(location, ENCODING);
+        String content = Resources.toString(location, ENCODING);
         Object parsed = JSON.parse(content);
 
         Assert.state(parsed instanceof DBObject,
@@ -123,7 +119,7 @@ public class MongoSeedLoader {
     @Required
     public void setLocation(Resource resource) {
         try {
-            this.location = resource.getFile();
+            this.location = resource.getURL();
         } catch (IOException ex) {
             throw new IllegalArgumentException(ex);
         }
