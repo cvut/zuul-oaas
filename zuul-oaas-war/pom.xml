@@ -13,10 +13,17 @@
     <!--//////////////////// DESCRIPTION ////////////////////-->
 
     <artifactId>zuul-oaas-war</artifactId>
-    <packaging>war</packaging>
+    <packaging>${project.packaging}</packaging>
 
     <name>Zuul OAAS WAR</name>
     <description>The main module that builds a deployable WAR archive.</description>
+
+
+    <!--//////////////////// PROPERTIES ////////////////////-->
+
+    <properties>
+        <project.packaging>war</project.packaging>
+    </properties>
 
 
     <!--//////////////////// DEPENDENCIES ////////////////////-->
@@ -47,6 +54,11 @@
             <artifactId>groovy</artifactId>
             <scope>compile</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
     </dependencies>
 
 
@@ -63,4 +75,48 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <!-- Profile to build an executable JAR (using Spring Boot). -->
+        <profile>
+            <id>exec-jar</id>
+
+            <properties>
+                <project.packaging>jar</project.packaging>
+            </properties>
+
+            <dependencies>
+                <dependency>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-jetty</artifactId>
+                </dependency>
+
+                <!-- Workaround to exclude dependency from JAR. -->
+                <dependency>
+                    <groupId>org.projectlombok</groupId>
+                    <artifactId>lombok</artifactId>
+                    <version>${lombok.version}</version>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+
+            <build>
+                <plugins>
+                    <!-- Repackage as an executable JAR -->
+                    <plugin>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-maven-plugin</artifactId>
+                        <version>${spring.boot.version}</version>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>repackage</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

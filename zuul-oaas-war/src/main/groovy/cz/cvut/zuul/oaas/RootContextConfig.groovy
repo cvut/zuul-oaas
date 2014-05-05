@@ -63,9 +63,9 @@ class RootContextConfig {
 
     @Configuration
     @ComponentScan(
-            basePackages = 'cz.cvut.zuul.oaas',
-            useDefaultFilters = false,
-            includeFilters = @Filter([EnableWebSecurity, EnableWebMvcSecurity]))
+        basePackages = 'cz.cvut.zuul.oaas',
+        useDefaultFilters = false,
+        includeFilters = @Filter([EnableWebSecurity, EnableWebMvcSecurity]))
     static class SecurityRootContextConfig {}
 
 
