@@ -23,21 +23,17 @@
  */
 package cz.cvut.zuul.oaas
 
+import cz.cvut.zuul.oaas.common.config.DispatcherServletRegistrationBean
 import cz.cvut.zuul.oaas.restapi.config.RestContextConfig
-import cz.cvut.zuul.oaas.restapi.config.RestControllersConfig
 import cz.cvut.zuul.oaas.web.config.WebContextConfig
-import cz.cvut.zuul.oaas.web.config.WebControllersConfig
 import org.springframework.boot.autoconfigure.web.EmbeddedServletContainerAutoConfiguration
 import org.springframework.boot.autoconfigure.web.ServerPropertiesAutoConfiguration
 import org.springframework.boot.builder.SpringApplicationBuilder
 import org.springframework.boot.context.embedded.RegistrationBean
-import org.springframework.boot.context.embedded.ServletRegistrationBean
 import org.springframework.boot.context.web.SpringBootServletInitializer
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
-import org.springframework.web.context.support.AnnotationConfigWebApplicationContext
-import org.springframework.web.servlet.DispatcherServlet
 
 @Configuration
 @Import([
@@ -66,27 +62,19 @@ class Application extends SpringBootServletInitializer {
     }
 
 
-    @Bean RegistrationBean webModuleRegistration() {
-        new ServletRegistrationBean (
-            name:        'web-module',
-            urlMappings: ['/*'],
-            servlet:     new DispatcherServlet (
-                new AnnotationConfigWebApplicationContext().with {
-                    register WebContextConfig, WebControllersConfig; it
-                }
-            )
+    @Bean RegistrationBean webModuleServlet() {
+        new DispatcherServletRegistrationBean (
+            name:          'web-module',
+            urlMapping:    '/*',
+            configClasses: WebContextConfig
         )
     }
 
-    @Bean RegistrationBean restModuleRegistration() {
-        new ServletRegistrationBean (
-            name:        'rest-module',
-            urlMappings: ['/api/*'],
-            servlet:     new DispatcherServlet (
-                new AnnotationConfigWebApplicationContext().with {
-                    register RestContextConfig, RestControllersConfig; it
-                }
-            ),
+    @Bean RegistrationBean restModuleServlet() {
+        new DispatcherServletRegistrationBean (
+            name:          'rest-module',
+            urlMapping:    '/api/*',
+            configClasses: RestContextConfig
         )
     }
 }

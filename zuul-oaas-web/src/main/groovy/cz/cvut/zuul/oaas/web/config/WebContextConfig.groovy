@@ -30,6 +30,7 @@ import org.springframework.beans.factory.config.PlaceholderConfigurerSupport
 import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Import
 import org.springframework.context.support.ReloadableResourceBundleMessageSource
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer
 import org.springframework.web.servlet.config.annotation.EnableWebMvc
@@ -44,6 +45,7 @@ import javax.inject.Inject
 @Configuration
 @EnableWebMvc
 @Mixin(ConfigurationSupport)
+@Import(WebControllersConfig)
 class WebContextConfig extends WebMvcConfigurerAdapter {
 
     // Initialize mixed in ConfigurationSupport
