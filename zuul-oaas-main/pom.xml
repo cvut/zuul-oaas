@@ -12,11 +12,11 @@
 
     <!--//////////////////// DESCRIPTION ////////////////////-->
 
-    <artifactId>zuul-oaas-war</artifactId>
+    <artifactId>zuul-oaas-main</artifactId>
     <packaging>${project.packaging}</packaging>
 
-    <name>Zuul OAAS WAR</name>
-    <description>The main module that builds a deployable WAR archive.</description>
+    <name>Zuul OAAS Main</name>
+    <description>The main module that builds a deployable WAR archive or an executable JAR.</description>
 
 
     <!--//////////////////// PROPERTIES ////////////////////-->

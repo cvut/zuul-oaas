@@ -46,7 +46,7 @@
         <module>zuul-oaas-api</module>
         <module>zuul-oaas-restapi</module>
         <module>zuul-oaas-web</module>
-        <module>zuul-oaas-war</module>
+        <module>zuul-oaas-main</module>
     </modules>
 
 
