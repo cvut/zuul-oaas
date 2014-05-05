@@ -64,20 +64,10 @@
 
     <!--//////////////////// BUILD ////////////////////-->
 
-    <build>
-        <plugins>
-            <plugin>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>2.4</version>
-                <configuration>
-                    <failOnMissingWebXml>false</failOnMissingWebXml>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
-
     <profiles>
-        <!-- Profile to build an executable JAR (using Spring Boot). -->
+        <!--
+            Profile to build an executable JAR (using Spring Boot).
+        -->
         <profile>
             <id>exec-jar</id>
 
@@ -106,14 +96,6 @@
                     <plugin>
                         <groupId>org.springframework.boot</groupId>
                         <artifactId>spring-boot-maven-plugin</artifactId>
-                        <version>${spring.boot.version}</version>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>repackage</goal>
-                                </goals>
-                            </execution>
-                        </executions>
                     </plugin>
                 </plugins>
             </build>
