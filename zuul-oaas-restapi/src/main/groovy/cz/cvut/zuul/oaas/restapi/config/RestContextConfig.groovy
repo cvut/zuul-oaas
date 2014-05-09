@@ -24,6 +24,7 @@
 package cz.cvut.zuul.oaas.restapi.config
 
 import cz.cvut.zuul.oaas.api.support.JsonMapperFactory
+import org.springframework.beans.factory.NoSuchBeanDefinitionException
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory
 import org.springframework.beans.factory.config.PlaceholderConfigurerSupport
@@ -46,7 +47,11 @@ class RestContextConfig extends WebMvcConfigurerAdapter {
     @Bean static BeanFactoryPostProcessor parentPlaceholderConfigurerPostProcessor() {
         new BeanFactoryPostProcessor() {
             void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) {
-                beanFactory.getBean(PlaceholderConfigurerSupport).postProcessBeanFactory(beanFactory)
+                try {
+                    beanFactory.getBean(PlaceholderConfigurerSupport).postProcessBeanFactory(beanFactory)
+                } catch (NoSuchBeanDefinitionException ex) {
+                    // is not available in integration test; TODO solve it better
+                }
             }
         }
     }

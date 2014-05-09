@@ -26,17 +26,18 @@ package cz.cvut.zuul.oaas.restapi.controllers
 import cz.cvut.zuul.oaas.api.models.ResourceDTO
 import cz.cvut.zuul.oaas.api.services.ResourcesService
 
+import javax.inject.Inject
+
 class ResourcesControllerIT extends AbstractControllerIT {
 
-    def service = Mock(ResourcesService)
+    @Inject ResourcesController controller
 
-    def initController() { new ResourcesController() }
-    void setupController(_) { _.resourceService = service }
+    def resourceService = Mock(ResourcesService)
 
 
     def 'GET all resources'() {
         setup:
-            1 * service.getAllResources() >> [ build(ResourceDTO) ] * 3
+            1 * resourceService.getAllResources() >> [ build(ResourceDTO) ] * 3
         when:
             perform GET('/')
         then:
@@ -49,7 +50,7 @@ class ResourcesControllerIT extends AbstractControllerIT {
 
     def 'GET resource'() {
         setup:
-            1 * service.findResourceById('123') >> build(ResourceDTO)
+            1 * resourceService.findResourceById('123') >> build(ResourceDTO)
         when:
             perform GET('/123')
         then:
@@ -62,7 +63,7 @@ class ResourcesControllerIT extends AbstractControllerIT {
 
     def 'POST resource'() {
         setup:
-            service.createResource(_ as ResourceDTO) >> '123'
+            resourceService.createResource(_ as ResourceDTO) >> '123'
         when:
             perform POST ('/').with {
                 content '{ "name": "Sample app" }'
@@ -83,7 +84,7 @@ class ResourcesControllerIT extends AbstractControllerIT {
 
     def 'PUT resource'() {
         setup:
-            1 * service.updateResource({
+            1 * resourceService.updateResource({
                 it.name == 'Foobar'
             })
         when:
@@ -99,7 +100,7 @@ class ResourcesControllerIT extends AbstractControllerIT {
 
     def 'DELETE resource'() {
         setup:
-            1 * service.deleteResourceById('123')
+            1 * resourceService.deleteResourceById('123')
         when:
             perform DELETE('/123')
         then:

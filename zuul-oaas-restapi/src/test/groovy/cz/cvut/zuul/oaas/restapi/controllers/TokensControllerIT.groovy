@@ -26,17 +26,18 @@ package cz.cvut.zuul.oaas.restapi.controllers
 import cz.cvut.zuul.oaas.api.models.TokenDTO
 import cz.cvut.zuul.oaas.api.services.TokensService
 
+import javax.inject.Inject
+
 class TokensControllerIT extends AbstractControllerIT {
 
-    def service = Mock(TokensService)
+    @Inject TokensController controller
 
-    def initController() { new TokensController() }
-    void setupController(_) { _.tokensService = service }
+    def tokensService = Mock(TokensService)
 
 
     def 'GET token'() {
         setup:
-            1 * service.getToken('42') >> build(TokenDTO)
+            1 * tokensService.getToken('42') >> build(TokenDTO)
         when:
             perform GET('/42')
         then:
@@ -49,7 +50,7 @@ class TokensControllerIT extends AbstractControllerIT {
 
     def 'DELETE token'() {
         setup:
-            1 * service.invalidateToken('42')
+            1 * tokensService.invalidateToken('42')
         when:
             perform DELETE('/42')
         then:

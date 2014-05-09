@@ -27,27 +27,20 @@ import cz.cvut.zuul.oaas.api.models.TokenInfo
 import cz.cvut.zuul.oaas.api.services.TokensService
 import org.springframework.security.oauth2.common.exceptions.InvalidTokenException
 
+import javax.inject.Inject
+
 import static java.lang.Math.min
 
 class TokenInfoControllerIT extends AbstractControllerIT {
 
-    static cacheMaxAge = 120
+    @Inject TokenInfoController controller
 
-    def service = Mock(TokensService)
-
-    def baseUri = '/v1/tokeninfo'
-
-    def initController() { new TokenInfoController() }
-
-    void setupController(_) {
-        _.tokensService = service
-        _.cacheMaxAge   = cacheMaxAge
-    }
+    def tokensService = Mock(TokensService)
 
 
     def 'GET invalid token info'() {
         setup:
-            1 * service.getTokenInfo('123') >> { throw new InvalidTokenException('foo') }
+            1 * tokensService.getTokenInfo('123') >> { throw new InvalidTokenException('foo') }
         when:
             perform GET('/?token={value}', '123')
         then:
@@ -56,7 +49,7 @@ class TokenInfoControllerIT extends AbstractControllerIT {
 
     def 'GET valid token info'() {
         setup:
-            1 * service.getTokenInfo('123') >> build(TokenInfo)
+            1 * tokensService.getTokenInfo('123') >> build(TokenInfo)
         when:
             perform request
         then:
@@ -75,13 +68,15 @@ class TokenInfoControllerIT extends AbstractControllerIT {
 
     def 'GET token info with correct Cache-Control'() {
         setup:
-            1 * service.getTokenInfo('123') >> build(TokenInfo, [expiresIn: expiresIn])
+            controller.cacheMaxAge = 120
+        and:
+            1 * tokensService.getTokenInfo('123') >> build(TokenInfo, [expiresIn: expiresIn])
         when:
             perform GET('/?token={value}', '123')
         then:
             response.getHeader('Cache-Control') == "private,max-age=${maxAge}"
         where:
             expiresIn << [600, 60]
-            maxAge = min(cacheMaxAge, expiresIn)
+            maxAge = min(120, expiresIn)
     }
 }

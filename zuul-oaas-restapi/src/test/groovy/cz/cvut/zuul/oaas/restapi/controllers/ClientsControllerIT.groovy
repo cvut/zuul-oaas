@@ -26,17 +26,18 @@ package cz.cvut.zuul.oaas.restapi.controllers
 import cz.cvut.zuul.oaas.api.models.ClientDTO
 import cz.cvut.zuul.oaas.api.services.ClientsService
 
+import javax.inject.Inject
+
 class ClientsControllerIT extends AbstractControllerIT {
 
-    def service = Mock(ClientsService)
+    @Inject ClientsController controller
 
-    def initController() { new ClientsController() }
-    void setupController(_) { _.clientsService = service }
+    def clientsService = Mock(ClientsService)
 
 
     def 'GET client'() {
         setup:
-            1 * service.findClientById('42') >> build(ClientDTO)
+            1 * clientsService.findClientById('42') >> build(ClientDTO)
         when:
             perform GET('/42')
         then:
@@ -49,7 +50,7 @@ class ClientsControllerIT extends AbstractControllerIT {
 
     def 'POST client'() {
         setup:
-            1 * service.createClient(_ as ClientDTO) >> '123'
+            1 * clientsService.createClient(_ as ClientDTO) >> '123'
         when:
             perform POST('/').with {
                 content '{ "redirect_uri": "http://example.org" }'
@@ -70,7 +71,7 @@ class ClientsControllerIT extends AbstractControllerIT {
 
     def 'PUT client'() {
         setup:
-            1 * service.updateClient({
+            1 * clientsService.updateClient({
                 it.productName == 'Skynet'
             })
         when:
@@ -86,7 +87,7 @@ class ClientsControllerIT extends AbstractControllerIT {
 
     def 'DELETE client'() {
         setup:
-            1 * service.removeClient('123')
+            1 * clientsService.removeClient('123')
         when:
             perform DELETE('/123')
         then:

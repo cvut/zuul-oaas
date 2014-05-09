@@ -24,22 +24,23 @@
 package cz.cvut.zuul.oaas.restapi.controllers
 
 import cz.cvut.zuul.oaas.api.test.ApiObjectFactory
-import cz.cvut.zuul.oaas.api.support.JsonMapperFactory
-import cz.cvut.zuul.oaas.restapi.test.AdvicedStandaloneMockMvcBuilder
+import cz.cvut.zuul.oaas.restapi.config.TestContextConfig
 import groovy.json.JsonSlurper
-import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter
 import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.mock.web.MockHttpServletResponse
+import org.springframework.test.context.ContextConfiguration
+import org.springframework.test.context.web.WebAppConfiguration
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.request.RequestPostProcessor
 import org.springframework.web.bind.annotation.RequestMapping
-import spock.lang.Shared
 import spock.lang.Specification
 
-import static org.springframework.http.MediaType.APPLICATION_JSON
+import javax.inject.Inject
 
+@WebAppConfiguration
+@ContextConfiguration(classes=TestContextConfig)
 abstract class AbstractControllerIT extends Specification {
 
     protected static final CONTENT_TYPE_JSON = "application/json;charset=UTF-8"
@@ -47,42 +48,40 @@ abstract class AbstractControllerIT extends Specification {
     @Delegate
     static ApiObjectFactory factory = new ApiObjectFactory()
 
-    @Shared MockMvc mockMvc
-    @Shared controller
-    ResponseWrapper response
+    @Inject MockMvc mockMvc
 
     def baseUri
 
+    ResponseWrapper response
+
+
+    abstract getController()
+
+    def setup() {
+        setupController()
+        baseUri = getBaseUri() ?: determineBaseUri()
+        assert baseUri, 'baseUri was not found, must be specified explicitly'
+    }
+
+    /**
+     * Finds properties on the controller and this object that has the same
+     * name and type. Then it maps this properties values to the controller
+     * (this is used for setting Spock mocks).
+     */
+    void setupController() {
+        controller.metaPropertyValues.each { otherProp ->
+            def thisProp = this.properties[otherProp.name]
+            if (otherProp.name != 'class' && otherProp.type.isInstance(thisProp)) {
+                otherProp.value = thisProp
+            }
+        }
+    }
+
+    // Method aliases
     static GET = MockMvcRequestBuilders.&get
     static POST = MockMvcRequestBuilders.&post
     static PUT = MockMvcRequestBuilders.&put
     static DELETE = MockMvcRequestBuilders.&delete
-
-
-    abstract def initController()
-    void setupController(_) {}
-
-
-    void setupSpec() {
-        def messageConverter = new MappingJacksonHttpMessageConverter(
-                objectMapper: JsonMapperFactory.getInstance()
-        )
-        controller = initController()
-        mockMvc = new AdvicedStandaloneMockMvcBuilder(controller)
-                .setControllerAdvices(new CommonExceptionHandler())
-                .setMessageConverters(messageConverter)
-                .defaultRequest(GET('/')
-                    .accept( APPLICATION_JSON )
-                    .contentType( APPLICATION_JSON) )
-                .build()
-    }
-
-    def setup() {
-        setupController(controller)
-
-        baseUri = getBaseUri() ?: determineBaseUri()
-        assert baseUri, 'baseUri was not found, must be specified explicitly'
-    }
 
 
     def perform(MockHttpServletRequestBuilder requestBuilder) {
