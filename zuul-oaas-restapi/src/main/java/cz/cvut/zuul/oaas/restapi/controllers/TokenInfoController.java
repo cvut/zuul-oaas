@@ -29,7 +29,6 @@ import lombok.Setter;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.common.exceptions.InvalidTokenException;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import static java.lang.Math.min;
@@ -37,7 +36,7 @@ import static org.springframework.http.HttpStatus.CONFLICT;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
-@Controller
+@RestController
 @RequestMapping("/v1/tokeninfo")
 public class TokenInfoController {
 
@@ -46,7 +45,6 @@ public class TokenInfoController {
     private @Setter int cacheMaxAge = 120;
 
 
-    @ResponseBody
     @RequestMapping(method=GET)
     ResponseEntity<TokenInfo> getTokenInfo(@RequestParam String token) {
 
@@ -57,7 +55,6 @@ public class TokenInfoController {
     }
 
 
-    @ResponseBody
     @ResponseStatus(CONFLICT)
     @ExceptionHandler(InvalidTokenException.class)
     ErrorResponse handleInvalidTokenException(InvalidTokenException ex) {
