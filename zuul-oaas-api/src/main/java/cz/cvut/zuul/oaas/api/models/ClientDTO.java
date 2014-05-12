@@ -23,8 +23,7 @@
  */
 package cz.cvut.zuul.oaas.api.models;
 
-import cz.cvut.zuul.oaas.api.validators.EachURI;
-import cz.cvut.zuul.oaas.api.validators.ValidURI;
+import cz.cvut.zuul.oaas.api.validators.EachValidURI;
 import cz.jirutka.validator.collection.constraints.EachPattern;
 import cz.jirutka.validator.collection.constraints.EachSize;
 import cz.jirutka.validator.spring.SpELAssert;
@@ -34,8 +33,6 @@ import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.security.oauth2.provider.BaseClientDetails.ArrayOrStringDeserializer;
 
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Collection;
 
@@ -45,8 +42,8 @@ import static javax.validation.constraints.Pattern.Flag.CASE_INSENSITIVE;
  * DTO for {@link org.springframework.security.oauth2.provider.ClientDetails}.
  */
 @Data
-@SpELAssert(value = "hasRedirectUri()", applyIf = "authorizedGrantTypes.contains('authorization_code')",
-            message = "{validator.missing_redirect_uri}")
+@SpELAssert(value="hasRedirectUri()", applyIf="authorizedGrantTypes.contains('authorization_code')",
+            message="{validator.missing_redirect_uri}")
 public class ClientDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -55,31 +52,30 @@ public class ClientDTO implements Serializable {
 
     private String clientSecret;
 
-    @EachSize( @Size(min = 5, max = 255) )
-    @EachPattern( @Pattern(regexp = "[\\x21\\x23-\\x5B\\x5D-\\x7E]+",
-        message = "{validator.invalid_scope}" )) // see http://tools.ietf.org/html/rfc6749#section-3.3
-    @JsonDeserialize(using = ArrayOrStringDeserializer.class)
+    @EachSize(min=5, max=255)
+    // see http://tools.ietf.org/html/rfc6749#section-3.3
+    @EachPattern(regexp="[\\x21\\x23-\\x5B\\x5D-\\x7E]+", message="{validator.invalid_scope}")
+    @JsonDeserialize(using=ArrayOrStringDeserializer.class)
     private Collection<String> scope;
 
     //TODO
-    @JsonDeserialize(using = ArrayOrStringDeserializer.class)
+    @JsonDeserialize(using=ArrayOrStringDeserializer.class)
     private Collection<String> resourceIds;
 
     @NotEmpty
-    @EachPattern( @Pattern( // see http://tools.ietf.org/html/rfc6749#section-1.3
-        regexp = "(client_credentials|implicit|authorization_code|resource_owner|refresh_token)",
-        flags = CASE_INSENSITIVE, message = "{validator.invalid_grant_type}"))
-    @JsonDeserialize(using = ArrayOrStringDeserializer.class)
+    // see http://tools.ietf.org/html/rfc6749#section-1.3
+    @EachPattern(regexp="(client_credentials|implicit|authorization_code|resource_owner|refresh_token)",
+                 flags=CASE_INSENSITIVE, message="{validator.invalid_grant_type}")
+    @JsonDeserialize(using=ArrayOrStringDeserializer.class)
     private Collection<String> authorizedGrantTypes;
 
-    @EachSize( @Size(min = 5, max = 255) )
-    @EachURI( @ValidURI(relative = false, fragment = false,
-        message = "{validator.invalid_redirect_uri}"))
+    @EachSize(min=5, max=255)
+    @EachValidURI(relative=false, fragment=false, message="{validator.invalid_redirect_uri}")
     @JsonProperty("redirect_uri")
-    @JsonDeserialize(using = ArrayOrStringDeserializer.class)
+    @JsonDeserialize(using=ArrayOrStringDeserializer.class)
     private Collection<String> registeredRedirectUri;
 
-    @JsonDeserialize(using = ArrayOrStringDeserializer.class)
+    @JsonDeserialize(using=ArrayOrStringDeserializer.class)
     private Collection<String> authorities;
 
     //TODO

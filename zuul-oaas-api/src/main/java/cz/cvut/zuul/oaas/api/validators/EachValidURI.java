@@ -24,6 +24,7 @@
 package cz.cvut.zuul.oaas.api.validators;
 
 import cz.jirutka.validator.collection.CommonEachValidator;
+import cz.jirutka.validator.collection.constraints.EachConstraint;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -35,17 +36,40 @@ import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * JSR-303 collection wrapper constraint for {@link ValidURI}.
+ * @see ValidURI
+ * @see CommonEachValidator
  */
 @Documented
 @Retention(RUNTIME)
 @Target({METHOD, FIELD, PARAMETER})
+@EachConstraint(validateAs = ValidURI.class)
 @Constraint(validatedBy = CommonEachValidator.class)
-public @interface EachURI {
+public @interface EachValidURI {
 
     String message() default "";
+
     Class<?>[] groups() default {};
+
     Class<? extends Payload>[] payload() default {};
 
-    ValidURI[] value();
+    /**
+     * May URI be relative? [default true]
+     */
+    boolean relative() default true;
+
+    /**
+     * May URI contain query string? [default true]
+     */
+    boolean query() default true;
+
+    /**
+     * May URI contain fragment? [default true]
+     */
+    boolean fragment() default true;
+
+    /**
+     * The scheme(s) (protocol) the string must match, eg. ftp or http.
+     * [default any]
+     */
+    String[] scheme() default {};
 }
