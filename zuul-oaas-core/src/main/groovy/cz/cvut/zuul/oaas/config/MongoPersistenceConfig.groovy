@@ -141,7 +141,7 @@ class MongoPersistenceConfig extends AbstractMongoConfiguration implements Persi
     }
 
 
-    private parseServerAddress(String value) {
+    def parseServerAddress(String value) {
         Assert.hasText(value, "server address must not be empty")
 
         def tokens = value.split(':', 2)
