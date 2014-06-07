@@ -68,8 +68,10 @@ class WebContextConfig extends WebMvcConfigurerAdapter {
     }
 
     void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler('/**')
-                .addResourceLocations('classpath:/static/')
+        registry.addResourceHandler('/css/**')
+                .addResourceLocations('classpath:/static/css/')
+        registry.addResourceHandler('/images/**')
+                .addResourceLocations('classpath:/static/images/')
     }
 
     @Bean thymeleafViewResolver() {
