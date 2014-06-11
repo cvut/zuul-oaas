@@ -78,10 +78,11 @@ class CoreServicesConfig extends ConfigurationSupport {
 
     /**
      * Enables method-level validation on annotated methods via JSR-303.
+     * The return value must be typed!
      */
-    @Bean methodValidationPostProcessor() {
+    @Bean MethodValidationPostProcessor methodValidationPostProcessor() {
         new MethodValidationPostProcessor (
-            validator:          validator()
+            validator: validator()
         )
     }
 
