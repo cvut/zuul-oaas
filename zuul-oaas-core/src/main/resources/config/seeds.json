@@ -69,7 +69,7 @@
                 },
                 "userAuth": null
             },
-            "exp": "2099-01-01T0:00:00.000Z",
+            "exp": { "$date": "2099-01-01T0:00:00.000Z" },
             "type": "bearer",
             "refToken": "dummy-refresh-token",
             "scopes": [ "urn:zuul:oauth:dummy", "urn:zuul:oauth:oaas:tokeninfo" ],
