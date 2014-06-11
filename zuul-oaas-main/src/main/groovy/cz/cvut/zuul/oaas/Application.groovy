@@ -49,7 +49,7 @@ class Application extends SpringBootServletInitializer {
     static void main(String[] args) {
         // allow to use shorten option for config file
         args = args*.replace('--conf=', '--spring.config.location=')
-        
+
         new SpringApplicationBuilder()
                 .sources(Application)
                 .showBanner(false)
