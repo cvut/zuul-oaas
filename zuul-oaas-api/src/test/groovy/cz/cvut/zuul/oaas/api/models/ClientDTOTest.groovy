@@ -23,9 +23,9 @@
  */
 package cz.cvut.zuul.oaas.api.models
 
+import cz.cvut.zuul.oaas.api.support.JsonMapperFactory
 import cz.cvut.zuul.oaas.api.test.ApiObjectFactory
 import cz.cvut.zuul.oaas.api.test.ValidatorUtils
-import cz.cvut.zuul.oaas.api.support.JsonMapperFactory
 import groovy.json.JsonSlurper
 import spock.lang.Shared
 import spock.lang.Specification
@@ -121,10 +121,12 @@ class ClientDTOTest extends Specification {
     void 'should be invalid given empty redirect URIs when grant type is "authorization_code"'() {
         given:
             def client = new ClientDTO(
-                    registeredRedirectUri: [],
+                    registeredRedirectUri: redirectUri,
                     authorizedGrantTypes: ['authorization_code']
             )
         expect:
             isInvalid client
+        where:
+            redirectUri << [[], null]
     }
 }

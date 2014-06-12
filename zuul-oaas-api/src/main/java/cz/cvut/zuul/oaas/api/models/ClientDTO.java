@@ -96,6 +96,6 @@ public class ClientDTO implements Serializable {
 
     @SuppressWarnings("UnusedDeclaration")
     public boolean hasRedirectUri() {
-        return !registeredRedirectUri.isEmpty();
+        return registeredRedirectUri != null && !registeredRedirectUri.isEmpty();
     }
 }
