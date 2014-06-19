@@ -23,7 +23,11 @@
  */
 package cz.cvut.zuul.oaas.restapi.config
 
+import cz.cvut.zuul.oaas.api.exceptions.ConflictException
+import cz.cvut.zuul.oaas.api.exceptions.NotFoundException
 import cz.cvut.zuul.oaas.api.support.JsonMapperFactory
+import cz.jirutka.spring.exhandler.RestHandlerExceptionResolver
+import cz.jirutka.spring.exhandler.handlers.ResponseStatusRestExceptionHandler
 import org.springframework.beans.factory.NoSuchBeanDefinitionException
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory
@@ -31,9 +35,18 @@ import org.springframework.beans.factory.config.PlaceholderConfigurerSupport
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
+import org.springframework.context.support.ReloadableResourceBundleMessageSource
 import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter
+import org.springframework.security.oauth2.common.exceptions.BadClientCredentialsException
+import org.springframework.web.servlet.HandlerExceptionResolver
+import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer
 import org.springframework.web.servlet.config.annotation.EnableWebMvc
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
+import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver
+
+import static cz.jirutka.spring.exhandler.support.HttpMessageConverterUtils.getDefaultHttpMessageConverters
+import static org.springframework.http.HttpStatus.*
+import static org.springframework.http.MediaType.APPLICATION_JSON
 
 @Configuration
 @EnableWebMvc
@@ -59,6 +72,35 @@ class RestContextConfig extends WebMvcConfigurerAdapter {
     void configureMessageConverters(List converters) {
         converters << new MappingJacksonHttpMessageConverter (
             objectMapper: JsonMapperFactory.getInstance()
+        )
+    }
+
+    void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
+        configurer.defaultContentType( APPLICATION_JSON )
+    }
+
+    void configureHandlerExceptionResolvers(List<HandlerExceptionResolver> resolvers) {
+        resolvers.add( exceptionHandlerExceptionResolver() ); // resolves @ExceptionHandler
+        resolvers.add( restExceptionResolver() );
+    }
+
+    @Bean restExceptionResolver() {
+        RestHandlerExceptionResolver.builder()
+                .messageSource(new ReloadableResourceBundleMessageSource (
+                    basename:        'classpath:/cz/cvut/zuul/oaas/restapi/exceptions',
+                    defaultEncoding: 'utf-8'
+                ))
+                .defaultContentType( APPLICATION_JSON )
+                .addErrorMessageHandler( NotFoundException, NOT_FOUND )
+                .addErrorMessageHandler( ConflictException, CONFLICT )
+                // TODO is this really needed?
+                .addHandler( BadClientCredentialsException, new ResponseStatusRestExceptionHandler(UNAUTHORIZED) )
+                .build();
+    }
+
+    @Bean exceptionHandlerExceptionResolver() {
+        new ExceptionHandlerExceptionResolver (
+            messageConverters: defaultHttpMessageConverters
         )
     }
 }

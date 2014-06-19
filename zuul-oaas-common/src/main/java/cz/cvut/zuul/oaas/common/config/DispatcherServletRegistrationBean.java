@@ -60,6 +60,7 @@ public class DispatcherServletRegistrationBean extends ServletRegistrationBean {
         cxt.register(configClasses);
 
         super.setServlet(new DispatcherServlet(cxt));
+        super.addInitParameter("throwExceptionIfNoHandlerFound", "true");
 
         super.onStartup(servletContext);
     }

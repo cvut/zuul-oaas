@@ -25,6 +25,7 @@ package cz.cvut.zuul.oaas.restapi.controllers;
 
 import cz.cvut.zuul.oaas.api.models.TokenInfo;
 import cz.cvut.zuul.oaas.api.services.TokensService;
+import cz.jirutka.spring.exhandler.messages.ErrorMessage;
 import lombok.Setter;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -55,10 +56,16 @@ public class TokenInfoController {
     }
 
 
+    @ExceptionHandler
     @ResponseStatus(CONFLICT)
-    @ExceptionHandler(InvalidTokenException.class)
-    ErrorResponse handleInvalidTokenException(InvalidTokenException ex) {
-        return ErrorResponse.from(CONFLICT, ex);
+    ErrorMessage handleInvalidTokenException(InvalidTokenException ex) {
+
+        ErrorMessage msg = new ErrorMessage();
+        msg.setTitle("Invalid Token");
+        msg.setStatus(CONFLICT);
+        msg.setDetail(ex.getLocalizedMessage());
+
+        return msg;
     }
 
 

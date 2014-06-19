@@ -27,7 +27,10 @@ import cz.cvut.zuul.oaas.api.services.ClientsService
 import cz.cvut.zuul.oaas.api.services.ResourcesService
 import cz.cvut.zuul.oaas.api.services.TokensService
 import cz.cvut.zuul.oaas.common.config.ConfigurationSupport
-import cz.cvut.zuul.oaas.restapi.controllers.*
+import cz.cvut.zuul.oaas.restapi.controllers.ClientsController
+import cz.cvut.zuul.oaas.restapi.controllers.ResourcesController
+import cz.cvut.zuul.oaas.restapi.controllers.TokenInfoController
+import cz.cvut.zuul.oaas.restapi.controllers.TokensController
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
@@ -65,9 +68,5 @@ class RestControllersConfig extends ConfigurationSupport {
             tokensService: tokensService,
             cacheMaxAge:   $('restapi.tokeninfo.cache.maxage') as int
         )
-    }
-
-    @Bean CommonExceptionHandler exceptionHandler() {
-        new CommonExceptionHandler()
     }
 }
