@@ -81,6 +81,20 @@
                     <artifactId>spring-boot-starter-jetty</artifactId>
                 </dependency>
 
+                <!-- Rewrite scope to "compile", to be bundled in JAR. -->
+                <dependency>
+                    <groupId>javax.annotation</groupId>
+                    <artifactId>jsr250-api</artifactId>
+                    <scope>compile</scope>
+                </dependency>
+
+                <!-- Rewrite scope to "compile", to be bundled in JAR. -->
+                <dependency>
+                    <groupId>javax.servlet</groupId>
+                    <artifactId>javax.servlet-api</artifactId>
+                    <scope>compile</scope>
+                </dependency>
+
                 <!-- Workaround to exclude dependency from JAR. -->
                 <dependency>
                     <groupId>org.projectlombok</groupId>
