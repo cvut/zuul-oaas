@@ -40,15 +40,16 @@ import cz.cvut.zuul.oaas.repos.mongo.converters.OAuth2AuthenticationReadConverte
 import cz.cvut.zuul.oaas.repos.mongo.converters.OAuth2AuthenticationWriteConverter
 import cz.cvut.zuul.oaas.repos.mongo.support.MongoSeedLoader
 import org.springframework.context.ApplicationContext
+import org.springframework.context.ApplicationListener
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.event.ContextRefreshedEvent
 import org.springframework.data.authentication.UserCredentials
 import org.springframework.data.mongodb.config.AbstractMongoConfiguration
 import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.data.mongodb.core.convert.CustomConversions
 import org.springframework.util.Assert
 
-import javax.annotation.PostConstruct
 import javax.inject.Inject
 
 import static org.springframework.data.mongodb.core.WriteResultChecking.EXCEPTION
@@ -56,20 +57,12 @@ import static org.springframework.data.mongodb.core.WriteResultChecking.EXCEPTIO
 //TODO MongoDB JMX
 @Configuration
 @Mixin(ConfigurationSupport)
-class MongoPersistenceConfig extends AbstractMongoConfiguration implements PersistenceBeans {
+class MongoPersistenceConfig extends AbstractMongoConfiguration
+        implements PersistenceBeans, ApplicationListener<ContextRefreshedEvent> {
 
     // Initialize mixed in ConfigurationSupport
     @Inject initSupport(ApplicationContext ctx) { _initSupport(ctx) }
 
-
-    @PostConstruct loadDatabaseSeed() {
-        if (profileDev) {
-            new MongoSeedLoader(
-                mongoTemplate:  mongoTemplate(),
-                location:       classpath('/config/seeds.json')
-            ).seed()
-        }
-    }
 
     @Lazy String mappingBasePackage = Resource.package.name
 
@@ -79,6 +72,15 @@ class MongoPersistenceConfig extends AbstractMongoConfiguration implements Persi
         $('persistence.mongo.username'),
         $('persistence.mongo.password')
     )
+
+    void onApplicationEvent(ContextRefreshedEvent event) {
+        if (profileDev) {
+            new MongoSeedLoader (
+                mongoTemplate:  mongoTemplate(),
+                location:       classpath('/config/seeds.json')
+            ).seed()
+        }
+    }
 
 
     @Bean Mongo mongo() {

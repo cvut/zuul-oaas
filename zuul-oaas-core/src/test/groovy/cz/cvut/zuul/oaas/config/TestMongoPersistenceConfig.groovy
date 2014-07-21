@@ -38,7 +38,6 @@ class TestMongoPersistenceConfig extends MongoPersistenceConfig {
 
     UserCredentials userCredentials = null
 
-    def loadDatabaseSeed() {}
 
     /**
      * Embedded MongoDB
