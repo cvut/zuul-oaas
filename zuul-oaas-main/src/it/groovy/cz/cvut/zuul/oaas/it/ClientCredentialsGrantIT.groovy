@@ -56,9 +56,8 @@ class ClientCredentialsGrantIT extends AbstractHttpIntegrationTest {
             r.headers['Content-Type'][0].contains 'application/json'
             r.body.json['token_type'] == 'bearer'
 
-        and: 'access token is an UUID'
-            def token = r.body.json['access_token'] as String
-            UUID.fromString(token)
+        and: 'access token is valid and exists'
+            assertAccessToken r.body.json['access_token'] as String
 
         and: 'scope contains only the requested scope'
             r.body.json['scope'] == client.scope[0]

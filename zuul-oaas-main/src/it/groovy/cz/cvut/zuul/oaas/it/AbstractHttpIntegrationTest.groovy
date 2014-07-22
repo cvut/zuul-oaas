@@ -24,6 +24,7 @@
 package cz.cvut.zuul.oaas.it
 
 import cz.cvut.zuul.oaas.Application
+import cz.cvut.zuul.oaas.api.services.TokensService
 import cz.cvut.zuul.oaas.it.config.TestMongoPersistenceConfig
 import cz.cvut.zuul.oaas.it.support.Fixtures
 import cz.cvut.zuul.oaas.it.support.RestTemplateDSL
@@ -33,6 +34,7 @@ import org.springframework.boot.test.IntegrationTest
 import org.springframework.boot.test.SpringApplicationContextLoader
 import org.springframework.core.env.Environment
 import org.springframework.data.mongodb.core.MongoTemplate
+import org.springframework.security.oauth2.provider.token.TokenStore
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.web.WebAppConfiguration
 import spock.lang.Shared
@@ -40,6 +42,8 @@ import spock.lang.Specification
 
 import javax.annotation.PostConstruct
 import javax.inject.Inject
+
+import static cz.cvut.zuul.oaas.it.support.TestUtils.isUUID
 
 @Slf4j
 @WebAppConfiguration
@@ -56,6 +60,8 @@ abstract class AbstractHttpIntegrationTest extends Specification {
     @Inject Environment env
 
     @Inject MongoTemplate mongoTemplate
+
+    @Inject TokenStore tokenStore
 
     static {
         // Override active profile for tests.
@@ -95,5 +101,16 @@ abstract class AbstractHttpIntegrationTest extends Specification {
 
     def dropDatabase() {
         mongoTemplate.db.dropDatabase()
+    }
+
+
+    void assertAccessToken(String accessToken) {
+        assert isUUID(accessToken)
+        assert tokenStore.readAccessToken(accessToken)
+    }
+
+    void assertRefreshToken(String refreshToken) {
+        assert isUUID(refreshToken)
+        assert tokenStore.readRefreshToken(refreshToken)
     }
 }

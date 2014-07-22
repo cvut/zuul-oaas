@@ -37,4 +37,13 @@ abstract class TestUtils {
     static String parseCookie(HttpHeaders headers) {
         headers.getFirst('Set-Cookie')?.split(';')?.first()
     }
+
+    static boolean isUUID(String str) {
+        try {
+            UUID.fromString(str)
+            return true
+        } catch (IllegalArgumentException ex) {
+            return false
+        }
+    }
 }
