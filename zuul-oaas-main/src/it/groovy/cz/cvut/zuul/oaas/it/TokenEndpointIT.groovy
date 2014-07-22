@@ -25,46 +25,57 @@ package cz.cvut.zuul.oaas.it
 
 import cz.cvut.zuul.oaas.it.support.Fixtures
 import cz.cvut.zuul.oaas.it.support.MyResponseEntity
-import cz.cvut.zuul.oaas.models.PersistableAccessToken
+import spock.lang.Unroll
 
 import static cz.cvut.zuul.oaas.it.support.TestUtils.base64
-import static java.lang.Math.abs
 
-class ClientCredentialsGrantIT extends AbstractHttpIntegrationTest {
+class TokenEndpointIT extends AbstractHttpIntegrationTest {
+
+    def client = Fixtures.allGrantsClient()
+
+    def defaultRequestOpts = [
+            ContentType: 'application/x-www-form-urlencoded',
+            body: [grant_type: 'client_credentials']
+    ]
 
     MyResponseEntity r
 
-    def client = Fixtures.allGrantsClient()
-    def credentials = client.clientId + ':' + client.clientSecret
 
+    def 'request token without authorization'() {
+        when:
+            r = POST '/oauth/token'
+        then:
+            r.status == 401
+    }
 
-    def 'request access token with grant client_credentials'() {
-        setup:
-            dropCollection PersistableAccessToken
-        and:
-            def expectedExpires = $('oaas.access_token.validity') as int
-            assert expectedExpires > 0
+    def 'request token with invalid credentials'() {
 
-        when: 'send request to the token endpoint'
+        when: 'using Authorization header'
             r = POST '/oauth/token',
-                ContentType: 'application/x-www-form-urlencoded',
+                Authorization: "Basic ${base64('test-client:invalid')}"
+        then:
+            r.status in [401, 403]
+
+        when: 'using form parameters'
+            r = POST '/oauth/token',
+                body: [grant_type: 'client_credentials', client_id: client.clientId, client_secret: 'invalid']
+        then:
+            r.status in [401, 403]
+    }
+
+    @Unroll
+    def 'request token with #desc'() {
+        given:
+            def credentials = "${client.clientId}:${client.clientSecret}"
+        when:
+            r = POST '/oauth/token',
                 Authorization: "Basic ${base64(credentials)}",
-                body: [grant_type: 'client_credentials', scope: client.scope[0]]
-
-        then: 'should get success response with JSON'
-            r.status == 200
-            r.headers['Content-Type'][0].contains 'application/json'
-            r.body.json['token_type'] == 'bearer'
-
-        and: 'access token is an UUID'
-            def token = r.body.json['access_token'] as String
-            UUID.fromString(token)
-
-        and: 'scope contains only the requested scope'
-            r.body.json['scope'] == client.scope[0]
-
-        and: 'expires_in is cca the same as configured validity duration'
-            def actualExpires = r.body.json['expires_in'] as int
-            abs( actualExpires - expectedExpires ) < 5
+                body: body
+        then:
+            r.status == 400
+        where:
+            body                                                | desc
+            [grant_type: 'implicit', scope: 'urn:zuul:invalid'] | 'unregistered scope'
+            [grant_type: 'invalid']                             | 'invalid grant type'
     }
 }
