@@ -21,25 +21,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package cz.cvut.zuul.oaas.config
+package cz.cvut.zuul.oaas.it.support
 
-import org.springframework.beans.factory.annotation.Qualifier
-import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
-import org.springframework.context.annotation.Profile
-import org.springframework.security.authentication.AuthenticationManager
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
+import org.springframework.util.MultiValueMap
 
-@Configuration
-@Profile(['dev', 'test'])
-class InMemoryUserAuthenticationConfig extends AbstractAuthenticationManagerConfig implements UserAuthenticationBeans {
+class MyResponseEntity extends ResponseEntity<ConvertibleResponseBody> {
 
-    @Bean @Qualifier('user')
-    AuthenticationManager userAuthenticationManager() {
-        builder.inMemoryAuthentication()
-            .withUser('tomy')
-                .password('best').authorities('ROLE_USER')
-               .and()
-            .and()
-        .build()
+    MyResponseEntity(ConvertibleResponseBody body, MultiValueMap<String, String> headers, HttpStatus statusCode) {
+        super(body, headers, statusCode)
+    }
+
+    int getStatus() {
+        statusCode.value()
     }
 }

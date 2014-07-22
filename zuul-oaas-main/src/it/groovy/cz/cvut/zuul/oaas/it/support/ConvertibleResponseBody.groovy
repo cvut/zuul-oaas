@@ -21,25 +21,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package cz.cvut.zuul.oaas.config
+package cz.cvut.zuul.oaas.it.support
 
-import org.springframework.beans.factory.annotation.Qualifier
-import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
-import org.springframework.context.annotation.Profile
-import org.springframework.security.authentication.AuthenticationManager
+import org.springframework.http.HttpStatus
+import org.springframework.http.converter.StringHttpMessageConverter
+import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter
+import org.springframework.mock.http.client.MockClientHttpResponse
 
-@Configuration
-@Profile(['dev', 'test'])
-class InMemoryUserAuthenticationConfig extends AbstractAuthenticationManagerConfig implements UserAuthenticationBeans {
+class ConvertibleResponseBody {
 
-    @Bean @Qualifier('user')
-    AuthenticationManager userAuthenticationManager() {
-        builder.inMemoryAuthentication()
-            .withUser('tomy')
-                .password('best').authorities('ROLE_USER')
-               .and()
-            .and()
-        .build()
+    private final byte[] body
+
+
+    ConvertibleResponseBody(byte[] body) {
+        this.body = body
+    }
+
+    String getStr() {
+        new StringHttpMessageConverter().read(String, clientHttpResponse)
+    }
+
+    Map getJson() {
+        new MappingJacksonHttpMessageConverter().read(Map, clientHttpResponse)
+    }
+
+    private getClientHttpResponse() {
+        new MockClientHttpResponse(body, HttpStatus.OK)
     }
 }

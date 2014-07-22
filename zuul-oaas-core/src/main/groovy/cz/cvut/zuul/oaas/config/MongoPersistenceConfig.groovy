@@ -43,6 +43,7 @@ import org.springframework.context.ApplicationContext
 import org.springframework.context.ApplicationListener
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Profile
 import org.springframework.context.event.ContextRefreshedEvent
 import org.springframework.data.authentication.UserCredentials
 import org.springframework.data.mongodb.config.AbstractMongoConfiguration
@@ -56,6 +57,7 @@ import static org.springframework.data.mongodb.core.WriteResultChecking.EXCEPTIO
 
 //TODO MongoDB JMX
 @Configuration
+@Profile('!test')
 @Mixin(ConfigurationSupport)
 class MongoPersistenceConfig extends AbstractMongoConfiguration
         implements PersistenceBeans, ApplicationListener<ContextRefreshedEvent> {

@@ -21,25 +21,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package cz.cvut.zuul.oaas.config
+package cz.cvut.zuul.oaas.it.support
 
-import org.springframework.beans.factory.annotation.Qualifier
-import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
-import org.springframework.context.annotation.Profile
-import org.springframework.security.authentication.AuthenticationManager
+import cz.cvut.zuul.oaas.models.Client
+import org.springframework.security.core.authority.SimpleGrantedAuthority
 
-@Configuration
-@Profile(['dev', 'test'])
-class InMemoryUserAuthenticationConfig extends AbstractAuthenticationManagerConfig implements UserAuthenticationBeans {
+import static cz.cvut.zuul.oaas.models.AuthorizationGrant.*
 
-    @Bean @Qualifier('user')
-    AuthenticationManager userAuthenticationManager() {
-        builder.inMemoryAuthentication()
-            .withUser('tomy')
-                .password('best').authorities('ROLE_USER')
-               .and()
-            .and()
-        .build()
+abstract class Fixtures {
+
+    static allGrantsClient() {
+        new Client (
+            clientId: 'test-client',
+            clientSecret: 'top-secret',
+            scope: [ 'urn:zuul:oauth:test', 'urn:zuul:oauth:test2', 'urn:zuul:oauth:oaas:tokeninfo' ],
+            authorizedGrantTypes: [ AUTHORIZATION_CODE, CLIENT_CREDENTIALS, IMPLICIT, REFRESH_TOKEN ],
+            registeredRedirectUri: [ 'http://example.org' ],
+            authorities: [ new SimpleGrantedAuthority('ROLE_CLIENT') ],
+        )
     }
 }

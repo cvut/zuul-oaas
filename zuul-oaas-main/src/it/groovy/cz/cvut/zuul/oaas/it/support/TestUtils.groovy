@@ -21,25 +21,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package cz.cvut.zuul.oaas.config
+package cz.cvut.zuul.oaas.it.support
 
-import org.springframework.beans.factory.annotation.Qualifier
-import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
-import org.springframework.context.annotation.Profile
-import org.springframework.security.authentication.AuthenticationManager
+import org.springframework.http.HttpHeaders
 
-@Configuration
-@Profile(['dev', 'test'])
-class InMemoryUserAuthenticationConfig extends AbstractAuthenticationManagerConfig implements UserAuthenticationBeans {
+abstract class TestUtils {
 
-    @Bean @Qualifier('user')
-    AuthenticationManager userAuthenticationManager() {
-        builder.inMemoryAuthentication()
-            .withUser('tomy')
-                .password('best').authorities('ROLE_USER')
-               .and()
-            .and()
-        .build()
+    /**
+     * Encodes string in Base64.
+     */
+    static String base64(String str) {
+        str.bytes.encodeBase64().toString()
+    }
+
+    static String parseCookie(HttpHeaders headers) {
+        headers.getFirst('Set-Cookie')?.split(';')?.first()
     }
 }

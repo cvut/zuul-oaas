@@ -21,25 +21,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package cz.cvut.zuul.oaas.config
+package cz.cvut.zuul.oaas.it.config
 
-import org.springframework.beans.factory.annotation.Qualifier
+import com.mongodb.Mongo
+import cz.cvut.zuul.oaas.config.MongoPersistenceConfig
+import cz.jirutka.spring.embedmongo.EmbeddedMongoBuilder
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.context.annotation.Profile
-import org.springframework.security.authentication.AuthenticationManager
+import org.springframework.data.authentication.UserCredentials
+
+import javax.annotation.PreDestroy
 
 @Configuration
-@Profile(['dev', 'test'])
-class InMemoryUserAuthenticationConfig extends AbstractAuthenticationManagerConfig implements UserAuthenticationBeans {
+class TestMongoPersistenceConfig extends MongoPersistenceConfig {
 
-    @Bean @Qualifier('user')
-    AuthenticationManager userAuthenticationManager() {
-        builder.inMemoryAuthentication()
-            .withUser('tomy')
-                .password('best').authorities('ROLE_USER')
-               .and()
-            .and()
-        .build()
+    String databaseName = 'oaas_it'
+
+    UserCredentials userCredentials = null
+
+
+    /**
+     * Embedded MongoDB
+     *
+     * It's not truly embedded 'cause there's no Java implementation of the MongoDB. This
+     * initializes embedmongo.flapdoodle.de that is able to download original MongoDB binary for
+     * your platform and run it for your integration tests.
+     */
+    @Bean Mongo mongo() {
+        new EmbeddedMongoBuilder()
+            .version('2.2.6')
+            .build()
+    }
+
+    @PreDestroy stopMongo() {
+        mongo().close()
     }
 }
