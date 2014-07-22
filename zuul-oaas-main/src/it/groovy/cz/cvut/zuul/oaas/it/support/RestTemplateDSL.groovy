@@ -44,8 +44,11 @@ import static org.springframework.util.StreamUtils.copyToByteArray
 
 class RestTemplateDSL {
 
-    final String defaultBaseUri
-    final RestTemplate restTemplate
+    RestTemplate restTemplate = createDefaultRestTemplate()
+
+    String defaultBaseUri = 'http://localhost'
+
+    Map defaultRequestOpts = [:]
 
     List<HttpMessageConverter> converters = [
             new FormHttpMessageConverter(),
@@ -53,11 +56,6 @@ class RestTemplateDSL {
             new StringHttpMessageConverter()
     ]
 
-
-    RestTemplateDSL(String defaultBaseUri) {
-        this.defaultBaseUri = defaultBaseUri
-        this.restTemplate = createRestTemplate()
-    }
 
     static formatQuery(Map<String, String> query) {
         query.collect { k, v -> "${k}=${v}" }.join('&')
@@ -73,7 +71,7 @@ class RestTemplateDSL {
     }
 
 
-    protected createRestTemplate() {
+    private createDefaultRestTemplate() {
         def rest = new RestTemplate(new SimpleClientHttpRequestFactory() {
             void prepareConnection(HttpURLConnection conn, String httpMethod) {
                 super.prepareConnection(conn, httpMethod)
@@ -89,6 +87,9 @@ class RestTemplateDSL {
 
 
     private execute(HttpMethod method, String path, Map<String, ?> opts) {
+
+        // merge with defaults
+        opts = defaultRequestOpts + opts
 
         if (!path.startsWith('http')) {
             path = defaultBaseUri + path

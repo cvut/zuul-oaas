@@ -48,7 +48,7 @@ import javax.inject.Inject
 @ContextConfiguration(classes=[Application, TestMongoPersistenceConfig], loader=SpringApplicationContextLoader)
 abstract class AbstractHttpIntegrationTest extends Specification {
 
-    @Delegate
+    @Delegate(includes=['GET', 'POST'])
     private RestTemplateDSL httpClient
 
     @Shared String serverUri
@@ -66,7 +66,7 @@ abstract class AbstractHttpIntegrationTest extends Specification {
     @Inject
     private setupHttpClient(EmbeddedWebApplicationContext server) {
         serverUri = 'http://localhost:' + server.embeddedServletContainer.port
-        httpClient = new RestTemplateDSL(serverUri)
+        httpClient = new RestTemplateDSL(defaultBaseUri: serverUri, defaultRequestOpts: defaultRequestOpts)
     }
 
     @PostConstruct prepareDatabase() {
@@ -78,8 +78,11 @@ abstract class AbstractHttpIntegrationTest extends Specification {
     }
 
 
+    // to be overridden in subclasses
+    def getDefaultRequestOpts() { [:] }
+
     def <T> T $(String propertyKey, Class<T> type = String) {
-        return env.getProperty(propertyKey, type)
+        env.getProperty(propertyKey, type)
     }
 
     def loadSeed() {
