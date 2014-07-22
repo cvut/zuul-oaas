@@ -24,15 +24,12 @@
 package cz.cvut.zuul.oaas.it
 
 import cz.cvut.zuul.oaas.it.support.Fixtures
-import cz.cvut.zuul.oaas.it.support.MyResponseEntity
 import cz.cvut.zuul.oaas.models.PersistableAccessToken
 
 import static cz.cvut.zuul.oaas.it.support.TestUtils.base64
 import static java.lang.Math.abs
 
 class ClientCredentialsGrantIT extends AbstractHttpIntegrationTest {
-
-    MyResponseEntity r
 
     def client = Fixtures.allGrantsClient()
     def credentials = client.clientId + ':' + client.clientSecret

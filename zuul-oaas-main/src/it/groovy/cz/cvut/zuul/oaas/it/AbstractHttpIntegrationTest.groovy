@@ -27,6 +27,7 @@ import cz.cvut.zuul.oaas.Application
 import cz.cvut.zuul.oaas.api.services.TokensService
 import cz.cvut.zuul.oaas.it.config.TestMongoPersistenceConfig
 import cz.cvut.zuul.oaas.it.support.Fixtures
+import cz.cvut.zuul.oaas.it.support.MyResponseEntity
 import cz.cvut.zuul.oaas.it.support.RestTemplateDSL
 import groovy.util.logging.Slf4j
 import org.springframework.boot.context.embedded.EmbeddedWebApplicationContext
@@ -62,6 +63,8 @@ abstract class AbstractHttpIntegrationTest extends Specification {
     @Inject MongoTemplate mongoTemplate
 
     @Inject TokenStore tokenStore
+
+    protected MyResponseEntity r
 
     static {
         // Override active profile for tests.

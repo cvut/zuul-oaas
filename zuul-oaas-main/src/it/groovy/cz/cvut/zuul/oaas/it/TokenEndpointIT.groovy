@@ -24,7 +24,6 @@
 package cz.cvut.zuul.oaas.it
 
 import cz.cvut.zuul.oaas.it.support.Fixtures
-import cz.cvut.zuul.oaas.it.support.MyResponseEntity
 import spock.lang.Unroll
 
 import static cz.cvut.zuul.oaas.it.support.TestUtils.base64
@@ -37,8 +36,6 @@ class TokenEndpointIT extends AbstractHttpIntegrationTest {
             ContentType: 'application/x-www-form-urlencoded',
             body: [grant_type: 'client_credentials']
     ]
-
-    MyResponseEntity r
 
 
     def 'request token without authorization'() {
