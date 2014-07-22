@@ -64,11 +64,11 @@ class RestTemplateDSL {
     }
 
 
-    MyResponseEntity GET(Map<String, Object> opts = [:], String path) {
+    MyResponseEntity GET(Map<String, ?> opts = [:], String path) {
         execute GET, path, opts
     }
 
-    MyResponseEntity POST(Map<String, Object> opts = [:], String path) {
+    MyResponseEntity POST(Map<String, ?> opts = [:], String path) {
         execute POST, path, opts
     }
 
@@ -88,7 +88,7 @@ class RestTemplateDSL {
     }
 
 
-    private execute(HttpMethod method, String path, Map<String, Object> opts) {
+    private execute(HttpMethod method, String path, Map<String, ?> opts) {
 
         if (!path.startsWith('http')) {
             path = defaultBaseUri + path
@@ -101,7 +101,7 @@ class RestTemplateDSL {
         restTemplate.execute(path, method, requestCallback, responseExtractor)
     }
 
-    private parseRequestBody(Map<String, Object> opts) {
+    private parseRequestBody(Map<String, ?> opts) {
         def body = opts['body']
 
         switch (opts['ContentType']?.toString()) {
@@ -114,7 +114,7 @@ class RestTemplateDSL {
         }
     }
 
-    private collectHeaders(Map<String, Object> opts) {
+    private collectHeaders(Map<String, ?> opts) {
 
         opts.findAll { k, v ->
             k.chars[0].isUpperCase()
@@ -126,7 +126,7 @@ class RestTemplateDSL {
         }
     }
 
-    private collectQuery(Map<String, Object> opts) {
+    private collectQuery(Map<String, ?> opts) {
         'query' in opts ? "?${formatQuery(opts['query'])}" : ''
     }
 
