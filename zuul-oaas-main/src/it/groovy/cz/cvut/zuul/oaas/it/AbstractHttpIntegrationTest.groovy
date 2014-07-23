@@ -40,7 +40,6 @@ import org.springframework.test.context.web.WebAppConfiguration
 import spock.lang.Shared
 import spock.lang.Specification
 
-import javax.annotation.PostConstruct
 import javax.inject.Inject
 
 import static cz.cvut.zuul.oaas.it.support.TestUtils.isUUID
@@ -55,6 +54,9 @@ abstract class AbstractHttpIntegrationTest extends Specification {
 
     @Delegate(includes=['GET', 'POST'])
     private RestTemplateDSL httpClient
+
+    @Shared
+    private boolean initialized
 
     @Shared String serverUri
 
@@ -78,7 +80,15 @@ abstract class AbstractHttpIntegrationTest extends Specification {
         httpClient = new RestTemplateDSL(defaultBaseUri: serverUri, defaultRequestOpts: defaultRequestOpts)
     }
 
-    @PostConstruct prepareDatabase() {
+    def setup() {
+        // workaround; in setupSpec phase beans are not injected yet
+        if (!initialized) {
+            prepareSpec()
+            initialized = true
+        }
+    }
+
+    def prepareSpec() {
         log.info 'Dropping database'
         dropDatabase()
 
