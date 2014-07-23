@@ -36,18 +36,22 @@ class AuthorizationCodeGrantIT extends AbstractHttpIntegrationTest {
     def client = Fixtures.allGrantsClient()
     def credentials = "${client.clientId}:${client.clientSecret}"
 
+    def authzParams = [
+            response_type: 'code',
+            state: 'xyz',
+            client_id: client.clientId,
+            redirect_uri: client.registeredRedirectUri[0],
+            scope: client.scope[0]
+    ]
+
     def defaultRequestOpts = [
             Accept: 'text/html, application/xhtml+xml'
     ]
 
 
-    def 'request user authorization, approve access and obtain access token'() {
+    def 'request user authorization, log-in user, approve access and obtain access token'() {
         setup:
             dropCollection PersistableAccessToken
-        and:
-            def redirectUri = client.registeredRedirectUri[0]
-            def authzParams = [response_type: 'code', state: 'xyz',
-                               client_id: client.clientId, redirect_uri: redirectUri, scope: client.scope[0]]
 
         when: 'send request to the authorization endpoint'
             r = GET '/oauth/authorize', query: authzParams
@@ -100,7 +104,11 @@ class AuthorizationCodeGrantIT extends AbstractHttpIntegrationTest {
 
         then: 'should be redirected to the specified redirect_uri with authorization code'
             r.status == 302
-            r.headers['Location'][0] ==~ /${redirectUri}\?code=.*&state=xyz/
+            r.headers['Location'][0].with {
+                it.startsWith(authzParams['redirect_uri']) &&
+                it.contains('code=') &&
+                it.contains("state=${authzParams['state']}")
+            }
         and:
             def matcher = r.headers['Location'][0] =~ /code=(.*)&/
             def code = matcher[0][1]
@@ -110,7 +118,7 @@ class AuthorizationCodeGrantIT extends AbstractHttpIntegrationTest {
                 ContentType: 'application/x-www-form-urlencoded',
                 Accept: 'application/json',
                 Authorization: "Basic ${base64(credentials)}",
-                body: [code: code, grant_type: 'authorization_code', redirect_uri: redirectUri]
+                body: [code: code, grant_type: 'authorization_code', redirect_uri: authzParams['redirect_uri']]
 
         then: 'should get success response with JSON'
             r.status == 200
@@ -130,25 +138,17 @@ class AuthorizationCodeGrantIT extends AbstractHttpIntegrationTest {
         setup:
             dropCollection PersistableAccessToken
         and:
-            def redirectUri = client.registeredRedirectUri[1]
-            def authzParams = [response_type: 'code', state: 'zyx',
-                               client_id: client.clientId, redirect_uri: redirectUri]
-            def location, cookie
+            authzParams += [state: 'zyx', redirect_uri: client.registeredRedirectUri[1]]
+            def cookie = loginUserAndGetCookie()
 
-        and: 'send request to the authorization endpoint'
-            r = GET '/oauth/authorize', query: authzParams
-            location = r.headers['Location'][0]
-            cookie = parseCookie(r.headers)
-            r = GET location, Cookie: cookie
+        when: 'send request to the authorization endpoint'
+            r = GET '/oauth/authorize', query: authzParams,
+                Cookie: cookie
 
-        and: 'post form with valid credentials'
-            r = POST '/login.do',
-                ContentType: 'application/x-www-form-urlencoded',
-                Cookie: cookie,
-                body: [j_username: 'tomy', j_password: 'best']
-            location = r.headers['Location'][0]
-            cookie = r.headers['Set-Cookie'] ? parseCookie(r.headers) : cookie
-            r = GET location, Cookie: cookie
+        then: 'should get HTML page that contains user_oauth_approval'
+            r.status == 200
+            r.headers['Content-Type'][0].contains 'text/html'
+            r.body.str.contains USER_OAUTH_APPROVAL
 
         when: 'post form with authorization rejection'
             r = POST '/oauth/authorize',
@@ -159,9 +159,9 @@ class AuthorizationCodeGrantIT extends AbstractHttpIntegrationTest {
         then: 'should be redirected to the specified redirect_uri with error access_denied'
             r.status == 302
             r.headers['Location'][0].with {
-                it.startsWith(redirectUri) &&
+                it.startsWith(authzParams['redirect_uri']) &&
                 it.contains('error=access_denied') &&
-                it.contains('state=zyx') &&
+                it.contains("state=${authzParams['state']}") &&
                 ! it.contains('code=')
             }
     }

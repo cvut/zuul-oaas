@@ -24,7 +24,6 @@
 package cz.cvut.zuul.oaas.it
 
 import cz.cvut.zuul.oaas.Application
-import cz.cvut.zuul.oaas.api.services.TokensService
 import cz.cvut.zuul.oaas.it.config.TestMongoPersistenceConfig
 import cz.cvut.zuul.oaas.it.support.Fixtures
 import cz.cvut.zuul.oaas.it.support.MyResponseEntity
@@ -45,6 +44,7 @@ import javax.annotation.PostConstruct
 import javax.inject.Inject
 
 import static cz.cvut.zuul.oaas.it.support.TestUtils.isUUID
+import static cz.cvut.zuul.oaas.it.support.TestUtils.parseCookie
 
 @Slf4j
 @WebAppConfiguration
@@ -104,6 +104,16 @@ abstract class AbstractHttpIntegrationTest extends Specification {
 
     def dropDatabase() {
         mongoTemplate.db.dropDatabase()
+    }
+
+    def loginUserAndGetCookie() {
+       def response =
+            POST '/login.do',
+            ContentType: 'application/x-www-form-urlencoded',
+            Accept: '*/*',
+            body: [j_username: 'tomy', j_password: 'best']
+
+        parseCookie(response.headers)
     }
 
 
