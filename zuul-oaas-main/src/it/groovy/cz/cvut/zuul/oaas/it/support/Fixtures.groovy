@@ -36,7 +36,7 @@ abstract class Fixtures {
             clientSecret: 'top-secret',
             scope: [ 'urn:zuul:oauth:test', 'urn:zuul:oauth:test2', 'urn:zuul:oauth:oaas:tokeninfo' ],
             authorizedGrantTypes: [ AUTHORIZATION_CODE, CLIENT_CREDENTIALS, IMPLICIT, REFRESH_TOKEN ],
-            registeredRedirectUri: [ 'http://example.org' ],
+            registeredRedirectUri: [ 'http://example.org', 'http://fit.cvut.cz' ],
             authorities: [ new SimpleGrantedAuthority('ROLE_CLIENT') ],
         )
     }

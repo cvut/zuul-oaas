@@ -87,11 +87,10 @@ class AuthorizationCodeGrantIT extends AbstractHttpIntegrationTest {
             r = GET location2,
                 Cookie: cookie2
 
-        then: 'should get HTML page that contain user_oauth_approval and user_oauth_denial buttons'
+        then: 'should get HTML page that contains user_oauth_approval'
             r.status == 200
             r.headers['Content-Type'][0].contains 'text/html'
-            r.body.str =~ /<button[^>]*name="user_oauth_approval"/
-            r.body.str =~ /<button[^>]*name="user_oauth_denial"/
+            r.body.str.contains USER_OAUTH_APPROVAL
 
         when: 'post form with authorization approval'
             r = POST '/oauth/authorize',
@@ -125,5 +124,45 @@ class AuthorizationCodeGrantIT extends AbstractHttpIntegrationTest {
 
         and: 'scope contains only the requested scope'
             r.body.json['scope'] == client.scope[0]
+    }
+
+    def 'request user authorization and reject access'() {
+        setup:
+            dropCollection PersistableAccessToken
+        and:
+            def redirectUri = client.registeredRedirectUri[1]
+            def authzParams = [response_type: 'code', state: 'zyx',
+                               client_id: client.clientId, redirect_uri: redirectUri]
+            def location, cookie
+
+        and: 'send request to the authorization endpoint'
+            r = GET '/oauth/authorize', query: authzParams
+            location = r.headers['Location'][0]
+            cookie = parseCookie(r.headers)
+            r = GET location, Cookie: cookie
+
+        and: 'post form with valid credentials'
+            r = POST '/login.do',
+                ContentType: 'application/x-www-form-urlencoded',
+                Cookie: cookie,
+                body: [j_username: 'tomy', j_password: 'best']
+            location = r.headers['Location'][0]
+            cookie = r.headers['Set-Cookie'] ? parseCookie(r.headers) : cookie
+            r = GET location, Cookie: cookie
+
+        when: 'post form with authorization rejection'
+            r = POST '/oauth/authorize',
+                ContentType: 'application/x-www-form-urlencoded',
+                Cookie: cookie,
+                body: [(USER_OAUTH_APPROVAL): 'false']
+
+        then: 'should be redirected to the specified redirect_uri with error access_denied'
+            r.status == 302
+            r.headers['Location'][0].with {
+                it.startsWith(redirectUri) &&
+                it.contains('error=access_denied') &&
+                it.contains('state=zyx') &&
+                ! it.contains('code=')
+            }
     }
 }
