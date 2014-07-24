@@ -71,7 +71,7 @@ class AuthorizationCodeGrantIT extends AbstractHttpIntegrationTest {
         and:
             dropCollection PersistableAccessToken
 
-        when: 'send request to the authorization endpoint'
+        when: 'request authorization with response_type code'
         send  GET: '/oauth/authorize', query: authzParams
 
         then:
@@ -146,7 +146,7 @@ class AuthorizationCodeGrantIT extends AbstractHttpIntegrationTest {
         setup:
             def cookie = loginUserAndGetCookie()
 
-        when:
+        when: 'request authorization with response_type token'
         send  GET: '/oauth/authorize', query: authzParams,
               Cookie: cookie
 
@@ -163,7 +163,7 @@ class AuthorizationCodeGrantIT extends AbstractHttpIntegrationTest {
             authzParams += [scope: client.scope.join(' ')]
             def cookie = loginUserAndGetCookie()
 
-        when:
+        when: 'request authorization with response_type token'
         send  GET: '/oauth/authorize', query: authzParams,
               Cookie: cookie
 
@@ -181,7 +181,7 @@ class AuthorizationCodeGrantIT extends AbstractHttpIntegrationTest {
             authzParams += [state: 'zyx', redirect_uri: client.registeredRedirectUri[1]]
             def cookie = loginUserAndGetCookie()
 
-        when: 'send request to the authorization endpoint'
+        when: 'request authorization with response_type token'
         send  GET: '/oauth/authorize', query: authzParams,
               Cookie: cookie
 
