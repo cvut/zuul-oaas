@@ -34,8 +34,8 @@ abstract class TestUtils {
         str.bytes.encodeBase64().toString()
     }
 
-    static String parseCookie(HttpHeaders headers) {
-        headers.getFirst('Set-Cookie')?.split(';')?.first()
+    static String parseCookie(String value) {
+        value?.split(';')?.first()
     }
 
     static boolean isUUID(String str) {

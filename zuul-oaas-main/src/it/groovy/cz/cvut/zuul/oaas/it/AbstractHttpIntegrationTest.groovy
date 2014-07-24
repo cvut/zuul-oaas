@@ -26,6 +26,7 @@ package cz.cvut.zuul.oaas.it
 import cz.cvut.zuul.oaas.Application
 import cz.cvut.zuul.oaas.it.config.TestMongoPersistenceConfig
 import cz.cvut.zuul.oaas.it.support.Fixtures
+import cz.cvut.zuul.oaas.it.support.HttpResponseAssertDSL
 import cz.cvut.zuul.oaas.it.support.MyResponseEntity
 import cz.cvut.zuul.oaas.it.support.RestTemplateDSL
 import groovy.util.logging.Slf4j
@@ -52,9 +53,6 @@ import static cz.cvut.zuul.oaas.it.support.TestUtils.parseCookie
 @ContextConfiguration(classes=[Application, TestMongoPersistenceConfig], loader=SpringApplicationContextLoader)
 abstract class AbstractHttpIntegrationTest extends Specification {
 
-    @Delegate(includes=['GET', 'POST'])
-    private RestTemplateDSL httpClient
-
     @Shared
     private boolean initialized
 
@@ -66,7 +64,10 @@ abstract class AbstractHttpIntegrationTest extends Specification {
 
     @Inject TokenStore tokenStore
 
-    protected MyResponseEntity r
+    private RestTemplateDSL httpClient
+
+    protected MyResponseEntity response
+
 
     static {
         // Override active profile for tests.
@@ -104,6 +105,17 @@ abstract class AbstractHttpIntegrationTest extends Specification {
         env.getProperty(propertyKey, type)
     }
 
+    MyResponseEntity send(Map<String, ?> kwargs) {
+        response = httpClient.perform(kwargs)
+    }
+
+    void check(Map<String, ?> kwargs, status=-1) {
+        if (status != -1) {
+            kwargs['status'] = status
+        }
+        new HttpResponseAssertDSL().expect(kwargs, response)
+    }
+
     def loadSeed() {
         mongoTemplate.save(Fixtures.allGrantsClient())
     }
@@ -117,23 +129,22 @@ abstract class AbstractHttpIntegrationTest extends Specification {
     }
 
     def loginUserAndGetCookie() {
-       def response =
-            POST '/login.do',
-            ContentType: 'application/x-www-form-urlencoded',
-            Accept: '*/*',
-            body: [j_username: 'tomy', j_password: 'best']
+       def resp = send(
+           POST: '/login.do',
+           ContentType: 'application/x-www-form-urlencoded',
+           Accept: '*/*',
+           body: [j_username: 'tomy', j_password: 'best']
+       )
 
-        parseCookie(response.headers)
+        parseCookie(resp.headers.getFirst('Set-Cookie'))
     }
 
 
-    void assertAccessToken(String accessToken) {
-        assert isUUID(accessToken)
-        assert tokenStore.readAccessToken(accessToken)
+    def isValidAccessToken(String accessToken) {
+        isUUID(accessToken) && tokenStore.readAccessToken(accessToken)
     }
 
-    void assertRefreshToken(String refreshToken) {
-        assert isUUID(refreshToken)
-        assert tokenStore.readRefreshToken(refreshToken)
+    def isValidRefreshToken(String refreshToken) {
+        isUUID(refreshToken) && tokenStore.readRefreshToken(refreshToken)
     }
 }

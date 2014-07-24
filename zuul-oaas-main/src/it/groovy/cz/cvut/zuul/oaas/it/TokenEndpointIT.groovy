@@ -40,24 +40,24 @@ class TokenEndpointIT extends AbstractHttpIntegrationTest {
 
     def 'request token without authorization'() {
         when:
-            r = POST '/oauth/token'
+            send POST: '/oauth/token'
         then:
-            r.status == 401
+            response.status == 401
     }
 
     def 'request token with invalid credentials'() {
 
         when: 'using Authorization header'
-            r = POST '/oauth/token',
-                Authorization: "Basic ${base64('test-client:invalid')}"
-        then:
-            r.status in [401, 403]
+        send  POST: '/oauth/token',
+              Authorization: "Basic ${base64('test-client:invalid')}"
+
+        then: response.status in [401, 403]
 
         when: 'using form parameters'
-            r = POST '/oauth/token',
-                body: [grant_type: 'client_credentials', client_id: client.clientId, client_secret: 'invalid']
-        then:
-            r.status in [401, 403]
+        send  POST: '/oauth/token',
+              body: [grant_type: 'client_credentials', client_id: client.clientId, client_secret: 'invalid']
+
+        then: response.status in [401, 403]
     }
 
     @Unroll
@@ -65,11 +65,12 @@ class TokenEndpointIT extends AbstractHttpIntegrationTest {
         given:
             def credentials = "${client.clientId}:${client.clientSecret}"
         when:
-            r = POST '/oauth/token',
-                Authorization: "Basic ${base64(credentials)}",
-                body: body
-        then:
-            r.status == 400
+        send  POST: '/oauth/token',
+              Authorization: "Basic ${base64(credentials)}",
+              body: body
+
+        then: response.status == 400
+
         where:
             body                                                | desc
             [grant_type: 'implicit', scope: 'urn:zuul:invalid'] | 'unregistered scope'

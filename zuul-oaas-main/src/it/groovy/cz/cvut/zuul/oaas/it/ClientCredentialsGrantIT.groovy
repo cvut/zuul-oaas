@@ -28,6 +28,8 @@ import cz.cvut.zuul.oaas.models.PersistableAccessToken
 
 import static cz.cvut.zuul.oaas.it.support.TestUtils.base64
 import static java.lang.Math.abs
+import static org.springframework.http.HttpStatus.OK
+import static org.springframework.http.MediaType.APPLICATION_JSON
 
 class ClientCredentialsGrantIT extends AbstractHttpIntegrationTest {
 
@@ -43,24 +45,21 @@ class ClientCredentialsGrantIT extends AbstractHttpIntegrationTest {
             assert expectedExpires > 0
 
         when: 'send request to the token endpoint'
-            r = POST '/oauth/token',
-                ContentType: 'application/x-www-form-urlencoded',
-                Authorization: "Basic ${base64(credentials)}",
-                body: [grant_type: 'client_credentials', scope: client.scope[0]]
+        send  POST: '/oauth/token',
+              ContentType: 'application/x-www-form-urlencoded',
+              Authorization: "Basic ${base64(credentials)}",
+              body: [grant_type: 'client_credentials', scope: client.scope[0]]
 
-        then: 'should get success response with JSON'
-            r.status == 200
-            r.headers['Content-Type'][0].contains 'application/json'
-            r.body.json['token_type'] == 'bearer'
+        then: 'should get valid access token for the requested scope (only)'
+        check status: OK,
+              ContentType: APPLICATION_JSON,
+              body: { body ->
+                  assert body.json['token_type'] == 'bearer'
+                  assert body.json['scope'] == client.scope[0]
+                  assert isValidAccessToken(body.json['access_token'])
 
-        and: 'access token is valid and exists'
-            assertAccessToken r.body.json['access_token'] as String
-
-        and: 'scope contains only the requested scope'
-            r.body.json['scope'] == client.scope[0]
-
-        and: 'expires_in is cca the same as configured validity duration'
-            def actualExpires = r.body.json['expires_in'] as int
-            abs( actualExpires - expectedExpires ) < 5
+                  def actualExpires = body.json['expires_in'] as int
+                  assert abs( actualExpires - expectedExpires ) < 5
+              }
     }
 }

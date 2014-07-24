@@ -29,12 +29,29 @@ import cz.cvut.zuul.oaas.models.PersistableAccessToken
 import static cz.cvut.zuul.oaas.it.support.RestTemplateDSL.formatQuery
 import static cz.cvut.zuul.oaas.it.support.TestUtils.base64
 import static cz.cvut.zuul.oaas.it.support.TestUtils.parseCookie
+import static org.springframework.http.HttpStatus.FOUND
+import static org.springframework.http.HttpStatus.OK
+import static org.springframework.http.MediaType.APPLICATION_JSON
+import static org.springframework.http.MediaType.TEXT_HTML
 import static org.springframework.security.oauth2.provider.AuthorizationRequest.USER_OAUTH_APPROVAL
 
 class AuthorizationCodeGrantIT extends AbstractHttpIntegrationTest {
 
-    def client = Fixtures.allGrantsClient()
-    def credentials = "${client.clientId}:${client.clientSecret}"
+    static final ASSERT_LOGIN_PAGE = {
+        assert it.str =~ /<input[^>]*name="j_username"/
+        assert it.str =~ /<input[^>]*name="j_password"/
+    }
+
+    final static ASSERT_CONFIRMATION_PAGE = {
+        assert it.str.contains(USER_OAUTH_APPROVAL)
+    }
+
+    final client = Fixtures.allGrantsClient()
+    final credentials = "${client.clientId}:${client.clientSecret}"
+
+    final defaultRequestOpts = [
+            Accept: 'text/html, application/xhtml+xml'
+    ]
 
     def authzParams = [
             response_type: 'code',
@@ -44,94 +61,82 @@ class AuthorizationCodeGrantIT extends AbstractHttpIntegrationTest {
             scope: client.scope[0]
     ]
 
-    def defaultRequestOpts = [
-            Accept: 'text/html, application/xhtml+xml'
-    ]
-
 
     def 'request user authorization, log-in user, approve access and obtain access token'() {
         setup:
+            def cookie = null
+            def code = null
+        and:
             dropCollection PersistableAccessToken
 
         when: 'send request to the authorization endpoint'
-            r = GET '/oauth/authorize', query: authzParams
+        send  GET: '/oauth/authorize', query: authzParams
 
-        then: 'should get a Cookie and be redirected to the login page'
-            def location1 = r.headers['Location'][0]
-            def cookie1 = parseCookie(r.headers)
-        and:
-            r.status == 302
-            cookie1 != null
-            location1 == "$serverUri/login.html"
+        then:
+        check status: FOUND,
+              Location: "$serverUri/login.html",
+              SetCookie: { cookie = parseCookie(it) }
 
         when: 'follow redirect to the login page'
-            r = GET location1,
-                Cookie: cookie1
+        send  GET: '/login.html', Cookie: cookie
 
-        then: 'should get HTML page that contain input fields for login'
-            r.status == 200
-            r.headers['Content-Type'][0].contains 'text/html'
-            r.body.str =~ /<input[^>]*name="j_username"/
-            r.body.str =~ /<input[^>]*name="j_password"/
+        then:
+        check status: OK,
+              ContentType: TEXT_HTML,
+              body: ASSERT_LOGIN_PAGE
 
-        when: 'post form with valid credentials'
-            r = POST '/login.do',
-                ContentType: 'application/x-www-form-urlencoded',
-                Cookie: cookie1,
-                body: [j_username: 'tomy', j_password: 'best']
+        when: 'log-in user with valid credentials'
+        send  POST: '/login.do',
+              ContentType: 'application/x-www-form-urlencoded',
+              Cookie: cookie,
+              body: [j_username: 'tomy', j_password: 'best']
 
         then: 'should be redirected back to the authorization endpoint with the same query as in the first step'
-            def location2 = r.headers['Location'][0]
-            def cookie2 = r.headers['Set-Cookie'] ? parseCookie(r.headers) : cookie1
-        and:
-            r.status == 302
-            location2 == "${serverUri}/oauth/authorize?${formatQuery(authzParams)}"
+        check status: FOUND,
+              Location: "${serverUri}/oauth/authorize?${formatQuery(authzParams)}",
+              SetCookie: { cookie = it ? parseCookie(it) : cookie }
 
         when: 'follow redirection back to the authorization endpoint'
-            r = GET location2,
-                Cookie: cookie2
+        send  GET: '/oauth/authorize', query: authzParams,
+              Cookie: cookie
 
-        then: 'should get HTML page that contains user_oauth_approval'
-            r.status == 200
-            r.headers['Content-Type'][0].contains 'text/html'
-            r.body.str.contains USER_OAUTH_APPROVAL
+        then:
+        check status: OK,
+              ContentType: TEXT_HTML,
+              body: ASSERT_CONFIRMATION_PAGE
 
-        when: 'post form with authorization approval'
-            r = POST '/oauth/authorize',
-                ContentType: 'application/x-www-form-urlencoded',
-                Cookie: cookie2,
-                body: [(USER_OAUTH_APPROVAL): 'true']
+        when: 'approve client authorization'
+        send  POST: '/oauth/authorize',
+              ContentType: 'application/x-www-form-urlencoded',
+              Cookie: cookie,
+              body: [(USER_OAUTH_APPROVAL): 'true']
 
         then: 'should be redirected to the specified redirect_uri with authorization code'
-            r.status == 302
-            r.headers['Location'][0].with {
-                it.startsWith(authzParams['redirect_uri']) &&
-                it.contains('code=') &&
-                it.contains("state=${authzParams['state']}")
-            }
-        and:
-            def matcher = r.headers['Location'][0] =~ /code=(.*)&/
-            def code = matcher[0][1]
+        check status: FOUND,
+              Location: {
+                  assert it.startsWith(authzParams['redirect_uri']) &&
+                         it.contains('code=') &&
+                         it.contains("state=${authzParams['state']}")
+                  code = (it =~ /code=(.*)&/)[0][1]
+              }
 
         when: 'send authorized request to the token endpoint'
-            r = POST '/oauth/token',
-                ContentType: 'application/x-www-form-urlencoded',
-                Accept: 'application/json',
-                Authorization: "Basic ${base64(credentials)}",
-                body: [code: code, grant_type: 'authorization_code', redirect_uri: authzParams['redirect_uri']]
+        send  POST: '/oauth/token',
+              ContentType: 'application/x-www-form-urlencoded',
+              Accept: 'application/json',
+              Authorization: "Basic ${base64(credentials)}",
+              body: [code: code, grant_type: 'authorization_code', redirect_uri: authzParams['redirect_uri']]
 
-        then: 'should get success response with JSON'
-            r.status == 200
-            r.headers['Content-Type'][0].contains 'application/json'
-            r.body.json['token_type'] == 'bearer'
-            r.body.json['expires_in'] > 0
-
-        and: 'access and refresh token is valid'
-            assertAccessToken r.body.json['access_token'] as String
-            assertRefreshToken r.body.json['refresh_token'] as String
-
-        and: 'scope contains only the requested scope'
-            r.body.json['scope'] == client.scope[0]
+        then:
+        check status: OK,
+              ContentType: APPLICATION_JSON,
+              body: { body ->
+                  assert body.json['token_type'] == 'bearer'
+                  assert body.json['expires_in'] > 0
+                  assert body.json['scope'] == client.scope[0]
+                  assert isValidAccessToken( body.json['access_token'] )
+                  assert isValidRefreshToken( body.json['refresh_token'] )
+              }
     }
 
     def 'request user authorization and reject access'() {
@@ -142,27 +147,27 @@ class AuthorizationCodeGrantIT extends AbstractHttpIntegrationTest {
             def cookie = loginUserAndGetCookie()
 
         when: 'send request to the authorization endpoint'
-            r = GET '/oauth/authorize', query: authzParams,
-                Cookie: cookie
+        send  GET: '/oauth/authorize', query: authzParams,
+              Cookie: cookie
 
-        then: 'should get HTML page that contains user_oauth_approval'
-            r.status == 200
-            r.headers['Content-Type'][0].contains 'text/html'
-            r.body.str.contains USER_OAUTH_APPROVAL
+        then:
+        check status: OK,
+              ContentType: TEXT_HTML,
+              body: ASSERT_CONFIRMATION_PAGE
 
-        when: 'post form with authorization rejection'
-            r = POST '/oauth/authorize',
-                ContentType: 'application/x-www-form-urlencoded',
-                Cookie: cookie,
-                body: [(USER_OAUTH_APPROVAL): 'false']
+        when: 'reject client authorization'
+        send  POST: '/oauth/authorize',
+              ContentType: 'application/x-www-form-urlencoded',
+              Cookie: cookie,
+              body: [(USER_OAUTH_APPROVAL): 'false']
 
         then: 'should be redirected to the specified redirect_uri with error access_denied'
-            r.status == 302
-            r.headers['Location'][0].with {
-                it.startsWith(authzParams['redirect_uri']) &&
-                it.contains('error=access_denied') &&
-                it.contains("state=${authzParams['state']}") &&
-                ! it.contains('code=')
-            }
+        check status: FOUND,
+              Location: {
+                  assert it.startsWith(authzParams['redirect_uri']) &
+                         it.contains('error=access_denied') &
+                         it.contains("state=${authzParams['state']}")
+                  assert ! it.contains('code=')
+              }
     }
 }

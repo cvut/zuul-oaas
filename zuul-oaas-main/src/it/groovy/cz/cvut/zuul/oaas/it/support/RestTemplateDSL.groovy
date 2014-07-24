@@ -70,6 +70,21 @@ class RestTemplateDSL {
         execute POST, path, opts
     }
 
+    MyResponseEntity perform(Map<String, ?> opts) {
+
+        def entry = opts.find { k, _ -> k in HttpMethod.values()*.toString() }
+
+        if (entry == null) {
+            throw new IllegalArgumentException('No HTTP method specified')
+        }
+        def method = HttpMethod.valueOf(entry.key)
+        def path = entry.value as String
+
+        opts.remove(entry.key)
+
+        execute method, path, opts
+    }
+
 
     private createDefaultRestTemplate() {
         def rest = new RestTemplate(new SimpleClientHttpRequestFactory() {
