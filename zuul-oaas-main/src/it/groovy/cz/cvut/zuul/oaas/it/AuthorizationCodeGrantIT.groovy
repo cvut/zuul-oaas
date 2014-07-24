@@ -25,6 +25,7 @@ package cz.cvut.zuul.oaas.it
 
 import cz.cvut.zuul.oaas.it.support.Fixtures
 import cz.cvut.zuul.oaas.models.PersistableAccessToken
+import spock.lang.Stepwise
 
 import static cz.cvut.zuul.oaas.it.support.RestTemplateDSL.formatQuery
 import static cz.cvut.zuul.oaas.it.support.TestUtils.base64
@@ -35,6 +36,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON
 import static org.springframework.http.MediaType.TEXT_HTML
 import static org.springframework.security.oauth2.provider.AuthorizationRequest.USER_OAUTH_APPROVAL
 
+@Stepwise
 class AuthorizationCodeGrantIT extends AbstractHttpIntegrationTest {
 
     static final ASSERT_LOGIN_PAGE = {
@@ -42,7 +44,7 @@ class AuthorizationCodeGrantIT extends AbstractHttpIntegrationTest {
         assert it.str =~ /<input[^>]*name="j_password"/
     }
 
-    final static ASSERT_CONFIRMATION_PAGE = {
+    static final ASSERT_CONFIRMATION_PAGE = {
         assert it.str.contains(USER_OAUTH_APPROVAL)
     }
 
@@ -138,6 +140,39 @@ class AuthorizationCodeGrantIT extends AbstractHttpIntegrationTest {
                   assert isValidRefreshToken( body.json['refresh_token'] )
               }
     }
+
+
+    def 'request user authorization when client is already authorized'() {
+        setup:
+            def cookie = loginUserAndGetCookie()
+
+        when:
+        send  GET: '/oauth/authorize', query: authzParams,
+              Cookie: cookie
+
+        then: 'should get authorization code without asking for confirmation'
+        check status: FOUND,
+              Location: {
+                  assert it.startsWith(authzParams['redirect_uri']) && it.contains('code=')
+            }
+    }
+
+
+    def 'request user authorization when client is already authorized but with different scopes'() {
+        setup:
+            authzParams += [scope: client.scope.join(' ')]
+            def cookie = loginUserAndGetCookie()
+
+        when:
+        send  GET: '/oauth/authorize', query: authzParams,
+              Cookie: cookie
+
+        then: 'should be asked to confirm access'
+        check status: OK,
+              ContentType: TEXT_HTML,
+              body: ASSERT_CONFIRMATION_PAGE
+    }
+
 
     def 'request user authorization and reject access'() {
         setup:
