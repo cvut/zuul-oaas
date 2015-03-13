@@ -37,7 +37,7 @@ import org.springframework.context.annotation.Configuration
 import javax.inject.Inject
 
 @Configuration
-class RestControllersConfig extends ConfigurationSupport {
+class RestControllersConfig implements ConfigurationSupport {
 
     // external services
     @Inject ClientsService clientsService
@@ -66,7 +66,7 @@ class RestControllersConfig extends ConfigurationSupport {
     @Bean TokenInfoController tokenInfoController() {
         new TokenInfoController (
             tokensService: tokensService,
-            cacheMaxAge:   $('restapi.tokeninfo.cache.maxage') as int
+            cacheMaxAge:   p('restapi.tokeninfo.cache.maxage') as int
         )
     }
 }

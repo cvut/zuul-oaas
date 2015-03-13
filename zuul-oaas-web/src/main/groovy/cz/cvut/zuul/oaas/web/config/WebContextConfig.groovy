@@ -27,7 +27,6 @@ import cz.cvut.zuul.oaas.common.config.ConfigurationSupport
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory
 import org.springframework.beans.factory.config.PlaceholderConfigurerSupport
-import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
@@ -40,16 +39,10 @@ import org.thymeleaf.spring4.SpringTemplateEngine
 import org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver
 import org.thymeleaf.spring4.view.ThymeleafViewResolver
 
-import javax.inject.Inject
-
 @Configuration
 @EnableWebMvc
-@Mixin(ConfigurationSupport)
 @Import(WebControllersConfig)
-class WebContextConfig extends WebMvcConfigurerAdapter {
-
-    // Initialize mixed in ConfigurationSupport
-    @Inject initSupport(ApplicationContext ctx) { _initSupport(ctx) }
+class WebContextConfig extends WebMvcConfigurerAdapter implements ConfigurationSupport {
 
     /**
      * {@code BeanFactoryPostProcessor} that inherits existing property

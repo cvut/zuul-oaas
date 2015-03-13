@@ -39,7 +39,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON
 
 @Configuration
 @Import(RestContextConfig)
-class TestContextConfig extends ConfigurationSupport {
+class TestContextConfig implements ConfigurationSupport {
 
     def localProperties = [
         'restapi.tokeninfo.cache.maxage': '600'

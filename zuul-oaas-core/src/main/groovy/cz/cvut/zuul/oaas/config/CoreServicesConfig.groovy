@@ -27,7 +27,6 @@ import cz.cvut.zuul.oaas.api.services.ClientsService
 import cz.cvut.zuul.oaas.api.services.ResourcesService
 import cz.cvut.zuul.oaas.api.services.TokensService
 import cz.cvut.zuul.oaas.common.config.ConfigurationSupport
-import cz.cvut.zuul.oaas.config.PersistenceBeans
 import cz.cvut.zuul.oaas.services.ClientsServiceImpl
 import cz.cvut.zuul.oaas.services.ResourcesServiceImpl
 import cz.cvut.zuul.oaas.services.TokensServiceImpl
@@ -47,7 +46,7 @@ import org.springframework.validation.beanvalidation.MethodValidationPostProcess
 import javax.inject.Inject
 
 @Configuration
-class CoreServicesConfig extends ConfigurationSupport {
+class CoreServicesConfig implements ConfigurationSupport {
 
     @Inject PersistenceBeans repos
 

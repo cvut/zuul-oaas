@@ -50,7 +50,7 @@ import org.springframework.security.oauth2.provider.token.ResourceServerTokenSer
 import javax.inject.Inject
 
 @Configuration
-class AuthorizationServerConfig extends ConfigurationSupport {
+class AuthorizationServerConfig implements ConfigurationSupport {
 
     @Inject PersistenceBeans repos
     @Inject ClientAuthenticationBeans clientAuthentication
@@ -76,8 +76,8 @@ class AuthorizationServerConfig extends ConfigurationSupport {
     @Bean tokenServices() {
         new DefaultTokenServices (
             supportRefreshToken:         isRefreshToken,
-            accessTokenValiditySeconds:  $('oaas.access_token.validity', int),
-            refreshTokenValiditySeconds: $('oaas.refresh_token.validity', int),
+            accessTokenValiditySeconds:  p('oaas.access_token.validity') as int,
+            refreshTokenValiditySeconds: p('oaas.refresh_token.validity') as int,
             clientDetailsService:        clientDetailsService(),
             tokenStore:                  tokenStore()
         )
@@ -113,10 +113,10 @@ class AuthorizationServerConfig extends ConfigurationSupport {
         if ( isImplicitGrant ) {
             granters << new ImplicitTokenGranter(tokenServices(), clientDetailsService())
         }
-        if ( $('oaas.grant.client_credentials.enabled', boolean) ) {
+        if ( p('oaas.grant.client_credentials.enabled') as boolean ) {
             granters << new ClientCredentialsTokenGranter(tokenServices(), clientDetailsService())
         }
-        if ( $('oaas.grant.password.enabled', boolean) ) {
+        if ( p('oaas.grant.password.enabled') as boolean ) {
             granters << new ResourceOwnerPasswordTokenGranter(
                     clientAuthentication.clientAuthenticationManager(), tokenServices(), clientDetailsService())
         }
@@ -167,8 +167,8 @@ class AuthorizationServerConfig extends ConfigurationSupport {
     @Bean oauth2HandlerMapping() {
         new FrameworkEndpointHandlerMapping (
             mappings: [
-                '/oauth/token':     $('oaas.endpoint.token'),
-                '/oauth/authorize': $('oaas.endpoint.authorization')
+                '/oauth/token':     p('oaas.endpoint.token'),
+                '/oauth/authorize': p('oaas.endpoint.authorization')
             ]
         )
     }

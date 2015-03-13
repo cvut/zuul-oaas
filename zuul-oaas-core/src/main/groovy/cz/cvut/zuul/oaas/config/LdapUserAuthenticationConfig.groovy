@@ -37,19 +37,19 @@ class LdapUserAuthenticationConfig extends AbstractAuthenticationManagerConfig i
     @Bean @Qualifier('user')
     AuthenticationManager userAuthenticationManager() {
         builder.ldapAuthentication().with {
-            contextSource().url         $('auth.user.ldap.server.uri') +'/'+ $('auth.user.ldap.server.base_dn')
-            userDnPatterns              $('auth.user.ldap.user_dn_pattern')
-            userSearchBase              $('auth.user.ldap.user_search_base')
-            userSearchFilter            $('auth.user.ldap.user_search_filter')
+            contextSource().url         p('auth.user.ldap.server.uri') +'/'+ p('auth.user.ldap.server.base_dn')
+            userDnPatterns              p('auth.user.ldap.user_dn_pattern')
+            userSearchBase              p('auth.user.ldap.user_search_base')
+            userSearchFilter            p('auth.user.ldap.user_search_filter')
             userDetailsContextMapper    ldapUserContextMapper()
         }.and().build()
     }
 
     @Bean ldapUserContextMapper() {
         new SimpleUserDetailsContextMapper (
-            firstNameAttrName:  $('auth.user.ldap.attribute.fist_name'),
-            lastNameAttrName:   $('auth.user.ldap.attribute.last_name'),
-            emailAttrName:      $('auth.user.ldap.attribute.email'),
+            firstNameAttrName:  p('auth.user.ldap.attribute.fist_name'),
+            lastNameAttrName:   p('auth.user.ldap.attribute.last_name'),
+            emailAttrName:      p('auth.user.ldap.attribute.email'),
             defaultRoles:       'ROLE_USER'
         )
     }

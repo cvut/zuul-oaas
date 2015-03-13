@@ -25,7 +25,6 @@ package cz.cvut.zuul.oaas.restapi.config
 
 import cz.cvut.zuul.oaas.common.config.ConfigurationSupport
 import cz.cvut.zuul.support.spring.provider.OAuth2ResourceServerConfigurerAdapter
-import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.annotation.Order
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -39,11 +38,7 @@ import javax.inject.Inject
  */
 @Configuration
 @EnableWebSecurity @Order(1)
-@Mixin(ConfigurationSupport)
-class RestSecurityConfig extends OAuth2ResourceServerConfigurerAdapter {
-
-    // Initialize mixed in ConfigurationSupport
-    @Inject initSupport(ApplicationContext ctx) { _initSupport(ctx) }
+class RestSecurityConfig extends OAuth2ResourceServerConfigurerAdapter implements ConfigurationSupport {
 
     // external service
     @Inject ResourceServerTokenServices resourceServerTokenServices
@@ -53,8 +48,8 @@ class RestSecurityConfig extends OAuth2ResourceServerConfigurerAdapter {
         http.antMatcher( '/api/v1/**' )
             .authorizeRequests()
                 .antMatchers( '/api/v1/tokeninfo' )
-                    .access( $('restapi.tokeninfo.security.access') )
+                    .access( p('restapi.tokeninfo.security.access') )
                 .antMatchers( '/api/v1/**' )
-                    .access( $('restapi.security.access') )
+                    .access( p('restapi.security.access') )
     }
 }

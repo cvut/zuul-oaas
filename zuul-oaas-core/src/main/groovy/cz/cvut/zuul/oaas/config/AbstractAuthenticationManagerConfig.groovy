@@ -29,7 +29,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 
 import javax.inject.Inject
 
-abstract class AbstractAuthenticationManagerConfig extends ConfigurationSupport {
+abstract class AbstractAuthenticationManagerConfig implements ConfigurationSupport {
 
     @Inject ObjectPostProcessor<Object> objectPostProcessor
 

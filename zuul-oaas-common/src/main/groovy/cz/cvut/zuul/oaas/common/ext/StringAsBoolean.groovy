@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2014 Czech Technical University in Prague.
+ * Copyright 2013-2015 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,36 +21,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package cz.cvut.zuul.oaas.web.config
+package cz.cvut.zuul.oaas.common.ext
 
-import cz.cvut.zuul.oaas.api.services.ClientsService
-import cz.cvut.zuul.oaas.common.config.ConfigurationSupport
-import cz.cvut.zuul.oaas.web.controllers.AccessConfirmationController
-import cz.cvut.zuul.oaas.web.controllers.MainController
-import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
+import org.codehaus.groovy.runtime.StringGroovyMethods
 
-import javax.inject.Inject
+@Category(String)
+class StringAsBoolean {
 
-@Configuration
-class WebControllersConfig implements ConfigurationSupport {
-
-    // external service
-    @Inject ClientsService clientsService
-
-    /**
-     * Static pages
-     */
-    @Bean MainController mainController() {
-        new MainController()
-    }
-
-    /**
-     * Overrides the default mappings for approval and error pages.
-     */
-    @Bean AccessConfirmationController confirmationController() {
-        new AccessConfirmationController (
-            clientsService: clientsService
-        )
+    def <T> T asType(Class<T> target) {
+        if (target in [boolean, Boolean] && this.toLowerCase() == 'false') {
+            false
+        } else {
+            StringGroovyMethods.asType(this, target)
+        }
     }
 }

@@ -39,7 +39,6 @@ import cz.cvut.zuul.oaas.repos.mongo.converters.GrantedAuthorityWriteConverter
 import cz.cvut.zuul.oaas.repos.mongo.converters.OAuth2AuthenticationReadConverter
 import cz.cvut.zuul.oaas.repos.mongo.converters.OAuth2AuthenticationWriteConverter
 import cz.cvut.zuul.oaas.repos.mongo.support.MongoSeedLoader
-import org.springframework.context.ApplicationContext
 import org.springframework.context.ApplicationListener
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -51,28 +50,21 @@ import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.data.mongodb.core.convert.CustomConversions
 import org.springframework.util.Assert
 
-import javax.inject.Inject
-
 import static org.springframework.data.mongodb.core.WriteResultChecking.EXCEPTION
 
 //TODO MongoDB JMX
 @Configuration
 @Profile('!test')
-@Mixin(ConfigurationSupport)
 class MongoPersistenceConfig extends AbstractMongoConfiguration
-        implements PersistenceBeans, ApplicationListener<ContextRefreshedEvent> {
-
-    // Initialize mixed in ConfigurationSupport
-    @Inject initSupport(ApplicationContext ctx) { _initSupport(ctx) }
-
+        implements PersistenceBeans, ApplicationListener<ContextRefreshedEvent>, ConfigurationSupport {
 
     @Lazy String mappingBasePackage = Resource.package.name
 
-    @Lazy String databaseName = $('persistence.mongo.dbname')
+    @Lazy String databaseName = p('persistence.mongo.dbname')
 
     @Lazy UserCredentials userCredentials = new UserCredentials (
-        $('persistence.mongo.username'),
-        $('persistence.mongo.password')
+        p('persistence.mongo.username'),
+        p('persistence.mongo.password')
     )
 
     void onApplicationEvent(ContextRefreshedEvent event) {
@@ -86,14 +78,14 @@ class MongoPersistenceConfig extends AbstractMongoConfiguration
 
 
     @Bean Mongo mongo() {
-        def servers = $('persistence.mongo.servers').split(',')
+        def servers = p('persistence.mongo.servers').split(',')
 
         def opts = MongoClientOptions.builder()
-        opts.writeConcern(WriteConcern.valueOf( $('persistence.mongo.write_concern')) )
+        opts.writeConcern(WriteConcern.valueOf( p('persistence.mongo.write_concern')) )
 
         // replica set
         if (servers.length > 1) {
-            opts.readPreference(ReadPreference.valueOf( $('persistence.mongo.read_preference')) )
+            opts.readPreference(ReadPreference.valueOf( p('persistence.mongo.read_preference')) )
 
             new MongoClient( servers.collect { parseServerAddress(it) }, opts.build() )
 

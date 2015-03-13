@@ -24,7 +24,6 @@
 package cz.cvut.zuul.oaas.config
 
 import cz.cvut.zuul.oaas.common.config.ConfigurationSupport
-import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Lazy
@@ -47,11 +46,7 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 
 @Configuration
 @EnableWebSecurity @Order(0)
-@Mixin(ConfigurationSupport)
-class TokenEndpointSecurityConfig extends WebSecurityConfigurerAdapter {
-
-    // Initialize mixed in ConfigurationSupport
-    @Inject initSupport(ApplicationContext ctx) { _initSupport(ctx) }
+class TokenEndpointSecurityConfig extends WebSecurityConfigurerAdapter implements ConfigurationSupport {
 
     @Inject ClientAuthenticationBeans clientAuthentication
 
@@ -65,7 +60,7 @@ class TokenEndpointSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     void configure(HttpSecurity http) {
-        http.antMatcher( $('oaas.endpoint.token') )
+        http.antMatcher( p('oaas.endpoint.token') )
             .exceptionHandling()
                 .authenticationEntryPoint( oauthAuthenticationEntryPoint() )
                 .accessDeniedHandler( accessDeniedHandler() )
@@ -82,9 +77,9 @@ class TokenEndpointSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticationEntryPoint( oauthAuthenticationEntryPoint() )
                 .and()
             .authorizeRequests()
-                .antMatchers( $('oaas.endpoint.token') ).fullyAuthenticated()
+                .antMatchers( p('oaas.endpoint.token') ).fullyAuthenticated()
 
-        if ( $('auth.client.authentication_scheme.form.allow', boolean) ) {
+        if ( p('auth.client.authentication_scheme.form.allow') as boolean ) {
             http.addFilterAfter( clientCredentialsTokenEndpointFilter(), BasicAuthenticationFilter )
         }
     }
@@ -106,7 +101,7 @@ class TokenEndpointSecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Bean @Lazy clientCredentialsTokenEndpointFilter() {
         new ClientCredentialsTokenEndpointFilter (
-            filterProcessesUrl: $('oaas.endpoint.token'),
+            filterProcessesUrl: p('oaas.endpoint.token'),
             authenticationManager: authenticationManager()
         )
     }
