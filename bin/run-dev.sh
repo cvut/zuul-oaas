@@ -1,7 +1,7 @@
 #!/bin/bash
 
 MODULE_NAME="zuul-oaas-main"
-PROJECT_DIR="$(cd ../"$(dirname "$0")" && pwd)"
+PROJECT_DIR="$(cd "$(dirname "$0")" && pwd)/.."
 TARGET_DIR="${PROJECT_DIR}/${MODULE_NAME}/target"
 
 MVN_HELP_PLUGIN='org.apache.maven.plugins:maven-help-plugin:2.2'
