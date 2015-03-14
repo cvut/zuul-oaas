@@ -56,7 +56,9 @@ class TokenEndpointSecurityConfig extends WebSecurityConfigurerAdapter implement
     AuthenticationManager authenticationManager() { clientAuthManager }
 
     void configure(HttpSecurity http) {
-        http.antMatcher( p('oaas.endpoint.token') )
+        http.requestMatchers()
+                .antMatchers( p('oaas.endpoint.token'), p('oaas.endpoint.check_token.uri') )
+                .and()
             .exceptionHandling()
                 .authenticationEntryPoint( oauthBasicAuthenticationEntryPoint() )
                 .accessDeniedHandler( new OAuth2AccessDeniedHandler() )
@@ -69,11 +71,16 @@ class TokenEndpointSecurityConfig extends WebSecurityConfigurerAdapter implement
                 .and()
             .servletApi()
                 .and()
+            .anonymous()
+                .and()
             .httpBasic()
                 .authenticationEntryPoint( oauthBasicAuthenticationEntryPoint() )
                 .and()
             .authorizeRequests()
-                .antMatchers( p('oaas.endpoint.token') ).fullyAuthenticated()
+                .antMatchers( p('oaas.endpoint.token') )
+                    .fullyAuthenticated()
+                .antMatchers( p('oaas.endpoint.check_token.uri') )
+                    .access( p('oaas.endpoint.check_token.access') )
 
         if ( p('auth.client.auth_scheme.form.allow') as boolean ) {
             http.addFilterAfter( clientFormAuthenticationFilter(), BasicAuthenticationFilter )

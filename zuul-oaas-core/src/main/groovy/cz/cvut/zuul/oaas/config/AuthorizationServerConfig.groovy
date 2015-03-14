@@ -93,6 +93,10 @@ class AuthorizationServerConfig implements ConfigurationSupport {
         new WhitelabelApprovalEndpoint()
     }
 
+    @Bean checkTokenEndpoint() {
+        new CheckTokenEndpoint( resourceServerTokenServices() )
+    }
+
     @Bean oauth2HandlerMapping() {
         new FrameworkEndpointHandlerMapping (
             mappings: [
