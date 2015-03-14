@@ -72,7 +72,7 @@ trait ConfigurationSupport {
 
     def <T> T initialize(FactoryBean<T> factoryBean) throws Exception {
         if (factoryBean instanceof InitializingBean) {
-            ((InitializingBean) factoryBean).afterPropertiesSet()
+            factoryBean.afterPropertiesSet()
         }
         factoryBean.getObject()
     }
