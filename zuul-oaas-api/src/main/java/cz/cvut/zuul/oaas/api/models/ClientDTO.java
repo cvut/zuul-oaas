@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2014 Czech Technical University in Prague.
+ * Copyright 2013-2015 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,7 +31,7 @@ import lombok.Data;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.hibernate.validator.constraints.NotEmpty;
-import org.springframework.security.oauth2.provider.BaseClientDetails.ArrayOrStringDeserializer;
+import org.springframework.security.oauth2.provider.client.JacksonArrayOrStringDeserializer;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -55,27 +55,27 @@ public class ClientDTO implements Serializable {
     @EachSize(min=5, max=255)
     // see http://tools.ietf.org/html/rfc6749#section-3.3
     @EachPattern(regexp="[\\x21\\x23-\\x5B\\x5D-\\x7E]+", message="{validator.invalid_scope}")
-    @JsonDeserialize(using=ArrayOrStringDeserializer.class)
+    @JsonDeserialize(using=JacksonArrayOrStringDeserializer.class)
     private Collection<String> scope;
 
     //TODO
-    @JsonDeserialize(using=ArrayOrStringDeserializer.class)
+    @JsonDeserialize(using=JacksonArrayOrStringDeserializer.class)
     private Collection<String> resourceIds;
 
     @NotEmpty
     // see http://tools.ietf.org/html/rfc6749#section-1.3
     @EachPattern(regexp="(client_credentials|implicit|authorization_code|resource_owner|refresh_token)",
                  flags=CASE_INSENSITIVE, message="{validator.invalid_grant_type}")
-    @JsonDeserialize(using=ArrayOrStringDeserializer.class)
+    @JsonDeserialize(using=JacksonArrayOrStringDeserializer.class)
     private Collection<String> authorizedGrantTypes;
 
     @EachSize(min=5, max=255)
     @EachValidURI(relative=false, fragment=false, message="{validator.invalid_redirect_uri}")
     @JsonProperty("redirect_uri")
-    @JsonDeserialize(using=ArrayOrStringDeserializer.class)
+    @JsonDeserialize(using=JacksonArrayOrStringDeserializer.class)
     private Collection<String> registeredRedirectUri;
 
-    @JsonDeserialize(using=ArrayOrStringDeserializer.class)
+    @JsonDeserialize(using=JacksonArrayOrStringDeserializer.class)
     private Collection<String> authorities;
 
     //TODO

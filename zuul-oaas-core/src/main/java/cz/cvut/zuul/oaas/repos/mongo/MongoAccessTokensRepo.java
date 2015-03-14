@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2014 Czech Technical University in Prague.
+ * Copyright 2013-2015 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -69,8 +69,11 @@ public class MongoAccessTokensRepo
         return findTokensBy(CLIENT_ID, clientId);
     }
 
-    public Collection<OAuth2AccessToken> findByUserName(String userName) {
-        return findTokensBy(USER_NAME, userName);
+    public Collection<OAuth2AccessToken> findByClientIdAndUserName(String clientId, String userName) {
+        Query query = query(where(CLIENT_ID).is(clientId).and(USER_NAME).is(userName));
+        query.fields().exclude("authentication");
+
+        return (Collection) mongo().find(query, entityClass());
     }
 
     public void deleteByRefreshToken(OAuth2RefreshToken refreshToken) {

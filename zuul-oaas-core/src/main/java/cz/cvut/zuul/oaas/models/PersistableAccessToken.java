@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2014 Czech Technical University in Prague.
+ * Copyright 2013-2015 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -144,8 +144,8 @@ public class PersistableAccessToken implements OAuth2AccessToken, Serializable {
     }
 
     public String getAuthenticatedClientId() {
-        if (authentication != null && authentication.getAuthorizationRequest() != null ) {
-            return authentication.getAuthorizationRequest().getClientId();
+        if (authentication != null && authentication.getOAuth2Request() != null ) {
+            return authentication.getOAuth2Request().getClientId();
         }
         return null;
     }

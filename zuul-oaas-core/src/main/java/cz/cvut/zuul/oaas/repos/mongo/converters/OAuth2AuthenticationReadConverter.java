@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2014 Czech Technical University in Prague.
+ * Copyright 2013-2015 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,15 +25,14 @@ package cz.cvut.zuul.oaas.repos.mongo.converters;
 
 import com.mongodb.DBObject;
 import cz.cvut.zuul.oaas.models.User;
-import cz.cvut.zuul.oaas.repos.mongo.converters.MongoDbConstants.authz_request;
+import cz.cvut.zuul.oaas.repos.mongo.converters.MongoDbConstants.oauth_request;
 import cz.cvut.zuul.oaas.repos.mongo.converters.MongoDbConstants.user_auth;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.oauth2.provider.AuthorizationRequest;
-import org.springframework.security.oauth2.provider.DefaultAuthorizationRequest;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.security.oauth2.provider.OAuth2Request;
 
 import java.util.Collection;
 
@@ -49,30 +48,35 @@ public class OAuth2AuthenticationReadConverter implements Converter<DBObject, OA
     public OAuth2Authentication convert(DBObject source) {
         DBObjectWrapper dbo = new DBObjectWrapper(source);
 
-        AuthorizationRequest authzReq = convertAuthorizationRequest( dbo.getDBObject(AUTHORIZATION_REQUEST) );
+        OAuth2Request authzReq = convertAuthorizationRequest( dbo.getDBObject(AUTHORIZATION_REQUEST) );
         Authentication userAuth = convertUserAuthentication( dbo.getDBObject(USER_AUTHENTICATION) );
 
         return new OAuth2Authentication(authzReq, userAuth);
     }
 
 
-    private AuthorizationRequest convertAuthorizationRequest(DBObjectWrapper source) {
+    @SuppressWarnings("unchecked")
+    private OAuth2Request convertAuthorizationRequest(DBObjectWrapper source) {
         if (source == null) return null;
 
-        DefaultAuthorizationRequest target = new DefaultAuthorizationRequest( source.getMap(authz_request.AUTHZ_PARAMS) );
-        target.setApprovalParameters( source.getMap(authz_request.APPROVAL_PARAMS) );
-        target.setApproved( source.getBoolean(authz_request.APPROVED) );
-        target.setAuthorities( createAuthorityList(source.getStringArray(authz_request.AUTHORITIES)) );
-        target.setResourceIds( source.getSet(authz_request.RESOURCE_IDS) );
-
-        return target;
+        return new OAuth2Request(
+            source.getMap(oauth_request.REQUEST_PARAMS),
+            source.getString(oauth_request.CLIENT_ID),
+            createAuthorityList(source.getStringArray(oauth_request.AUTHORITIES)),
+            source.getBoolean(oauth_request.APPROVED),
+            source.getSet(oauth_request.SCOPE),
+            source.getSet(oauth_request.RESOURCE_IDS),
+            source.getString(oauth_request.REDIRECT_URI),
+            source.getSet(oauth_request.RESPONSE_TYPES),
+            source.getMap(oauth_request.EXTENSIONS)
+        );
     }
 
     //TODO incomplete!
     private Authentication convertUserAuthentication(DBObjectWrapper source) {
         if (source == null) return null;
 
-        Collection<GrantedAuthority> authorities = createAuthorityList(source.getStringArray(authz_request.AUTHORITIES));
+        Collection<GrantedAuthority> authorities = createAuthorityList(source.getStringArray(oauth_request.AUTHORITIES));
 
         User user = new User(
                 source.getString( user_auth.USER_NAME ),

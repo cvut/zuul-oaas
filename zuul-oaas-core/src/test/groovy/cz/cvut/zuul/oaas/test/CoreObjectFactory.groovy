@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2014 Czech Technical University in Prague.
+ * Copyright 2013-2015 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -32,8 +32,8 @@ import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.oauth2.common.*
 import org.springframework.security.oauth2.provider.AuthorizationRequest
-import org.springframework.security.oauth2.provider.DefaultAuthorizationRequest
 import org.springframework.security.oauth2.provider.OAuth2Authentication
+import org.springframework.security.oauth2.provider.OAuth2Request
 
 import static cz.cvut.zuul.oaas.test.CustomGeneratorSamples.anyEmail
 import static net.java.quickcheck.generator.CombinedGeneratorSamples.anyMap
@@ -82,23 +82,21 @@ class CoreObjectFactory extends ObjectFactory {
         registerBuilder(OAuth2Authentication) { values ->
             def userAuth = values['clientOnly'] ? null : build(Authentication, values)
 
-            new OAuth2Authentication(build(AuthorizationRequest, values), userAuth)
+            new OAuth2Authentication(build(OAuth2Request, values), userAuth)
         }
 
-        registerBuilder(DefaultAuthorizationRequest) { values ->
-            def authzParams = [:].with {
-                put(AuthorizationRequest.CLIENT_ID, values['clientId'] ?: anyLetterString(5, 10))
-                anyBoolean() && put(AuthorizationRequest.STATE, anyLetterString(5, 10))
-                anyBoolean() && put(AuthorizationRequest.REDIRECT_URI, anyLetterString(5, 10))
-                return it
-            } as Map
-
-            def object = new DefaultAuthorizationRequest(authzParams).with {
-                authorities = buildListOf(GrantedAuthority)
-                scope = anySet(letterStrings(5, 10), integers(1, 3))
-                return it
-            }
-            ObjectFeeder.populate(object)
+        registerBuilder(OAuth2Request) { values ->
+            new OAuth2Request(
+                    [:],
+                    values['clientId'] as String ?: anyLetterString(5, 10),
+                    buildListOf(GrantedAuthority),
+                    anyBoolean(),
+                    anySet(letterStrings(5, 10), integers(1, 3)),
+                    anySet(letterStrings(5, 10), integers(1, 3)),
+                    anyLetterString(5, 10),
+                    anySet(letterStrings(5, 10)),
+                    [:]
+            )
         }
 
         registerBuilder(UsernamePasswordAuthenticationToken) { values ->
@@ -180,7 +178,6 @@ class CoreObjectFactory extends ObjectFactory {
         registerSuperclass OAuth2AccessToken, DefaultOAuth2AccessToken
         registerSuperclass OAuth2RefreshToken, DefaultOAuth2RefreshToken
         registerSuperclass ExpiringOAuth2RefreshToken, DefaultExpiringOAuth2RefreshToken
-        registerSuperclass AuthorizationRequest, DefaultAuthorizationRequest
         registerSuperclass GrantedAuthority, SimpleGrantedAuthority
         registerSuperclass Authentication, UsernamePasswordAuthenticationToken
     }

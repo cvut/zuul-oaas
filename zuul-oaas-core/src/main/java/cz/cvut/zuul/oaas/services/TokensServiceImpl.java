@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2014 Czech Technical University in Prague.
+ * Copyright 2013-2015 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,9 +23,9 @@
  */
 package cz.cvut.zuul.oaas.services;
 
-import cz.cvut.zuul.oaas.api.models.TokenInfo;
 import cz.cvut.zuul.oaas.api.exceptions.NoSuchTokenException;
 import cz.cvut.zuul.oaas.api.models.TokenDTO;
+import cz.cvut.zuul.oaas.api.models.TokenInfo;
 import cz.cvut.zuul.oaas.api.services.TokensService;
 import cz.cvut.zuul.oaas.models.Client;
 import cz.cvut.zuul.oaas.models.PersistableAccessToken;
@@ -34,12 +34,15 @@ import cz.cvut.zuul.oaas.repos.AccessTokensRepo;
 import cz.cvut.zuul.oaas.repos.ClientsRepo;
 import lombok.Getter;
 import lombok.Setter;
+import ma.glasnost.orika.CustomMapper;
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.MapperFactory;
+import ma.glasnost.orika.MappingContext;
 import ma.glasnost.orika.impl.DefaultMapperFactory.Builder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.common.exceptions.InvalidTokenException;
 import org.springframework.security.oauth2.provider.AuthorizationRequest;
+import org.springframework.security.oauth2.provider.OAuth2Request;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -101,7 +104,7 @@ public class TokensServiceImpl implements TokensService {
             throw new InvalidTokenException("Client is locked");
         }
 
-        AuthorizationRequest clientAuth = accessToken.getAuthentication().getAuthorizationRequest();
+        OAuth2Request clientAuth = accessToken.getAuthentication().getOAuth2Request();
         Authentication userAuth = accessToken.getAuthentication().getUserAuthentication();
 
         TokenInfo o = new TokenInfo();
@@ -136,11 +139,11 @@ public class TokensServiceImpl implements TokensService {
 
         factory.classMap(PersistableAccessToken.class, TokenDTO.class)
                 .field("value", "tokenValue")
-                .field("authentication.authorizationRequest", "clientAuthentication")
-                .field("authentication.userAuthentication.principal", "userAuthentication")
+                .fieldAToB("authentication.OAuth2Request", "clientAuthentication")
+                .fieldAToB("authentication.userAuthentication.principal", "userAuthentication")
                 .byDefault().register();
 
-        factory.classMap(AuthorizationRequest.class, TokenDTO.ClientAuthentication.class)
+        factory.classMap(OAuth2Request.class, TokenDTO.ClientAuthentication.class)
                 .byDefault().register();
 
         factory.classMap(User.class, TokenDTO.UserAuthentication.class)

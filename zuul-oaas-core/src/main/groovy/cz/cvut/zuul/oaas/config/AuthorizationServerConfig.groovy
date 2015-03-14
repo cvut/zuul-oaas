@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2014 Czech Technical University in Prague.
+ * Copyright 2013-2015 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,15 +25,13 @@ package cz.cvut.zuul.oaas.config
 
 import cz.cvut.zuul.oaas.common.config.ConfigurationSupport
 import cz.cvut.zuul.oaas.oauth2.ClientDetailsServiceImpl
-import cz.cvut.zuul.oaas.oauth2.LockableClientUserApprovalHandler
 import cz.cvut.zuul.oaas.oauth2.TokenStoreImpl
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Lazy
 import org.springframework.security.oauth2.provider.CompositeTokenGranter
-import org.springframework.security.oauth2.provider.DefaultAuthorizationRequestManager
-import org.springframework.security.oauth2.provider.approval.TokenServicesUserApprovalHandler
+import org.springframework.security.oauth2.provider.approval.TokenStoreUserApprovalHandler
 import org.springframework.security.oauth2.provider.client.ClientCredentialsTokenGranter
 import org.springframework.security.oauth2.provider.code.AuthorizationCodeTokenGranter
 import org.springframework.security.oauth2.provider.code.InMemoryAuthorizationCodeServices
@@ -44,6 +42,7 @@ import org.springframework.security.oauth2.provider.endpoint.WhitelabelApprovalE
 import org.springframework.security.oauth2.provider.implicit.ImplicitTokenGranter
 import org.springframework.security.oauth2.provider.password.ResourceOwnerPasswordTokenGranter
 import org.springframework.security.oauth2.provider.refresh.RefreshTokenGranter
+import org.springframework.security.oauth2.provider.request.DefaultOAuth2RequestFactory
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices
 import org.springframework.security.oauth2.provider.token.ResourceServerTokenServices
 
@@ -64,6 +63,7 @@ class AuthorizationServerConfig implements ConfigurationSupport {
      * This is important especially for clients with implicit grant which are
      * issued an access token directly without requesting token endpoint.
      */
+    /* TODO
     @Bean clientApprovalHandler() {
         new LockableClientUserApprovalHandler (
             clientsRepo:   repos.clientsRepo(),
@@ -71,6 +71,17 @@ class AuthorizationServerConfig implements ConfigurationSupport {
                 tokenServices: tokenServices()
             )
         )
+    }
+    */
+    @Bean clientApprovalHandler() {
+        new TokenStoreUserApprovalHandler(
+            tokenStore: tokenStore(),
+            requestFactory: oAuth2RequestFactory()
+        )
+    }
+
+    @Bean oAuth2RequestFactory() {
+        new DefaultOAuth2RequestFactory( clientDetailsService() )
     }
 
     @Bean tokenServices() {
@@ -108,31 +119,32 @@ class AuthorizationServerConfig implements ConfigurationSupport {
             granters << authorizationCodeTokenGranter()
         }
         if ( isRefreshToken ) {
-            granters << new RefreshTokenGranter(tokenServices(), clientDetailsService())
+            granters << new RefreshTokenGranter(tokenServices(), clientDetailsService(), oAuth2RequestFactory())
         }
         if ( isImplicitGrant ) {
-            granters << new ImplicitTokenGranter(tokenServices(), clientDetailsService())
+            granters << new ImplicitTokenGranter(tokenServices(), clientDetailsService(), oAuth2RequestFactory())
         }
         if ( p('oaas.grant.client_credentials.enabled') as boolean ) {
-            granters << new ClientCredentialsTokenGranter(tokenServices(), clientDetailsService())
+            granters << new ClientCredentialsTokenGranter(tokenServices(), clientDetailsService(), oAuth2RequestFactory())
         }
         if ( p('oaas.grant.password.enabled') as boolean ) {
             granters << new ResourceOwnerPasswordTokenGranter(
-                    clientAuthentication.clientAuthenticationManager(), tokenServices(), clientDetailsService())
+                    clientAuthentication.clientAuthenticationManager(), tokenServices(), clientDetailsService(), oAuth2RequestFactory())
         }
         new CompositeTokenGranter(granters)
     }
 
     @Bean @Lazy authorizationCodeTokenGranter() {
-        new AuthorizationCodeTokenGranter(tokenServices(), authorizationCodeServices(), clientDetailsService())
+        new AuthorizationCodeTokenGranter (
+            tokenServices(),
+            authorizationCodeServices(),
+            clientDetailsService(),
+            oAuth2RequestFactory()
+        )
     }
 
     @Bean @Lazy authorizationCodeServices() {
         new InMemoryAuthorizationCodeServices()
-    }
-
-    @Bean authorizationRequestManager() {
-        new DefaultAuthorizationRequestManager(clientDetailsService())
     }
 
 
@@ -142,7 +154,7 @@ class AuthorizationServerConfig implements ConfigurationSupport {
         new TokenEndpoint (
             tokenGranter:                tokenGranter(),
             clientDetailsService:        clientDetailsService(),
-            authorizationRequestManager: authorizationRequestManager()
+            OAuth2RequestFactory:        oAuth2RequestFactory()
         )
     }
 
@@ -151,9 +163,9 @@ class AuthorizationServerConfig implements ConfigurationSupport {
             new AuthorizationEndpoint (
                 tokenGranter:                tokenGranter(),
                 clientDetailsService:        clientDetailsService(),
+                OAuth2RequestFactory:        oAuth2RequestFactory(),
                 authorizationCodeServices:   authorizationCodeServices(),
                 userApprovalHandler:         clientApprovalHandler(),
-                authorizationRequestManager: authorizationRequestManager(),
                 userApprovalPage:            'forward:/oauth/confirm_access',
                 errorPage:                   'forward:/oauth/error'
             )

@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2014 Czech Technical University in Prague.
+ * Copyright 2013-2015 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,22 +30,16 @@ import static cz.cvut.zuul.oaas.test.Assertions.assertThat
 class SharedAsserts {
 
     static isEqual(OAuth2Authentication actual, OAuth2Authentication expected) {
-        def actualAuthzReq = actual.authorizationRequest
-        def expectAuthzReq = expected.authorizationRequest
+        def actualOAuthReq = actual.getOAuth2Request()
+        def expectOAuthReq = expected.getOAuth2Request()
         def actualUserAuth = actual.userAuthentication
         def expectUserAuth = expected.userAuthentication
 
-        assertThat (actual) equalsTo expected inAllPropertiesExcept ('userAuthentication', 'authorizationRequest', 'authorities')
-
+        assertThat (actual) equalsTo expected inAllPropertiesExcept ('userAuthentication', 'OAuth2Request', 'authorities')
         actual.authorities as Set == expected.authorities as Set
 
-        assertThat (actualAuthzReq) equalsTo (expectAuthzReq) inAllPropertiesExcept ('authorizationParameters')
-
-        // scope parameter contains space separated scopes extracted from property of type Set,
-        // thus it can be shuffled so we must exclude it from assertion
-        def actualAuthzParams = actualAuthzReq.authorizationParameters.findAll { it.key != 'scope' }
-        def expectedAuthzParams =  expectAuthzReq.authorizationParameters.findAll { it.key != 'scope' }
-        actualAuthzParams == expectedAuthzParams
+        assertThat (actualOAuthReq) equalsTo (expectOAuthReq) inAllPropertiesExcept ('authorities')
+        actualOAuthReq.authorities as Set == expectOAuthReq.authorities as Set
 
         if (expectUserAuth) {
             assertThat (actualUserAuth) equalsTo (expectUserAuth) inAllPropertiesExcept ('authorities')

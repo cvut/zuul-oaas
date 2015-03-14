@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2014 Czech Technical University in Prague.
+ * Copyright 2013-2015 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -106,12 +106,12 @@ class AccessTokensRepoIT extends AbstractRepoIT<PersistableAccessToken> {
             2.times {
                 def entity = new PersistableAccessToken(
                         build(OAuth2AccessToken),
-                        build(OAuth2Authentication, [username: 'myName'])
+                        build(OAuth2Authentication, [clientId: 'someClientId', username: 'myName'])
                 )
                 repo.save(entity)
             }
         when:
-            def result = repo.findByUserName('myName')
+            def result = repo.findByClientIdAndUserName('someClientId', 'myName')
         then:
             result.size() == 2
     }

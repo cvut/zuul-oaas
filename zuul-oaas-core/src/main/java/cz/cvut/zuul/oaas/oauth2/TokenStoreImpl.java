@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2014 Czech Technical University in Prague.
+ * Copyright 2013-2015 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,10 +23,10 @@
  */
 package cz.cvut.zuul.oaas.oauth2;
 
-import cz.cvut.zuul.oaas.repos.AccessTokensRepo;
-import cz.cvut.zuul.oaas.repos.RefreshTokensRepo;
 import cz.cvut.zuul.oaas.models.PersistableAccessToken;
 import cz.cvut.zuul.oaas.models.PersistableRefreshToken;
+import cz.cvut.zuul.oaas.repos.AccessTokensRepo;
+import cz.cvut.zuul.oaas.repos.RefreshTokensRepo;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
@@ -57,8 +57,8 @@ public class TokenStoreImpl implements TokenStore {
     }
 
     public OAuth2AccessToken getAccessToken(OAuth2Authentication authentication) {
-        log.debug("Loading access token for client: [{}]", authentication.getAuthorizationRequest() != null
-                ? authentication.getAuthorizationRequest().getClientId()
+        log.debug("Loading access token for client: [{}]", authentication.getOAuth2Request() != null
+                ? authentication.getOAuth2Request().getClientId()
                 : "unknown");
         return accessTokensRepo.findOneByAuthentication(authentication);
     }
@@ -82,8 +82,8 @@ public class TokenStoreImpl implements TokenStore {
         return accessTokensRepo.findByClientId(clientId);
     }
 
-    public Collection<OAuth2AccessToken> findTokensByUserName(String userName) {
-        return accessTokensRepo.findByUserName(userName);
+    public Collection<OAuth2AccessToken> findTokensByClientIdAndUserName(String clientId, String userName) {
+        return accessTokensRepo.findByClientIdAndUserName(clientId, userName);
     }
 
     public OAuth2Authentication readAuthentication(OAuth2AccessToken token) {

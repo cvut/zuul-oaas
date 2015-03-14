@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2014 Czech Technical University in Prague.
+ * Copyright 2013-2015 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -37,7 +37,7 @@ public interface AccessTokensRepo extends CrudRepository<PersistableAccessToken,
 
     Collection<OAuth2AccessToken> findByClientId(String clientId);
 
-    Collection<OAuth2AccessToken> findByUserName(String userName);
+    Collection<OAuth2AccessToken> findByClientIdAndUserName(String clientId, String userName);
 
     void deleteByRefreshToken(OAuth2RefreshToken refreshToken);
 

@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2014 Czech Technical University in Prague.
+ * Copyright 2013-2015 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,7 +30,7 @@ import spock.lang.Stepwise
 import static org.springframework.http.HttpStatus.FOUND
 import static org.springframework.http.HttpStatus.OK
 import static org.springframework.http.MediaType.TEXT_HTML
-import static org.springframework.security.oauth2.provider.AuthorizationRequest.USER_OAUTH_APPROVAL
+import static org.springframework.security.oauth2.common.util.OAuth2Utils.USER_OAUTH_APPROVAL
 
 @Stepwise
 class ImplicitGrantIT extends AbstractHttpIntegrationTest {

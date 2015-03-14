@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2014 Czech Technical University in Prague.
+ * Copyright 2013-2015 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,12 +26,12 @@ package cz.cvut.zuul.oaas.repos.mongo.converters;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import cz.cvut.zuul.oaas.models.User;
-import cz.cvut.zuul.oaas.repos.mongo.converters.MongoDbConstants.authz_request;
+import cz.cvut.zuul.oaas.repos.mongo.converters.MongoDbConstants.oauth_request;
 import cz.cvut.zuul.oaas.repos.mongo.converters.MongoDbConstants.user_auth;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.oauth2.provider.AuthorizationRequest;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.security.oauth2.provider.OAuth2Request;
 
 import static cz.cvut.zuul.oaas.repos.mongo.converters.MongoDbConstants.authentication.AUTHORIZATION_REQUEST;
 import static cz.cvut.zuul.oaas.repos.mongo.converters.MongoDbConstants.authentication.USER_AUTHENTICATION;
@@ -45,22 +45,25 @@ public class OAuth2AuthenticationWriteConverter implements Converter<OAuth2Authe
     public DBObject convert(OAuth2Authentication source) {
         DBObject target = new BasicDBObject();
 
-        target.put(AUTHORIZATION_REQUEST, convertAuthorizationRequest(source.getAuthorizationRequest()));
+        target.put(AUTHORIZATION_REQUEST, convertAuthorizationRequest(source.getOAuth2Request()));
         target.put(USER_AUTHENTICATION, convertUserAuthentication(source.getUserAuthentication()));
 
         return target;
     }
 
 
-    private DBObject convertAuthorizationRequest(AuthorizationRequest source) {
+    private DBObject convertAuthorizationRequest(OAuth2Request source) {
         DBObject target = new BasicDBObject();
 
-        target.put(authz_request.APPROVAL_PARAMS, source.getApprovalParameters());
-        target.put(authz_request.APPROVED, source.isApproved());
-        target.put(authz_request.AUTHORITIES, authorityListToSet(source.getAuthorities()));
-        target.put(authz_request.AUTHZ_PARAMS, source.getAuthorizationParameters());
-        target.put(authz_request.RESOURCE_IDS, source.getResourceIds());
-        target.put(authz_request.CLIENT_ID, source.getClientId());
+        target.put(oauth_request.APPROVED, source.isApproved());
+        target.put(oauth_request.AUTHORITIES, authorityListToSet(source.getAuthorities()));
+        target.put(oauth_request.CLIENT_ID, source.getClientId());
+        target.put(oauth_request.EXTENSIONS, source.getExtensions());
+        target.put(oauth_request.REDIRECT_URI, source.getRedirectUri());
+        target.put(oauth_request.REQUEST_PARAMS, source.getRequestParameters());
+        target.put(oauth_request.RESOURCE_IDS, source.getResourceIds());
+        target.put(oauth_request.RESPONSE_TYPES, source.getResponseTypes());
+        target.put(oauth_request.SCOPE, source.getScope());
 
         return target;
     }

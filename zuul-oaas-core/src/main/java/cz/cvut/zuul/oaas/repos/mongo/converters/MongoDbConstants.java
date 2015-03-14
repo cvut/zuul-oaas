@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2014 Czech Technical University in Prague.
+ * Copyright 2013-2015 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -95,17 +95,20 @@ public final class MongoDbConstants {
         private authentication() { /* do not initialize */ }
     }
 
-    public static final class authz_request {
+    public static final class oauth_request {
 
         public static final String
-                APPROVAL_PARAMS = "approval",
                 APPROVED = "approved",
                 AUTHORITIES = "authorities",
-                AUTHZ_PARAMS = "authz",
+                CLIENT_ID = "client",
+                EXTENSIONS = "exts",
+                REDIRECT_URI = "redirect",
+                REQUEST_PARAMS = "reqParams",
                 RESOURCE_IDS = "resources",
-                CLIENT_ID = "client";
+                RESPONSE_TYPES = "respTypes",
+                SCOPE = "scope";
 
-        private authz_request() { /* do not initialize */ }
+        private oauth_request() { /* do not initialize */ }
     }
 
     public static final class user_auth {

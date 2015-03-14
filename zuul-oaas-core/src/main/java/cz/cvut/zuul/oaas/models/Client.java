@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2014 Czech Technical University in Prague.
+ * Copyright 2013-2015 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -138,6 +138,11 @@ public class Client implements ClientDetails {
         this.authorities = authorities != null
                 ? new LinkedHashSet<>(authorities)
                 : Collections.<GrantedAuthority>emptySet();
+    }
+
+    // TODO implement properly
+    public boolean isAutoApprove(String scope) {
+        return false;
     }
 
     public Map<String, Object> getAdditionalInformation() {

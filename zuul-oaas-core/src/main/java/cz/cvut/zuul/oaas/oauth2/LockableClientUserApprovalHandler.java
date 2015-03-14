@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2014 Czech Technical University in Prague.
+ * Copyright 2013-2015 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -38,8 +38,9 @@ import org.springframework.security.oauth2.provider.approval.UserApprovalHandler
  * the decorated parent handler is asked for approve. When no parent handler
  * was set, then {@link DefaultUserApprovalHandler} is used.
  */
+// TODO
 @Slf4j
-public class LockableClientUserApprovalHandler implements UserApprovalHandler {
+public class LockableClientUserApprovalHandler { /*implements UserApprovalHandler {*/
 
     private UserApprovalHandler parentHandler = new DefaultUserApprovalHandler();
     private ClientsRepo clientsRepo;

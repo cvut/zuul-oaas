@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2014 Czech Technical University in Prague.
+ * Copyright 2013-2015 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,7 +30,7 @@ import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.oauth2.provider.BaseClientDetails.ArrayOrStringDeserializer;
+import org.springframework.security.oauth2.provider.client.JacksonArrayOrStringDeserializer;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -46,15 +46,15 @@ public class TokenInfo {
 
     private String clientId;
 
-    @JsonDeserialize(using = ArrayOrStringDeserializer.class)
+    @JsonDeserialize(using = JacksonArrayOrStringDeserializer.class)
     private Set<String> scope = emptySet();
 
     //alias resource_ids
-    @JsonDeserialize(using = ArrayOrStringDeserializer.class)
+    @JsonDeserialize(using = JacksonArrayOrStringDeserializer.class)
     private Set<String> audience = emptySet();
 
     @JsonProperty
-    @JsonDeserialize(using = ArrayOrStringDeserializer.class)
+    @JsonDeserialize(using = JacksonArrayOrStringDeserializer.class)
     private Set<String> clientAuthorities = emptySet();
 
     private Integer expiresIn;
@@ -64,7 +64,7 @@ public class TokenInfo {
     private String userEmail;
 
     @JsonProperty
-    @JsonDeserialize(using = ArrayOrStringDeserializer.class)
+    @JsonDeserialize(using = JacksonArrayOrStringDeserializer.class)
     private Set<String> userAuthorities = emptySet();
 
 
