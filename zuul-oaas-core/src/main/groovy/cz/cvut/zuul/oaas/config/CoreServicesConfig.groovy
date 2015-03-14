@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2014 Czech Technical University in Prague.
+ * Copyright 2013-2015 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -32,9 +32,9 @@ import cz.cvut.zuul.oaas.services.ResourcesServiceImpl
 import cz.cvut.zuul.oaas.services.TokensServiceImpl
 import cz.cvut.zuul.oaas.services.generators.RandomizedIdentifierEncoder
 import cz.cvut.zuul.oaas.services.generators.SecurePasswordGenerator
-import cz.cvut.zuul.oaas.services.generators.UUIDStringGenerator
 import org.hibernate.validator.messageinterpolation.ResourceBundleMessageInterpolator
 import org.hibernate.validator.messageinterpolation.ValueFormatterMessageInterpolator
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Primary
@@ -43,35 +43,33 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean
 import org.springframework.validation.beanvalidation.MessageSourceResourceBundleLocator
 import org.springframework.validation.beanvalidation.MethodValidationPostProcessor
 
-import javax.inject.Inject
-
 @Configuration
 class CoreServicesConfig implements ConfigurationSupport {
 
-    @Inject PersistenceBeans repos
+    @Autowired PersistenceBeans repos
 
 
     @Bean ResourcesService resourcesService() {
         new ResourcesServiceImpl (
-            resourcesRepo:      repos.resourcesRepo(),
-            identifierEncoder:  identifierEncoder()
+            resourcesRepo:     repos.resourcesRepo(),
+            identifierEncoder: new RandomizedIdentifierEncoder()
         )
     }
 
     @Bean ClientsService clientsService() {
         new ClientsServiceImpl (
-            clientsRepo:        repos.clientsRepo(),
-            accessTokensRepo:   repos.accessTokensRepo(),
-            refreshTokensRepo:  repos.refreshTokensRepo(),
-            clientIdGenerator:  clientIdGenerator(),
-            secretGenerator:    secretGenerator()
+            clientsRepo:       repos.clientsRepo(),
+            accessTokensRepo:  repos.accessTokensRepo(),
+            refreshTokensRepo: repos.refreshTokensRepo(),
+            clientIdGenerator: { UUID.randomUUID().toString() },
+            secretGenerator:   new SecurePasswordGenerator()
         )
     }
 
     @Bean TokensService tokensService() {
         new TokensServiceImpl (
-            accessTokensRepo:   repos.accessTokensRepo(),
-            clientsRepo:        repos.clientsRepo()
+            accessTokensRepo:  repos.accessTokensRepo(),
+            clientsRepo:       repos.clientsRepo()
         )
     }
 
@@ -99,22 +97,9 @@ class CoreServicesConfig implements ConfigurationSupport {
 
     @Bean validatorMessageSource() {
         new ReloadableResourceBundleMessageSource (
-            basename:           'classpath:/config/i18n/validator-messages',
-            defaultEncoding:    'utf-8',
-            cacheSeconds:       profileDev ? 5 : 0
+            basename:          'classpath:/config/i18n/validator-messages',
+            defaultEncoding:   'utf-8',
+            cacheSeconds:      profileDev ? 5 : 0
         )
-    }
-
-
-    @Bean secretGenerator() {
-        new SecurePasswordGenerator()
-    }
-
-    @Bean clientIdGenerator() {
-        new UUIDStringGenerator()
-    }
-
-    @Bean identifierEncoder() {
-        new RandomizedIdentifierEncoder()
     }
 }

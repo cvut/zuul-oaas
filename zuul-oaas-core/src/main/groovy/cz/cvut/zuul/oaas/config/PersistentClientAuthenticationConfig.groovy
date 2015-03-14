@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2014 Czech Technical University in Prague.
+ * Copyright 2013-2015 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,20 +24,19 @@
 package cz.cvut.zuul.oaas.config
 
 import cz.cvut.zuul.oaas.oauth2.LockableClientUserDetailsService
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.authentication.AuthenticationManager
 
-import javax.inject.Inject
-
 @Configuration
-class PersistentClientAuthenticationConfig extends AbstractAuthenticationManagerConfig implements ClientAuthenticationBeans {
+class PersistentClientAuthenticationConfig extends AbstractAuthenticationManagerConfig {
 
-    @Inject PersistenceBeans repos
+    @Autowired PersistenceBeans repos
 
     @Bean @Qualifier('client')
-    AuthenticationManager clientAuthenticationManager() {
+    AuthenticationManager clientAuthManager() {
         builder.userDetailsService (
             new LockableClientUserDetailsService (
                 clientsRepo: repos.clientsRepo()

@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2014 Czech Technical University in Prague.
+ * Copyright 2013-2015 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -70,8 +70,8 @@ class MongoPersistenceConfig extends AbstractMongoConfiguration
     void onApplicationEvent(ContextRefreshedEvent event) {
         if (profileDev) {
             new MongoSeedLoader (
-                mongoTemplate:  mongoTemplate(),
-                location:       classpath('/config/seeds.json')
+                mongoTemplate: mongoTemplate(),
+                location:      classpath('/config/seeds.json')
             ).seed()
         }
     }

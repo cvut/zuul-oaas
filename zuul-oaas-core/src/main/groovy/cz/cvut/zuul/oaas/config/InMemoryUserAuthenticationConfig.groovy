@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2014 Czech Technical University in Prague.
+ * Copyright 2013-2015 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,10 +31,10 @@ import org.springframework.security.authentication.AuthenticationManager
 
 @Configuration
 @Profile(['dev', 'test'])
-class InMemoryUserAuthenticationConfig extends AbstractAuthenticationManagerConfig implements UserAuthenticationBeans {
+class InMemoryUserAuthenticationConfig extends AbstractAuthenticationManagerConfig {
 
     @Bean @Qualifier('user')
-    AuthenticationManager userAuthenticationManager() {
+    AuthenticationManager userAuthManager() {
         builder.inMemoryAuthentication()
             .withUser('tomy')
                 .password('best').authorities('ROLE_USER')

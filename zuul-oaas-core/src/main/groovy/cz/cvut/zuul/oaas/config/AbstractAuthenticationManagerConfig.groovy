@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2014 Czech Technical University in Prague.
+ * Copyright 2013-2015 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,14 +24,13 @@
 package cz.cvut.zuul.oaas.config
 
 import cz.cvut.zuul.oaas.common.config.ConfigurationSupport
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.config.annotation.ObjectPostProcessor
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 
-import javax.inject.Inject
-
 abstract class AbstractAuthenticationManagerConfig implements ConfigurationSupport {
 
-    @Inject ObjectPostProcessor<Object> objectPostProcessor
+    @Autowired ObjectPostProcessor<Object> objectPostProcessor
 
     def getBuilder() {
         new AuthenticationManagerBuilder(objectPostProcessor)

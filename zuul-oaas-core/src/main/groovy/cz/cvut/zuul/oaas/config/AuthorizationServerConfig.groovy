@@ -26,37 +26,148 @@ package cz.cvut.zuul.oaas.config
 import cz.cvut.zuul.oaas.common.config.ConfigurationSupport
 import cz.cvut.zuul.oaas.oauth2.ClientDetailsServiceImpl
 import cz.cvut.zuul.oaas.oauth2.TokenStoreImpl
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Lazy
+import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.oauth2.provider.CompositeTokenGranter
 import org.springframework.security.oauth2.provider.approval.TokenStoreUserApprovalHandler
 import org.springframework.security.oauth2.provider.client.ClientCredentialsTokenGranter
 import org.springframework.security.oauth2.provider.code.AuthorizationCodeTokenGranter
 import org.springframework.security.oauth2.provider.code.InMemoryAuthorizationCodeServices
-import org.springframework.security.oauth2.provider.endpoint.AuthorizationEndpoint
-import org.springframework.security.oauth2.provider.endpoint.FrameworkEndpointHandlerMapping
-import org.springframework.security.oauth2.provider.endpoint.TokenEndpoint
-import org.springframework.security.oauth2.provider.endpoint.WhitelabelApprovalEndpoint
+import org.springframework.security.oauth2.provider.endpoint.*
 import org.springframework.security.oauth2.provider.implicit.ImplicitTokenGranter
 import org.springframework.security.oauth2.provider.password.ResourceOwnerPasswordTokenGranter
 import org.springframework.security.oauth2.provider.refresh.RefreshTokenGranter
 import org.springframework.security.oauth2.provider.request.DefaultOAuth2RequestFactory
+import org.springframework.security.oauth2.provider.token.ConsumerTokenServices
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices
 import org.springframework.security.oauth2.provider.token.ResourceServerTokenServices
 
-import javax.inject.Inject
-
+/**
+ * Configuration of non-security features of the Authorization Server endpoints,
+ * like token store, token customizations, user approvals and grant types.
+ */
 @Configuration
 class AuthorizationServerConfig implements ConfigurationSupport {
 
-    @Inject PersistenceBeans repos
-    @Inject ClientAuthenticationBeans clientAuthentication
+    @Autowired PersistenceBeans repos
+
+    @Autowired @Qualifier('client')
+    AuthenticationManager clientAuthManager
 
     @Value('${oaas.refresh_token.enabled}') boolean isRefreshToken
     @Value('${oaas.grant.implicit.enabled}') boolean isImplicitGrant
     @Value('${oaas.grant.authorization_code.enabled}') boolean isAuthCodeGrant
+
+
+    //////// Endpoints (Controllers) ////////
+
+    @Bean tokenEndpoint() {
+        new TokenEndpoint (
+            tokenGranter:         tokenGranter(),
+            clientDetailsService: clientDetailsService(),
+            OAuth2RequestFactory: oAuth2RequestFactory()
+        )
+    }
+
+
+    @Bean authorizationEndpoint() {
+        if (isAuthCodeGrant || isImplicitGrant) {
+            new AuthorizationEndpoint(
+                tokenGranter:              tokenGranter(),
+                clientDetailsService:      clientDetailsService(),
+                OAuth2RequestFactory:      oAuth2RequestFactory(),
+                authorizationCodeServices: authorizationCodeServices(),
+                userApprovalHandler:       userApprovalHandler(),
+                userApprovalPage:          'forward:/oauth/confirm_access',
+                errorPage:                 'forward:/oauth/error'
+            )
+        } else null
+    }
+
+    @Bean approvalEndpoint() {
+        new WhitelabelApprovalEndpoint()
+    }
+
+    @Bean oauth2HandlerMapping() {
+        new FrameworkEndpointHandlerMapping (
+            mappings: [
+                '/oauth/token':       p('oaas.endpoint.token'),
+                '/oauth/authorize':   p('oaas.endpoint.authorization'),
+                '/oauth/check_token': p('oaas.endpoint.check_token.uri')
+            ]
+        )
+    }
+
+    //////// Services etc. ////////
+
+    @Bean tokenGranter() {
+        def granters = []
+
+        if ( isAuthCodeGrant ) {
+            granters << new AuthorizationCodeTokenGranter (
+                tokenServices(),
+                authorizationCodeServices(),
+                clientDetailsService(),
+                oAuth2RequestFactory()
+            )
+        }
+        if ( isRefreshToken ) {
+            granters << new RefreshTokenGranter (
+                tokenServices(),
+                clientDetailsService(),
+                oAuth2RequestFactory()
+            )
+        }
+        if ( isImplicitGrant ) {
+            granters << new ImplicitTokenGranter (
+                tokenServices(),
+                clientDetailsService(),
+                oAuth2RequestFactory()
+            )
+        }
+        if ( p('oaas.grant.client_credentials.enabled') as boolean ) {
+            granters << new ClientCredentialsTokenGranter (
+                tokenServices(),
+                clientDetailsService(),
+                oAuth2RequestFactory()
+            )
+        }
+        if ( p('oaas.grant.password.enabled') as boolean ) {
+            granters << new ResourceOwnerPasswordTokenGranter (
+                clientAuthManager,
+                tokenServices(),
+                clientDetailsService(),
+                oAuth2RequestFactory()
+            )
+        }
+        new CompositeTokenGranter(granters)
+    }
+
+    @Bean tokenServices() {
+        new DefaultTokenServices (
+            supportRefreshToken:         isRefreshToken,
+            accessTokenValiditySeconds:  p('oaas.access_token.validity') as int,
+            refreshTokenValiditySeconds: p('oaas.refresh_token.validity') as int,
+            reuseRefreshToken:           p('oaas.refresh_token.reuse') as boolean,
+            clientDetailsService:        clientDetailsService(),
+            tokenStore:                  tokenStore()
+        )
+    }
+
+    // Register explicitly under this interface so it can be autowired by this type.
+    @Bean ResourceServerTokenServices resourceServerTokenServices() {
+        tokenServices()
+    }
+
+    // Register explicitly under this interface so it can be autowired by this type.
+    @Bean ConsumerTokenServices consumerTokenServices() {
+        tokenServices()
+    }
 
     /**
      * A user approval handler that prevents locked clients to be authorized.
@@ -73,10 +184,11 @@ class AuthorizationServerConfig implements ConfigurationSupport {
         )
     }
     */
-    @Bean clientApprovalHandler() {
-        new TokenStoreUserApprovalHandler(
-            tokenStore: tokenStore(),
-            requestFactory: oAuth2RequestFactory()
+    @Bean userApprovalHandler() {
+        new TokenStoreUserApprovalHandler (
+            tokenStore:           tokenStore(),
+            clientDetailsService: clientDetailsService(),
+            requestFactory:       oAuth2RequestFactory()
         )
     }
 
@@ -84,104 +196,21 @@ class AuthorizationServerConfig implements ConfigurationSupport {
         new DefaultOAuth2RequestFactory( clientDetailsService() )
     }
 
-    @Bean tokenServices() {
-        new DefaultTokenServices (
-            supportRefreshToken:         isRefreshToken,
-            accessTokenValiditySeconds:  p('oaas.access_token.validity') as int,
-            refreshTokenValiditySeconds: p('oaas.refresh_token.validity') as int,
-            clientDetailsService:        clientDetailsService(),
-            tokenStore:                  tokenStore()
+    @Bean clientDetailsService() {
+        new ClientDetailsServiceImpl (
+                clientsRepo: repos.clientsRepo()
         )
     }
 
-    // Register explicitly under this interface so it can be autowired by this type.
-    @Bean ResourceServerTokenServices resourceServerTokenServices() {
-        tokenServices()
+    // TODO implement persistent store
+    @Bean @Lazy authorizationCodeServices() {
+        new InMemoryAuthorizationCodeServices()
     }
 
     @Bean tokenStore() {
         new TokenStoreImpl (
             accessTokensRepo:  repos.accessTokensRepo(),
             refreshTokensRepo: repos.refreshTokensRepo()
-        )
-    }
-
-    @Bean clientDetailsService() {
-        new ClientDetailsServiceImpl (
-            clientsRepo: repos.clientsRepo()
-        )
-    }
-
-    @Bean tokenGranter() {
-        def granters = []
-
-        if ( isAuthCodeGrant ) {
-            granters << authorizationCodeTokenGranter()
-        }
-        if ( isRefreshToken ) {
-            granters << new RefreshTokenGranter(tokenServices(), clientDetailsService(), oAuth2RequestFactory())
-        }
-        if ( isImplicitGrant ) {
-            granters << new ImplicitTokenGranter(tokenServices(), clientDetailsService(), oAuth2RequestFactory())
-        }
-        if ( p('oaas.grant.client_credentials.enabled') as boolean ) {
-            granters << new ClientCredentialsTokenGranter(tokenServices(), clientDetailsService(), oAuth2RequestFactory())
-        }
-        if ( p('oaas.grant.password.enabled') as boolean ) {
-            granters << new ResourceOwnerPasswordTokenGranter(
-                    clientAuthentication.clientAuthenticationManager(), tokenServices(), clientDetailsService(), oAuth2RequestFactory())
-        }
-        new CompositeTokenGranter(granters)
-    }
-
-    @Bean @Lazy authorizationCodeTokenGranter() {
-        new AuthorizationCodeTokenGranter (
-            tokenServices(),
-            authorizationCodeServices(),
-            clientDetailsService(),
-            oAuth2RequestFactory()
-        )
-    }
-
-    @Bean @Lazy authorizationCodeServices() {
-        new InMemoryAuthorizationCodeServices()
-    }
-
-
-    //////// Endpoints (Controllers) ////////
-
-    @Bean tokenEndpoint() {
-        new TokenEndpoint (
-            tokenGranter:                tokenGranter(),
-            clientDetailsService:        clientDetailsService(),
-            OAuth2RequestFactory:        oAuth2RequestFactory()
-        )
-    }
-
-    @Bean authorizationEndpoint() {
-        isAuthCodeGrant || isImplicitGrant ?
-            new AuthorizationEndpoint (
-                tokenGranter:                tokenGranter(),
-                clientDetailsService:        clientDetailsService(),
-                OAuth2RequestFactory:        oAuth2RequestFactory(),
-                authorizationCodeServices:   authorizationCodeServices(),
-                userApprovalHandler:         clientApprovalHandler(),
-                userApprovalPage:            'forward:/oauth/confirm_access',
-                errorPage:                   'forward:/oauth/error'
-            )
-        : null
-    }
-
-    @Bean approvalEndpoint() {
-        new WhitelabelApprovalEndpoint()
-    }
-
-    @Bean oauth2HandlerMapping() {
-        new FrameworkEndpointHandlerMapping (
-            mappings: [
-                '/oauth/token':     p('oaas.endpoint.token'),
-                '/oauth/authorize': p('oaas.endpoint.authorization')
-            ]
         )
     }
 }

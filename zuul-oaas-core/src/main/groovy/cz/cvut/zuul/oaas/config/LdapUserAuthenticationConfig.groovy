@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2014 Czech Technical University in Prague.
+ * Copyright 2013-2015 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -32,25 +32,23 @@ import org.springframework.security.authentication.AuthenticationManager
 
 @Configuration
 @Profile('ldap')
-class LdapUserAuthenticationConfig extends AbstractAuthenticationManagerConfig implements UserAuthenticationBeans {
+class LdapUserAuthenticationConfig extends AbstractAuthenticationManagerConfig {
 
     @Bean @Qualifier('user')
-    AuthenticationManager userAuthenticationManager() {
-        builder.ldapAuthentication().with {
-            contextSource().url         p('auth.user.ldap.server.uri') +'/'+ p('auth.user.ldap.server.base_dn')
-            userDnPatterns              p('auth.user.ldap.user_dn_pattern')
-            userSearchBase              p('auth.user.ldap.user_search_base')
-            userSearchFilter            p('auth.user.ldap.user_search_filter')
-            userDetailsContextMapper    ldapUserContextMapper()
-        }.and().build()
-    }
-
-    @Bean ldapUserContextMapper() {
-        new SimpleUserDetailsContextMapper (
-            firstNameAttrName:  p('auth.user.ldap.attribute.fist_name'),
-            lastNameAttrName:   p('auth.user.ldap.attribute.last_name'),
-            emailAttrName:      p('auth.user.ldap.attribute.email'),
-            defaultRoles:       'ROLE_USER'
-        )
+    AuthenticationManager userAuthManager() {
+        builder.ldapAuthentication()
+            .contextSource()
+                .url( p('auth.user.ldap.server.uri') +'/'+ p('auth.user.ldap.server.base_dn') )
+                .and()
+            .userDnPatterns( p('auth.user.ldap.user_dn_pattern') )
+            .userSearchBase( p('auth.user.ldap.user_search_base') )
+            .userSearchFilter( p('auth.user.ldap.user_search_filter') )
+            .userDetailsContextMapper(new SimpleUserDetailsContextMapper (
+                firstNameAttrName: p('auth.user.ldap.attribute.fist_name'),
+                lastNameAttrName: p('auth.user.ldap.attribute.last_name'),
+                emailAttrName: p('auth.user.ldap.attribute.email'),
+                defaultRoles: 'ROLE_USER'
+            )).and()
+        .build()
     }
 }

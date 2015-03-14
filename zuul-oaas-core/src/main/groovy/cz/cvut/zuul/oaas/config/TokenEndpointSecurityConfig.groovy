@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2014 Czech Technical University in Prague.
+ * Copyright 2013-2015 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,12 +24,12 @@
 package cz.cvut.zuul.oaas.config
 
 import cz.cvut.zuul.oaas.common.config.ConfigurationSupport
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Lazy
 import org.springframework.core.annotation.Order
-import org.springframework.security.access.vote.AuthenticatedVoter
-import org.springframework.security.access.vote.UnanimousBased
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
@@ -37,10 +37,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.oauth2.provider.client.ClientCredentialsTokenEndpointFilter
 import org.springframework.security.oauth2.provider.error.OAuth2AccessDeniedHandler
 import org.springframework.security.oauth2.provider.error.OAuth2AuthenticationEntryPoint
-import org.springframework.security.oauth2.provider.vote.ScopeVoter
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter
-
-import javax.inject.Inject
 
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS
 
@@ -48,22 +45,21 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @EnableWebSecurity @Order(0)
 class TokenEndpointSecurityConfig extends WebSecurityConfigurerAdapter implements ConfigurationSupport {
 
-    @Inject ClientAuthenticationBeans clientAuthentication
+    @Autowired @Qualifier('client')
+    AuthenticationManager clientAuthManager
 
 
     TokenEndpointSecurityConfig() {
         super(true) // disable defaults
     }
 
-    AuthenticationManager authenticationManager() {
-        clientAuthentication.clientAuthenticationManager()
-    }
+    AuthenticationManager authenticationManager() { clientAuthManager }
 
     void configure(HttpSecurity http) {
         http.antMatcher( p('oaas.endpoint.token') )
             .exceptionHandling()
-                .authenticationEntryPoint( oauthAuthenticationEntryPoint() )
-                .accessDeniedHandler( accessDeniedHandler() )
+                .authenticationEntryPoint( oauthBasicAuthenticationEntryPoint() )
+                .accessDeniedHandler( new OAuth2AccessDeniedHandler() )
                 .and()
             .headers()
                 .cacheControl()
@@ -74,20 +70,20 @@ class TokenEndpointSecurityConfig extends WebSecurityConfigurerAdapter implement
             .servletApi()
                 .and()
             .httpBasic()
-                .authenticationEntryPoint( oauthAuthenticationEntryPoint() )
+                .authenticationEntryPoint( oauthBasicAuthenticationEntryPoint() )
                 .and()
             .authorizeRequests()
                 .antMatchers( p('oaas.endpoint.token') ).fullyAuthenticated()
 
-        if ( p('auth.client.authentication_scheme.form.allow') as boolean ) {
-            http.addFilterAfter( clientCredentialsTokenEndpointFilter(), BasicAuthenticationFilter )
+        if ( p('auth.client.auth_scheme.form.allow') as boolean ) {
+            http.addFilterAfter( clientFormAuthenticationFilter(), BasicAuthenticationFilter )
         }
     }
 
     /**
      * Client authentication with HTTP Basic scheme. This is the recommended way by specification.
      */
-    @Bean oauthAuthenticationEntryPoint() {
+    @Bean oauthBasicAuthenticationEntryPoint() {
         new OAuth2AuthenticationEntryPoint (
             realmName: 'Zuul OAAS'
         )
@@ -99,19 +95,9 @@ class TokenEndpointSecurityConfig extends WebSecurityConfigurerAdapter implement
      * OAuth specification (draft-ietf-oauth-v2-31, 16)! Clients should use HTTP Basic scheme
      * instead.
      */
-    @Bean @Lazy clientCredentialsTokenEndpointFilter() {
-        new ClientCredentialsTokenEndpointFilter (
-            filterProcessesUrl: p('oaas.endpoint.token'),
-            authenticationManager: authenticationManager()
-        )
-    }
-
-    @Bean accessDeniedHandler() {
-        new OAuth2AccessDeniedHandler()
-    }
-
-    //TODO ??
-    @Bean accessDecisionManager() {
-        new UnanimousBased([ new ScopeVoter(), new AuthenticatedVoter() ])
+    @Bean @Lazy clientFormAuthenticationFilter() {
+        new ClientCredentialsTokenEndpointFilter( p('oaas.endpoint.token') ).with {
+            it.authenticationManager = authenticationManager(); it
+        }
     }
 }
