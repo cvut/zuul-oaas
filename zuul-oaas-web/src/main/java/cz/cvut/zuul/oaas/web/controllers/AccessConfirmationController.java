@@ -44,7 +44,7 @@ public class AccessConfirmationController {
 
     private @Setter ClientsService clientsService;
 
-    @Value("${oaas.endpoint.authorization}") String authorizationUri;
+    @Value("${oaas.endpoint.authorization.uri}") String authorizationUri;
 
 
     @RequestMapping("/oauth/confirm_access")

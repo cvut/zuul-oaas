@@ -57,7 +57,7 @@ class TokenEndpointSecurityConfig extends WebSecurityConfigurerAdapter implement
 
     void configure(HttpSecurity http) {
         http.requestMatchers()
-                .antMatchers( p('oaas.endpoint.token'), p('oaas.endpoint.check_token.uri') )
+                .antMatchers( p('oaas.endpoint.token.uri'), p('oaas.endpoint.check_token.uri') )
                 .and()
             .exceptionHandling()
                 .authenticationEntryPoint( oauthBasicAuthenticationEntryPoint() )
@@ -77,12 +77,12 @@ class TokenEndpointSecurityConfig extends WebSecurityConfigurerAdapter implement
                 .authenticationEntryPoint( oauthBasicAuthenticationEntryPoint() )
                 .and()
             .authorizeRequests()
-                .antMatchers( p('oaas.endpoint.token') )
+                .antMatchers( p('oaas.endpoint.token.uri') )
                     .fullyAuthenticated()
                 .antMatchers( p('oaas.endpoint.check_token.uri') )
                     .access( p('oaas.endpoint.check_token.access') )
 
-        if ( p('auth.client.auth_scheme.form.allow') as boolean ) {
+        if ( p('oaas.endpoint.token.allow_form_auth') as boolean ) {
             http.addFilterAfter( clientFormAuthenticationFilter(), BasicAuthenticationFilter )
         }
     }
@@ -103,7 +103,7 @@ class TokenEndpointSecurityConfig extends WebSecurityConfigurerAdapter implement
      * instead.
      */
     @Bean @Lazy clientFormAuthenticationFilter() {
-        new ClientCredentialsTokenEndpointFilter( p('oaas.endpoint.token') ).with {
+        new ClientCredentialsTokenEndpointFilter( p('oaas.endpoint.token.uri') ).with {
             it.authenticationManager = authenticationManager(); it
         }
     }

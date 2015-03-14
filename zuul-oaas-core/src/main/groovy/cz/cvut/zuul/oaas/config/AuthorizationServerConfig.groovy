@@ -100,8 +100,8 @@ class AuthorizationServerConfig implements ConfigurationSupport {
     @Bean oauth2HandlerMapping() {
         new FrameworkEndpointHandlerMapping (
             mappings: [
-                '/oauth/token':       p('oaas.endpoint.token'),
-                '/oauth/authorize':   p('oaas.endpoint.authorization'),
+                '/oauth/token':       p('oaas.endpoint.token.uri'),
+                '/oauth/authorize':   p('oaas.endpoint.authorization.uri'),
                 '/oauth/check_token': p('oaas.endpoint.check_token.uri')
             ]
         )
