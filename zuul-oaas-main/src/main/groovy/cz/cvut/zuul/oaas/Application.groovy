@@ -23,7 +23,6 @@
  */
 package cz.cvut.zuul.oaas
 
-import cz.cvut.zuul.oaas.common.config.DispatcherServletRegistrationBean
 import cz.cvut.zuul.oaas.restapi.config.RestContextConfig
 import cz.cvut.zuul.oaas.web.config.WebContextConfig
 import org.springframework.boot.autoconfigure.web.EmbeddedServletContainerAutoConfiguration
@@ -68,16 +67,16 @@ class Application extends SpringBootServletInitializer {
     @Bean RegistrationBean webModuleServlet() {
         new DispatcherServletRegistrationBean (
             name:          'web-module',
-            urlMapping:    '/*',
-            configClasses: WebContextConfig
+            urlMappings:   ['/*'],
+            configClasses: [WebContextConfig]
         )
     }
 
     @Bean RegistrationBean restModuleServlet() {
         new DispatcherServletRegistrationBean (
             name:          'rest-module',
-            urlMapping:    '/api/*',
-            configClasses: RestContextConfig
+            urlMappings:   ['/api/*'],
+            configClasses: [RestContextConfig]
         )
     }
 }

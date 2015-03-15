@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2014 Czech Technical University in Prague.
+ * Copyright 2013-2015 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,17 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package cz.cvut.zuul.oaas.common.config;
+package cz.cvut.zuul.oaas
 
-import org.springframework.boot.context.embedded.ServletRegistrationBean;
-import org.springframework.util.Assert;
-import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
-import org.springframework.web.servlet.DispatcherServlet;
+import org.springframework.boot.context.embedded.ServletRegistrationBean
+import org.springframework.web.context.support.AnnotationConfigWebApplicationContext
+import org.springframework.web.servlet.DispatcherServlet
 
-import javax.servlet.Servlet;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import java.util.Arrays;
+import javax.servlet.Servlet
+import javax.servlet.ServletContext
 
 /**
  * A {@link org.springframework.boot.context.embedded.ServletContextInitializer ServletContextInitializer}
@@ -48,29 +45,7 @@ import java.util.Arrays;
  * @see AnnotationConfigWebApplicationContext
  * @see org.springframework.boot.context.embedded.ServletContextInitializer
  */
-public class DispatcherServletRegistrationBean extends ServletRegistrationBean {
-
-    private Class<?>[] configClasses;
-
-
-    @Override
-    public void onStartup(ServletContext servletContext) throws ServletException {
-
-        AnnotationConfigWebApplicationContext cxt = new AnnotationConfigWebApplicationContext();
-        cxt.register(configClasses);
-
-        super.setServlet(new DispatcherServlet(cxt));
-        super.addInitParameter("throwExceptionIfNoHandlerFound", "true");
-
-        super.onStartup(servletContext);
-    }
-
-    /**
-     * @see #setConfigClasses(Class[])
-     */
-    public Class<?>[] getConfigClasses() {
-        return configClasses;
-    }
+class DispatcherServletRegistrationBean extends ServletRegistrationBean {
 
     /**
      * Specify {@link org.springframework.context.annotation.Configuration @Configuration}
@@ -78,22 +53,25 @@ public class DispatcherServletRegistrationBean extends ServletRegistrationBean {
      * provided to the {@linkplain AnnotationConfigWebApplicationContext web application
      * context}.
      */
-    public void setConfigClasses(Class<?>... configClasses) {
-        this.configClasses = configClasses;
+    Class<?>[] configClasses
+
+
+    @Override
+    void onStartup(ServletContext servletContext) {
+
+        def cxt = new AnnotationConfigWebApplicationContext()
+        cxt.register(configClasses)
+
+        super.setServlet(new DispatcherServlet(cxt))
+        super.addInitParameter('throwExceptionIfNoHandlerFound', 'true')
+
+        super.onStartup(servletContext)
     }
 
     /**
-     * @see #setUrlMappings(java.util.Collection)
-     */
-    public void setUrlMapping(String urlMapping) {
-        Assert.notNull(urlMapping, "UrlMapping must not be null");
-        setUrlMappings(Arrays.asList(urlMapping));
-    }
-
-    /**
-     * Not implemented in this class; uses {@link DispatcherServlet}.
+     * Not implemented in this class uses {@link DispatcherServlet}.
      */
     @Override
-    public void setServlet(Servlet servlet) {
+    void setServlet(Servlet servlet) {
     }
 }
