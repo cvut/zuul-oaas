@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2014 Czech Technical University in Prague.
+ * Copyright 2013-2015 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,21 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package cz.cvut.zuul.oaas.web.controllers;
+package cz.cvut.zuul.oaas.web.controllers
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.stereotype.Controller
+import org.springframework.web.bind.annotation.RequestMapping
 
 @Controller
-public class MainController {
+class MainController {
 
-    @RequestMapping("/")
-    public String getIndex() {
-        return "index";
-    }
+    @RequestMapping('/')
+    def getIndex() { 'index' }
 
-    @RequestMapping("/login")
-    public String getLogin() {
-        return "login";
-    }
+    @RequestMapping('/login')
+    def getLogin() { 'login' }
 }
