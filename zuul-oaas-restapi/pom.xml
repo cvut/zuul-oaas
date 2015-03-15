@@ -21,6 +21,7 @@
     <!--//////////////////// DEPENDENCIES ////////////////////-->
 
     <dependencies>
+
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>zuul-oaas-common</artifactId>
@@ -29,6 +30,16 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>zuul-oaas-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
         </dependency>
 
         <dependency>
@@ -42,26 +53,9 @@
             </exclusions>
         </dependency>
 
-        <!--//// Spring Framework ////-->
-
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-beans</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-core</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-web</artifactId>
+            <groupId>cz.jirutka.spring</groupId>
+            <artifactId>spring-rest-exception-handler</artifactId>
         </dependency>
 
         <dependency>
@@ -75,36 +69,8 @@
         </dependency>
 
         <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-core</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>org.springframework.security.oauth</groupId>
             <artifactId>spring-security-oauth2</artifactId>
-        </dependency>
-
-        <!--//// Others ////-->
-
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-        </dependency>
-
-        <!-- JSR-303 Validator -->
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-validator</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>cz.jirutka.spring</groupId>
-            <artifactId>spring-rest-exception-handler</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
         </dependency>
 
         <!--////// Test //////-->
@@ -122,28 +88,9 @@
             <type>test-jar</type>
         </dependency>
 
-        <!-- required by zuul-oaas-api-test -->
-        <dependency>
-            <groupId>net.java.quickcheck</groupId>
-            <artifactId>quickcheck</artifactId>
-            <scope>test</scope>
-        </dependency>
-
         <dependency>
             <groupId>org.codehaus.groovy</groupId>
             <artifactId>groovy-json</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.spockframework</groupId>
-            <artifactId>spock-spring</artifactId>
             <scope>test</scope>
         </dependency>
 
