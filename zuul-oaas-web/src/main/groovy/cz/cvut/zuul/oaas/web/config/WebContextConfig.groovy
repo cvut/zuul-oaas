@@ -70,7 +70,8 @@ class WebContextConfig extends WebMvcConfigurerAdapter implements ConfigurationS
     @Bean thymeleafViewResolver() {
         new ThymeleafViewResolver (
             templateEngine:     templateEngine(),
-            contentType:        'text/html;charset=UTF-8'
+            contentType:        'text/html;charset=UTF-8',
+            order:              0
         )
     }
 
