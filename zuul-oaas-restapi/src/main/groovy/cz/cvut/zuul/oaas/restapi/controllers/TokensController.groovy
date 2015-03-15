@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2014 Czech Technical University in Prague.
+ * Copyright 2013-2015 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,39 +21,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package cz.cvut.zuul.oaas.restapi.controllers;
+package cz.cvut.zuul.oaas.restapi.controllers
 
-import cz.cvut.zuul.oaas.api.models.TokenDTO;
-import cz.cvut.zuul.oaas.api.services.TokensService;
-import lombok.Setter;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import cz.cvut.zuul.oaas.api.services.TokensService
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.ResponseStatus
+import org.springframework.web.bind.annotation.RestController
 
-import static org.springframework.http.HttpStatus.NO_CONTENT;
-import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-
+import static org.springframework.http.HttpStatus.NO_CONTENT
+import static org.springframework.web.bind.annotation.RequestMethod.DELETE
+import static org.springframework.web.bind.annotation.RequestMethod.GET
 
 /**
  * API for authorization server tokens' management.
  */
 @RestController
-@RequestMapping("/v1/tokens")
-public class TokensController {
+@RequestMapping('/v1/tokens')
+class TokensController {
 
-    private @Setter TokensService tokensService;
+    TokensService tokensService
 
 
-    @RequestMapping(value = "{tokenValue}", method = GET)
-    TokenDTO getTokenDetails(@PathVariable String tokenValue) {
-        return tokensService.getToken(tokenValue);
+    @RequestMapping(value = '{tokenValue}', method = GET)
+    def getTokenDetails(@PathVariable String tokenValue) {
+        tokensService.getToken(tokenValue)
     }
 
     @ResponseStatus(NO_CONTENT)
-    @RequestMapping(value = "{tokenValue}", method = DELETE)
-    void invalidateToken(@PathVariable String tokenValue){
-        tokensService.invalidateToken(tokenValue);
+    @RequestMapping(value = '{tokenValue}', method = DELETE)
+    void invalidateToken(@PathVariable String tokenValue) {
+        tokensService.invalidateToken(tokenValue)
     }
 }

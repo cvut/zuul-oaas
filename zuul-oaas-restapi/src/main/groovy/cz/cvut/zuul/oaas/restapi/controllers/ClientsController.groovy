@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2014 Czech Technical University in Prague.
+ * Copyright 2013-2015 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,60 +21,59 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package cz.cvut.zuul.oaas.restapi.controllers;
+package cz.cvut.zuul.oaas.restapi.controllers
 
-import cz.cvut.zuul.oaas.api.exceptions.ConflictException;
-import cz.cvut.zuul.oaas.api.models.ClientDTO;
-import cz.cvut.zuul.oaas.api.services.ClientsService;
-import lombok.Setter;
-import org.springframework.web.bind.annotation.*;
+import cz.cvut.zuul.oaas.api.exceptions.ConflictException
+import cz.cvut.zuul.oaas.api.models.ClientDTO
+import cz.cvut.zuul.oaas.api.services.ClientsService
+import org.springframework.web.bind.annotation.*
 
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletResponse
 
-import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.NO_CONTENT;
-import static org.springframework.web.bind.annotation.RequestMethod.*;
+import static org.springframework.http.HttpStatus.CREATED
+import static org.springframework.http.HttpStatus.NO_CONTENT
+import static org.springframework.web.bind.annotation.RequestMethod.*
 
 /**
  * API for authorization server client's management.
  */
 @RestController
-@RequestMapping("/v1/clients")
-public class ClientsController {
+@RequestMapping('/v1/clients')
+class ClientsController {
 
-    private static final String SELF_URI = "/v1/clients/";
+    private static final SELF_URI = '/v1/clients/'
 
-    private @Setter ClientsService clientsService;
+    ClientsService clientsService
 
 
-    //////////  API methods  //////////
-
-    @RequestMapping(value = "{clientId}", method = GET)
-    ClientDTO getClient(@PathVariable String clientId) {
-        return clientsService.findClientById(clientId);
+    @RequestMapping(value = '{clientId}', method = GET)
+    def getClient(@PathVariable String clientId) {
+        clientsService.findClientById(clientId)
     }
 
     @ResponseStatus(CREATED)
     @RequestMapping(method = POST)
     void createClient(@RequestBody ClientDTO client, HttpServletResponse response) {
-        String clientId = clientsService.createClient(client);
+
+        def clientId = clientsService.createClient(client)
 
         // send redirect to URI of the created client (i.e. api/clients/{clientId}/)
-        response.setHeader("Location", SELF_URI + clientId);
+        response.setHeader('Location', SELF_URI + clientId)
     }
 
     @ResponseStatus(NO_CONTENT)
-    @RequestMapping(value = "/{clientId}", method = PUT)
+    @RequestMapping(value = '/{clientId}', method = PUT)
     void updateClient(@PathVariable String clientId, @RequestBody ClientDTO client) {
-        if (! clientId.equals(client.getClientId())) {
-            throw new ConflictException("clientId could not be changed");
+
+        if (clientId != client.clientId) {
+            throw new ConflictException('clientId could not be changed')
         }
-        clientsService.updateClient(client);
+        clientsService.updateClient(client)
     }
 
     @ResponseStatus(NO_CONTENT)
-    @RequestMapping(value = "{clientId}", method = DELETE)
+    @RequestMapping(value = '{clientId}', method = DELETE)
     void removeClient(@PathVariable String clientId) {
-        clientsService.removeClient(clientId);
+        clientsService.removeClient(clientId)
     }
 }
