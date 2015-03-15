@@ -36,7 +36,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
 import org.springframework.context.support.ReloadableResourceBundleMessageSource
-import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
 import org.springframework.security.oauth2.common.exceptions.BadClientCredentialsException
 import org.springframework.web.servlet.HandlerExceptionResolver
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer
@@ -70,7 +70,7 @@ class RestContextConfig extends WebMvcConfigurerAdapter {
     }
 
     void configureMessageConverters(List converters) {
-        converters << new MappingJacksonHttpMessageConverter (
+        converters << new MappingJackson2HttpMessageConverter (
             objectMapper: JsonMapperFactory.getInstance()
         )
     }

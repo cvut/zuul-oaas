@@ -87,16 +87,6 @@
         <!--//// Others ////-->
 
         <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-core-asl</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-mapper-asl</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
         </dependency>
@@ -112,11 +102,9 @@
             <artifactId>spring-rest-exception-handler</artifactId>
         </dependency>
 
-        <!-- Needed for spring-rest-exception-handler (will be fixed in 1.0.2). -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-annotations</artifactId>
-            <version>2.4.1</version>
+            <artifactId>jackson-databind</artifactId>
         </dependency>
 
         <!--////// Test //////-->

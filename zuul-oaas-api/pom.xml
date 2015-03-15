@@ -67,6 +67,11 @@
             <artifactId>javax.el</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
+
         <!-- Collection validators for JSR-303 -->
         <dependency>
             <groupId>cz.jirutka.validator</groupId>
@@ -77,16 +82,6 @@
         <dependency>
             <groupId>cz.jirutka.validator</groupId>
             <artifactId>validator-spring</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-core-asl</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-mapper-asl</artifactId>
         </dependency>
 
         <!--////// Test //////-->

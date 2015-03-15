@@ -23,15 +23,15 @@
  */
 package cz.cvut.zuul.oaas.api.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import cz.cvut.zuul.oaas.api.validators.EachValidURI;
 import cz.jirutka.validator.collection.constraints.EachPattern;
 import cz.jirutka.validator.collection.constraints.EachSize;
 import cz.jirutka.validator.spring.SpELAssert;
 import lombok.Data;
-import org.codehaus.jackson.annotate.JsonProperty;
-import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.hibernate.validator.constraints.NotEmpty;
-import org.springframework.security.oauth2.provider.client.JacksonArrayOrStringDeserializer;
+import org.springframework.security.oauth2.provider.client.Jackson2ArrayOrStringDeserializer;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -55,27 +55,27 @@ public class ClientDTO implements Serializable {
     @EachSize(min=5, max=255)
     // see http://tools.ietf.org/html/rfc6749#section-3.3
     @EachPattern(regexp="[\\x21\\x23-\\x5B\\x5D-\\x7E]+", message="{validator.invalid_scope}")
-    @JsonDeserialize(using=JacksonArrayOrStringDeserializer.class)
+    @JsonDeserialize(using=Jackson2ArrayOrStringDeserializer.class)
     private Collection<String> scope;
 
     //TODO
-    @JsonDeserialize(using=JacksonArrayOrStringDeserializer.class)
+    @JsonDeserialize(using=Jackson2ArrayOrStringDeserializer.class)
     private Collection<String> resourceIds;
 
     @NotEmpty
     // see http://tools.ietf.org/html/rfc6749#section-1.3
     @EachPattern(regexp="(client_credentials|implicit|authorization_code|resource_owner|refresh_token)",
                  flags=CASE_INSENSITIVE, message="{validator.invalid_grant_type}")
-    @JsonDeserialize(using=JacksonArrayOrStringDeserializer.class)
+    @JsonDeserialize(using=Jackson2ArrayOrStringDeserializer.class)
     private Collection<String> authorizedGrantTypes;
 
     @EachSize(min=5, max=255)
     @EachValidURI(relative=false, fragment=false, message="{validator.invalid_redirect_uri}")
     @JsonProperty("redirect_uri")
-    @JsonDeserialize(using=JacksonArrayOrStringDeserializer.class)
+    @JsonDeserialize(using=Jackson2ArrayOrStringDeserializer.class)
     private Collection<String> registeredRedirectUri;
 
-    @JsonDeserialize(using=JacksonArrayOrStringDeserializer.class)
+    @JsonDeserialize(using=Jackson2ArrayOrStringDeserializer.class)
     private Collection<String> authorities;
 
     //TODO

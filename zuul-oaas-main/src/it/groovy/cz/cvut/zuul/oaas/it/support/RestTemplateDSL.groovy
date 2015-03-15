@@ -32,7 +32,7 @@ import org.springframework.http.client.SimpleClientHttpRequestFactory
 import org.springframework.http.converter.FormHttpMessageConverter
 import org.springframework.http.converter.HttpMessageConverter
 import org.springframework.http.converter.StringHttpMessageConverter
-import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
 import org.springframework.util.LinkedMultiValueMap
 import org.springframework.web.client.*
 
@@ -52,7 +52,7 @@ class RestTemplateDSL {
 
     List<HttpMessageConverter> converters = [
             new FormHttpMessageConverter(),
-            new MappingJacksonHttpMessageConverter(),
+            new MappingJackson2HttpMessageConverter(),
             new StringHttpMessageConverter()
     ]
 

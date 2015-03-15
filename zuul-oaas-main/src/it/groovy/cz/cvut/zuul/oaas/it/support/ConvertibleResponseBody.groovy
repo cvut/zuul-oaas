@@ -25,7 +25,7 @@ package cz.cvut.zuul.oaas.it.support
 
 import org.springframework.http.HttpStatus
 import org.springframework.http.converter.StringHttpMessageConverter
-import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
 import org.springframework.mock.http.client.MockClientHttpResponse
 
 class ConvertibleResponseBody {
@@ -42,7 +42,7 @@ class ConvertibleResponseBody {
     }
 
     Map getJson() {
-        new MappingJacksonHttpMessageConverter().read(Map, clientHttpResponse)
+        new MappingJackson2HttpMessageConverter().read(Map, clientHttpResponse)
     }
 
     private getClientHttpResponse() {

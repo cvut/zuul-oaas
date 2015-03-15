@@ -23,14 +23,14 @@
  */
 package cz.cvut.zuul.oaas.api.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.Data;
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonProperty;
-import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.oauth2.provider.client.JacksonArrayOrStringDeserializer;
+import org.springframework.security.oauth2.provider.client.Jackson2ArrayOrStringDeserializer;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -46,15 +46,15 @@ public class TokenInfo {
 
     private String clientId;
 
-    @JsonDeserialize(using = JacksonArrayOrStringDeserializer.class)
+    @JsonDeserialize(using = Jackson2ArrayOrStringDeserializer.class)
     private Set<String> scope = emptySet();
 
     //alias resource_ids
-    @JsonDeserialize(using = JacksonArrayOrStringDeserializer.class)
+    @JsonDeserialize(using = Jackson2ArrayOrStringDeserializer.class)
     private Set<String> audience = emptySet();
 
     @JsonProperty
-    @JsonDeserialize(using = JacksonArrayOrStringDeserializer.class)
+    @JsonDeserialize(using = Jackson2ArrayOrStringDeserializer.class)
     private Set<String> clientAuthorities = emptySet();
 
     private Integer expiresIn;
@@ -64,7 +64,7 @@ public class TokenInfo {
     private String userEmail;
 
     @JsonProperty
-    @JsonDeserialize(using = JacksonArrayOrStringDeserializer.class)
+    @JsonDeserialize(using = Jackson2ArrayOrStringDeserializer.class)
     private Set<String> userAuthorities = emptySet();
 
 
