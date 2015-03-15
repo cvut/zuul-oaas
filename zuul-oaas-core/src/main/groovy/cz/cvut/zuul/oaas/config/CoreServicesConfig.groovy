@@ -33,7 +33,6 @@ import cz.cvut.zuul.oaas.services.TokensServiceImpl
 import cz.cvut.zuul.oaas.services.generators.RandomizedIdentifierEncoder
 import cz.cvut.zuul.oaas.services.generators.SecurePasswordGenerator
 import org.hibernate.validator.messageinterpolation.ResourceBundleMessageInterpolator
-import org.hibernate.validator.messageinterpolation.ValueFormatterMessageInterpolator
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -85,10 +84,8 @@ class CoreServicesConfig implements ConfigurationSupport {
 
     @Bean @Primary
     LocalValidatorFactoryBean validator() {
-        def interpolator = new ValueFormatterMessageInterpolator (
-            new ResourceBundleMessageInterpolator (
-                new MessageSourceResourceBundleLocator( validatorMessageSource() )
-            )
+        def interpolator = new ResourceBundleMessageInterpolator (
+            new MessageSourceResourceBundleLocator( validatorMessageSource() )
         )
         new LocalValidatorFactoryBean (
             messageInterpolator: interpolator
