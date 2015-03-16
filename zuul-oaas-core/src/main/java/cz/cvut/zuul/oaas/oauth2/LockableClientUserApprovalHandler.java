@@ -32,25 +32,23 @@ import org.springframework.security.oauth2.provider.AuthorizationRequest;
 import org.springframework.security.oauth2.provider.approval.DefaultUserApprovalHandler;
 import org.springframework.security.oauth2.provider.approval.UserApprovalHandler;
 
+import java.util.Map;
+
 /**
  * This handler verifies whether the client that is to be authorized is not
  * locked. If so then the {@link ClientLockedException} is thrown, otherwise
  * the decorated parent handler is asked for approve. When no parent handler
  * was set, then {@link DefaultUserApprovalHandler} is used.
+ *
+ * This is important especially for clients with implicit grant which are
+ * issued an access token directly without requesting token endpoint.
  */
-// TODO
 @Slf4j
-public class LockableClientUserApprovalHandler { /*implements UserApprovalHandler {*/
+public class LockableClientUserApprovalHandler implements UserApprovalHandler {
 
     private UserApprovalHandler parentHandler = new DefaultUserApprovalHandler();
     private ClientsRepo clientsRepo;
 
-
-    public AuthorizationRequest updateBeforeApproval(AuthorizationRequest authorizationRequest,
-            Authentication userAuthentication) {
-
-        return authorizationRequest;
-    }
 
     public boolean isApproved(AuthorizationRequest authorizationRequest, Authentication userAuthentication) {
         Client client = clientsRepo.findOne(authorizationRequest.getClientId());
@@ -60,6 +58,18 @@ public class LockableClientUserApprovalHandler { /*implements UserApprovalHandle
             throw new ClientLockedException("Client with id [%s] is locked", client.getClientId());
         }
         return parentHandler.isApproved(authorizationRequest, userAuthentication);
+    }
+
+    public AuthorizationRequest checkForPreApproval(AuthorizationRequest authzRequest, Authentication userAuth) {
+        return parentHandler.checkForPreApproval(authzRequest, userAuth);
+    }
+
+    public AuthorizationRequest updateAfterApproval(AuthorizationRequest authzRequest, Authentication userAuth) {
+        return parentHandler.updateAfterApproval(authzRequest, userAuth);
+    }
+
+    public Map<String, Object> getUserApprovalRequest(AuthorizationRequest authzRequest, Authentication userAuth) {
+        return parentHandler.getUserApprovalRequest(authzRequest, userAuth);
     }
 
     /**

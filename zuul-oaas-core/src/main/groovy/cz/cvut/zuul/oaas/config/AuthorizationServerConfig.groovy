@@ -25,6 +25,7 @@ package cz.cvut.zuul.oaas.config
 
 import cz.cvut.zuul.oaas.common.config.ConfigurationSupport
 import cz.cvut.zuul.oaas.oauth2.ClientDetailsServiceImpl
+import cz.cvut.zuul.oaas.oauth2.LockableClientUserApprovalHandler
 import cz.cvut.zuul.oaas.oauth2.TokenStoreImpl
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
@@ -173,26 +174,14 @@ class AuthorizationServerConfig implements ConfigurationSupport {
         tokenServices()
     }
 
-    /**
-     * A user approval handler that prevents locked clients to be authorized.
-     * This is important especially for clients with implicit grant which are
-     * issued an access token directly without requesting token endpoint.
-     */
-    /* TODO
-    @Bean clientApprovalHandler() {
+    @Bean userApprovalHandler() {
         new LockableClientUserApprovalHandler (
             clientsRepo:   repos.clientsRepo(),
-            parentHandler: new TokenServicesUserApprovalHandler (
-                tokenServices: tokenServices()
+            parentHandler: new TokenStoreUserApprovalHandler (
+                tokenStore:           tokenStore(),
+                clientDetailsService: clientDetailsService(),
+                requestFactory:       oAuth2RequestFactory()
             )
-        )
-    }
-    */
-    @Bean userApprovalHandler() {
-        new TokenStoreUserApprovalHandler (
-            tokenStore:           tokenStore(),
-            clientDetailsService: clientDetailsService(),
-            requestFactory:       oAuth2RequestFactory()
         )
     }
 
