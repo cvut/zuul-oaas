@@ -47,7 +47,7 @@ class LdapUserAuthenticationConfig extends AbstractAuthenticationManagerConfig {
                 firstNameAttrName: p('auth.user.ldap.attribute.fist_name'),
                 lastNameAttrName: p('auth.user.ldap.attribute.last_name'),
                 emailAttrName: p('auth.user.ldap.attribute.email'),
-                defaultRoles: 'ROLE_USER'
+                defaultRoles: ['ROLE_USER']
             )).and()
         .build()
     }
