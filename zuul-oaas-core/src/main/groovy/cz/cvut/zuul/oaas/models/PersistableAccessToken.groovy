@@ -42,7 +42,7 @@ import org.springframework.util.Assert
 import static java.lang.System.currentTimeMillis
 
 @CompoundIndexes([
-    @CompoundIndex(name = 'clientId', def = '{auth.authzReq.client: 1}'),
+    @CompoundIndex(name = 'clientId', def = '{auth.oauthReq.client: 1}'),
     @CompoundIndex(name = 'username', def = '{auth.userAuth.uname: 1}')
 ])
 @TypeAlias('AccessToken')

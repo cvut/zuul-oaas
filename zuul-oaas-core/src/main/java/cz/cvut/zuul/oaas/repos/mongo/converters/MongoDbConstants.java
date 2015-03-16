@@ -89,7 +89,7 @@ public final class MongoDbConstants {
     public static final class authentication {
 
         public static final String
-                AUTHORIZATION_REQUEST = "authzReq",
+                AUTHORIZATION_REQUEST = "oauthReq",
                 USER_AUTHENTICATION = "userAuth";
 
         private authentication() { /* do not initialize */ }
