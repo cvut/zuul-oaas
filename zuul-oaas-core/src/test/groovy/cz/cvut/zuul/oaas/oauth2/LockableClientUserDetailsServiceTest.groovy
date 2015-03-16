@@ -71,4 +71,13 @@ class LockableClientUserDetailsServiceTest extends Specification {
         where:
             secret << [null, '']
     }
+
+    def "loadUserByUsername: throws InvalidClientException when no client is found"() {
+        setup:
+            repo.findOne(_) >> null
+        when:
+            service.loadUserByUsername('foo')
+        then:
+            thrown InvalidClientException
+    }
 }

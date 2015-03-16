@@ -32,6 +32,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
@@ -51,6 +52,10 @@ public class LockableClientUserDetailsService implements UserDetailsService {
 
     public UserDetails loadUserByUsername(String clientId) throws UsernameNotFoundException {
         Client client = clientsRepo.findOne(clientId);
+
+        if (client == null) {
+            throw OAuth2Exception.create(OAuth2Exception.INVALID_CLIENT, "No such client found with id = " + clientId);
+        }
 
         String clientSecret = client.getClientSecret();
         if (isBlank(clientSecret)) {
