@@ -1,0 +1,64 @@
+/*
+ * The MIT License
+ *
+ * Copyright 2013-2015 Czech Technical University in Prague.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package cz.cvut.zuul.oaas.oauth2
+
+import cz.cvut.zuul.oaas.repos.ClientsRepo
+import groovy.util.logging.Slf4j
+import org.springframework.security.core.Authentication
+import org.springframework.security.oauth2.provider.AuthorizationRequest
+import org.springframework.security.oauth2.provider.approval.UserApprovalHandler
+
+/**
+ * This handler verifies whether the client that is to be authorized is not
+ * locked. If so then the {@link ClientLockedException} is thrown, otherwise
+ * the decorated parent handler is asked for approve.
+ *
+ * This is important especially for clients with implicit grant which are
+ * issued an access token directly without requesting token endpoint.
+ */
+@Slf4j
+class LockableClientUserApprovalHandler implements UserApprovalHandler {
+
+    @Delegate
+    final UserApprovalHandler parentHandler
+
+    final ClientsRepo clientsRepo
+
+
+    LockableClientUserApprovalHandler(UserApprovalHandler parentHandler, ClientsRepo clientsRepo) {
+        this.parentHandler = parentHandler
+        this.clientsRepo = clientsRepo
+    }
+
+    boolean isApproved(AuthorizationRequest authorizationRequest, Authentication userAuthentication) {
+
+        def client = clientsRepo.findOne(authorizationRequest.clientId)
+
+        if (client.locked) {
+            log.warn 'Prevented authorization for locked client: [{}]', client.clientId
+            throw new ClientLockedException('Client with id [%s] is locked', client.clientId)
+        }
+        parentHandler.isApproved(authorizationRequest, userAuthentication)
+    }
+}

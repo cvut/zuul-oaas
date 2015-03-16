@@ -45,7 +45,7 @@ class TokenStoreImplTest extends Specification {
     def persAccessToken = new PersistableAccessToken(accessToken, oauthAuth)
     def persRefreshToken = new PersistableRefreshToken(refreshToken, oauthAuth)
 
-    def store = new TokenStoreImpl(accessTokensRepo: accessTokensRepo, refreshTokensRepo: refreshTokensRepo)
+    def store = new TokenStoreImpl(accessTokensRepo, refreshTokensRepo)
 
 
     //////// Delegate to AccessTokens Repository ////////

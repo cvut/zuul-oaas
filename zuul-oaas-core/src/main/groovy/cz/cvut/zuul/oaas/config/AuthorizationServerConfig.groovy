@@ -175,14 +175,12 @@ class AuthorizationServerConfig implements ConfigurationSupport {
     }
 
     @Bean userApprovalHandler() {
-        new LockableClientUserApprovalHandler (
-            clientsRepo:   repos.clientsRepo(),
-            parentHandler: new TokenStoreUserApprovalHandler (
-                tokenStore:           tokenStore(),
-                clientDetailsService: clientDetailsService(),
-                requestFactory:       oAuth2RequestFactory()
-            )
+        def handler = new TokenStoreUserApprovalHandler (
+            tokenStore:           tokenStore(),
+            clientDetailsService: clientDetailsService(),
+            requestFactory:       oAuth2RequestFactory()
         )
+        new LockableClientUserApprovalHandler(handler, repos.clientsRepo())
     }
 
     @Bean oAuth2RequestFactory() {
@@ -190,9 +188,7 @@ class AuthorizationServerConfig implements ConfigurationSupport {
     }
 
     @Bean clientDetailsService() {
-        new ClientDetailsServiceImpl (
-                clientsRepo: repos.clientsRepo()
-        )
+        new ClientDetailsServiceImpl( repos.clientsRepo() )
     }
 
     // TODO implement persistent store
@@ -201,9 +197,6 @@ class AuthorizationServerConfig implements ConfigurationSupport {
     }
 
     @Bean tokenStore() {
-        new TokenStoreImpl (
-            accessTokensRepo:  repos.accessTokensRepo(),
-            refreshTokensRepo: repos.refreshTokensRepo()
-        )
+        new TokenStoreImpl( repos.accessTokensRepo(), repos.refreshTokensRepo() )
     }
 }

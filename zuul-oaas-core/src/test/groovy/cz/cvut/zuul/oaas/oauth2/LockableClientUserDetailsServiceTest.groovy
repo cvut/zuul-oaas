@@ -37,12 +37,14 @@ class LockableClientUserDetailsServiceTest extends Specification {
     def repo = Mock(ClientsRepo)
     def passwordEncoder = Mock(PasswordEncoder)
 
-    def service = new LockableClientUserDetailsService(clientsRepo: repo)
+    def service = new LockableClientUserDetailsService(repo)
 
 
     def "loadUserByUsername: returns Spring's User object populated from Client loaded from the repository"() {
         given:
-            def client = build(Client)
+            def client = build(Client).with {
+                it.clientSecret = 'top-secret'; it
+            }
         when:
             def user = service.loadUserByUsername(client.clientId)
         then:

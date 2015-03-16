@@ -33,7 +33,7 @@ import spock.lang.Specification
 class ClientDetailsServiceImplTest extends Specification {
 
     def repo = Mock(ClientsRepo)
-    def service = new ClientDetailsServiceImpl(clientsRepo: repo)
+    def service = new ClientDetailsServiceImpl(repo)
 
 
     def "loadClientByClientId: returns client from the repository"() {

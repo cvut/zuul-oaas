@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2014 Czech Technical University in Prague.
+ * Copyright 2013-2015 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,14 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package cz.cvut.zuul.oaas.oauth2;
+package cz.cvut.zuul.oaas.oauth2
 
-import org.springframework.security.oauth2.common.exceptions.ClientAuthenticationException;
+import org.springframework.security.oauth2.common.exceptions.ClientAuthenticationException
 
 /**
  * Exception thrown when a client is locked.
  */
-public class ClientLockedException extends ClientAuthenticationException {
+class ClientLockedException extends ClientAuthenticationException {
+
+    int httpErrorCode = 401
+    String OAuth2ErrorCode = 'locked_client'
 
     /**
      * Construct a {@code ClientLockedException} with the specified
@@ -39,16 +42,7 @@ public class ClientLockedException extends ClientAuthenticationException {
      * @param args Arguments referenced by the format specifiers in the
      *             formatted message.
      */
-    public ClientLockedException(String message, Object... args) {
-        super(String.format(message, args));
-    }
-
-    @Override
-    public int getHttpErrorCode() {
-        return 401;
-    }
-
-    public String getOAuth2ErrorCode() {
-        return "locked_client";
+    ClientLockedException(String message, Object... args) {
+        super(String.format(message, args))
     }
 }

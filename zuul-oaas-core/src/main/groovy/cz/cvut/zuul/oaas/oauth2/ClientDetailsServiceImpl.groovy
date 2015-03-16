@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2014 Czech Technical University in Prague.
+ * Copyright 2013-2015 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,32 +21,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package cz.cvut.zuul.oaas.oauth2;
+package cz.cvut.zuul.oaas.oauth2
 
-import cz.cvut.zuul.oaas.repos.ClientsRepo;
-import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
-import org.springframework.security.oauth2.provider.ClientDetails;
-import org.springframework.security.oauth2.provider.ClientDetailsService;
+import cz.cvut.zuul.oaas.repos.ClientsRepo
+import groovy.util.logging.Slf4j
+import org.springframework.security.oauth2.common.exceptions.OAuth2Exception
+import org.springframework.security.oauth2.provider.ClientDetails
+import org.springframework.security.oauth2.provider.ClientDetailsService
+
+import static org.springframework.security.oauth2.common.exceptions.OAuth2Exception.INVALID_CLIENT
 
 /**
  * This is implementation of {@link ClientDetailsService} interface that
  * basically delegates calls to {@link cz.cvut.zuul.oaas.repos.ClientsRepo}.
  */
 @Slf4j
-public class ClientDetailsServiceImpl implements ClientDetailsService {
+class ClientDetailsServiceImpl implements ClientDetailsService {
 
-    private @Setter ClientsRepo clientsRepo;
+    final ClientsRepo clientsRepo
 
 
-    public ClientDetails loadClientByClientId(String clientId) throws OAuth2Exception {
-        log.debug("Loading client: [{}]", clientId);
-        ClientDetails result = clientsRepo.findOne(clientId);
+    ClientDetailsServiceImpl(ClientsRepo clientsRepo) {
+        this.clientsRepo = clientsRepo
+    }
 
-        if (result == null) {
-            throw OAuth2Exception.create(OAuth2Exception.INVALID_CLIENT, "No such client found with id = " + clientId);
+    ClientDetails loadClientByClientId(String clientId) {
+        log.debug 'Loading client: [{}]', clientId
+
+        def result = clientsRepo.findOne(clientId)
+
+        if (!result) {
+            throw OAuth2Exception.create(INVALID_CLIENT, "No such client found with id = ${clientId}")
         }
-        return result;
+        result
     }
 }
