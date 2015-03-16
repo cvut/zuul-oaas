@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2014 Czech Technical University in Prague.
+ * Copyright 2013-2015 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,46 +21,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package cz.cvut.zuul.oaas.models;
+package cz.cvut.zuul.oaas.models
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.TypeAlias;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
+enum AuthorizationGrant {
 
-import java.io.Serializable;
-import java.util.List;
+    CLIENT_CREDENTIALS,
+    IMPLICIT,
+    AUTHORIZATION_CODE,
+    RESOURCE_OWNER,
+    REFRESH_TOKEN
 
-@Data
-@EqualsAndHashCode(of="id")
-@ToString(of={"id", "name", "version"})
 
-@TypeAlias("Resource")
-@Document(collection = "resources")
-
-public class Resource implements Serializable {
-
-    private static final long serialVersionUID = 2L;
-
-    @Id
-    private String id;
-
-    private String baseUrl;
-
-    @Field("desc")
-    private String description;
-
-    private String name;
-
-    private String version;
-
-    private List<Scope> scopes;
-
-    @Indexed
-    private Visibility visibility = Visibility.PUBLIC;
-
+    String toString() {
+        name().toLowerCase()
+    }
 }

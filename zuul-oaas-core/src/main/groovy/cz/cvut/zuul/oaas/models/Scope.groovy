@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2014 Czech Technical University in Prague.
+ * Copyright 2013-2015 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,18 +21,33 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package cz.cvut.zuul.oaas.models;
+package cz.cvut.zuul.oaas.models
+
+import groovy.transform.EqualsAndHashCode
+import groovy.transform.ToString
+import groovy.transform.TupleConstructor
+import org.springframework.data.annotation.TypeAlias
+import org.springframework.data.mongodb.core.mapping.Field
 
 /**
- * Value indicating Resource visibility
+ * Represents a scope of the access token issued by authorization server in
+ * OAuth 2.0 protocol. Access token scopes are then used in the authorization
+ * and token endpoints. The value of the scope parameter is expressed as a list
+ * of space-delimited, case sensitive strings (%x21 / %x23-5B / %x5D-7E). The
+ * strings are defined by the authorization server.
  */
-public enum Visibility {
+@TypeAlias('Scope')
+@TupleConstructor
+@EqualsAndHashCode(includes = 'name')
+@ToString(includes = 'name', includePackage = false)
+class Scope implements Serializable {
 
-    PUBLIC,
-    HIDDEN;
+    private static final long serialVersionUID = 2L
 
-    @Override
-    public String toString() {
-        return name().toLowerCase();
-    }
+    String name
+
+    @Field('desc')
+    String description
+
+    boolean secured = false
 }

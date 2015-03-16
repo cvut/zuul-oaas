@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2014 Czech Technical University in Prague.
+ * Copyright 2013-2015 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,19 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package cz.cvut.zuul.oaas.models;
+package cz.cvut.zuul.oaas.models
 
-public enum AuthorizationGrant {
+/**
+ * Value indicating Resource visibility
+ */
+enum Visibility {
 
-    CLIENT_CREDENTIALS,
-    IMPLICIT,
-    AUTHORIZATION_CODE,
-    RESOURCE_OWNER,
-    REFRESH_TOKEN;
+    PUBLIC,
+    HIDDEN
 
-
-    @Override
-    public String toString() {
-        return name().toLowerCase();
+    String toString() {
+        name().toLowerCase()
     }
 }

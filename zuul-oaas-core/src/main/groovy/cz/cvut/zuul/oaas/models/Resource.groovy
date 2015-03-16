@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2014 Czech Technical University in Prague.
+ * Copyright 2013-2015 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,37 +21,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package cz.cvut.zuul.oaas.models;
+package cz.cvut.zuul.oaas.models
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.TypeAlias;
-import org.springframework.data.mongodb.core.mapping.Field;
+import groovy.transform.EqualsAndHashCode
+import groovy.transform.ToString
+import org.springframework.data.annotation.Id
+import org.springframework.data.annotation.TypeAlias
+import org.springframework.data.mongodb.core.index.Indexed
+import org.springframework.data.mongodb.core.mapping.Document
+import org.springframework.data.mongodb.core.mapping.Field
 
-import java.io.Serializable;
+@TypeAlias('Resource')
+@Document(collection = 'resources')
+@EqualsAndHashCode(includes = 'id')
+@ToString(includes = ['id', 'name', 'version'], includeNames = true, includePackage = false)
+class Resource implements Serializable {
 
-/**
- * Represents a scope of the access token issued by authorization server in
- * OAuth 2.0 protocol. Access token scopes are then used in the authorization
- * and token endpoints. The value of the scope parameter is expressed as a list
- * of space-delimited, case sensitive strings (%x21 / %x23-5B / %x5D-7E). The
- * strings are defined by the authorization server.
- */
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+    private static final long serialVersionUID = 3L
 
-@TypeAlias("Scope")
+    @Id
+    String id
 
-public class Scope implements Serializable {
+    String baseUrl
 
-    private static final long serialVersionUID = 1L;
+    @Field('desc')
+    String description
 
-    private String name;
+    String name
 
-    @Field("desc")
-    private String description;
+    String version
 
-    private boolean secured = false;
+    List<Scope> scopes
+
+    @Indexed
+    Visibility visibility = Visibility.PUBLIC
 }
