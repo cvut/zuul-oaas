@@ -23,7 +23,6 @@
  */
 package cz.cvut.zuul.oaas.models
 
-import groovy.transform.EqualsAndHashCode
 import org.springframework.data.annotation.Id
 import org.springframework.data.annotation.PersistenceConstructor
 import org.springframework.data.annotation.TypeAlias
@@ -48,7 +47,6 @@ import static java.lang.System.currentTimeMillis
 ])
 @TypeAlias('AccessToken')
 @Document(collection = 'access_tokens')
-@EqualsAndHashCode(includes = 'value')
 class PersistableAccessToken implements OAuth2AccessToken, Serializable {
 
     private static final long serialVersionUID = 4L
@@ -135,4 +133,8 @@ class PersistableAccessToken implements OAuth2AccessToken, Serializable {
     }
 
     String toString() { value }
+
+    int hashCode() { value.hashCode() }
+
+    boolean equals(Object that) { toString() == that.toString() }
 }

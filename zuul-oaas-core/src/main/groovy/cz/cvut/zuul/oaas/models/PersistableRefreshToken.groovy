@@ -25,7 +25,6 @@ package cz.cvut.zuul.oaas.models
 
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonValue
-import groovy.transform.EqualsAndHashCode
 import org.springframework.data.annotation.Id
 import org.springframework.data.annotation.PersistenceConstructor
 import org.springframework.data.annotation.TypeAlias
@@ -38,7 +37,6 @@ import org.springframework.security.oauth2.provider.OAuth2Authentication
 
 @TypeAlias('RefreshToken')
 @Document(collection = "refresh_tokens")
-@EqualsAndHashCode(includes = 'value')
 class PersistableRefreshToken implements ExpiringOAuth2RefreshToken, Serializable {
 
     private static final long serialVersionUID = 2L
@@ -88,4 +86,8 @@ class PersistableRefreshToken implements ExpiringOAuth2RefreshToken, Serializabl
     boolean isExpiring() { expiration != null }
 
     String toString() { value }
+
+    int hashCode() { value.hashCode() }
+
+    boolean equals(Object that) { toString() == that.toString() }
 }
