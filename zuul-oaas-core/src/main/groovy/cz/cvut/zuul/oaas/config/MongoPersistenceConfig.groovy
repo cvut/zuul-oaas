@@ -102,27 +102,19 @@ class MongoPersistenceConfig extends AbstractMongoConfiguration
 
 
     @Bean ClientsRepo clientsRepo() {
-        new MongoClientsRepo (
-            mongoOperations: mongoTemplate()
-        )
+        new MongoClientsRepo( mongoTemplate() )
     }
 
     @Bean AccessTokensRepo accessTokensRepo() {
-        new MongoAccessTokensRepo (
-            mongoOperations: mongoTemplate()
-        )
+        new MongoAccessTokensRepo( mongoTemplate() )
     }
 
     @Bean RefreshTokensRepo refreshTokensRepo() {
-        new MongoRefreshTokensRepo (
-            mongoOperations: mongoTemplate()
-        )
+        new MongoRefreshTokensRepo( mongoTemplate() )
     }
 
     @Bean ResourcesRepo resourcesRepo() {
-        new MongoResourcesRepo (
-            mongoOperations: mongoTemplate()
-        )
+        new MongoResourcesRepo( mongoTemplate() )
     }
 
 

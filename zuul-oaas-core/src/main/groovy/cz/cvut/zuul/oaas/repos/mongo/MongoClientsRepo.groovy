@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2014 Czech Technical University in Prague.
+ * Copyright 2013-2015 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,21 +21,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package cz.cvut.zuul.oaas.repos.mongo;
+package cz.cvut.zuul.oaas.repos.mongo
 
-import cz.cvut.zuul.oaas.repos.RefreshTokensRepo;
-import cz.cvut.zuul.oaas.models.PersistableRefreshToken;
+import com.mongodb.WriteResult
+import cz.cvut.zuul.oaas.models.Client
+import cz.cvut.zuul.oaas.repos.ClientsRepo
+import groovy.transform.InheritConstructors
+import org.springframework.dao.EmptyResultDataAccessException
 
-import static org.springframework.data.mongodb.core.query.Criteria.where;
-import static org.springframework.data.mongodb.core.query.Query.query;
+import static org.springframework.data.mongodb.core.query.Criteria.where
+import static org.springframework.data.mongodb.core.query.Query.query
+import static org.springframework.data.mongodb.core.query.Update.update
 
-public class MongoRefreshTokensRepo
-        extends AbstractMongoRepository<PersistableRefreshToken, String> implements RefreshTokensRepo {
+@InheritConstructors
+class MongoClientsRepo extends AbstractMongoRepository<Client, String> implements ClientsRepo {
 
 
-    public void deleteByClientId(String clientId) {
-        mongo().remove(query(
-                where("auth.oauthReq.client").is(clientId)),
-                entityClass());
+    void updateClientSecret(String clientId, String secret) throws EmptyResultDataAccessException {
+        WriteResult result = mongo.updateFirst(
+                query(where("_id").is(clientId)),
+                update("secret", secret),
+                entityClass)
+
+        if (result.n == 0) {
+            throw new EmptyResultDataAccessException("No such client with clientId = ${clientId}", 1)
+        }
     }
 }

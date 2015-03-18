@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2014 Czech Technical University in Prague.
+ * Copyright 2013-2015 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,24 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package cz.cvut.zuul.oaas.repos.mongo;
+package cz.cvut.zuul.oaas.repos
 
-import cz.cvut.zuul.oaas.repos.ResourcesRepo;
-import cz.cvut.zuul.oaas.models.Resource;
-import cz.cvut.zuul.oaas.models.Visibility;
+import cz.cvut.zuul.oaas.models.PersistableRefreshToken
+import org.springframework.data.repository.CrudRepository
 
-import java.util.List;
+interface RefreshTokensRepo extends CrudRepository<PersistableRefreshToken, String> {
 
-import static org.springframework.data.mongodb.core.query.Criteria.where;
-import static org.springframework.data.mongodb.core.query.Query.query;
-
-public class MongoResourcesRepo extends AbstractMongoRepository<Resource, String> implements ResourcesRepo {
-
-
-    public List<Resource> findAllPublic() {
-        return mongo().find(query(
-                where("visibility").is(Visibility.PUBLIC)),
-                entityClass()
-        );
-    }
+    void deleteByClientId(String clientId)
 }

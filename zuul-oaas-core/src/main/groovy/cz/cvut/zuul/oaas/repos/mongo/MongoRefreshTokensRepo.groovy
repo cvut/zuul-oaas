@@ -21,25 +21,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package cz.cvut.zuul.oaas.repos;
+package cz.cvut.zuul.oaas.repos.mongo
 
-import cz.cvut.zuul.oaas.models.PersistableAccessToken;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.security.oauth2.common.OAuth2AccessToken;
-import org.springframework.security.oauth2.common.OAuth2RefreshToken;
-import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import cz.cvut.zuul.oaas.models.PersistableRefreshToken
+import cz.cvut.zuul.oaas.repos.RefreshTokensRepo
+import groovy.transform.InheritConstructors
 
-import java.util.Collection;
+import static org.springframework.data.mongodb.core.query.Criteria.where
+import static org.springframework.data.mongodb.core.query.Query.query
 
-public interface AccessTokensRepo extends CrudRepository<PersistableAccessToken, String> {
+@InheritConstructors
+class MongoRefreshTokensRepo
+        extends AbstractMongoRepository<PersistableRefreshToken, String> implements RefreshTokensRepo {
 
-    PersistableAccessToken findOneByAuthentication(OAuth2Authentication authentication);
-
-    Collection<OAuth2AccessToken> findByClientId(String clientId);
-
-    Collection<OAuth2AccessToken> findByClientIdAndUserName(String clientId, String userName);
-
-    void deleteByRefreshToken(OAuth2RefreshToken refreshToken);
-
-    void deleteByClientId(String clientId);
+    void deleteByClientId(String clientId) {
+        mongo.remove(query(
+                where('auth.oauthReq.client').is(clientId)),
+                entityClass)
+    }
 }

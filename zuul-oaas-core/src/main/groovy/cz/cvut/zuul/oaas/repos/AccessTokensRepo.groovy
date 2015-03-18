@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2014 Czech Technical University in Prague.
+ * Copyright 2013-2015 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,14 +21,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package cz.cvut.zuul.oaas.repos;
+package cz.cvut.zuul.oaas.repos
 
-import cz.cvut.zuul.oaas.models.Client;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.data.repository.CrudRepository;
+import cz.cvut.zuul.oaas.models.PersistableAccessToken
+import org.springframework.data.repository.CrudRepository
+import org.springframework.security.oauth2.common.OAuth2AccessToken
+import org.springframework.security.oauth2.common.OAuth2RefreshToken
+import org.springframework.security.oauth2.provider.OAuth2Authentication
 
-public interface ClientsRepo extends CrudRepository<Client, String> {
+interface AccessTokensRepo extends CrudRepository<PersistableAccessToken, String> {
 
-    void updateClientSecret(String clientId, String secret) throws EmptyResultDataAccessException;
+    PersistableAccessToken findOneByAuthentication(OAuth2Authentication authentication)
 
+    Collection<OAuth2AccessToken> findByClientId(String clientId)
+
+    Collection<OAuth2AccessToken> findByClientIdAndUserName(String clientId, String userName)
+
+    void deleteByRefreshToken(OAuth2RefreshToken refreshToken)
+
+    void deleteByClientId(String clientId)
 }
