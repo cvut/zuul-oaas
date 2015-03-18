@@ -30,14 +30,11 @@ import cz.cvut.zuul.oaas.repos.AccessTokensRepo
 import cz.cvut.zuul.oaas.repos.ClientsRepo
 import cz.cvut.zuul.oaas.repos.RefreshTokensRepo
 import cz.cvut.zuul.oaas.repos.ResourcesRepo
+import cz.cvut.zuul.oaas.repos.mongo.CustomConverters
 import cz.cvut.zuul.oaas.repos.mongo.MongoAccessTokensRepo
 import cz.cvut.zuul.oaas.repos.mongo.MongoClientsRepo
 import cz.cvut.zuul.oaas.repos.mongo.MongoRefreshTokensRepo
 import cz.cvut.zuul.oaas.repos.mongo.MongoResourcesRepo
-import cz.cvut.zuul.oaas.repos.mongo.converters.GrantedAuthorityReaderConverter
-import cz.cvut.zuul.oaas.repos.mongo.converters.GrantedAuthorityWriteConverter
-import cz.cvut.zuul.oaas.repos.mongo.converters.OAuth2AuthenticationReadConverter
-import cz.cvut.zuul.oaas.repos.mongo.converters.OAuth2AuthenticationWriteConverter
 import cz.cvut.zuul.oaas.support.MongoSeedLoader
 import org.springframework.context.ApplicationListener
 import org.springframework.context.annotation.Bean
@@ -100,12 +97,7 @@ class MongoPersistenceConfig extends AbstractMongoConfiguration
     }
 
     @Bean CustomConversions customConversions() {
-        new CustomConversions([
-            new GrantedAuthorityReaderConverter(),
-            new GrantedAuthorityWriteConverter(),
-            new OAuth2AuthenticationReadConverter(),
-            new OAuth2AuthenticationWriteConverter()
-        ])
+        new CustomConversions( CustomConverters.ALL_CONVERTERS )
     }
 
 
