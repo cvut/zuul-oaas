@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2014 Czech Technical University in Prague.
+ * Copyright 2013-2015 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,11 +21,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package cz.cvut.zuul.oaas.api.exceptions;
+package cz.cvut.zuul.oaas.api.models
 
-public class NotFoundException extends ZuulException {
+import groovy.transform.Canonical
 
-    public NotFoundException(String message, Object... args) {
-        super(message, args);
+@Canonical
+class TokenDTO implements Serializable {
+
+    Date expiration
+    ClientAuthentication clientAuthentication
+    Set<String> scope
+    String tokenType
+    String tokenValue
+    UserAuthentication userAuthentication
+
+
+    @Canonical
+    static class ClientAuthentication implements Serializable {
+
+        String clientId
+        Boolean clientLocked
+        String productName
+        Set<String> scope
+        String redirectUri
+        Set<String> resourceIds
+    }
+
+
+    @Canonical
+    static class UserAuthentication implements Serializable {
+
+        String username
+        String email
+        String firstName
+        String lastName
     }
 }

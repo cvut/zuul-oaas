@@ -21,29 +21,50 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package cz.cvut.zuul.oaas.api.support;
+package cz.cvut.zuul.oaas.api.validators
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.util.ISO8601DateFormat;
+import javax.validation.Constraint
+import javax.validation.Payload
+import java.lang.annotation.Documented
+import java.lang.annotation.Retention
+import java.lang.annotation.Target
 
-import static com.fasterxml.jackson.databind.PropertyNamingStrategy.CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES;
+import static java.lang.annotation.ElementType.*
+import static java.lang.annotation.RetentionPolicy.RUNTIME
 
-public final class JsonMapperFactory {
+/**
+ * JSR-303 constraint for URI validation.
+ */
+@Documented
+@Retention(RUNTIME)
+@Target([METHOD, FIELD, PARAMETER, ANNOTATION_TYPE])
+@Constraint(validatedBy = ValidURIConstraintValidator.class)
+@interface ValidURI {
+
+    String message() default '{validator.ValidURI.message}'
+
+    Class<?>[] groups() default []
+
+    Class<? extends Payload>[] payload() default []
 
     /**
-     * Should not be instantiated.
+     * May URI be relative? [default true]
      */
-    private JsonMapperFactory() {}
+    boolean relative() default true
 
     /**
-     * Creates instance of a configured {@link ObjectMapper}.
+     * May URI contain query string? [default true]
      */
-    public static ObjectMapper getInstance() {
-        ObjectMapper mapper = new ObjectMapper();
+    boolean query() default true
 
-        mapper.setPropertyNamingStrategy(CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES);
-        mapper.setDateFormat(new ISO8601DateFormat());
+    /**
+     * May URI contain fragment? [default true]
+     */
+    boolean fragment() default true
 
-        return mapper;
-    }
+    /**
+     * The scheme(s) (protocol) the string must match, eg. ftp or http.
+     * [default any]
+     */
+    String[] scheme() default []
 }

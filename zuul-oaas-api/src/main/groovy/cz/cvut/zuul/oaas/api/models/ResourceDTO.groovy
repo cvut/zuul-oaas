@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2014 Czech Technical University in Prague.
+ * Copyright 2013-2015 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,36 +21,60 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package cz.cvut.zuul.oaas.api.exceptions;
+package cz.cvut.zuul.oaas.api.models
 
-import org.springframework.core.NestedRuntimeException;
+import cz.cvut.zuul.oaas.api.validators.ValidURI
+import groovy.transform.Canonical
+import org.hibernate.validator.constraints.NotEmpty
 
-/**
- * Base exception for Zuul exceptions.
- */
-public class ZuulException extends NestedRuntimeException {
+import javax.validation.constraints.Pattern
+import javax.validation.constraints.Size
 
-    /**
-     * Construct a {@code ZuulException} with the specified
-     * {@linkplain String#format(String, Object...) formatted string} as
-     * a detail message.
-     *
-     * @param message The formatted message.
-     * @param args Arguments referenced by the format specifiers in the
-     *             formatted message.
-     */
-    public ZuulException(String message, Object... args) {
-        super(String.format(message, args));
+import static javax.validation.constraints.Pattern.Flag.CASE_INSENSITIVE
+
+@Canonical
+class ResourceDTO implements Serializable {
+
+    String resourceId
+
+    Auth auth
+
+    @NotEmpty
+    @Size(max = 256)
+    @ValidURI(scheme = ['https', 'http'])
+    String baseUrl
+
+    @Size(max = 256)
+    String description
+
+    @NotEmpty
+    @Size(max = 256)
+    String name
+
+    @Size(max = 256)
+    String version
+
+    @NotEmpty
+    @Pattern(regexp = '(public|hidden)', flags = CASE_INSENSITIVE)
+    String visibility
+
+
+    @Canonical
+    static class Auth implements Serializable {
+
+        List<Scope> scopes
     }
 
-    /**
-     * Construct a {@code ZuulException} with the specified detail message and
-     * nested exception.
-     *
-     * @param message The detail message.
-     * @param cause The nested exception.
-     */
-    public ZuulException(String message, Throwable cause) {
-        super(message, cause);
+
+    @Canonical
+    static class Scope implements Serializable {
+
+        @Size(max = 256)
+        String name
+
+        @Size(max = 256)
+        String description
+
+        boolean secured = false
     }
 }

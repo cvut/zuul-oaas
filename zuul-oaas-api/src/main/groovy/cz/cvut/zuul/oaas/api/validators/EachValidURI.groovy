@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2014 Czech Technical University in Prague.
+ * Copyright 2013-2015 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,48 +21,55 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package cz.cvut.zuul.oaas.api.validators;
+package cz.cvut.zuul.oaas.api.validators
 
-import javax.validation.Constraint;
-import javax.validation.Payload;
-import java.lang.annotation.Documented;
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
+import cz.jirutka.validator.collection.CommonEachValidator
+import cz.jirutka.validator.collection.constraints.EachConstraint
 
-import static java.lang.annotation.ElementType.*;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import javax.validation.Constraint
+import javax.validation.Payload
+import java.lang.annotation.Documented
+import java.lang.annotation.Retention
+import java.lang.annotation.Target
+
+import static java.lang.annotation.ElementType.*
+import static java.lang.annotation.RetentionPolicy.RUNTIME
 
 /**
- * JSR-303 constraint for URI validation.
+ * @see ValidURI
+ * @see CommonEachValidator
  */
 @Documented
 @Retention(RUNTIME)
-@Target({METHOD, FIELD, PARAMETER, ANNOTATION_TYPE})
-@Constraint(validatedBy = ValidURIConstraintValidator.class)
-public @interface ValidURI {
+@Target([METHOD, FIELD, PARAMETER])
+@EachConstraint(validateAs = ValidURI)
+@Constraint(validatedBy = CommonEachValidator)
+@interface EachValidURI {
 
-    String message() default "{validator.ValidURI.message}";
-    Class<?>[] groups() default {};
-    Class<? extends Payload>[] payload() default {};
+    String message() default ''
+
+    Class<?>[] groups() default []
+
+    Class<? extends Payload>[] payload() default []
 
     /**
      * May URI be relative? [default true]
      */
-    boolean relative() default true;
+    boolean relative() default true
 
     /**
      * May URI contain query string? [default true]
      */
-    boolean query() default true;
+    boolean query() default true
 
     /**
      * May URI contain fragment? [default true]
      */
-    boolean fragment() default true;
+    boolean fragment() default true
 
     /**
      * The scheme(s) (protocol) the string must match, eg. ftp or http.
      * [default any]
      */
-    String[] scheme() default {};
+    String[] scheme() default []
 }

@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2014 Czech Technical University in Prague.
+ * Copyright 2013-2015 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,11 +21,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package cz.cvut.zuul.oaas.api.exceptions;
+package cz.cvut.zuul.oaas.api.support
 
-public class NoSuchTokenException extends NotFoundException {
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.util.ISO8601DateFormat
 
-    public NoSuchTokenException(String message, Object... args) {
-        super(message, args);
+import static com.fasterxml.jackson.databind.PropertyNamingStrategy.CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES
+
+final class JsonMapperFactory {
+
+    /**
+     * Should not be instantiated.
+     */
+    private JsonMapperFactory() {}
+
+    /**
+     * Creates instance of a configured {@link ObjectMapper}.
+     */
+    static ObjectMapper getInstance() {
+        new ObjectMapper (
+            propertyNamingStrategy: CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES,
+            dateFormat: new ISO8601DateFormat()
+        )
     }
 }

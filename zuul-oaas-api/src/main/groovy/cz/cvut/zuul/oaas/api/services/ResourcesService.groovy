@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2014 Czech Technical University in Prague.
+ * Copyright 2013-2015 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,50 +21,49 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package cz.cvut.zuul.oaas.api.services;
+package cz.cvut.zuul.oaas.api.services
 
-import cz.cvut.zuul.oaas.api.models.ResourceDTO;
-import cz.cvut.zuul.oaas.api.exceptions.NoSuchResourceException;
-import org.springframework.validation.annotation.Validated;
+import cz.cvut.zuul.oaas.api.exceptions.NoSuchResourceException
+import cz.cvut.zuul.oaas.api.models.ResourceDTO
+import org.springframework.validation.annotation.Validated
 
-import javax.validation.Valid;
-import java.util.List;
+import javax.validation.Valid
 
 @Validated
-public interface ResourcesService {
+interface ResourcesService {
 
     /**
      * @param id resource's id
      * @return resource if exists
      * @throws NoSuchResourceException when no matching resource was found
      */
-    ResourceDTO findResourceById(String id) throws NoSuchResourceException;
+    ResourceDTO findResourceById(String id) throws NoSuchResourceException
 
     /**
      * @param resource resource to be created
      * @return id of the created resource
      */
-    String createResource(@Valid ResourceDTO resource);
+    String createResource(@Valid ResourceDTO resource)
 
     /**
      * @param resource resource's content to be updated with
      * @throws NoSuchResourceException when no matching resource was found
      */
-    void updateResource(@Valid ResourceDTO resource) throws NoSuchResourceException;
+    void updateResource(@Valid ResourceDTO resource) throws NoSuchResourceException
 
     /**
      * @param id id of the resource to be deleted
      * @throws NoSuchResourceException when no matching resource was found
      */
-    void deleteResourceById(String id) throws NoSuchResourceException;
+    void deleteResourceById(String id) throws NoSuchResourceException
 
     /**
      * @return all resources
      */
-    List<ResourceDTO> getAllResources();
+    List<ResourceDTO> getAllResources()
 
     /**
      * @return all public resources
      */
-    List<ResourceDTO> getAllPublicResources();
+    List<ResourceDTO> getAllPublicResources()
 }

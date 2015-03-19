@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2014 Czech Technical University in Prague.
+ * Copyright 2013-2015 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,11 +21,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package cz.cvut.zuul.oaas.api.exceptions;
+package cz.cvut.zuul.oaas.api.services
 
-public class NoSuchClientException extends NotFoundException {
+import cz.cvut.zuul.oaas.api.models.TokenDTO
+import cz.cvut.zuul.oaas.api.models.TokenInfo
 
-    public NoSuchClientException(String message, Object... args) {
-        super(message, args);
-    }
+interface TokensService {
+
+    TokenDTO getToken(String tokenValue)
+
+    TokenInfo getTokenInfo(String tokenValue)
+
+    void invalidateToken(String tokenValue)
 }

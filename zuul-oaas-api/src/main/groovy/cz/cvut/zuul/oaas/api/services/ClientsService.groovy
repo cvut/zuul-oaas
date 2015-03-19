@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2014 Czech Technical University in Prague.
+ * Copyright 2013-2015 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,11 +21,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package cz.cvut.zuul.oaas.api.exceptions;
+package cz.cvut.zuul.oaas.api.services
 
-public class NoSuchResourceException extends NotFoundException {
+import cz.cvut.zuul.oaas.api.exceptions.NoSuchClientException
+import cz.cvut.zuul.oaas.api.models.ClientDTO
+import org.springframework.validation.annotation.Validated
 
-    public NoSuchResourceException(String message, Object... args) {
-        super(message, args);
-    }
+import javax.validation.Valid
+
+@Validated
+interface ClientsService {
+
+    ClientDTO findClientById(String clientId) throws NoSuchClientException
+
+    String createClient(@Valid ClientDTO client)
+
+    void updateClient(@Valid ClientDTO client) throws NoSuchClientException
+
+    void removeClient(String clientId) throws NoSuchClientException
+
+    void resetClientSecret(String clientId) throws NoSuchClientException
 }

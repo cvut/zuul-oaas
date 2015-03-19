@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2014 Czech Technical University in Prague.
+ * Copyright 2013-2015 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,16 +21,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package cz.cvut.zuul.oaas.api.services;
+package cz.cvut.zuul.oaas.api.exceptions
 
-import cz.cvut.zuul.oaas.api.models.TokenInfo;
-import cz.cvut.zuul.oaas.api.models.TokenDTO;
+import groovy.transform.InheritConstructors
+import org.springframework.core.NestedRuntimeException
 
-public interface TokensService {
+/**
+ * Base exception for Zuul exceptions.
+ */
+@InheritConstructors
+class ZuulException extends NestedRuntimeException {}
 
-    TokenDTO getToken(String tokenValue);
+@InheritConstructors
+class ConflictException extends ZuulException {}
 
-    TokenInfo getTokenInfo(String tokenValue);
+@InheritConstructors
+class NotFoundException extends ZuulException {}
 
-    void invalidateToken(String tokenValue);
-}
+@InheritConstructors
+class NoSuchClientException extends NotFoundException {}
+
+@InheritConstructors
+class NoSuchResourceException extends NotFoundException {}
+
+@InheritConstructors
+public class NoSuchTokenException extends NotFoundException {}
