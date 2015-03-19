@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2014 Czech Technical University in Prague.
+ * Copyright 2013-2015 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,28 +21,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package cz.cvut.zuul.oaas.services.generators;
+package cz.cvut.zuul.oaas.services.generators
 
-import lombok.Setter;
+import org.apache.commons.lang3.RandomStringUtils
+import org.springframework.security.crypto.keygen.StringKeyGenerator
 
-import static org.apache.commons.lang3.RandomStringUtils.randomNumeric;
-import static org.apache.commons.lang3.StringUtils.stripAccents;
+import java.security.SecureRandom
 
-public class RandomizedIdentifierEncoder implements StringEncoder {
+class SecurePasswordGenerator implements StringKeyGenerator {
 
-    private @Setter int numericSuffixLength = 4;
+    final int length
+
+    private final Random randomGenerator
 
 
-    public String encode(String value) {
-        if (value == null) return null;
+    /**
+     * @param length The length of random password to generate (default is 32).
+     * @param randomGenerator A source of randomness (default is {@link SecureRandom}).
+     */
+    SecurePasswordGenerator(int length = 32, Random randomGenerator = new SecureRandom()) {
+        this.length = length
+        this.randomGenerator = randomGenerator
+    }
 
-        String encoded = stripAccents(value)
-                .replace("\\s+", "-")            //replace whitespaces with '-'
-                .replaceAll("[^a-zA-Z0-9]", "")  //remove non-alphanumeric characters
-                .toLowerCase();
-
-        String suffix = randomNumeric(numericSuffixLength);
-
-        return encoded + "-" + suffix;
+    String generateKey() {
+        RandomStringUtils.random(length, 0, 0, true, true, null, randomGenerator)
     }
 }

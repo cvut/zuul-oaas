@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2014 Czech Technical University in Prague.
+ * Copyright 2013-2015 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,13 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package cz.cvut.zuul.oaas.services.generators;
+package cz.cvut.zuul.oaas.services.generators
 
-public interface StringEncoder {
+interface StringEncoder {
 
     /**
      * @param value A String to encode.
      * @return The encoded String.
      */
-    String encode(String value);
+    String encode(String value)
 }

@@ -91,6 +91,7 @@ class ClientsServiceTest extends Specification {
             def client = build(ClientDTO).with {
                 it.authorities = []; return it
             }
+            clientIdGenerator.generateKey() >> 'top-secret'
         when:
             service.createClient(client)
         then:

@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2014 Czech Technical University in Prague.
+ * Copyright 2013-2015 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,20 +21,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package cz.cvut.zuul.oaas.services.converters;
+package cz.cvut.zuul.oaas.services.converters
 
-import ma.glasnost.orika.CustomConverter;
-import ma.glasnost.orika.metadata.Type;
+import ma.glasnost.orika.converter.BidirectionalConverter
+import ma.glasnost.orika.metadata.Type
+import org.springframework.security.core.GrantedAuthority
+import org.springframework.security.core.authority.SimpleGrantedAuthority
 
-public class CaseInsensitiveToEnumConverter extends CustomConverter<String, Enum> {
+class GrantedAuthorityConverter extends BidirectionalConverter<GrantedAuthority, String> {
 
-    public boolean canConvert(Type<?> sourceType, Type<?> destinationType) {
-        return String.class == sourceType.getRawType()
-                && Enum.class.isAssignableFrom(destinationType.getRawType());
+    String convertTo(GrantedAuthority source, Type<String> destinationType) {
+        source.toString()
     }
 
-    public Enum convert(String source, Type<? extends Enum> destinationType) {
-        String name = source.toUpperCase();
-        return Enum.valueOf(destinationType.getRawType(), name);
+    GrantedAuthority convertFrom(String source, Type<GrantedAuthority> destinationType) {
+        new SimpleGrantedAuthority(source)
     }
 }
