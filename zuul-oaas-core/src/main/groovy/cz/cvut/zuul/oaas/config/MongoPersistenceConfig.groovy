@@ -38,7 +38,7 @@ import cz.cvut.zuul.oaas.repos.mongo.converters.GrantedAuthorityReaderConverter
 import cz.cvut.zuul.oaas.repos.mongo.converters.GrantedAuthorityWriteConverter
 import cz.cvut.zuul.oaas.repos.mongo.converters.OAuth2AuthenticationReadConverter
 import cz.cvut.zuul.oaas.repos.mongo.converters.OAuth2AuthenticationWriteConverter
-import cz.cvut.zuul.oaas.repos.mongo.support.MongoSeedLoader
+import cz.cvut.zuul.oaas.support.MongoSeedLoader
 import org.springframework.context.ApplicationListener
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -69,10 +69,7 @@ class MongoPersistenceConfig extends AbstractMongoConfiguration
 
     void onApplicationEvent(ContextRefreshedEvent event) {
         if (profileDev) {
-            new MongoSeedLoader (
-                mongoTemplate: mongoTemplate(),
-                location:      classpath('/config/seeds.json')
-            ).seed()
+            new MongoSeedLoader( classpath('/config/seeds.json'), mongoTemplate() ).seed()
         }
     }
 
