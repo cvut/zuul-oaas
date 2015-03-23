@@ -132,9 +132,11 @@ class ResourcesServiceImpl implements ResourcesService {
         factory.classMap(Resource, ResourceDTO)
                 .field('id', 'resourceId')
                 .field('scopes', 'auth.scopes')
+                .exclude('metaClass')
                 .byDefault().register()
 
         factory.classMap(Scope, ResourceDTO.Scope)
+                .exclude('metaClass')
                 .byDefault().register()
 
         mapper = factory.mapperFacade

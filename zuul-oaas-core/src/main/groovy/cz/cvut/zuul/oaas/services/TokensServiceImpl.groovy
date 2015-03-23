@@ -129,12 +129,14 @@ public class TokensServiceImpl implements TokensService {
                 .field('value', 'tokenValue')
                 .fieldAToB('authentication.OAuth2Request', 'clientAuthentication')
                 .fieldAToB('authentication.userAuthentication.principal', 'userAuthentication')
+                .exclude('metaClass')
                 .byDefault().register()
 
         factory.classMap(OAuth2Request, TokenDTO.ClientAuthentication)
                 .byDefault().register()
 
         factory.classMap(User, TokenDTO.UserAuthentication)
+                .exclude('metaClass')
                 .byDefault().register()
 
         mapper = factory.mapperFacade
