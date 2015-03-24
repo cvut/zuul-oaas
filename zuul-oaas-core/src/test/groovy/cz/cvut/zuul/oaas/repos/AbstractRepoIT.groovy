@@ -28,7 +28,6 @@ import cz.cvut.zuul.oaas.test.CoreObjectFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.MongoTemplate
-import org.springframework.data.repository.CrudRepository
 import org.springframework.test.context.ContextConfiguration
 import spock.lang.Shared
 import spock.lang.Specification
@@ -65,7 +64,7 @@ abstract class AbstractRepoIT<E> extends Specification {
 
     //////// Helper methods ////////
 
-    abstract CrudRepository<E, ? extends Serializable> getRepo()
+    abstract BaseRepository<E, ? extends Serializable> getRepo()
 
 
     def E buildEntity() {
@@ -87,7 +86,7 @@ abstract class AbstractRepoIT<E> extends Specification {
     }
 
     def ID(object) {
-        object[idPropertyName]
+        object[idPropertyName] as Serializable
     }
 
     private determineEntityClass() {
@@ -116,14 +115,14 @@ abstract class AbstractRepoIT<E> extends Specification {
         given:
             def entities = buildEntities(3)
         when:
-            repo.save(entities)
+            repo.saveAll(entities)
         then:
             repo.count() == 3
     }
 
     def 'try to retrieve an entity by non existing id'() {
         setup:
-            repo.save(seed())
+            repo.saveAll(seed())
         expect:
             ! repo.findOne('does-not-exist')
     }
@@ -141,8 +140,8 @@ abstract class AbstractRepoIT<E> extends Specification {
     def 'retrieve entities by the ids'() {
         setup:
             def expected = buildEntities(3)
-            repo.save(expected)
-            repo.save(seed())
+            repo.saveAll(expected)
+            repo.saveAll(seed())
         when:
             def actual = repo.findAll( expected.collect{ ID(it) } ).toList()
         then:
@@ -152,7 +151,7 @@ abstract class AbstractRepoIT<E> extends Specification {
     def 'retrieve all entities'() {
         setup:
             def expected = buildEntities(3)
-            repo.save(expected)
+            repo.saveAll(expected)
         when:
             def actual = repo.findAll().toList()
         then:
@@ -169,9 +168,9 @@ abstract class AbstractRepoIT<E> extends Specification {
 
     def 'try to delete entity by non existing id'() {
         setup:
-            repo.save(seed())
+            repo.saveAll(seed())
         expect:
-            repo.delete('does-not-exist')
+            repo.deleteById('does-not-exist')
     }
 
     def 'delete entity by the id'() {
@@ -181,7 +180,7 @@ abstract class AbstractRepoIT<E> extends Specification {
 
             assert repo.findOne( ID(expected) )
         when:
-            repo.delete(ID(expected))
+            repo.deleteById(ID(expected))
         then:
             ! repo.findOne(ID(expected))
     }
@@ -193,7 +192,7 @@ abstract class AbstractRepoIT<E> extends Specification {
 
             assert repo.findOne(ID(expected))
         when:
-            repo.delete((E) expected)
+            repo.delete(expected)
         then:
             ! repo.findOne(ID(expected))
     }
@@ -202,21 +201,11 @@ abstract class AbstractRepoIT<E> extends Specification {
         setup:
             def toPreserve = buildEntities(3)
             def toDelete = buildEntities(4)
-            repo.save(toPreserve + toDelete)
+            repo.saveAll(toPreserve + toDelete)
         when:
-            repo.delete((List<E>) toDelete)
+            repo.deleteAll((Iterable<E>) toDelete)
         then:
             ! repo.findAll( toDelete.collect { ID(it) } )
             repo.findAll( toPreserve.collect { ID(it) } )
-    }
-
-    def 'delete all'() {
-        setup:
-            repo.save(buildEntities(3))
-            assert repo.count() == 3
-        when:
-            repo.deleteAll()
-        then:
-            repo.count() == 0
     }
 }

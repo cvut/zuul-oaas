@@ -24,12 +24,11 @@
 package cz.cvut.zuul.oaas.repos
 
 import cz.cvut.zuul.oaas.models.PersistableAccessToken
-import org.springframework.data.repository.CrudRepository
 import org.springframework.security.oauth2.common.OAuth2AccessToken
 import org.springframework.security.oauth2.common.OAuth2RefreshToken
 import org.springframework.security.oauth2.provider.OAuth2Authentication
 
-interface AccessTokensRepo extends CrudRepository<PersistableAccessToken, String> {
+interface AccessTokensRepo extends BaseRepository<PersistableAccessToken, String> {
 
     PersistableAccessToken findOneByAuthentication(OAuth2Authentication authentication)
 

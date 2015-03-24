@@ -118,7 +118,7 @@ public class TokensServiceImpl implements TokensService {
         if (!accessTokensRepo.exists(tokenValue)) {
             throw new NoSuchTokenException("No such token: ${tokenValue}")
         }
-        accessTokensRepo.delete(tokenValue)
+        accessTokensRepo.deleteById(tokenValue)
     }
 
 

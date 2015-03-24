@@ -23,48 +23,86 @@
  */
 package cz.cvut.zuul.oaas.repos.mongo
 
+import cz.cvut.zuul.oaas.repos.BaseRepository
+import groovy.transform.CompileStatic
 import org.springframework.data.mapping.model.MappingException
 import org.springframework.data.mongodb.core.MongoOperations
 import org.springframework.data.mongodb.core.mapping.MongoPersistentEntity
+import org.springframework.data.mongodb.repository.MongoRepository
 import org.springframework.data.mongodb.repository.query.MongoEntityInformation
 import org.springframework.data.mongodb.repository.support.MappingMongoEntityInformation
 import org.springframework.data.mongodb.repository.support.SimpleMongoRepository
-import org.springframework.data.repository.CrudRepository
+import org.springframework.util.Assert
 
 import java.lang.reflect.ParameterizedType
 
 /**
- * Abstract implementation of the {@link CrudRepository} for MongoDB that
+ * Abstract implementation of the {@link BaseRepository} for MongoDB that
  * delegates all common methods to Spring’s {@link SimpleMongoRepository}.
  */
-abstract class AbstractMongoRepository<T, ID extends Serializable> implements CrudRepository<T, ID> {
+@CompileStatic
+abstract class AbstractMongoRepository<T, ID extends Serializable> implements BaseRepository<T, ID> {
 
     protected final MongoOperations mongo
-
     protected final Class<T> entityClass
 
-    @Delegate
-    private final CrudRepository<T, ID> mongoRepository
+    private final MongoRepository<T, ID> repository
+    private final MongoEntityInformation<T, ID> entityInformation
 
 
     protected AbstractMongoRepository(MongoOperations mongoOperations) {
         this.mongo = mongoOperations
         this.entityClass = (Class<T>) ((ParameterizedType) this.class.genericSuperclass).actualTypeArguments[0]
 
-        def entityInformation = createEntityInformation(entityClass, mongoOperations)
-        this.mongoRepository = new SimpleMongoRepository(entityInformation, mongoOperations)
+        this.entityInformation = createEntityInformation(entityClass, mongoOperations)
+        this.repository = new SimpleMongoRepository(entityInformation, mongoOperations)
     }
 
 
-    // There's some type problem with these methods to be delegated,
-    // we must implement them explicitly.
+    //////// Delegate to MongoRepository ////////
 
-    def <S extends T> S save(S entity) {
-        (S) mongoRepository.save(entity)
+    def T save(T entity) {
+        repository.save(entity)
     }
 
-    def <S extends T> Iterable<S> save(Iterable<S> entites) {
-        mongoRepository.save(entites)
+    def List<T> saveAll(Iterable<? extends T> entites) {
+        repository.save(entites)
+    }
+
+    T findOne(ID id) {
+        repository.findOne(id)
+    }
+
+    boolean exists(ID id) {
+        repository.exists(id)
+    }
+
+    List<T> findAll() {
+        repository.findAll()
+    }
+
+    List<T> findAll(Iterable<ID> ids) {
+        repository.findAll(ids) as List
+    }
+
+    long count() {
+        repository.count()
+    }
+
+    void delete(T entity) {
+        // Simple call to mongoRepository.delete(entity) doesn't work here due
+        // to a type ambiguity problem.
+        Assert.notNull(entity, 'The given entity must not be null!')
+
+        repository.delete(entityInformation.getId(entity))
+    }
+
+    void deleteAll(Iterable<? extends T> entities) {
+        repository.delete(entities)
+    }
+
+    void deleteById(ID id) {
+        repository.delete(id)
     }
 
 

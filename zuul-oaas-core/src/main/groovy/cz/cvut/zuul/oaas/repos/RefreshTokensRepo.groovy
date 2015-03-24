@@ -24,9 +24,8 @@
 package cz.cvut.zuul.oaas.repos
 
 import cz.cvut.zuul.oaas.models.PersistableRefreshToken
-import org.springframework.data.repository.CrudRepository
 
-interface RefreshTokensRepo extends CrudRepository<PersistableRefreshToken, String> {
+interface RefreshTokensRepo extends BaseRepository<PersistableRefreshToken, String> {
 
     void deleteByClientId(String clientId)
 }

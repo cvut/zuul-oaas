@@ -71,7 +71,7 @@ class TokenStoreImpl implements TokenStore {
 
     void removeAccessToken(OAuth2AccessToken token) {
         log.debug 'Removing access token: [{}]', token
-        accessTokensRepo.delete(token.value)
+        accessTokensRepo.deleteById(token.value)
     }
 
     void removeAccessTokenUsingRefreshToken(OAuth2RefreshToken refreshToken) {
@@ -111,7 +111,7 @@ class TokenStoreImpl implements TokenStore {
 
     void removeRefreshToken(OAuth2RefreshToken token) {
         log.debug 'Removing refresh token: [{}]', token
-        refreshTokensRepo.delete(token.value)
+        refreshTokensRepo.deleteById(token.value)
     }
 
     OAuth2Authentication readAuthenticationForRefreshToken(OAuth2RefreshToken token) {

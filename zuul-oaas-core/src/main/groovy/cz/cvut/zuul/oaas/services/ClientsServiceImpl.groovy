@@ -125,7 +125,7 @@ class ClientsServiceImpl implements ClientsService {
         accessTokensRepo.deleteByClientId(clientId)
         refreshTokensRepo.deleteByClientId(clientId)
 
-        clientsRepo.delete(clientId)
+        clientsRepo.deleteById(clientId)
     }
 
     void resetClientSecret(String clientId) {

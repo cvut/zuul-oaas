@@ -113,7 +113,7 @@ class ResourcesServiceImpl implements ResourcesService {
     void deleteResourceById(String id) {
         assertResourceExists id
 
-        resourcesRepo.delete(id)
+        resourcesRepo.deleteById(id)
     }
 
 

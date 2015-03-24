@@ -159,7 +159,7 @@ class ClientsServiceTest extends Specification {
         when:
             service.removeClient(clientId)
         then:
-            1 * clientsRepo.delete(clientId)
+            1 * clientsRepo.deleteById(clientId)
             1 * accessTokensRepo.deleteByClientId(clientId)
             1 * refreshTokensRepo.deleteByClientId(clientId)
     }

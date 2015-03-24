@@ -25,9 +25,8 @@ package cz.cvut.zuul.oaas.repos
 
 import cz.cvut.zuul.oaas.models.Client
 import org.springframework.dao.EmptyResultDataAccessException
-import org.springframework.data.repository.CrudRepository
 
-interface ClientsRepo extends CrudRepository<Client, String> {
+interface ClientsRepo extends BaseRepository<Client, String> {
 
     void updateClientSecret(String clientId, String secret) throws EmptyResultDataAccessException
 

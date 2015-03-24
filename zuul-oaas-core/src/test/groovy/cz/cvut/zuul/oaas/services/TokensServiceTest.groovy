@@ -90,7 +90,7 @@ class TokensServiceTest extends Specification {
         when:
             service.invalidateToken('666')
         then:
-            1 * accessTokensRepo.delete('666')
+            1 * accessTokensRepo.deleteById('666')
     }
 
     def 'invalidate non existing token'() {

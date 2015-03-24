@@ -24,9 +24,8 @@
 package cz.cvut.zuul.oaas.repos
 
 import cz.cvut.zuul.oaas.models.Resource
-import org.springframework.data.repository.CrudRepository
 
-interface ResourcesRepo extends CrudRepository<Resource, String> {
+interface ResourcesRepo extends BaseRepository<Resource, String> {
 
     List<Resource> findAllPublic()
 }

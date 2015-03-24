@@ -67,7 +67,7 @@ class AccessTokensRepoIT extends AbstractRepoIT<PersistableAccessToken> {
     def 'find token by non existing authentication'() {
         setup:
             def invalid = build(OAuth2Authentication)
-            repo.save(seed())
+            repo.saveAll(seed())
         expect:
             repo.findOneByAuthentication(invalid) == null
     }
@@ -86,7 +86,7 @@ class AccessTokensRepoIT extends AbstractRepoIT<PersistableAccessToken> {
 
     def 'find tokens by clientId'() {
         setup:
-            repo.save(seed())
+            repo.saveAll(seed())
             2.times {
                 def entity = new PersistableAccessToken(
                         build(OAuth2AccessToken),
@@ -102,7 +102,7 @@ class AccessTokensRepoIT extends AbstractRepoIT<PersistableAccessToken> {
 
     def 'find tokens by username'() {
         setup:
-            repo.save(seed())
+            repo.saveAll(seed())
             2.times {
                 def entity = new PersistableAccessToken(
                         build(OAuth2AccessToken),

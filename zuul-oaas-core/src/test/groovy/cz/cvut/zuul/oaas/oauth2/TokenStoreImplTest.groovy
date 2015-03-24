@@ -79,7 +79,7 @@ class TokenStoreImplTest extends Specification {
         when:
             store.removeAccessToken(accessToken)
         then:
-            1 * accessTokensRepo.delete(accessToken.value)
+            1 * accessTokensRepo.deleteById(accessToken.value)
     }
 
     def "removeAccessTokenUsingRefreshToken: deletes access token from the repo using the refresh token"() {
@@ -141,7 +141,7 @@ class TokenStoreImplTest extends Specification {
         when:
             store.removeRefreshToken(refreshToken)
         then:
-            1 * refreshTokensRepo.delete(refreshToken.value)
+            1 * refreshTokensRepo.deleteById(refreshToken.value)
     }
 
     def "readAuthenticationForRefreshToken: finds authentication of the refresh token and returns it"() {
