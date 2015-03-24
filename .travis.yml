@@ -1,7 +1,20 @@
 language: java
-sudo: true
+sudo: false
 jdk:
   - openjdk7
   - oraclejdk8
+env:
+  - PROFILE=indy
+  - PROFILE=no-indy
+
+# Travis provides older Maven 3.2.5 that contains some bug causing incorrect
+# dependency resolution when using profiles and alternative dependency types.
+before_install:
+  - wget http://mirror.hosting90.cz/apache/maven/maven-3/3.3.1/binaries/apache-maven-3.3.1-bin.tar.gz
+  - tar -xzf apache-maven-3.3.1-bin.tar.gz
+  - export PATH=$(pwd)/apache-maven-3.3.1/bin:$PATH
+  - echo "M2_HOME=$(pwd)/apache-maven-3.3.1" >> $HOME/.mavenrc
+install:
+  - mvn install -P $PROFILE -DskipTests=true -Dmaven.javadoc.skip=true -B -V
 script:
-  - 'mvn verify -B'
+  - mvn verify -P $PROFILE -B -V
