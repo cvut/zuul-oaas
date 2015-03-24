@@ -43,17 +43,6 @@
         </dependency>
 
         <dependency>
-            <groupId>cz.cvut.zuul</groupId>
-            <artifactId>zuul-spring-support</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>cz.jirutka.spring</groupId>
-                    <artifactId>spring-http-client-cache</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <dependency>
             <groupId>cz.jirutka.spring</groupId>
             <artifactId>spring-rest-exception-handler</artifactId>
         </dependency>

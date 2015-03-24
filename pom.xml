@@ -225,12 +225,6 @@
             </dependency>
 
             <dependency>
-                <groupId>cz.cvut.zuul</groupId>
-                <artifactId>zuul-spring-support</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
                 <groupId>cz.jirutka.spring</groupId>
                 <artifactId>spring-http-client-cache</artifactId>
                 <version>1.0.0.M1</version>

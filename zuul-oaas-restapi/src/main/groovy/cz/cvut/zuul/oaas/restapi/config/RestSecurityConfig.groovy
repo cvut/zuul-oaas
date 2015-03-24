@@ -24,11 +24,13 @@
 package cz.cvut.zuul.oaas.restapi.config
 
 import cz.cvut.zuul.oaas.common.config.ConfigurationSupport
-import cz.cvut.zuul.support.spring.provider.OAuth2ResourceServerConfigurerAdapter
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.annotation.Order
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer
+import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurer
+import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer
 import org.springframework.security.oauth2.provider.token.ResourceServerTokenServices
 
 import javax.inject.Inject
@@ -37,12 +39,19 @@ import javax.inject.Inject
  * This configuration must be loaded in the root context!
  */
 @Configuration
+@EnableResourceServer
 @EnableWebSecurity @Order(1)
-class RestSecurityConfig extends OAuth2ResourceServerConfigurerAdapter implements ConfigurationSupport {
+class RestSecurityConfig implements ResourceServerConfigurer, ConfigurationSupport {
 
     // external service
     @Inject ResourceServerTokenServices resourceServerTokenServices
 
+
+    void configure(ResourceServerSecurityConfigurer resources) {
+        resources
+            .resourceId('zuul-oaas')
+            .tokenServices(resourceServerTokenServices)
+    }
 
     void configure(HttpSecurity http) {
         http.antMatcher( '/api/v1/**' )
