@@ -31,13 +31,6 @@
             <organization>CTU in Prague</organization>
             <organizationUrl>http://www.cvut.cz</organizationUrl>
         </developer>
-
-        <developer>
-            <name>Tomas Mano</name>
-            <email>tomasmano@gmail.com</email>
-            <organization>CTU in Prague</organization>
-            <organizationUrl>http://www.cvut.cz</organizationUrl>
-        </developer>
     </developers>
 
 
