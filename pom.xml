@@ -92,8 +92,8 @@
 
     <properties>
         <bootstrap.version>3.0.0</bootstrap.version>
-        <groovy.version>2.3.10</groovy.version>
-        <spock.version>1.0-groovy-2.3</spock.version>
+        <groovy.version>2.4.3</groovy.version>
+        <spock.version>1.0-groovy-2.4</spock.version>
         <!-- Keep in sync with platform-bom! -->
         <spring-boot.version>1.2.1.RELEASE</spring-boot.version>
         <spring-security-oauth.version>2.0.6.RELEASE</spring-security-oauth.version>
@@ -122,11 +122,6 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.codehaus.groovy</groupId>
-            <artifactId>groovy</artifactId>
         </dependency>
 
         <!-- Required by some Spring modules -->
@@ -275,18 +270,6 @@
             </dependency>
 
             <dependency>
-                <groupId>org.codehaus.groovy</groupId>
-                <artifactId>groovy</artifactId>
-                <version>${groovy.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.codehaus.groovy</groupId>
-                <artifactId>groovy-json</artifactId>
-                <version>${groovy.version}</version>
-            </dependency>
-
-            <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter</artifactId>
                 <version>${spring-boot.version}</version>
@@ -410,7 +393,7 @@
                 </executions>
                 <configuration>
                     <targetBytecode>${java.version}</targetBytecode>
-                    <invokeDynamic>false</invokeDynamic>
+                    <invokeDynamic>${groovy.invokeDynamic}</invokeDynamic>
                     <testSources>
                         <testSource>
                             <directory>${project.basedir}/src/test/groovy</directory>
@@ -482,5 +465,76 @@
             </plugins>
         </pluginManagement>
     </build>
+
+
+    <!--//////////////////// PROFILE ////////////////////-->
+
+    <profiles>
+        <!--
+            Compile with invokedynamic instruction.
+
+            Requires JDK 7u60+ or JDK 8 in runtime!
+            See http://groovy.codehaus.org/InvokeDynamic+support for more information.
+        -->
+        <profile>
+            <id>indy</id>
+
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+
+            <properties>
+                <groovy.invokeDynamic>true</groovy.invokeDynamic>
+            </properties>
+
+            <dependencies>
+                <dependency>
+                    <groupId>org.codehaus.groovy</groupId>
+                    <artifactId>groovy</artifactId>
+                    <version>${groovy.version}</version>
+                    <classifier>indy</classifier>
+                </dependency>
+
+                <dependency>
+                    <groupId>org.codehaus.groovy</groupId>
+                    <artifactId>groovy-json</artifactId>
+                    <version>${groovy.version}</version>
+                    <classifier>indy</classifier>
+                    <exclusions>
+                        <!-- Transitive dependency lacks indy classifier. -->
+                        <exclusion>
+                            <groupId>org.codehaus.groovy</groupId>
+                            <artifactId>*</artifactId>
+                        </exclusion>
+                    </exclusions>
+                </dependency>
+            </dependencies>
+        </profile>
+
+        <!--
+            Compile without invokedynamic instruction (i.e. use call site caching).
+        -->
+        <profile>
+            <id>no-indy</id>
+
+            <properties>
+                <groovy.invokeDynamic>false</groovy.invokeDynamic>
+            </properties>
+
+            <dependencies>
+                <dependency>
+                    <groupId>org.codehaus.groovy</groupId>
+                    <artifactId>groovy</artifactId>
+                    <version>${groovy.version}</version>
+                </dependency>
+
+                <dependency>
+                    <groupId>org.codehaus.groovy</groupId>
+                    <artifactId>groovy-json</artifactId>
+                    <version>${groovy.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
 
 </project>
