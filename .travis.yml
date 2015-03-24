@@ -7,14 +7,25 @@ env:
   - PROFILE=indy
   - PROFILE=no-indy
 
+# Cache local Maven repository, but exclude our artifacts.
+cache:
+  directories:
+    - $HOME/.m2
+    - $HOME/.embedmongo
+before_cache:
+  - rm -Rf $HOME/.m2/repository/cz/cvut/zuul
+
 # Travis provides older Maven 3.2.5 that contains some bug causing incorrect
 # dependency resolution when using profiles and alternative dependency types.
 before_install:
-  - wget http://mirror.hosting90.cz/apache/maven/maven-3/3.3.1/binaries/apache-maven-3.3.1-bin.tar.gz
-  - tar -xzf apache-maven-3.3.1-bin.tar.gz
-  - export PATH=$(pwd)/apache-maven-3.3.1/bin:$PATH
-  - echo "M2_HOME=$(pwd)/apache-maven-3.3.1" >> $HOME/.mavenrc
+  - wget -P ~/.m2/ -nc http://mirror.hosting90.cz/apache/maven/maven-3/3.3.1/binaries/apache-maven-3.3.1-bin.tar.gz
+  - tar -xzf ~/.m2/apache-maven-3.3.1-bin.tar.gz -C ~/.m2
+  - export PATH=$HOME/.m2/apache-maven-3.3.1/bin:$PATH
+  - echo "M2_HOME=$HOME/.m2/apache-maven-3.3.1" >> ~/.mavenrc
+
+# Just resolve and install dependencies, don't run tests.
 install:
   - mvn install -P $PROFILE -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+
 script:
   - mvn verify -P $PROFILE -B -V
