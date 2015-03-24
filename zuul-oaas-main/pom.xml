@@ -110,14 +110,6 @@
                     <artifactId>javax.servlet-api</artifactId>
                     <scope>compile</scope>
                 </dependency>
-
-                <!-- Workaround to exclude dependency from JAR. -->
-                <dependency>
-                    <groupId>org.projectlombok</groupId>
-                    <artifactId>lombok</artifactId>
-                    <version>${lombok.version}</version>
-                    <scope>test</scope>
-                </dependency>
             </dependencies>
 
             <build>

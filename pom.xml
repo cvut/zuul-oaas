@@ -7,7 +7,7 @@
 
     <parent>
         <groupId>cz.cvut.fit.maven</groupId>
-        <artifactId>groovy-lombok-parent</artifactId>
+        <artifactId>root-parent</artifactId>
         <version>2.1.4</version>
     </parent>
 
@@ -99,6 +99,8 @@
 
     <properties>
         <bootstrap.version>3.0.0</bootstrap.version>
+        <groovy.version>2.3.10</groovy.version>
+        <spock.version>1.0-groovy-2.3</spock.version>
         <!-- Keep in sync with platform-bom! -->
         <spring-boot.version>1.2.1.RELEASE</spring-boot.version>
         <spring-security-oauth.version>2.0.6.RELEASE</spring-security-oauth.version>
@@ -127,6 +129,11 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy</artifactId>
         </dependency>
 
         <!-- Required by some Spring modules -->
@@ -275,6 +282,18 @@
             </dependency>
 
             <dependency>
+                <groupId>org.codehaus.groovy</groupId>
+                <artifactId>groovy</artifactId>
+                <version>${groovy.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.codehaus.groovy</groupId>
+                <artifactId>groovy-json</artifactId>
+                <version>${groovy.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter</artifactId>
                 <version>${spring-boot.version}</version>
@@ -354,6 +373,18 @@
 
             <dependency>
                 <groupId>org.spockframework</groupId>
+                <artifactId>spock-core</artifactId>
+                <version>${spock.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.codehaus.groovy</groupId>
+                        <artifactId>groovy-all</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <dependency>
+                <groupId>org.spockframework</groupId>
                 <artifactId>spock-spring</artifactId>
                 <version>${spock.version}</version>
                 <exclusions>
@@ -370,8 +401,49 @@
     <!--//////////////////// BUILD ////////////////////-->
 
     <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.gmavenplus</groupId>
+                <artifactId>gmavenplus-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>addSources</goal>
+                            <goal>addTestSources</goal>
+                            <goal>compile</goal>
+                            <goal>testCompile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <targetBytecode>${java.version}</targetBytecode>
+                    <invokeDynamic>false</invokeDynamic>
+                    <testSources>
+                        <testSource>
+                            <directory>${project.basedir}/src/test/groovy</directory>
+                            <includes>
+                                <include>**/*.groovy</include>
+                            </includes>
+                        </testSource>
+                        <testSource>
+                            <directory>${project.basedir}/src/it/groovy</directory>
+                            <includes>
+                                <include>**/*.groovy</include>
+                            </includes>
+                        </testSource>
+                    </testSources>
+                </configuration>
+            </plugin>
+        </plugins>
+
         <pluginManagement>
             <plugins>
+                <plugin>
+                    <groupId>org.codehaus.gmavenplus</groupId>
+                    <artifactId>gmavenplus-plugin</artifactId>
+                    <version>1.5</version>
+                </plugin>
+
                 <!--
                     Build a JAR with the test classes.
                 -->
