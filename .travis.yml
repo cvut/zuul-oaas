@@ -22,10 +22,11 @@ before_install:
   - tar -xzf ~/.m2/apache-maven-3.3.1-bin.tar.gz -C ~/.m2
   - export PATH=$HOME/.m2/apache-maven-3.3.1/bin:$PATH
   - echo "M2_HOME=$HOME/.m2/apache-maven-3.3.1" >> ~/.mavenrc
+  - mvn --version
 
-# Just resolve and install dependencies, don't run tests.
+# Just resolve and install dependencies, don't build or run tests.
 install:
-  - mvn install -P $PROFILE -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+  - mvn dependency:go-offline -P $PROFILE --fail-never --batch-mode --threads 5
 
 script:
-  - mvn verify -P $PROFILE -B -V
+  - mvn verify -P $PROFILE --batch-mode
