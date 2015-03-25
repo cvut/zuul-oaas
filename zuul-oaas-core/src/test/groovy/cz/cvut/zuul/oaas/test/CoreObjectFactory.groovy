@@ -132,7 +132,7 @@ class CoreObjectFactory extends ObjectFactory {
 
         registerBuilder(ClientDTO) { values ->
             def client = ObjectFeeder.populate(new ClientDTO()).with {
-                authorities: buildListOf(GrantedAuthority, 1)*.authority
+                authorities = buildListOf(GrantedAuthority, 0)*.authority
                 return it
             }
             values.each { prop, value ->
