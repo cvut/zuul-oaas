@@ -117,13 +117,13 @@ class TokensServiceTest extends Specification {
             1 * accessTokensRepo.findOne(tokenVal) >> accessToken
             1 * clientsRepo.findOne(accessToken.authenticatedClientId) >> build(Client).with { it.locked = false; it }
 
-            actual.expiresIn         == accessToken.expiresIn
             actual.scope             == accessToken.scope
             actual.audience          == clientAuth.resourceIds
             actual.clientId          == clientAuth.clientId
             actual.clientAuthorities == clientAuth.authorities as Set
             actual.userAuthorities   == userAuth.authorities as Set
             actual.userId            == userAuth.name
+            (actual.expiresIn - accessToken.expiresIn).abs() < 2  // tolerance
     }
 
     def 'get token info for non existing token'() {
