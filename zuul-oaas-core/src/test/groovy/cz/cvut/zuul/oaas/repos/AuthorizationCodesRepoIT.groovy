@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2014 Czech Technical University in Prague.
+ * Copyright 2013-2015 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,24 +21,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package cz.cvut.zuul.oaas.config
+package cz.cvut.zuul.oaas.repos
 
-import cz.cvut.zuul.oaas.repos.AccessTokensRepo
-import cz.cvut.zuul.oaas.repos.AuthorizationCodesRepo
-import cz.cvut.zuul.oaas.repos.ClientsRepo
-import cz.cvut.zuul.oaas.repos.RefreshTokensRepo
-import cz.cvut.zuul.oaas.repos.ResourcesRepo
-import org.springframework.context.annotation.Bean
+import cz.cvut.zuul.oaas.models.PersistableAuthorizationCode
+import cz.cvut.zuul.oaas.test.SharedAsserts
+import org.springframework.beans.factory.annotation.Autowired
 
-interface PersistenceBeans {
+import static cz.cvut.zuul.oaas.test.Assertions.assertThat
 
-    @Bean ClientsRepo clientsRepo()
+class AuthorizationCodesRepoIT extends AbstractRepoIT<PersistableAuthorizationCode> {
 
-    @Bean AccessTokensRepo accessTokensRepo()
+    @Autowired AuthorizationCodesRepo repo
 
-    @Bean RefreshTokensRepo refreshTokensRepo()
 
-    @Bean ResourcesRepo resourcesRepo()
-
-    @Bean AuthorizationCodesRepo authorizationCodesRepo()
+    void assertIt(PersistableAuthorizationCode actual, PersistableAuthorizationCode expected) {
+        assertThat (actual) equalsTo (expected) inAllPropertiesExcept ('authentication')
+        SharedAsserts.isEqual actual.authentication, expected.authentication
+    }
 }

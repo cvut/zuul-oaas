@@ -31,7 +31,6 @@ import org.springframework.security.core.Authentication
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.oauth2.common.*
-import org.springframework.security.oauth2.provider.AuthorizationRequest
 import org.springframework.security.oauth2.provider.OAuth2Authentication
 import org.springframework.security.oauth2.provider.OAuth2Request
 
@@ -116,6 +115,11 @@ class CoreObjectFactory extends ObjectFactory {
             new SimpleGrantedAuthority(
                     anyFixedValue('ROLE_USER', 'ROLE_CLIENT', 'ROLE_ADMIN', 'ROLE_MASTER')
             )
+        }
+
+
+        registerBuilder(PersistableAuthorizationCode) { values ->
+            new PersistableAuthorizationCode( anyLetterString(5, 10), build(OAuth2Authentication) )
         }
 
 

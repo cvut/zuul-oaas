@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2014 Czech Technical University in Prague.
+ * Copyright 2013-2015 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,24 +21,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package cz.cvut.zuul.oaas.config
+package cz.cvut.zuul.oaas.models
 
-import cz.cvut.zuul.oaas.repos.AccessTokensRepo
-import cz.cvut.zuul.oaas.repos.AuthorizationCodesRepo
-import cz.cvut.zuul.oaas.repos.ClientsRepo
-import cz.cvut.zuul.oaas.repos.RefreshTokensRepo
-import cz.cvut.zuul.oaas.repos.ResourcesRepo
-import org.springframework.context.annotation.Bean
+import org.springframework.data.annotation.Id
+import org.springframework.data.annotation.PersistenceConstructor
+import org.springframework.data.annotation.TypeAlias
+import org.springframework.data.mongodb.core.mapping.Document
+import org.springframework.data.mongodb.core.mapping.Field
+import org.springframework.security.oauth2.provider.OAuth2Authentication
 
-interface PersistenceBeans {
+@TypeAlias('OAuthCode')
+@Document(collection = 'oauth_codes')
+class PersistableAuthorizationCode {
 
-    @Bean ClientsRepo clientsRepo()
+    private static final long serialVersionUID = 1L
 
-    @Bean AccessTokensRepo accessTokensRepo()
+    @Id
+    final String code
 
-    @Bean RefreshTokensRepo refreshTokensRepo()
+    @Field('auth')
+    final OAuth2Authentication authentication
 
-    @Bean ResourcesRepo resourcesRepo()
 
-    @Bean AuthorizationCodesRepo authorizationCodesRepo()
+    @PersistenceConstructor
+    PersistableAuthorizationCode(String code, OAuth2Authentication authentication) {
+        this.code = code
+        this.authentication = authentication
+    }
+
+
+    String toString() { code }
+
+    int hashCode() { code.hashCode() }
+
+    boolean equals(Object that) { toString() == that.toString() }
 }

@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2014 Czech Technical University in Prague.
+ * Copyright 2013-2015 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,24 +21,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package cz.cvut.zuul.oaas.config
+package cz.cvut.zuul.oaas.oauth2
 
-import cz.cvut.zuul.oaas.repos.AccessTokensRepo
+import cz.cvut.zuul.oaas.models.PersistableAuthorizationCode
 import cz.cvut.zuul.oaas.repos.AuthorizationCodesRepo
-import cz.cvut.zuul.oaas.repos.ClientsRepo
-import cz.cvut.zuul.oaas.repos.RefreshTokensRepo
-import cz.cvut.zuul.oaas.repos.ResourcesRepo
-import org.springframework.context.annotation.Bean
+import groovy.util.logging.Slf4j
+import org.springframework.security.oauth2.provider.OAuth2Authentication
+import org.springframework.security.oauth2.provider.code.RandomValueAuthorizationCodeServices
 
-interface PersistenceBeans {
+@Slf4j
+class AuthorizationCodeServicesImpl extends RandomValueAuthorizationCodeServices {
 
-    @Bean ClientsRepo clientsRepo()
+    final AuthorizationCodesRepo oauthCodesRepo
 
-    @Bean AccessTokensRepo accessTokensRepo()
 
-    @Bean RefreshTokensRepo refreshTokensRepo()
+    AuthorizationCodeServicesImpl(AuthorizationCodesRepo oauthCodesRepo) {
+        this.oauthCodesRepo = oauthCodesRepo
+    }
 
-    @Bean ResourcesRepo resourcesRepo()
 
-    @Bean AuthorizationCodesRepo authorizationCodesRepo()
+    void store(String code, OAuth2Authentication authentication) {
+        log.debug 'Storing authorization code: {}', code
+        oauthCodesRepo.save(new PersistableAuthorizationCode(code, authentication))
+    }
+
+    OAuth2Authentication remove(String code) {
+        log.debug 'Consuming authorization code: {}', code
+
+        def result = oauthCodesRepo.findOne(code)
+
+        if (result) {
+            oauthCodesRepo.deleteById(code)
+        }
+        result?.authentication
+    }
 }

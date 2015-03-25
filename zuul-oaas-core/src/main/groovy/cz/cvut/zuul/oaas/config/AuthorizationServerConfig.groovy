@@ -24,6 +24,7 @@
 package cz.cvut.zuul.oaas.config
 
 import cz.cvut.zuul.oaas.common.config.ConfigurationSupport
+import cz.cvut.zuul.oaas.oauth2.AuthorizationCodeServicesImpl
 import cz.cvut.zuul.oaas.oauth2.ClientDetailsServiceImpl
 import cz.cvut.zuul.oaas.oauth2.LockableClientUserApprovalHandler
 import cz.cvut.zuul.oaas.oauth2.TokenStoreImpl
@@ -38,7 +39,6 @@ import org.springframework.security.oauth2.provider.CompositeTokenGranter
 import org.springframework.security.oauth2.provider.approval.TokenStoreUserApprovalHandler
 import org.springframework.security.oauth2.provider.client.ClientCredentialsTokenGranter
 import org.springframework.security.oauth2.provider.code.AuthorizationCodeTokenGranter
-import org.springframework.security.oauth2.provider.code.InMemoryAuthorizationCodeServices
 import org.springframework.security.oauth2.provider.endpoint.*
 import org.springframework.security.oauth2.provider.implicit.ImplicitTokenGranter
 import org.springframework.security.oauth2.provider.password.ResourceOwnerPasswordTokenGranter
@@ -191,9 +191,8 @@ class AuthorizationServerConfig implements ConfigurationSupport {
         new ClientDetailsServiceImpl( repos.clientsRepo() )
     }
 
-    // TODO implement persistent store
     @Bean @Lazy authorizationCodeServices() {
-        new InMemoryAuthorizationCodeServices()
+        new AuthorizationCodeServicesImpl( repos.authorizationCodesRepo() )
     }
 
     @Bean tokenStore() {
