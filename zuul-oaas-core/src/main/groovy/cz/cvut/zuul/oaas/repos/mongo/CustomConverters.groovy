@@ -112,9 +112,9 @@ interface CustomConverters {
 
         def authorities = src.authorities?.collect { new SimpleGrantedAuthority(it as String) }
         def principal = new User (
-            src.uname as String,
-            src.email as String,
-            authorities ?: [] as Collection
+            username: src.uname as String,
+            email: src.email as String,
+            authorities: authorities ?: [] as Collection
         )
         new UsernamePasswordAuthenticationToken(principal, null, authorities)
     }

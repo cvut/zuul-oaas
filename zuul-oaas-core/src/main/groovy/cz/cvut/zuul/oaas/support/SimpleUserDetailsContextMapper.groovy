@@ -83,7 +83,8 @@ class SimpleUserDetailsContextMapper implements UserDetailsContextMapper {
         def lastName = ctx.getStringAttribute(lastNameAttrName)
         def mergedAuthorities = (authorities + defaultAuthorities) as LinkedHashSet
 
-        new User(username, email, firstName, lastName, mergedAuthorities)
+        new User(username: username, email: email, firstName: firstName, lastName: lastName,
+                 authorities: mergedAuthorities)
     }
 
     void mapUserToContext(UserDetails user, DirContextAdapter ctx) {

@@ -25,13 +25,11 @@ package cz.cvut.zuul.oaas.models
 
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
-import groovy.transform.TupleConstructor
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 
 import static java.util.Collections.unmodifiableCollection
 
-@TupleConstructor(includes = ['username', 'email', 'firstName', 'lastName', 'authorities'])
 @EqualsAndHashCode(includes = 'username')
 @ToString(includes = 'username', includePackage = false)
 class User implements UserDetails {
@@ -50,21 +48,6 @@ class User implements UserDetails {
     boolean credentialsNonExpired = true
     boolean enabled = true
 
-
-    User(String username, String email, Collection<? extends GrantedAuthority> authorities) {
-        this.username = username
-        this.email = email
-        this.authorities = unmodifiableCollection(authorities)
-    }
-
-    // TODO remove after converting all oaas-core to Groovy
-    User(String username, String email, String firstName, String lastName, Collection<? extends GrantedAuthority> authorities) {
-        this.username = username
-        this.email = email
-        this.firstName = firstName
-        this.lastName = lastName
-        this.authorities = unmodifiableCollection(authorities)
-    }
 
     void setAuthorities(Collection<? extends GrantedAuthority> authorities) {
         this.authorities = unmodifiableCollection(authorities)
