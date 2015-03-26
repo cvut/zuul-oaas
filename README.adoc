@@ -10,6 +10,7 @@ ifdef::env-github[:idprefix: user-content-]
 :badge-style: flat
 
 image:https://img.shields.io/travis/{gh-name}/{gh-branch}.svg?style={badge-style}[Build Status, link="https://travis-ci.org/{gh-name}"]
+image:https://img.shields.io/coveralls/{gh-name}/{gh-branch}.svg?style={badge-style}[Coverage Status, link="https://coveralls.io/r/{gh-name}?branch={gh-branch}"]
 
 Zuul OAAS is a _standalone_ Authorization Server for OAuth 2.0 (http://tools.ietf.org/html/rfc6749[RFC 6749]).
 The “standalone” means that it’s decoupled from resource provider(s), i.e. you can have many resource providers and just one authorization server that issues and validates tokens.

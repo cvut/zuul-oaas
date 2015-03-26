@@ -12,8 +12,6 @@ cache:
   directories:
     - $HOME/.m2
     - $HOME/.embedmongo
-before_cache:
-  - rm -Rf $HOME/.m2/repository/cz/cvut/zuul
 
 # Travis provides older Maven 3.2.5 that contains some bug causing incorrect
 # dependency resolution when using profiles and alternative dependency types.
@@ -26,7 +24,20 @@ before_install:
 
 # Just resolve and install dependencies, don't build or run tests.
 install:
-  - mvn dependency:go-offline -P $PROFILE --fail-never --batch-mode --threads 5
+  - mvn dependency:go-offline -P $PROFILE --fail-never -B --threads 5
+
+before_script:
+  - rm -Rf $HOME/.m2/repository/cz/cvut/zuul
 
 script:
-  - mvn verify -P $PROFILE --batch-mode
+  - mvn install verify -P $PROFILE -B
+
+# Analyze code coverage and report it to Coveralls.
+# Note: sed is a workaround for some bug in Cobertura that sometimes reports line
+# number 0 and coveralls-maven that can't handle it...
+after_success: |
+  if [[ "$TRAVIS_JDK_VERSION" == 'openjdk7' && "$PROFILE" == 'no-indy' ]]; then
+      mvn cobertura:cobertura-integration-test -P no-indy -B \
+        && sed -i -s 's/\(line number\)="0"/\1="1"/g' target/site/cobertura/coverage.xml \
+        && mvn coveralls:report -N -P no-indy -B
+  fi

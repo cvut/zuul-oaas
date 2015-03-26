@@ -97,6 +97,10 @@
         <!-- Keep in sync with platform-bom! -->
         <spring-boot.version>1.2.1.RELEASE</spring-boot.version>
         <spring-security-oauth.version>2.0.6.RELEASE</spring-security-oauth.version>
+
+        <!-- This project uses Cobertura instead of JaCoCo, which unfortunately
+             doesn't work well for Groovy. :( -->
+        <jacoco.skip>true</jacoco.skip>
     </properties>
 
 
@@ -371,6 +375,8 @@
     <!--//////////////////// BUILD ////////////////////-->
 
     <build>
+        <sourceDirectory>${project.basedir}/src/main/groovy</sourceDirectory>
+
         <plugins>
             <plugin>
                 <groupId>org.codehaus.gmavenplus</groupId>
@@ -528,6 +534,76 @@
                     <version>${groovy.version}</version>
                 </dependency>
             </dependencies>
+        </profile>
+
+        <!--
+            Profile for Travis CI.
+        -->
+        <profile>
+            <id>travis-ci</id>
+
+            <!-- Will be automatically activated on Travis CI. -->
+            <activation>
+                <property>
+                    <name>env.TRAVIS</name>
+                </property>
+            </activation>
+
+            <build>
+                <plugins>
+                    <!--
+                        Analyze code coverage.
+
+                        This plugin is not bound with any lifecycle phase, it should be
+                        executed manually: mvn cobertura:cobertura-integration-test.
+                    -->
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>cobertura-maven-plugin</artifactId>
+                        <version>2.7</version>
+                        <configuration>
+                            <formats>
+                                <format>xml</format>
+                                <format>html</format>
+                            </formats>
+                            <aggregate>true</aggregate>
+                            <instrumentation>
+                                <ignoreTrivial>true</ignoreTrivial>
+                                <excludes>
+                                    <!-- It doesn't make much sense to measure coverage of configuration. -->
+                                    <exclude>cz/cvut/zuul/oaas/config/*.*</exclude>
+                                    <exclude>cz/cvut/zuul/oaas/restapi/config/*.*</exclude>
+                                    <exclude>cz/cvut/zuul/oaas/web/config/*.*</exclude>
+                                </excludes>
+                            </instrumentation>
+                        </configuration>
+                    </plugin>
+
+                    <!--
+                        Plugin for submitting code coverage reports to Coveralls.
+
+                        This plugin is not bound with any lifecycle phase, it should be
+                        executed manually: mvn coveralls:report.
+                    -->
+                    <plugin>
+                        <groupId>org.eluder.coveralls</groupId>
+                        <artifactId>coveralls-maven-plugin</artifactId>
+                        <version>3.1.0</version>
+                        <inherited>false</inherited>
+                        <configuration>
+                            <!-- Shame to coveralls-maven that it can't read it from the cobertura.xml! -->
+                            <sourceDirectories>
+                                <sourceDirectory>zuul-oaas-api/src/main/groovy</sourceDirectory>
+                                <sourceDirectory>zuul-oaas-common/src/main/groovy</sourceDirectory>
+                                <sourceDirectory>zuul-oaas-core/src/main/groovy</sourceDirectory>
+                                <sourceDirectory>zuul-oaas-main/src/main/groovy</sourceDirectory>
+                                <sourceDirectory>zuul-oaas-restapi/src/main/groovy</sourceDirectory>
+                                <sourceDirectory>zuul-oaas-web/src/main/groovy</sourceDirectory>
+                            </sourceDirectories>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
     </profiles>
 
