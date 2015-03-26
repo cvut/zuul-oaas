@@ -24,11 +24,14 @@ before_install:
 
 # Just resolve and install dependencies, don't build or run tests.
 install:
-  - mvn dependency:go-offline -P $PROFILE --fail-never -B --threads 5
+  - mvn dependency:go-offline -P $PROFILE --fail-never --threads 5 -B
 
+# Remove local artifacts of ours from any previous build, just to be sure.
 before_script:
   - rm -Rf $HOME/.m2/repository/cz/cvut/zuul
 
+# Run unit and integration tests.
+# Also install artifacts to the local repo to be available for after_success task.
 script:
   - mvn install verify -P $PROFILE -B
 
@@ -38,6 +41,6 @@ script:
 after_success: |
   if [[ "$TRAVIS_JDK_VERSION" == 'openjdk7' && "$PROFILE" == 'no-indy' ]]; then
       mvn cobertura:cobertura-integration-test -P no-indy -B \
-        && sed -i -s 's/\(line number\)="0"/\1="1"/g' target/site/cobertura/coverage.xml \
-        && mvn coveralls:report -N -P no-indy -B
+          && sed -i -s 's/\(line number\)="0"/\1="1"/g' target/site/cobertura/coverage.xml \
+          && mvn coveralls:report -P no-indy -N -B
   fi
