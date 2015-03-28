@@ -91,7 +91,7 @@ class AuthorizationCodeGrantIT extends AbstractHttpIntegrationTest {
         send  POST: '/login.do',
               ContentType: 'application/x-www-form-urlencoded',
               Cookie: cookie,
-              body: [j_username: 'tomy', j_password: 'best']
+              body: [j_username: 'zuul', j_password: 'zuul']
 
         then: 'should be redirected back to the authorization endpoint with the same query as in the first step'
         check status: FOUND,

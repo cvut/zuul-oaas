@@ -132,7 +132,7 @@ abstract class AbstractHttpIntegrationTest extends Specification {
            POST: '/login.do',
            ContentType: 'application/x-www-form-urlencoded',
            Accept: '*/*',
-           body: [j_username: 'tomy', j_password: 'best']
+           body: [j_username: 'zuul', j_password: 'zuul']
        )
 
         parseCookie(resp.headers.getFirst('Set-Cookie'))

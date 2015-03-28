@@ -36,8 +36,8 @@ class InMemoryUserAuthenticationConfig extends AbstractAuthenticationManagerConf
     @Bean @Qualifier('user')
     AuthenticationManager userAuthManager() {
         builder.inMemoryAuthentication()
-            .withUser('tomy')
-                .password('best').authorities('ROLE_USER')
+            .withUser('zuul')
+                .password('zuul').authorities('ROLE_USER')
                .and()
             .and()
         .build()

@@ -1,102 +1,163 @@
 {
-    "clients": [
-        {
-            "_class": "Client",
-            "_id": "apps-manager",
-            "authorities": [ "ROLE_BIG_BOSS" ],
-            "grants": [ "client_credentials" ],
-            "secret": "top-secret",
-            "locked": false,
-            "name": "AppsManager",
-            "scopes": [ "urn:zuul:oauth:oaas:manager", "urn:zuul:oauth:oaas:tokeninfo" ],
-            "resources": [ "zuul-oaas" ],
-            "redirects": []
-        },
-        {
-            "_class": "Client",
-            "_id": "quotes-client",
-            "authorities": [ "ROLE_CLIENT" ],
-            "grants": [ "client_credentials" ],
-            "secret": "top-secret",
-            "locked": false,
-            "name": "Quotes Client",
-            "redirects": [],
-            "resources": [],
-            "scopes": [ "urn:zuul:oauth:quotes.read" ]
-        },
-        {
-            "_class": "Client",
-            "_id": "quotes-provider",
-            "authorities": [ "ROLE_RESOURCE_SERVER" ],
-            "grants": [ "client_credentials" ],
-            "secret": "top-secret",
-            "locked": false,
-            "redirects": [],
-            "resources": [],
-            "scopes": [ "urn:zuul:oauth:oaas:tokeninfo" ]
-        },
-        {
-            "_class": "Client",
-            "_id": "dummy-client",
-            "authorities": [ "ROLE_CLIENT" ],
-            "grants": [ "client_credentials", "refresh_token", "authorization_code" ],
-            "secret": "top-secret",
-            "locked": false,
-            "redirects": [ "http://example.org" ],
-            "resources": [],
-            "scopes": [ "urn:zuul:oauth:dummy", "urn:zuul:oauth:oaas:tokeninfo" ]
-        }
-    ],
+  "clients": [
+    {
+      "_id" : "zuul-admin",
+      "_class" : "Client",
+      "authorities" : [ "ROLE_ADMIN" ],
+      "grants" : [ "client_credentials" ],
+      "secret" : "top-secret",
+      "locked" : false,
+      "name" : "Zuul Admin",
+      "scopes" : [ "urn:zuul:oauth:oaas:manager" ],
+      "resources" : [ "zuul-oaas" ],
+      "redirects" : []
+    },
+    {
+      "_id" : "quotes-client",
+      "_class" : "Client",
+      "authorities" : [ "ROLE_CLIENT" ],
+      "grants" : [ "client_credentials" ],
+      "secret" : "top-secret",
+      "locked" : false,
+      "name" : "Quotes Client",
+      "redirects" : [],
+      "resources" : [],
+      "scopes" : [ "urn:zuul:oauth:quotes.read" ]
+    },
+    {
+      "_id" : "dummy-client",
+      "_class" : "Client",
+      "authorities" : [ "ROLE_CLIENT" ],
+      "grants" : [
+        "authorization_code",
+        "client_credentials",
+        "implicit",
+        "refresh_token"
+      ],
+      "secret" : "top-secret",
+      "locked" : false,
+      "redirects" : [ "http://example.org" ],
+      "resources" : [],
+      "scopes" : [
+        "urn:zuul:oauth:alpha",
+        "urn:zuul:oauth:beta"
+      ]
+    }
+  ],
 
-    "access_tokens": [
-        {
-            "_class": "AccessToken",
-            "_id": "dummy-access-token",
-            "authKey": "cc76a58c5418860277a6b19d0a40a068",
-            "auth": {
-                "authzReq": {
-                    "approval": {},
-                    "approved": true,
-                    "authorities": [  "ROLE_CLIENT" ],
-                    "authz": {
-                        "scope": "urn:zuul:oauth:dummy urn:zuul:oauth:oaas:tokeninfo",
-                        "client_secret": "top-secret",
-                        "grant_type": "refresh_token authorization_code",
-                        "client_id": "dummy-client"
-                    },
-                    "resources": [],
-                    "client": "dummy-client"
-                },
-                "userAuth": null
-            },
-            "exp": { "$date": "2099-01-01T0:00:00.000Z" },
-            "type": "bearer",
-            "refToken": "dummy-refresh-token",
-            "scopes": [ "urn:zuul:oauth:dummy", "urn:zuul:oauth:oaas:tokeninfo" ],
-            "addl": {}
+  "access_tokens": [
+    {
+      "_id" : "dummy-access-client-cred",
+      "_class" : "AccessToken",
+      "exp" : { "$date": "2099-01-01T00:00:00.000Z" },
+      "type" : "bearer",
+      "refToken" : "63e8f2c2-7770-4e50-949d-06d6236ff1d6",
+      "scopes" : [
+        "urn:zuul:oauth:alpha",
+        "urn:zuul:oauth:beta"
+      ],
+      "addl" : {},
+      "authKey" : "f447706ca70d56650807a755dfbeba10",
+      "auth" : {
+        "oauthReq" : {
+          "client" : "dummy-client",
+          "scope" : [
+            "urn:zuul:oauth:alpha",
+            "urn:zuul:oauth:beta"
+          ],
+          "reqParams" : {
+            "grant_type" : "client_credentials"
+          },
+          "resources" : [],
+          "authorities" : [
+            "ROLE_CLIENT"
+          ],
+          "approved" : true,
+          "redirect" : null,
+          "respTypes" : [],
+          "exts" : {}
+        },
+        "userAuth" : null
+      }
+    },
+    {
+      "_id" : "dummy-access-auth-code",
+      "_class" : "AccessToken",
+      "exp" : { "$date": "2099-01-01T00:00:00.000Z" },
+      "type" : "bearer",
+      "refToken" : "dummy-refresh",
+      "scopes" : [
+        "urn:zuul:oauth:alpha",
+        "urn:zuul:oauth:beta"
+      ],
+      "addl" : {},
+      "authKey" : "d8572edf1b73d6f6d795e2fe9e087281",
+      "auth" : {
+        "oauthReq" : {
+          "client" : "dummy-client",
+          "scope" : [
+            "urn:zuul:oauth:alpha",
+            "urn:zuul:oauth:beta"
+          ],
+          "reqParams" : {
+            "response_type" : "code",
+            "state" : "xyz",
+            "redirect_uri" : "http://example.org",
+            "code" : "Cov6eQ",
+            "grant_type" : "authorization_code",
+            "client_id" : "dummy-client"
+          },
+          "resources" : [],
+          "authorities" : [
+            "ROLE_CLIENT"
+          ],
+          "approved" : true,
+          "redirect" : "http://example.org",
+          "respTypes" : [ "code" ],
+          "exts" : {}
+        },
+        "userAuth" : {
+          "uname" : "zuul",
+          "email" : null,
+          "authorities" : [ "ROLE_USER" ]
         }
-    ],
+      }
+    }
+  ],
 
-    "refresh_tokens": [
-        {
-            "_class": "RefreshToken",
-            "_id": "dummy-refresh-token",
-            "auth": {
-                "authzReq": {
-                    "approval": {  },
-                    "approved": true,
-                    "authorities": [  "ROLE_CLIENT" ],
-                    "authz": {
-                        "scope": "urn:zuul:oauth:dummy urn:zuul:oauth:oaas:tokeninfo",
-                        "client_secret": "top-secret",
-                        "grant_type": "refresh_token authorization_code",
-                        "client_id": "dummy-client"
-                    },
-                    "resources": [ ],
-                    "client": "dummy-client"
-                },
-                "userAuth": null
-            }
+  "refresh_tokens": [
+    {
+      "_id" : "dummy-refresh",
+      "_class" : "RefreshToken",
+      "exp" : { "$date": "2099-01-01T00:00:00.000Z" },
+      "auth" : {
+        "oauthReq" : {
+          "client" : "dummy-client",
+          "scope" : [
+            "urn:zuul:oauth:alpha",
+            "urn:zuul:oauth:beta"
+          ],
+          "reqParams" : {
+            "response_type" : "code",
+            "state" : "xyz",
+            "redirect_uri" : "http://example.org",
+            "code" : "Cov6eQ",
+            "grant_type" : "authorization_code",
+            "client_id" : "dummy-client"
+          },
+          "resources" : [],
+          "authorities" : [ "ROLE_CLIENT" ],
+          "approved" : true,
+          "redirect" : "http://example.org",
+          "respTypes" : [ "code" ],
+          "exts" : {}
+        },
+        "userAuth" : {
+          "uname" : "zuul",
+          "email" : null,
+          "authorities" : [ "ROLE_USER" ]
         }
-    ]
+      }
+    }
+  ]
 }
