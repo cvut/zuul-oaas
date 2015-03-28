@@ -24,6 +24,7 @@
 package cz.cvut.zuul.oaas.restapi.config
 
 import cz.cvut.zuul.oaas.common.config.ConfigurationSupport
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.annotation.Order
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -32,8 +33,6 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurer
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer
 import org.springframework.security.oauth2.provider.token.ResourceServerTokenServices
-
-import javax.inject.Inject
 
 /**
  * This configuration must be loaded in the root context!
@@ -44,7 +43,7 @@ import javax.inject.Inject
 class RestSecurityConfig implements ResourceServerConfigurer, ConfigurationSupport {
 
     // external service
-    @Inject ResourceServerTokenServices resourceServerTokenServices
+    @Autowired ResourceServerTokenServices resourceServerTokenServices
 
 
     void configure(ResourceServerSecurityConfigurer resources) {

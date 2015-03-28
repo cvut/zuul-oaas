@@ -27,16 +27,15 @@ import cz.cvut.zuul.oaas.api.services.ClientsService
 import cz.cvut.zuul.oaas.common.config.ConfigurationSupport
 import cz.cvut.zuul.oaas.web.controllers.AccessConfirmationController
 import cz.cvut.zuul.oaas.web.controllers.MainController
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-
-import javax.inject.Inject
 
 @Configuration
 class WebControllersConfig implements ConfigurationSupport {
 
     // external service
-    @Inject ClientsService clientsService
+    @Autowired ClientsService clientsService
 
     /**
      * Static pages

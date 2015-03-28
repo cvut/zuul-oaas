@@ -30,6 +30,7 @@ import cz.cvut.zuul.oaas.it.support.HttpResponseAssertDSL
 import cz.cvut.zuul.oaas.it.support.MyResponseEntity
 import cz.cvut.zuul.oaas.it.support.RestTemplateDSL
 import groovy.util.logging.Slf4j
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.context.embedded.EmbeddedWebApplicationContext
 import org.springframework.boot.test.IntegrationTest
 import org.springframework.boot.test.SpringApplicationContextLoader
@@ -40,8 +41,6 @@ import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.web.WebAppConfiguration
 import spock.lang.Shared
 import spock.lang.Specification
-
-import javax.inject.Inject
 
 import static cz.cvut.zuul.oaas.it.support.TestUtils.isUUID
 import static cz.cvut.zuul.oaas.it.support.TestUtils.parseCookie
@@ -58,11 +57,11 @@ abstract class AbstractHttpIntegrationTest extends Specification {
 
     @Shared String serverUri
 
-    @Inject Environment env
+    @Autowired Environment env
 
-    @Inject MongoTemplate mongoTemplate
+    @Autowired MongoTemplate mongoTemplate
 
-    @Inject TokenStore tokenStore
+    @Autowired TokenStore tokenStore
 
     private RestTemplateDSL httpClient
 
@@ -75,7 +74,7 @@ abstract class AbstractHttpIntegrationTest extends Specification {
         System.setProperty('spring.profiles.active', 'test')
     }
 
-    @Inject
+    @Autowired
     private setupHttpClient(EmbeddedWebApplicationContext server) {
         serverUri = 'http://localhost:' + server.embeddedServletContainer.port
         httpClient = new RestTemplateDSL(defaultBaseUri: serverUri, defaultRequestOpts: defaultRequestOpts)

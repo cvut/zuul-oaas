@@ -25,12 +25,11 @@ package cz.cvut.zuul.oaas.restapi.controllers
 
 import cz.cvut.zuul.oaas.api.models.TokenDTO
 import cz.cvut.zuul.oaas.api.services.TokensService
-
-import javax.inject.Inject
+import org.springframework.beans.factory.annotation.Autowired
 
 class TokensControllerIT extends AbstractControllerIT {
 
-    @Inject TokensController controller
+    @Autowired TokensController controller
 
     def tokensService = Mock(TokensService)
 

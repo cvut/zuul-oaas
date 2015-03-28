@@ -25,12 +25,11 @@ package cz.cvut.zuul.oaas.restapi.controllers
 
 import cz.cvut.zuul.oaas.api.models.ResourceDTO
 import cz.cvut.zuul.oaas.api.services.ResourcesService
-
-import javax.inject.Inject
+import org.springframework.beans.factory.annotation.Autowired
 
 class ResourcesControllerIT extends AbstractControllerIT {
 
-    @Inject ResourcesController controller
+    @Autowired ResourcesController controller
 
     def resourceService = Mock(ResourcesService)
 

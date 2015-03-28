@@ -31,18 +31,17 @@ import cz.cvut.zuul.oaas.restapi.controllers.ClientsController
 import cz.cvut.zuul.oaas.restapi.controllers.ResourcesController
 import cz.cvut.zuul.oaas.restapi.controllers.TokenInfoController
 import cz.cvut.zuul.oaas.restapi.controllers.TokensController
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-
-import javax.inject.Inject
 
 @Configuration
 class RestControllersConfig implements ConfigurationSupport {
 
     // external services
-    @Inject ClientsService clientsService
-    @Inject ResourcesService resourcesService
-    @Inject TokensService tokensService
+    @Autowired ClientsService clientsService
+    @Autowired ResourcesService resourcesService
+    @Autowired TokensService tokensService
 
 
     @Bean ClientsController clientsController() {

@@ -25,15 +25,14 @@ package cz.cvut.zuul.oaas.restapi.controllers
 
 import cz.cvut.zuul.oaas.api.models.TokenInfo
 import cz.cvut.zuul.oaas.api.services.TokensService
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.oauth2.common.exceptions.InvalidTokenException
-
-import javax.inject.Inject
 
 import static java.lang.Math.min
 
 class TokenInfoControllerIT extends AbstractControllerIT {
 
-    @Inject TokenInfoController controller
+    @Autowired TokenInfoController controller
 
     def tokensService = Mock(TokensService)
 

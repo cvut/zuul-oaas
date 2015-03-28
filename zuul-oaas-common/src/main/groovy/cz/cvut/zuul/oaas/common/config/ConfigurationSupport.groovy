@@ -27,6 +27,7 @@ import cz.cvut.zuul.oaas.common.ext.StringAsBoolean
 import groovy.transform.CompileStatic
 import org.springframework.beans.factory.FactoryBean
 import org.springframework.beans.factory.InitializingBean
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer
 import org.springframework.core.env.Environment
@@ -34,13 +35,11 @@ import org.springframework.core.io.ClassPathResource
 import org.springframework.core.io.Resource
 import org.springframework.core.io.ResourceLoader
 
-import javax.inject.Inject
-
 @CompileStatic
 trait ConfigurationSupport {
 
-    @Inject ResourceLoader resourceLoader
-    @Inject Environment env
+    @Autowired ResourceLoader resourceLoader
+    @Autowired Environment env
 
     private ConfigurableListableBeanFactory beanFactory
 
@@ -55,7 +54,7 @@ trait ConfigurationSupport {
         new Properties()
     }
 
-    @Inject
+    @Autowired
     void __initialize(ConfigurableListableBeanFactory beanFactory) {
         this.beanFactory = beanFactory
         loadProperties()

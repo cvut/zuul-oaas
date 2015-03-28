@@ -25,12 +25,11 @@ package cz.cvut.zuul.oaas.restapi.controllers
 
 import cz.cvut.zuul.oaas.api.models.ClientDTO
 import cz.cvut.zuul.oaas.api.services.ClientsService
-
-import javax.inject.Inject
+import org.springframework.beans.factory.annotation.Autowired
 
 class ClientsControllerIT extends AbstractControllerIT {
 
-    @Inject ClientsController controller
+    @Autowired ClientsController controller
 
     def clientsService = Mock(ClientsService)
 

@@ -26,6 +26,7 @@ package cz.cvut.zuul.oaas.restapi.controllers
 import cz.cvut.zuul.oaas.api.test.ApiObjectFactory
 import cz.cvut.zuul.oaas.restapi.config.TestContextConfig
 import groovy.json.JsonSlurper
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.mock.web.MockHttpServletResponse
 import org.springframework.test.context.ContextConfiguration
@@ -37,8 +38,6 @@ import org.springframework.test.web.servlet.request.RequestPostProcessor
 import org.springframework.web.bind.annotation.RequestMapping
 import spock.lang.Specification
 
-import javax.inject.Inject
-
 @WebAppConfiguration
 @ContextConfiguration(classes=TestContextConfig)
 abstract class AbstractControllerIT extends Specification {
@@ -48,7 +47,7 @@ abstract class AbstractControllerIT extends Specification {
     @Delegate
     static ApiObjectFactory factory = new ApiObjectFactory()
 
-    @Inject MockMvc mockMvc
+    @Autowired MockMvc mockMvc
 
     def baseUri
 
