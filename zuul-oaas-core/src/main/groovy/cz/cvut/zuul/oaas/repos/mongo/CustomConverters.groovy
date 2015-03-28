@@ -31,6 +31,7 @@ import groovy.transform.CompileStatic
 import org.springframework.core.convert.converter.GenericConverter
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
+import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.oauth2.provider.OAuth2Authentication
 import org.springframework.security.oauth2.provider.OAuth2Request
@@ -117,6 +118,14 @@ interface CustomConverters {
             authorities: authorities ?: [] as Collection
         )
         new UsernamePasswordAuthenticationToken(principal, null, authorities)
+    }
+
+    ConverterAdapter StringToGrantedAuthority = createConverter String, GrantedAuthority, {
+        new SimpleGrantedAuthority(it)
+    }
+
+    ConverterAdapter GrantedAuthorityToString = createConverter GrantedAuthority, String, {
+        it.authority
     }
 
 
