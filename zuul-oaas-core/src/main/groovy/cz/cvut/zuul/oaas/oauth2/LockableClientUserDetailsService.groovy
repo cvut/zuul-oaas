@@ -28,10 +28,8 @@ import groovy.util.logging.Slf4j
 import org.springframework.security.core.userdetails.User
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
+import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.security.crypto.password.PasswordEncoder
-import org.springframework.security.oauth2.common.exceptions.OAuth2Exception
-
-import static org.springframework.security.oauth2.common.exceptions.OAuth2Exception.INVALID_CLIENT
 
 /**
  * Service for populating OAuth2 Client as "UserDetails" that implements
@@ -56,7 +54,7 @@ class LockableClientUserDetailsService implements UserDetailsService {
         def client = clientsRepo.findOne(clientId)
 
         if (!client) {
-            throw OAuth2Exception.create(INVALID_CLIENT, "No such client found with id = ${clientId}")
+            throw new UsernameNotFoundException("No such client found with id = ${clientId}")
         }
         if (client.locked) {
             log.info 'Locked client loaded: {}', client

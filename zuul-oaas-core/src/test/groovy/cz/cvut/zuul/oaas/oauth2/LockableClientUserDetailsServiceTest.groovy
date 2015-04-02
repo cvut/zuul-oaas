@@ -27,8 +27,8 @@ import cz.cvut.zuul.oaas.models.Client
 import cz.cvut.zuul.oaas.repos.ClientsRepo
 import cz.cvut.zuul.oaas.test.CoreObjectFactory
 import org.springframework.security.core.userdetails.User
+import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.security.crypto.password.PasswordEncoder
-import org.springframework.security.oauth2.common.exceptions.InvalidClientException
 import spock.lang.Specification
 
 @Mixin(CoreObjectFactory)
@@ -74,12 +74,12 @@ class LockableClientUserDetailsServiceTest extends Specification {
             secret << [null, '']
     }
 
-    def "loadUserByUsername: throws InvalidClientException when no client is found"() {
+    def "loadUserByUsername: throws UsernameNotFoundException when no client is found"() {
         setup:
             repo.findOne(_) >> null
         when:
             service.loadUserByUsername('foo')
         then:
-            thrown InvalidClientException
+            thrown UsernameNotFoundException
     }
 }
