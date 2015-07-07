@@ -32,16 +32,16 @@ import org.springframework.security.oauth2.provider.ClientDetailsService
 import static org.springframework.security.oauth2.common.exceptions.OAuth2Exception.INVALID_CLIENT
 
 /**
- * This is implementation of {@link ClientDetailsService} interface that
- * basically delegates calls to {@link cz.cvut.zuul.oaas.repos.ClientsRepo}.
+ * This class adapts {@link ClientsRepo} to the {@link ClientDetailsService}
+ * interface from the Spring Security OAuth framework.
  */
 @Slf4j
-class ClientDetailsServiceImpl implements ClientDetailsService {
+class ClientDetailsServiceAdapter implements ClientDetailsService {
 
     final ClientsRepo clientsRepo
 
 
-    ClientDetailsServiceImpl(ClientsRepo clientsRepo) {
+    ClientDetailsServiceAdapter(ClientsRepo clientsRepo) {
         this.clientsRepo = clientsRepo
     }
 

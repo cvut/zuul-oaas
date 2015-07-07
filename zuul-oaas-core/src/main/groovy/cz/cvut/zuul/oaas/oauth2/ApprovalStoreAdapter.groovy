@@ -23,36 +23,48 @@
  */
 package cz.cvut.zuul.oaas.oauth2
 
-import cz.cvut.zuul.oaas.models.PersistableAuthorizationCode
-import cz.cvut.zuul.oaas.repos.AuthorizationCodesRepo
+import cz.cvut.zuul.oaas.models.PersistableApproval
+import cz.cvut.zuul.oaas.repos.ApprovalsRepo
 import groovy.util.logging.Slf4j
-import org.springframework.security.oauth2.provider.OAuth2Authentication
-import org.springframework.security.oauth2.provider.code.RandomValueAuthorizationCodeServices
+import org.springframework.security.oauth2.provider.approval.Approval
+import org.springframework.security.oauth2.provider.approval.ApprovalStore
 
+/**
+ * This class adapts {@link ApprovalsRepo} to the {@link ApprovalStore}
+ * interface from the Spring Security OAuth framework.
+ */
 @Slf4j
-class AuthorizationCodeServicesImpl extends RandomValueAuthorizationCodeServices {
+class ApprovalStoreAdapter implements ApprovalStore {
 
-    final AuthorizationCodesRepo oauthCodesRepo
+    final ApprovalsRepo approvalRepo
 
 
-    AuthorizationCodeServicesImpl(AuthorizationCodesRepo oauthCodesRepo) {
-        this.oauthCodesRepo = oauthCodesRepo
+    ApprovalStoreAdapter(ApprovalsRepo approvalRepo) {
+        this.approvalRepo = approvalRepo
     }
 
 
-    void store(String code, OAuth2Authentication authentication) {
-        log.debug 'Storing authorization code: {}', code
-        oauthCodesRepo.save(new PersistableAuthorizationCode(code, authentication))
+    boolean addApprovals(Collection<Approval> approvals) {
+
+        def persistables = PersistableApproval.createFrom(approvals)
+
+        log.debug 'Storing approvals: {}', persistables
+        approvalRepo.saveAll(persistables)
+
+        return true
     }
 
-    OAuth2Authentication remove(String code) {
-        log.debug 'Consuming authorization code: {}', code
+    boolean revokeApprovals(Collection<Approval> approvals) {
+        log.debug "Revoking approvals: ${-> PersistableApproval.createFrom(approvals) }"
 
-        def result = oauthCodesRepo.findOne(code)
-
-        if (result) {
-            oauthCodesRepo.deleteById(code)
+        approvals.each {
+            approvalRepo.deleteById(it.userId, it.clientId, it.scope)
         }
-        result?.authentication
+        return true
+    }
+
+    Collection<Approval> getApprovals(String userId, String clientId) {
+
+        approvalRepo.findByUserIdAndClientId(userId, clientId)*.toOAuthApproval()
     }
 }

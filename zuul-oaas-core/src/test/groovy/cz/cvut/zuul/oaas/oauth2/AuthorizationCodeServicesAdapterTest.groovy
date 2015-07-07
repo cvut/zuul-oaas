@@ -23,50 +23,46 @@
  */
 package cz.cvut.zuul.oaas.oauth2
 
-import cz.cvut.zuul.oaas.models.PersistableApproval
-import cz.cvut.zuul.oaas.repos.ApprovalsRepo
+import cz.cvut.zuul.oaas.models.PersistableAuthorizationCode
+import cz.cvut.zuul.oaas.repos.AuthorizationCodesRepo
 import cz.cvut.zuul.oaas.test.CoreObjectFactory
-import org.springframework.security.oauth2.provider.approval.Approval
+import org.springframework.security.oauth2.provider.OAuth2Authentication
 import spock.lang.Specification
 
-class ApprovalStoreImplTest extends Specification {
+class AuthorizationCodeServicesAdapterTest extends Specification {
 
     @Delegate
     CoreObjectFactory factory = new CoreObjectFactory()
 
-    def repo = Mock(ApprovalsRepo)
-    def store = new ApprovalStoreImpl(repo)
+    def auth = build(OAuth2Authentication)
+    def repo = Mock(AuthorizationCodesRepo)
+    def service = new AuthorizationCodeServicesAdapter(repo)
 
-    def approvals = buildListOf(Approval)
 
-
-    def "addApprovals: saves the approval to the repo"() {
-        setup:
-            def expected = approvals.collect { new PersistableApproval(it) }
+    def "store: creates PersistableAuthorizationCode and saves it to the repo"() {
         when:
-            def result = store.addApprovals(approvals)
+            service.store('abcd', auth)
         then:
-            1 * repo.saveAll({ it == expected })
-            result
+            1 * repo.save({ PersistableAuthorizationCode it ->
+                it.code == 'abcd' && it.authentication == auth
+            })
     }
 
-    def "revokeApprovals: deletes the approvals from the repo"() {
+    def "remove: finds authentication in the repo by the code, deletes and returns it"() {
         when:
-            def result = store.revokeApprovals(approvals)
+            def result = service.remove('abcd')
         then:
-            approvals.each {
-                1 * repo.deleteById(it.userId, it.clientId, it.scope)
-            }
-            result
+            1 * repo.findOne('abcd') >> new PersistableAuthorizationCode('abcd', auth)
+        then:
+            1 * repo.deleteById('abcd')
+            result == auth
     }
 
-    def "getApprovals: finds approvals in the repo by the userId and clientId and returns it"() {
-        setup:
-            def persApprovals = buildListOf(PersistableApproval)
+    def "remove: returns null when the code doesn't exist in the repo"() {
         when:
-            def result = store.getApprovals('flynn', 'abc')
+            def result = service.remove('unknown')
         then:
-            1 * repo.findByUserIdAndClientId('flynn', 'abc') >> persApprovals
-            result == persApprovals*.toOAuthApproval()
+            1 * repo.findOne('unknown') >> null
+            result == null
     }
 }

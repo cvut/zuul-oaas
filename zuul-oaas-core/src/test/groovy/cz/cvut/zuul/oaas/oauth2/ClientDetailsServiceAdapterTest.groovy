@@ -23,46 +23,36 @@
  */
 package cz.cvut.zuul.oaas.oauth2
 
-import cz.cvut.zuul.oaas.models.PersistableAuthorizationCode
-import cz.cvut.zuul.oaas.repos.AuthorizationCodesRepo
+import cz.cvut.zuul.oaas.models.Client
+import cz.cvut.zuul.oaas.repos.ClientsRepo
 import cz.cvut.zuul.oaas.test.CoreObjectFactory
-import org.springframework.security.oauth2.provider.OAuth2Authentication
+import org.springframework.security.oauth2.common.exceptions.InvalidClientException
 import spock.lang.Specification
 
-class AuthorizationCodeServicesImplTest extends Specification {
+@Mixin(CoreObjectFactory)
+class ClientDetailsServiceAdapterTest extends Specification {
 
-    @Delegate
-    CoreObjectFactory factory = new CoreObjectFactory()
-
-    def auth = build(OAuth2Authentication)
-    def repo = Mock(AuthorizationCodesRepo)
-    def service = new AuthorizationCodeServicesImpl(repo)
+    def repo = Mock(ClientsRepo)
+    def service = new ClientDetailsServiceAdapter(repo)
 
 
-    def "store: creates PersistableAuthorizationCode and saves it to the repo"() {
+    def "loadClientByClientId: returns client from the repository"() {
+        given:
+            def expected = build(Client)
+            def clientId = expected.clientId
         when:
-            service.store('abcd', auth)
+            def actual = service.loadClientByClientId(clientId)
         then:
-            1 * repo.save({ PersistableAuthorizationCode it ->
-                it.code == 'abcd' && it.authentication == auth
-            })
+            1 * repo.findOne(clientId) >> expected
+            actual == expected
     }
 
-    def "remove: finds authentication in the repo by the code, deletes and returns it"() {
+    def "loadClientByClientId: throws InvalidClientException when no client is found"() {
+        setup:
+            repo.findOne(_) >> null
         when:
-            def result = service.remove('abcd')
+            service.loadClientByClientId('foo')
         then:
-            1 * repo.findOne('abcd') >> new PersistableAuthorizationCode('abcd', auth)
-        then:
-            1 * repo.deleteById('abcd')
-            result == auth
-    }
-
-    def "remove: returns null when the code doesn't exist in the repo"() {
-        when:
-            def result = service.remove('unknown')
-        then:
-            1 * repo.findOne('unknown') >> null
-            result == null
+            thrown InvalidClientException
     }
 }

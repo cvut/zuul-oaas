@@ -25,46 +25,48 @@ package cz.cvut.zuul.oaas.oauth2
 
 import cz.cvut.zuul.oaas.models.PersistableApproval
 import cz.cvut.zuul.oaas.repos.ApprovalsRepo
-import groovy.util.logging.Slf4j
+import cz.cvut.zuul.oaas.test.CoreObjectFactory
 import org.springframework.security.oauth2.provider.approval.Approval
-import org.springframework.security.oauth2.provider.approval.ApprovalStore
+import spock.lang.Specification
 
-/**
- * This is implementation of {@link ApprovalStore} interface that basically
- * delegates calls to {@link ApprovalsRepo}.
- */
-@Slf4j
-class ApprovalStoreImpl implements ApprovalStore {
+class ApprovalStoreAdapterTest extends Specification {
 
-    final ApprovalsRepo approvalRepo
+    @Delegate
+    CoreObjectFactory factory = new CoreObjectFactory()
+
+    def repo = Mock(ApprovalsRepo)
+    def store = new ApprovalStoreAdapter(repo)
+
+    def approvals = buildListOf(Approval)
 
 
-    ApprovalStoreImpl(ApprovalsRepo approvalRepo) {
-        this.approvalRepo = approvalRepo
+    def "addApprovals: saves the approval to the repo"() {
+        setup:
+            def expected = approvals.collect { new PersistableApproval(it) }
+        when:
+            def result = store.addApprovals(approvals)
+        then:
+            1 * repo.saveAll({ it == expected })
+            result
     }
 
-
-    boolean addApprovals(Collection<Approval> approvals) {
-
-        def persistables = PersistableApproval.createFrom(approvals)
-
-        log.debug 'Storing approvals: {}', persistables
-        approvalRepo.saveAll(persistables)
-
-        return true
+    def "revokeApprovals: deletes the approvals from the repo"() {
+        when:
+            def result = store.revokeApprovals(approvals)
+        then:
+            approvals.each {
+                1 * repo.deleteById(it.userId, it.clientId, it.scope)
+            }
+            result
     }
 
-    boolean revokeApprovals(Collection<Approval> approvals) {
-        log.debug "Revoking approvals: ${-> PersistableApproval.createFrom(approvals) }"
-
-        approvals.each {
-            approvalRepo.deleteById(it.userId, it.clientId, it.scope)
-        }
-        return true
-    }
-
-    Collection<Approval> getApprovals(String userId, String clientId) {
-
-        approvalRepo.findByUserIdAndClientId(userId, clientId)*.toOAuthApproval()
+    def "getApprovals: finds approvals in the repo by the userId and clientId and returns it"() {
+        setup:
+            def persApprovals = buildListOf(PersistableApproval)
+        when:
+            def result = store.getApprovals('flynn', 'abc')
+        then:
+            1 * repo.findByUserIdAndClientId('flynn', 'abc') >> persApprovals
+            result == persApprovals*.toOAuthApproval()
     }
 }

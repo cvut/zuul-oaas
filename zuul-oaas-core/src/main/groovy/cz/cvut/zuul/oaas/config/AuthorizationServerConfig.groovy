@@ -24,10 +24,10 @@
 package cz.cvut.zuul.oaas.config
 
 import cz.cvut.zuul.oaas.common.config.ConfigurationSupport
-import cz.cvut.zuul.oaas.oauth2.AuthorizationCodeServicesImpl
-import cz.cvut.zuul.oaas.oauth2.ClientDetailsServiceImpl
+import cz.cvut.zuul.oaas.oauth2.AuthorizationCodeServicesAdapter
+import cz.cvut.zuul.oaas.oauth2.ClientDetailsServiceAdapter
 import cz.cvut.zuul.oaas.oauth2.LockableClientUserApprovalHandler
-import cz.cvut.zuul.oaas.oauth2.TokenStoreImpl
+import cz.cvut.zuul.oaas.oauth2.TokenStoreAdapter
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
@@ -188,14 +188,14 @@ class AuthorizationServerConfig implements ConfigurationSupport {
     }
 
     @Bean clientDetailsService() {
-        new ClientDetailsServiceImpl( repos.clientsRepo() )
+        new ClientDetailsServiceAdapter( repos.clientsRepo() )
     }
 
     @Bean @Lazy authorizationCodeServices() {
-        new AuthorizationCodeServicesImpl( repos.authorizationCodesRepo() )
+        new AuthorizationCodeServicesAdapter( repos.authorizationCodesRepo() )
     }
 
     @Bean tokenStore() {
-        new TokenStoreImpl( repos.accessTokensRepo(), repos.refreshTokensRepo() )
+        new TokenStoreAdapter( repos.accessTokensRepo(), repos.refreshTokensRepo() )
     }
 }

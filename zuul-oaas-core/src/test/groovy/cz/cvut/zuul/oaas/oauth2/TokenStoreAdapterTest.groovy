@@ -34,7 +34,7 @@ import org.springframework.security.oauth2.provider.OAuth2Authentication
 import spock.lang.Specification
 
 @Mixin(CoreObjectFactory)
-class TokenStoreImplTest extends Specification {
+class TokenStoreAdapterTest extends Specification {
 
     def accessTokensRepo = Mock(AccessTokensRepo)
     def refreshTokensRepo = Mock(RefreshTokensRepo)
@@ -45,7 +45,7 @@ class TokenStoreImplTest extends Specification {
     def persAccessToken = new PersistableAccessToken(accessToken, oauthAuth)
     def persRefreshToken = new PersistableRefreshToken(refreshToken, oauthAuth)
 
-    def store = new TokenStoreImpl(accessTokensRepo, refreshTokensRepo)
+    def store = new TokenStoreAdapter(accessTokensRepo, refreshTokensRepo)
 
 
     //////// Delegate to AccessTokens Repository ////////

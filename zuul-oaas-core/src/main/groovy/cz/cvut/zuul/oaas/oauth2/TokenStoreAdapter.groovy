@@ -34,17 +34,17 @@ import org.springframework.security.oauth2.provider.OAuth2Authentication
 import org.springframework.security.oauth2.provider.token.TokenStore
 
 /**
- * This is a façade for the {@link AccessTokensRepo} and {@link RefreshTokensRepo}
- * that implements {@linkplain TokenStore} interface.
+ * This class adapts {@link AccessTokensRepo} and {@link RefreshTokensRepo} to
+ * the {@link TokenStore} interface from the Spring Security OAuth framework.
  */
 @Slf4j
-class TokenStoreImpl implements TokenStore {
+class TokenStoreAdapter implements TokenStore {
 
     final AccessTokensRepo accessTokensRepo
     final RefreshTokensRepo refreshTokensRepo
 
 
-    TokenStoreImpl(AccessTokensRepo accessTokensRepo, RefreshTokensRepo refreshTokensRepo) {
+    TokenStoreAdapter(AccessTokensRepo accessTokensRepo, RefreshTokensRepo refreshTokensRepo) {
         this.accessTokensRepo = accessTokensRepo
         this.refreshTokensRepo = refreshTokensRepo
     }
