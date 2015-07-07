@@ -33,6 +33,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.oauth2.common.*
 import org.springframework.security.oauth2.provider.OAuth2Authentication
 import org.springframework.security.oauth2.provider.OAuth2Request
+import org.springframework.security.oauth2.provider.approval.Approval
 
 import static cz.cvut.zuul.oaas.test.CustomGeneratorSamples.anyEmail
 import static net.java.quickcheck.generator.CombinedGeneratorSamples.anyMap
@@ -177,6 +178,21 @@ class CoreObjectFactory extends ObjectFactory {
 
         registerBuilder(Scope) {
             new Scope(anyLetterString(5, 10), anyLetterString(0, 10), anyBoolean())
+        }
+
+        registerBuilder(PersistableApproval) { values ->
+            def approval = new PersistableApproval(
+                anyLetterString(5, 10), anyLetterString(5, 10), anyLetterString(5, 10))
+
+            ObjectFeeder.populate(approval)
+            values.each { prop, value ->
+                approval[prop] = value
+            }
+            return approval
+        }
+
+        registerBuilder(Approval) { values ->
+            build(PersistableApproval, values).toOAuthApproval()
         }
 
         //////// Superclasses ////////

@@ -27,12 +27,14 @@ import com.mongodb.*
 import cz.cvut.zuul.oaas.common.config.ConfigurationSupport
 import cz.cvut.zuul.oaas.models.Resource
 import cz.cvut.zuul.oaas.repos.AccessTokensRepo
+import cz.cvut.zuul.oaas.repos.ApprovalsRepo
 import cz.cvut.zuul.oaas.repos.AuthorizationCodesRepo
 import cz.cvut.zuul.oaas.repos.ClientsRepo
 import cz.cvut.zuul.oaas.repos.RefreshTokensRepo
 import cz.cvut.zuul.oaas.repos.ResourcesRepo
 import cz.cvut.zuul.oaas.repos.mongo.CustomConverters
 import cz.cvut.zuul.oaas.repos.mongo.MongoAccessTokensRepo
+import cz.cvut.zuul.oaas.repos.mongo.MongoApprovalsRepo
 import cz.cvut.zuul.oaas.repos.mongo.MongoAuthorizationCodesRepo
 import cz.cvut.zuul.oaas.repos.mongo.MongoClientsRepo
 import cz.cvut.zuul.oaas.repos.mongo.MongoRefreshTokensRepo
@@ -121,6 +123,10 @@ class MongoPersistenceConfig extends AbstractMongoConfiguration
 
     @Bean AuthorizationCodesRepo authorizationCodesRepo() {
         new MongoAuthorizationCodesRepo( mongoTemplate() )
+    }
+
+    @Bean ApprovalsRepo approvalsRepo() {
+        new MongoApprovalsRepo( mongoTemplate() )
     }
 
 

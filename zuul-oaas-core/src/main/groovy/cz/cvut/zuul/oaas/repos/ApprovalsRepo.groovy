@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2014 Czech Technical University in Prague.
+ * Copyright 2013-2015 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,27 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package cz.cvut.zuul.oaas.config
+package cz.cvut.zuul.oaas.repos
 
-import cz.cvut.zuul.oaas.repos.AccessTokensRepo
-import cz.cvut.zuul.oaas.repos.ApprovalsRepo
-import cz.cvut.zuul.oaas.repos.AuthorizationCodesRepo
-import cz.cvut.zuul.oaas.repos.ClientsRepo
-import cz.cvut.zuul.oaas.repos.RefreshTokensRepo
-import cz.cvut.zuul.oaas.repos.ResourcesRepo
-import org.springframework.context.annotation.Bean
+import cz.cvut.zuul.oaas.models.PersistableApproval
 
-interface PersistenceBeans {
+interface ApprovalsRepo extends BaseRepository<PersistableApproval, Serializable> {
 
-    @Bean ClientsRepo clientsRepo()
+    PersistableApproval findOne(String userId, String clientId, String scope)
 
-    @Bean AccessTokensRepo accessTokensRepo()
+    Collection<PersistableApproval> findByUserIdAndClientId(String userId, String clientId)
 
-    @Bean RefreshTokensRepo refreshTokensRepo()
+    boolean exists(String userId, String clientId, String scope)
 
-    @Bean ResourcesRepo resourcesRepo()
-
-    @Bean AuthorizationCodesRepo authorizationCodesRepo()
-
-    @Bean ApprovalsRepo approvalsRepo()
+    void deleteById(String userId, String clientId, String scope)
 }
