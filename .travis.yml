@@ -16,11 +16,7 @@ cache:
 # Travis provides older Maven 3.2.5 that contains some bug causing incorrect
 # dependency resolution when using profiles and alternative dependency types.
 before_install:
-  - wget -P ~/.m2/ -nc http://mirror.hosting90.cz/apache/maven/maven-3/3.3.1/binaries/apache-maven-3.3.1-bin.tar.gz
-  - tar -xzf ~/.m2/apache-maven-3.3.1-bin.tar.gz -C ~/.m2
-  - export PATH=$HOME/.m2/apache-maven-3.3.1/bin:$PATH
-  - echo "M2_HOME=$HOME/.m2/apache-maven-3.3.1" >> ~/.mavenrc
-  - mvn --version
+  - script/travis-install-maven 3.3.1
 
 # Just resolve and install dependencies, don't build or run tests.
 install:
@@ -36,11 +32,5 @@ script:
   - mvn install verify -P $PROFILE -B
 
 # Analyze code coverage and report it to Coveralls.
-# Note: sed is a workaround for some bug in Cobertura that sometimes reports line
-# number 0 and coveralls-maven that can't handle it...
-after_success: |
-  if [[ "$TRAVIS_JDK_VERSION" == 'openjdk7' && "$PROFILE" == 'no-indy' ]]; then
-      mvn cobertura:cobertura-integration-test -P no-indy -B \
-          && sed -i -s 's/\(line number\)="0"/\1="1"/g' target/site/cobertura/coverage.xml \
-          && mvn coveralls:report -P no-indy -N -B
-  fi
+after_success:
+  - script/travis-code-coverage

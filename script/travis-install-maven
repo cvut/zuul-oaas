@@ -1,0 +1,18 @@
+#!/bin/bash
+
+APACHE_MIRROR_URL="http://mirror.hosting90.cz/apache"
+
+version="$1"
+
+echo "Installing Maven ${version} ..."
+
+# Download and extract binary package.
+wget -P ~/.m2/ -nc "${APACHE_MIRROR_URL}/maven/maven-3/${version}/binaries/apache-maven-${version}-bin.tar.gz"
+tar -xzf ~/.m2/apache-maven-${version}-bin.tar.gz -C ~/.m2
+
+# Setup environment to use this maven version instead of the preinstalled one.
+mkdir -p ~/bin
+ln -fs ~/.m2/apache-maven-${version}/bin/mvn ~/bin/mvn
+echo "M2_HOME=$HOME/.m2/apache-maven-${version}" >> ~/.mavenrc
+
+mvn --version
