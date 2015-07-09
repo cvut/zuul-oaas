@@ -1,0 +1,17 @@
+#!/bin/sh
+# This script follows the GitHub's normalized pattern
+# http://githubengineering.com/scripts-to-rule-them-all
+
+java_version="$(java -version 2>&1 | sed -nE 's/^(java|openjdk) version[^0-9]*([0-9a-z_.-]+).*/\2/p' || '')"
+if [[ "$java_version" != 1.[789]* ]]; then
+    echo "ERROR: Java 7 or higher is required." >&2
+    echo "You can download JDK from http://www.oracle.com/technetwork/java/javase/downloads/" >&2
+fi
+
+mvn_version="$(mvn --version 2>&1 | sed -nE 's/^Apache Maven ([0-9a-z_.-]+).*/\1/p' || '')"
+if [[ "$mvn_version" != 3.[3-9]* ]]; then
+    echo "ERROR: Maven 3.3 or higher is required." >&2
+    echo "You can download Maven from https://maven.apache.org/download.cgi" >&2
+fi
+
+echo "==> All system requirements are satisfied."
