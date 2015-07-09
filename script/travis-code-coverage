@@ -1,11 +1,17 @@
 #!/bin/bash
 
+# Exit if any statement returns a non-true return value.
+set -e
+
 if [[ "$TRAVIS_JDK_VERSION" != 'openjdk7' || "$PROFILE" != 'no-indy' ]]; then
     echo "Skipping code-coverage for this job."; exit 0
 fi
 
-# Note: sed is a workaround for some bug in Cobertura that sometimes reports line
+mvn cobertura:cobertura-integration-test -P $PROFILE --batch-mode
+
+# This is a workaround for some bug in Cobertura that sometimes reports line
 # number 0 and coveralls-maven that can't handle it...
-mvn cobertura:cobertura-integration-test -P $PROFILE --batch-mode \
-    && sed -i -s 's/\(line number\)="0"/\1="1"/g' target/site/cobertura/coverage.xml \
-    && mvn coveralls:report -P $PROFILE --non-recursive --batch-mode
+sed -i -s 's/\(line number\)="0"/\1="1"/g' target/site/cobertura/coverage.xml
+
+# Report results to the Coveralls service.
+mvn coveralls:report -P $PROFILE --non-recursive --batch-mode
