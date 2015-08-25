@@ -52,7 +52,7 @@ class ClientsControllerIT extends AbstractControllerIT {
             1 * clientsService.createClient(_ as ClientDTO) >> '123'
         when:
             perform POST('/').with {
-                content '{ "redirect_uri": "http://example.org" }'
+                content '{ "redirect_uris": ["http://example.org"] }'
             }
         then:
             response.status        == 201

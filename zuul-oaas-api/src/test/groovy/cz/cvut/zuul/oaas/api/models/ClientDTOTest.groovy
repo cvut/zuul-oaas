@@ -54,7 +54,7 @@ class ClientDTOTest extends Specification {
                 scope                  == input.scope
                 resource_ids           == input.resourceIds
                 authorized_grant_types == input.authorizedGrantTypes
-                redirect_uri           == input.registeredRedirectUri
+                redirect_uris          == input.redirectUris
                 authorities            == input.authorities
                 access_token_validity  == input.accessTokenValidity
                 refresh_token_validity == input.refreshTokenValidity
@@ -95,9 +95,9 @@ class ClientDTOTest extends Specification {
             'invalid'         | ['evil-grant']                                  || invalid
     }
 
-    void 'registeredRedirectUri should be #expected given #description URI'() {
+    void 'redirectUris should be #expected given #description URI'() {
         expect:
-            validate 'registeredRedirectUri', value, expected
+            validate 'redirectUris', value, expected
         where:
             description     | value                                     || expected
             'empty'         | []                                        || valid
@@ -111,7 +111,7 @@ class ClientDTOTest extends Specification {
     void 'should be valid given empty redirect URIs when grant type is not "authorization_code"'() {
         given:
             def client = new ClientDTO(
-                    registeredRedirectUri: [],
+                    redirectUris: [],
                     authorizedGrantTypes: ['client_credentials']
             )
         expect:
@@ -121,12 +121,12 @@ class ClientDTOTest extends Specification {
     void 'should be invalid given empty redirect URIs when grant type is "authorization_code"'() {
         given:
             def client = new ClientDTO(
-                    registeredRedirectUri: redirectUri,
+                    redirectUris: redirectUris,
                     authorizedGrantTypes: ['authorization_code']
             )
         expect:
             isInvalid client
         where:
-            redirectUri << [[], null]
+            redirectUris << [[], null]
     }
 }

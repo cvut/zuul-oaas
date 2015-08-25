@@ -155,6 +155,7 @@ class ClientsServiceImpl implements ClientsService {
                .registerConverter(new GrantedAuthorityConverter())
 
         factory.classMap(Client, ClientDTO)
+                .field('registeredRedirectUri', 'redirectUris')
                 .field('accessTokenValiditySeconds', 'accessTokenValidity')
                 .field('refreshTokenValiditySeconds', 'refreshTokenValidity')
                 .exclude('metaClass')

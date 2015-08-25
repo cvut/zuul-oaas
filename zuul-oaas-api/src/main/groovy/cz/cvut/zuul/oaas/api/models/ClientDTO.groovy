@@ -66,20 +66,17 @@ class ClientDTO implements Serializable {
 
     @EachSize(min = 5, max = 255)
     @EachValidURI(relative = false, fragment = false, message = '{validator.invalid_redirect_uri}')
-    @JsonProperty('redirect_uri')
     @JsonDeserialize(using = Jackson2ArrayOrStringDeserializer)
-    Collection<String> registeredRedirectUri
+    Collection<String> redirectUris
 
     @JsonDeserialize(using = Jackson2ArrayOrStringDeserializer)
     Collection<String> authorities
 
     //TODO
-    @JsonProperty('access_token_validity')
-    Integer accessTokenValiditySeconds
+    Integer accessTokenValidity
 
     //TODO
-    @JsonProperty('refresh_token_validity')
-    Integer refreshTokenValiditySeconds
+    Integer refreshTokenValidity
 
     String productName
 
@@ -91,6 +88,6 @@ class ClientDTO implements Serializable {
 
     @SuppressWarnings('GroovyUnusedDeclaration')
     boolean hasRedirectUri() {
-        registeredRedirectUri
+        redirectUris
     }
 }

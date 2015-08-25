@@ -33,7 +33,7 @@ This section groups **clients** resources.
             "authorization_code",
             "refresh_token"
         ],
-        "redirect_uri": [ "http://example.org" ],
+        "redirect_uris": [ "http://example.org" ],
         "authorities": [ "ROLE_CLIENT" ],
         "access_token_validity": 3600,
         "refresh_token_validity": 15552000,
@@ -94,7 +94,7 @@ To create a new Client provide a JSON object same as [Client][], but without *cl
             "authorization_code",
             "refresh_token"
         ],
-        "redirect_uri": [ "https://example.org" ],
+        "redirect_uris": [ "https://example.org" ],
         "authorities": [ "ROLE_CLIENT" ],
         "access_token_validity": 3600,
         "refresh_token_validity": 15552000,
@@ -265,7 +265,7 @@ This resource provides an extra information about the assigned [access tokens](h
             "client_locked": false,
             "product_name": "Simple Client",
             "scope": [ "urn:zuul:scope:sample.read" ],
-            "redirect_uri": "https://example.org",
+            "redirect_uris": "https://example.org",
             "resource_ids": []
         },
         "user_authentication": {

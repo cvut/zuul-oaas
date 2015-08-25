@@ -213,11 +213,12 @@ class ClientsServiceTest extends Specification {
     private void assertMapping(Client entity, ClientDTO dto) {
 
         assertThat( entity ).equalsTo( dto ).inAllPropertiesExcept(
-            'authorities', 'accessTokenValidity', 'refreshTokenValidity')
+            'authorities', 'accessTokenValidity', 'refreshTokenValidity', 'redirectUris')
 
         def entityAuthorities = entity.authorities ? entity.authorities*.toString() : []
         assert entity.accessTokenValiditySeconds == dto.accessTokenValidity
         assert entity.refreshTokenValiditySeconds == dto.refreshTokenValidity
+        assert entity.registeredRedirectUri as Set == dto.redirectUris as Set
         assert entityAuthorities as Set == dto.authorities as Set
     }
 }
