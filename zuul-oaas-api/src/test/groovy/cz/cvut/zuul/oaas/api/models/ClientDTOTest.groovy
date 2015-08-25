@@ -56,8 +56,8 @@ class ClientDTOTest extends Specification {
                 authorized_grant_types == input.authorizedGrantTypes
                 redirect_uri           == input.registeredRedirectUri
                 authorities            == input.authorities
-                access_token_validity  == input.accessTokenValiditySeconds
-                refresh_token_validity == input.refreshTokenValiditySeconds
+                access_token_validity  == input.accessTokenValidity
+                refresh_token_validity == input.refreshTokenValidity
                 product_name           == input.productName
                 client_locked          == input.locked
                 client_type            == input.clientType

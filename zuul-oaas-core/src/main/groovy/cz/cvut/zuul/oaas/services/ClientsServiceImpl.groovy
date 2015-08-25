@@ -155,8 +155,10 @@ class ClientsServiceImpl implements ClientsService {
                .registerConverter(new GrantedAuthorityConverter())
 
         factory.classMap(Client, ClientDTO)
-               .exclude('metaClass')
-               .byDefault().register()
+                .field('accessTokenValiditySeconds', 'accessTokenValidity')
+                .field('refreshTokenValiditySeconds', 'refreshTokenValidity')
+                .exclude('metaClass')
+                .byDefault().register()
 
         mapper = factory.mapperFacade
     }
