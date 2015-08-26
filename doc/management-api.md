@@ -37,7 +37,7 @@ This section groups **clients** resources.
         "authorities": [ "ROLE_CLIENT" ],
         "access_token_validity": 3600,
         "refresh_token_validity": 15552000,
-        "product_name": "Simple Client",
+        "display_name": "Simple Client",
         "client_locked": false,
         "client_type": "android"
     }
@@ -98,7 +98,7 @@ To create a new Client provide a JSON object same as [Client][], but without *cl
         "authorities": [ "ROLE_CLIENT" ],
         "access_token_validity": 3600,
         "refresh_token_validity": 15552000,
-        "product_name": "Simple Client",
+        "display_name": "Simple Client",
         "client_type": "android"
     }
     ```
@@ -263,7 +263,7 @@ This resource provides an extra information about the assigned [access tokens](h
         "client_authentication": {
             "client_id": "e12b71c4-e31f-4bd5-80bc-a6e341214430",
             "client_locked": false,
-            "product_name": "Simple Client",
+            "display_name": "Simple Client",
             "scope": [ "urn:zuul:scope:sample.read" ],
             "redirect_uris": "https://example.org",
             "resource_ids": []

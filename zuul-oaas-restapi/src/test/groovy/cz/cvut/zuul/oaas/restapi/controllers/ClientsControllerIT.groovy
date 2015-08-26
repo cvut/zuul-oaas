@@ -71,13 +71,13 @@ class ClientsControllerIT extends AbstractControllerIT {
     def 'PUT client'() {
         setup:
             1 * clientsService.updateClient({
-                it.productName == 'Skynet'
+                it.displayName == 'Skynet'
             })
         when:
             perform PUT('/123').with {
                 content """{
                         "client_id": "123",
-                        "product_name": "Skynet"
+                        "display_name": "Skynet"
                     }"""
             }
         then:

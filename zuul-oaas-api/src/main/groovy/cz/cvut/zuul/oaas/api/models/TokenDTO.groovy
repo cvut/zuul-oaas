@@ -41,7 +41,7 @@ class TokenDTO implements Serializable {
 
         String clientId
         Boolean clientLocked
-        String productName
+        String displayName
         Set<String> scope
         String redirectUri
         Set<String> resourceIds

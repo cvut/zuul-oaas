@@ -78,7 +78,7 @@ class ClientDTO implements Serializable {
     //TODO
     Integer refreshTokenValidity
 
-    String productName
+    String displayName
 
     @JsonProperty('client_locked')
     boolean locked

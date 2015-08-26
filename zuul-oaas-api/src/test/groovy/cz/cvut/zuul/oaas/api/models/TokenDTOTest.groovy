@@ -49,7 +49,7 @@ class TokenDTOTest extends Specification {
                 with (client_authentication) {
                     client_id     == clientAuth.clientId
                     client_locked == clientAuth.clientLocked
-                    product_name  == clientAuth.productName
+                    display_name  == clientAuth.displayName
                     scope         == clientAuth.scope as List
                     redirect_uri  == clientAuth.redirectUri
                     resource_ids  == clientAuth.resourceIds as List

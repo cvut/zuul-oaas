@@ -36,7 +36,7 @@ import org.springframework.security.oauth2.provider.ClientDetails
 @TypeAlias('Client')
 @Document(collection = 'clients')
 @EqualsAndHashCode(includes = 'clientId')
-@ToString(includes = ['clientId', 'productName'], includePackage = false)
+@ToString(includes = ['clientId', 'displayName'], includePackage = false)
 class Client implements ClientDetails {
 
     private static final long serialVersionUID = 2L
@@ -69,7 +69,7 @@ class Client implements ClientDetails {
     Integer refreshTokenValiditySeconds
 
     @Field('name')
-    String productName
+    String displayName
 
     @Field('locked')
     boolean locked = false
@@ -85,7 +85,7 @@ class Client implements ClientDetails {
             this.properties = prototype.properties
         }
         def addl = prototype.additionalInformation ?: [:]
-        productName = addl.product_name
+        displayName = addl.display_name
         locked = addl.locked
         clientType = addl.client_type
     }
@@ -126,7 +126,7 @@ class Client implements ClientDetails {
 
     Map<String, Object> getAdditionalInformation() {
         [
-            product_name: productName,
+            display_name: displayName,
             locked: locked,
             client_type: clientType
         ]

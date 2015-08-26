@@ -58,7 +58,7 @@ class ClientDTOTest extends Specification {
                 authorities            == input.authorities
                 access_token_validity  == input.accessTokenValidity
                 refresh_token_validity == input.refreshTokenValidity
-                product_name           == input.productName
+                display_name           == input.displayName
                 client_locked          == input.locked
                 client_type            == input.clientType
             }
