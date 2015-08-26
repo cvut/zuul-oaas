@@ -71,7 +71,7 @@ public class TokensServiceImpl implements TokensService {
 
         def dto = mapper.map(accessToken, TokenDTO)
         // TODO what is the purpose?
-        dto.clientAuthentication.clientLocked = client.locked
+        dto.clientAuthentication.locked = client.locked
         dto.clientAuthentication.displayName = client.displayName
 
         return dto

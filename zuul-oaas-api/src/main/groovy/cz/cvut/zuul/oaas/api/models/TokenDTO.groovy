@@ -40,7 +40,7 @@ class TokenDTO implements Serializable {
     static class ClientAuthentication implements Serializable {
 
         String clientId
-        Boolean clientLocked
+        Boolean locked
         String displayName
         Set<String> scope
         String redirectUri

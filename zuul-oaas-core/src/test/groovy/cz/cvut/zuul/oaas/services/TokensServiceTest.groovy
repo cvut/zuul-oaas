@@ -70,7 +70,7 @@ class TokensServiceTest extends Specification {
             actual instanceof TokenDTO
             actual.clientAuthentication.with {
                 displayName == client.displayName
-                clientLocked == client.locked
+                locked == client.locked
             }
             // other fields are asserted in mapping test
     }
@@ -179,7 +179,7 @@ class TokensServiceTest extends Specification {
 
         assertThat( entity.authentication.getOAuth2Request() )
                 .equalsTo( dto.clientAuthentication )
-                .inAllPropertiesExcept( 'displayName', 'clientLocked' )
+                .inAllPropertiesExcept( 'displayName', 'locked' )
 
         assertThat( entity.authentication.userAuthentication.principal )
                 .equalsTo( dto.userAuthentication )

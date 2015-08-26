@@ -80,7 +80,6 @@ class ClientDTO implements Serializable {
 
     String displayName
 
-    @JsonProperty('client_locked')
     boolean locked
 
     String clientType

@@ -38,7 +38,7 @@ This section groups **clients** resources.
         "access_token_validity": 3600,
         "refresh_token_validity": 15552000,
         "display_name": "Simple Client",
-        "client_locked": false,
+        "locked": false,
         "client_type": "android"
     }
     ```
@@ -262,7 +262,7 @@ This resource provides an extra information about the assigned [access tokens](h
         "token_value": "a62b78c4-e32f-4bd5-80bc-a6e441144930",
         "client_authentication": {
             "client_id": "e12b71c4-e31f-4bd5-80bc-a6e341214430",
-            "client_locked": false,
+            "locked": false,
             "display_name": "Simple Client",
             "scope": [ "urn:zuul:scope:sample.read" ],
             "redirect_uris": "https://example.org",
