@@ -82,8 +82,6 @@ class ClientDTO implements Serializable {
 
     boolean locked
 
-    String clientType
-
 
     @SuppressWarnings('GroovyUnusedDeclaration')
     boolean hasRedirectUri() {

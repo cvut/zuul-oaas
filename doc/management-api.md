@@ -38,8 +38,7 @@ This section groups **clients** resources.
         "access_token_validity": 3600,
         "refresh_token_validity": 15552000,
         "display_name": "Simple Client",
-        "locked": false,
-        "client_type": "android"
+        "locked": false
     }
     ```
 
@@ -98,8 +97,7 @@ To create a new Client provide a JSON object same as [Client][], but without *cl
         "authorities": [ "ROLE_CLIENT" ],
         "access_token_validity": 3600,
         "refresh_token_validity": 15552000,
-        "display_name": "Simple Client",
-        "client_type": "android"
+        "display_name": "Simple Client"
     }
     ```
 

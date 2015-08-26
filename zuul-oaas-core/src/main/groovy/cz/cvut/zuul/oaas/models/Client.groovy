@@ -74,9 +74,6 @@ class Client implements ClientDetails {
     @Field('locked')
     boolean locked = false
 
-    @Field('type')
-    String clientType
-
 
     Client() { }
 
@@ -87,7 +84,6 @@ class Client implements ClientDetails {
         def addl = prototype.additionalInformation ?: [:]
         displayName = addl.display_name
         locked = addl.locked
-        clientType = addl.client_type
     }
 
 
@@ -127,8 +123,7 @@ class Client implements ClientDetails {
     Map<String, Object> getAdditionalInformation() {
         [
             display_name: displayName,
-            locked: locked,
-            client_type: clientType
+            locked: locked
         ]
     }
 }

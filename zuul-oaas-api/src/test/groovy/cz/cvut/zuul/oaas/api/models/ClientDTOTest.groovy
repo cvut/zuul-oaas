@@ -60,7 +60,6 @@ class ClientDTOTest extends Specification {
                 refresh_token_validity == input.refreshTokenValidity
                 display_name           == input.displayName
                 locked                 == input.locked
-                client_type            == input.clientType
             }
         when:
             def readed = mapper.readValue(output, ClientDTO)
