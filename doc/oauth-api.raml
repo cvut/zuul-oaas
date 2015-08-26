@@ -1,0 +1,184 @@
+#%RAML 0.8
+
+title: Zuul OAAS - OAuth API
+protocols: [ HTTPS ]
+mediaType: application/json
+
+securitySchemes:
+  - client_password:
+      description: |
+        Client is authenticated using the client_id and client_secret issued during the
+        registration process.
+      type: Basic Authentication
+      describedBy:
+        headers:
+          Authorization:
+            description: |
+              The value must consist of the string `Basic` followed by a single space and
+              Base64 encoded credentials. The credentials is a pair of the `client_id` and
+              `client_secret` encoded using the `application/x-www-form-urlencoded` encoding
+              algorithm and joined by a colon.
+            type: string
+            example: Basic Y2xpZW50X2lkOmNsaWVudF9zZWNyZXQ=
+        responses:
+          401:
+            description: The provided client_id or client_secret is invalid.
+
+/oauth/authorize:
+  displayName: Authorization endpoint
+  description: |
+    Endpoint used to interact with the resource owner and obtain an authorization grant. It is
+    specified in OAuth 2.0 ([RFC 6749, sec. 3.1](http://tools.ietf.org/html/rfc6749#section-3.1)).
+  get:
+    queryParameters:
+      response_type:
+        description: |
+          Use "code" for requesting an authorization code, or "token" for requesting an access
+          token (implicit grant).
+        type: string
+        enum: [ "code", "token" ]
+        required: true
+      client_id:
+        description: |
+          Indicates the client that is making the request. The client ID is obtained during the
+          client registration.
+        required: true
+      redirect_uri:
+        description: |
+          URL where users will be sent after authorization. The value of this parameter must
+          exactly match one of the values registered on OAAS.
+        required: true
+      scope:
+        description: |
+          A space delimited set of scopes the client requests. It might be all scopes registered
+          for the client on OAAS or just a subset of them. If not provided then all registered
+          scopes will be issued.
+        example: urn:zuul:oauth:sample:read
+        required: false
+      state:
+        description: |
+          A string value used by the client to maintain state between the request and callback.
+          The OAAS includes this value when redirecting the user back to the client. It should be
+          used for preventing cross-site request forgery attacks.
+        required: false
+    responses:
+      302:
+        description: |
+          If the user is still logged in the OAAS and already has authorized all the requested
+          scopes to the client, then the user-agent is redirected to the provided redirect_uri.
+          Otherwise the user-agent is redirected to the login page.
+      200:
+        description: |
+          When the user is still logged in the OAAS and has not authorized the client or some of
+          the requested scopes yet, then the authorization page is returned.
+
+/oauth/token:
+  displayName: Token endpoint
+  description: |
+    Endpoint is used by the client to obtain an access token by presenting its authorization grant
+    or refresh token. It is used with every authorization grant except for the implicit grant type
+    (since an access token is issued directly). This endpoint is specified in OAuth 2.0
+    ([RFC 6749, sec. 3.2](http://tools.ietf.org/html/rfc6749#section-3.2)).
+  post:
+    securedBy: [ client_password ]
+    body:
+      application/x-www-form-urlencoded:
+        formParameters:
+          grant_type:
+            type: string
+            enum: [ "authorization_code", "client_credentials", "password", "refresh_token" ]
+            required: true
+          scope:
+            description: |
+              A space delimited set of scopes the client requests. It might be all scopes registered
+              for the client on OAAS or just a subset of them. If not provided then all registered
+              scopes will be issued.
+
+              This parameter is used only for the _client credentials_, _password_, and
+              _refresh token_ grant.
+            example: urn:zuul:oauth:sample:read
+          code:
+            description: |
+              The authorization code received from the authorization server. This parameter is used
+              and required only for the _authorization code_ grant.
+          redirect_uri:
+            description: |
+              This parameter is required if the `grant_type` is `authorization_code` and
+              `redirect_uri` parameter was included in the authorization request (and their values
+              must be identical).
+          refresh_token:
+            description: |
+              The refresh token issued to the client. This parameter is used and required only when
+              refreshing the token.
+          username:
+            description: |
+              The resource owner (i.e. user) username. This parameter is used and required only for
+              the _password_ grant.
+          password:
+            description: |
+              The resource owner (i.e. user) password. This parameter is used and required only for
+              the _password_ grant.
+          client_id:
+            description: |
+              The client identifier issued to the client during the registration process.
+              This parameter is required if the Authorization header is not used.
+          client_secret:
+            description: |
+              The client secret. This parameter is required if the Authorization header is not
+              used.
+    responses:
+      200:
+        body:
+          application/json:
+            example: |
+              {
+                "access_token": "3f801c23-2442-4ffe-aece-9bfc778c1ca2",
+                "token_type": "bearer",
+                "expires_in": 3600,
+                "scope": "urn:zuul:oauth:sample:read urn:zuul:oauth:sample:write"
+              }
+      400:
+        body:
+          application/json:
+            example: |
+              {
+                "error": "invalid_request"
+              }
+
+/oauth/check_token:
+  displayName: Check token endpoint
+  description: |
+    Endpoint used by the resource provider to validate an access token. Interactions between the
+    resource provider and the authorization server are not specified in OAuth 2.0. This one is
+    based on Spring Security OAuth 2.0, so it should be compatible with other authorization servers
+    based on this framework.
+  post:
+    securedBy: [ client_password ]
+    body:
+      application/x-www-form-urlencoded:
+        formParameters:
+          token:
+            description: The access token to validate.
+            type: string
+            example: e7d7941e-4c0f-11e5-98f4-639461ea09be
+            required: true
+    responses:
+      200:
+        body:
+          application/json:
+            example: |
+              {
+                "aud": [ "openid", "sample-123" ],
+                "client_id": "71acd722-4c0f-11e5-8375-639461ea09be",
+                "exp": 138943173,
+                "scope": [ "urn:zuul:oauth:sample:read" ],
+                "user_name": "flynnkev",
+                "email": "kevin@flynn.com"
+              }
+      400:
+        body:
+          application/json:
+            example: |
+              {
+                "error": "invalid_request"
+              }
