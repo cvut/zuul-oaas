@@ -100,7 +100,7 @@ interface CustomConverters {
 
     ConverterAdapter AuthenticationToDBObject = createConverter Authentication, DBObject, {
 
-        def user = (User) it.principal instanceof User ? it.principal : null
+        def user = (User) (it.principal instanceof User ? it.principal : null)
         new BasicDBObject([
             uname:       it.name,
             email:       user?.email,
