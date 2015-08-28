@@ -92,7 +92,7 @@
 
     <properties>
         <bootstrap.version>3.0.0</bootstrap.version>
-        <groovy.version>2.4.3</groovy.version>
+        <groovy.version>2.4.4</groovy.version>
         <spock.version>1.0-groovy-2.4</spock.version>
         <!-- Keep in sync with platform-bom! -->
         <spring-boot.version>1.2.1.RELEASE</spring-boot.version>
