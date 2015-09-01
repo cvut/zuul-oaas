@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2014 Czech Technical University in Prague.
+ * Copyright 2013-2015 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -33,18 +33,6 @@ import org.springframework.security.config.annotation.web.servlet.configuration.
  * Spring configuration of the root context.
  */
 @Configuration
-/*
- * Register configuration properties for placeholders replacement.
- *
- * The first location points to the bundled properties file with default values.
- * Location of the second file is specified by the environment variable
- * 'zuul.config.file' and when exists, then it overrides the default values.
- * This variable can be set via JNDI (see /META-INF/context.xml) or command
- * line parameter (-Dzuul.config.file).
- */
-@PropertySources([
-    @PropertySource('classpath:/config/zuul-config.properties'),
-    @PropertySource(value='file:${java:comp/env/zuul.config.file}', ignoreResourceNotFound=true)])
 /*
  * Export MBeans via JMX for monitoring.
  */
