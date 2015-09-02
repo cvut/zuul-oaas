@@ -73,7 +73,7 @@ class TokenInfo {
     }
 
     void setUserAuthorities(Collection<? extends GrantedAuthority> authorities) {
-        this.userAuthorities = authorityListToSet(authorities)
+        this.userAuthorities = authorityListToSet(authorities ?: [])
     }
 
     @JsonIgnore
@@ -82,7 +82,7 @@ class TokenInfo {
     }
 
     void setClientAuthorities(Collection<? extends GrantedAuthority> authorities) {
-        this.clientAuthorities = authorityListToSet(authorities)
+        this.clientAuthorities = authorityListToSet(authorities ?: [])
     }
 
     private Set<GrantedAuthority> toGrantedAuthorities(Collection<String> authorities) {
