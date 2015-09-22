@@ -16,7 +16,7 @@
 
     <groupId>cz.cvut.zuul.oaas</groupId>
     <artifactId>zuul-oaas</artifactId>
-    <version>0.5.0</version>
+    <version>0.5.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Zuul OAAS</name>
