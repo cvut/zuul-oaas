@@ -5,6 +5,7 @@ jdk:
   - oraclejdk8
 env:
   - PROFILE=exec-jar
+  - PROFILE=exec-jar,saml
 
 # Cache local Maven repository, but exclude our artifacts.
 cache:

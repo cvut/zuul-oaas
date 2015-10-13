@@ -41,6 +41,7 @@
         <module>zuul-oaas-core</module>
         <module>zuul-oaas-api</module>
         <module>zuul-oaas-restapi</module>
+        <module>zuul-oaas-saml-sp</module>
         <module>zuul-oaas-web</module>
         <module>zuul-oaas-main</module>
     </modules>
@@ -224,6 +225,12 @@
 
             <dependency>
                 <groupId>${project.groupId}</groupId>
+                <artifactId>zuul-oaas-saml</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>${project.groupId}</groupId>
                 <artifactId>zuul-oaas-web</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -242,6 +249,12 @@
                 <version>${project.version}</version>
                 <type>test-jar</type>
                 <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>zuul-oaas-saml-sp</artifactId>
+                <version>${project.version}</version>
             </dependency>
 
             <dependency>
@@ -331,6 +344,18 @@
                     <exclusion>
                         <groupId>org.codehaus.jackson</groupId>
                         <artifactId>jackson-mapper-asl</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.security.extensions</groupId>
+                <artifactId>spring-security-saml2-core</artifactId>
+                <version>1.0.1.RELEASE</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>commons-logging</groupId>
+                        <artifactId>commons-logging</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>
