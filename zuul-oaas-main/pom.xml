@@ -131,5 +131,19 @@
                 </plugins>
             </build>
         </profile>
+
+        <!--
+            Build with support for user authentication using SAML 2.0.
+        -->
+        <profile>
+            <id>saml</id>
+
+            <dependencies>
+                <dependency>
+                    <groupId>${project.groupId}</groupId>
+                    <artifactId>zuul-oaas-saml-sp</artifactId>
+                </dependency>
+            </dependencies>
+        </profile>
     </profiles>
 </project>

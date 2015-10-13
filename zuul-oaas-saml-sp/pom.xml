@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>cz.cvut.zuul.oaas</groupId>
+        <artifactId>zuul-oaas</artifactId>
+        <version>0.5.1-SNAPSHOT</version>
+    </parent>
+
+
+    <!--//////////////////// DESCRIPTION ////////////////////-->
+
+    <artifactId>zuul-oaas-saml-sp</artifactId>
+    <packaging>jar</packaging>
+
+    <name>Zuul OAAS SAML SP</name>
+
+
+    <!--//////////////////// DEPENDENCIES ////////////////////-->
+
+    <dependencies>
+
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>zuul-oaas-common</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security.extensions</groupId>
+            <artifactId>spring-security-saml2-core</artifactId>
+        </dependency>
+
+        <!--////// Test //////-->
+
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>zuul-oaas-common</artifactId>
+            <type>test-jar</type>
+        </dependency>
+
+    </dependencies>
+
+</project>
