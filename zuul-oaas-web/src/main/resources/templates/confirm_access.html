@@ -12,14 +12,14 @@
     <th:block th:replace="_layout::header" />
 
     <section id="main" class="container">
-      <h1 th:text="#{confirm_access.notice.title}">Allow access to your data?</h1>
+      <h1 th:utext="#{confirm_access.notice.title}">Allow access to your data?</h1>
 
       <p th:utext="#{confirm_access.notice.text(${client.displayName})}">
         Third-party application <strong>FooBar</strong> would like to access your account.
       </p>
 
       <ul th:each="scope : ${client.scope}">
-        <li th:text="${scope}">Read your timetable</li>
+        <li th:utext="${scope}">Read your timetable</li>
       </ul>
 
       <form method="post" th:action="@{${authorization_uri}}" class="approval-form">
@@ -28,14 +28,14 @@
                 value="true"
                 class="btn btn-lg btn-primary">
 
-          <span th:text="#{confirm_access.form.authorize}">Yes, I agree</span>
+          <span th:utext="#{confirm_access.form.authorize}">Yes, I agree</span>
         </button>
 
         <button name="user_oauth_denial"
                 type="submit"
                 class="btn btn-lg btn-default">
 
-           <span th:text="#{confirm_access.form.deny}">No, I disagree</span>
+           <span th:utext="#{confirm_access.form.deny}">No, I disagree</span>
         </button>
       </form>
     </section>

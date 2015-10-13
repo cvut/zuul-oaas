@@ -12,9 +12,9 @@
     <th:block th:replace="_layout::header" />
 
     <section id="main" class="container">
-      <h1 th:text="#{oauth_error.title}">Houston, we have a problem…</h1>
+      <h1 th:utext="#{oauth_error.title}">Houston, we have a problem…</h1>
 
-      <div class="alert alert-danger" th:text="${error.summary}">
+      <div class="alert alert-danger" th:utext="${error.summary}">
         Error summary
       </div>
 
