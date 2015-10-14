@@ -87,6 +87,10 @@
         <profile>
             <id>exec-jar</id>
 
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+
             <properties>
                 <project.packaging>jar</project.packaging>
             </properties>

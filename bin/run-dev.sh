@@ -38,7 +38,7 @@ resolve_version() {
 }
 
 build() {
-    $MAVEN package -Pexec-jar -DskipTests=true; return $?
+    $MAVEN package -DskipTests=true; return $?
 }
 
 start() {
