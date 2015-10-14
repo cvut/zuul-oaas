@@ -1,0 +1,6 @@
+= Changelog
+
+== not released yet
+
+* Remove no-indy profile, i.e. always compile with http://groovy.codehaus.org/InvokeDynamic+support[invokedynamic] (requires JDK 7u60+).
+* Build executable JAR by default (profile exec-jar).
