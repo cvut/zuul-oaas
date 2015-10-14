@@ -23,6 +23,13 @@ Zuul OAAS is build on top of http://projects.spring.io/spring-security-oauth[Spr
 
 TODO
 
+
+== Requirements
+
+* Java 7u60+ or 8
+* MongoDB 2.6+
+
+
 == Contributing
 
 . Fork it

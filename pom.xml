@@ -123,6 +123,27 @@
             <artifactId>commons-lang3</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy</artifactId>
+            <version>${groovy.version}</version>
+            <classifier>indy</classifier>
+        </dependency>
+
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-json</artifactId>
+            <version>${groovy.version}</version>
+            <classifier>indy</classifier>
+            <exclusions>
+                <!-- Transitive dependencies lacks indy classifier. -->
+                <exclusion>
+                    <groupId>org.codehaus.groovy</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
         <!-- Required by some Spring modules -->
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -387,7 +408,7 @@
                 </executions>
                 <configuration>
                     <targetBytecode>${java.version}</targetBytecode>
-                    <invokeDynamic>${groovy.invokeDynamic}</invokeDynamic>
+                    <invokeDynamic>true</invokeDynamic>
                     <testSources>
                         <testSource>
                             <directory>${project.basedir}/src/test/groovy</directory>
@@ -456,72 +477,6 @@
     <!--//////////////////// PROFILE ////////////////////-->
 
     <profiles>
-        <!--
-            Compile with invokedynamic instruction.
-
-            Requires JDK 7u60+ or JDK 8 in runtime!
-            See http://groovy.codehaus.org/InvokeDynamic+support for more information.
-        -->
-        <profile>
-            <id>indy</id>
-
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-
-            <properties>
-                <groovy.invokeDynamic>true</groovy.invokeDynamic>
-            </properties>
-
-            <dependencies>
-                <dependency>
-                    <groupId>org.codehaus.groovy</groupId>
-                    <artifactId>groovy</artifactId>
-                    <version>${groovy.version}</version>
-                    <classifier>indy</classifier>
-                </dependency>
-
-                <dependency>
-                    <groupId>org.codehaus.groovy</groupId>
-                    <artifactId>groovy-json</artifactId>
-                    <version>${groovy.version}</version>
-                    <classifier>indy</classifier>
-                    <exclusions>
-                        <!-- Transitive dependency lacks indy classifier. -->
-                        <exclusion>
-                            <groupId>org.codehaus.groovy</groupId>
-                            <artifactId>*</artifactId>
-                        </exclusion>
-                    </exclusions>
-                </dependency>
-            </dependencies>
-        </profile>
-
-        <!--
-            Compile without invokedynamic instruction (i.e. use call site caching).
-        -->
-        <profile>
-            <id>no-indy</id>
-
-            <properties>
-                <groovy.invokeDynamic>false</groovy.invokeDynamic>
-            </properties>
-
-            <dependencies>
-                <dependency>
-                    <groupId>org.codehaus.groovy</groupId>
-                    <artifactId>groovy</artifactId>
-                    <version>${groovy.version}</version>
-                </dependency>
-
-                <dependency>
-                    <groupId>org.codehaus.groovy</groupId>
-                    <artifactId>groovy-json</artifactId>
-                    <version>${groovy.version}</version>
-                </dependency>
-            </dependencies>
-        </profile>
-
         <!--
             Profile for Travis CI.
         -->

@@ -4,8 +4,7 @@ jdk:
   - openjdk7
   - oraclejdk8
 env:
-  - PROFILE=indy
-  - PROFILE=no-indy
+  - PROFILE=exec-jar
 
 # Cache local Maven repository, but exclude our artifacts.
 cache:
