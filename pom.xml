@@ -77,13 +77,13 @@
         <repository>
             <id>cvut-local-repos</id>
             <name>CVUT Repository Local</name>
-            <url>http://repository.fit.cvut.cz/maven/local-repos/</url>
+            <url>https://repository.fit.cvut.cz/maven/local-repos/</url>
         </repository>
 
         <repository>
             <id>cvut-remote-repos</id>
             <name>CVUT Repository Proxies</name>
-            <url>http://repository.fit.cvut.cz/maven/remote-repos/</url>
+            <url>https://repository.fit.cvut.cz/maven/remote-repos/</url>
         </repository>
     </repositories>
 
