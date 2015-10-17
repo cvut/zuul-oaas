@@ -92,6 +92,16 @@
                                     <artifactId>less</artifactId>
                                     <version>2.5.3</version>
                                 </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.webjars</groupId>
+                                    <artifactId>thymol.js</artifactId>
+                                    <version>2.0.0</version>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.webjars</groupId>
+                                    <artifactId>jquery</artifactId>
+                                    <version>3.0.0-alpha1</version>
+                                </artifactItem>
                             </artifactItems>
                             <outputDirectory>${build.webjarsDirectory}</outputDirectory>
                         </configuration>

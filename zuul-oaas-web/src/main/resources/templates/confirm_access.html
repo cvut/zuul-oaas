@@ -1,15 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}">
 
-  <head th:replace="_layout::head (page.confirm_access)">
-
-    <!-- This is used only for prototyping, will be removed by Thymeleaf. -->
-    <link type="text/css" rel="stylesheet/less" href="../../less/style.local.less" />
-    <script src=".local/less.min.js"></script>
+  <head th:replace="_layout::head (#{page.confirm_access})">
+    <!--/* This is used only for prototyping, will be removed by Thymeleaf. */-->
+    <script src="thymol.init.js"></script>
   </head>
 
   <body>
-    <th:block th:replace="_layout::header" />
+    <th:block th:replace="_layout::header"></th:block>
 
     <section id="main" class="container">
       <h1 th:utext="#{confirm_access.notice.title}">Allow access to your data?</h1>
@@ -40,6 +38,6 @@
       </form>
     </section>
 
-    <th:block th:replace="_layout::footer" />
+    <th:block th:replace="_layout::footer"></th:block>
   </body>
 </html>

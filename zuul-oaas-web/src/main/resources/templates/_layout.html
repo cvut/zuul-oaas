@@ -11,13 +11,9 @@
     <meta name="description" content="Zuul OAuth 2.0 Authorization Server"/>
     <meta name="author" content="Jakub Jirutka"/>
 
-    <title th:text="|#{project.title_short} :: #{${title}}|"></title>
+    <title th:text="|#{project.title_short} :: ${title}|"></title>
 
     <link type="text/css" rel="stylesheet" th:href="@{/css/style.css}" />
-
-    <!-- This is used only for prototyping, will be removed by Thymeleaf. -->
-    <link th:remove="all" type="text/css" rel="stylesheet/less" href="../../less/style.local.less" />
-    <script th:remove="all" src=".local/less.min.js"></script>
   </head>
 
   <body>
