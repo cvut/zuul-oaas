@@ -7,7 +7,7 @@
   </head>
 
   <body>
-    <th:block th:replace="_layout::header"></th:block>
+    <header th:include="_layout::header"></header>
 
     <section id="main" class="container">
       <h1 th:utext="#{index.title}">
@@ -25,6 +25,6 @@
            class="center" />
     </section>
 
-    <th:block th:replace="_layout::footer"></th:block>
+    <footer th:include="_layout::footer"></footer>
   </body>
 </html>

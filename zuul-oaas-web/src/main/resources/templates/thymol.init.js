@@ -37,7 +37,7 @@ thymolDeferredFunctions = [function () {
 }]
 
 thMappings = [
-  ['/images', '../static/images']
+  ['/images', '../static/images'],
 ]
 
 ;(function () {
