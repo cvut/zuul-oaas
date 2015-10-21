@@ -24,7 +24,7 @@
 package cz.cvut.zuul.oaas.saml.sp.config
 
 import cz.cvut.zuul.oaas.common.config.ConfigurationSupport
-import cz.cvut.zuul.oaas.saml.sp.SamlUserDetailsServiceImpl
+import cz.cvut.zuul.oaas.saml.sp.SamlAttributesUserDetailsService
 import org.apache.commons.httpclient.HttpClient
 import org.opensaml.saml2.metadata.provider.HTTPMetadataProvider
 import org.opensaml.xml.parse.StaticBasicParserPool
@@ -128,11 +128,23 @@ class SamlSecurityConfig extends WebSecurityConfigurerAdapter implements Configu
      */
     @Bean samlAuthenticationProvider() {
         new SAMLAuthenticationProvider (
-            userDetails: new SamlUserDetailsServiceImpl(),
+            userDetails: samlUserDetailsService(),
             samlLogger: samlLogger(),
             consumer: webSSOprofileConsumer(),
             hokConsumer: webSSOprofileConsumer(),  // workaround for https://jira.spring.io/browse/SES-169
             forcePrincipalAsString: false
+        )
+    }
+
+    /**
+     * Service that maps SAML assertion to an {@link cz.cvut.zuul.oaas.models.User} object.
+     */
+    @Bean samlUserDetailsService() {
+        new SamlAttributesUserDetailsService (
+            emailAttrNames:     p('auth.user.saml.attribute.email').split(/,\s*/),
+            firstNameAttrNames: p('auth.user.saml.attribute.first_name').split(/,\s*/),
+            lastNameAttrNames:  p('auth.user.saml.attribute.last_name').split(/,\s*/),
+            usernameAttrNames:  p('auth.user.saml.attribute.username').split(/,\s*/)
         )
     }
 
