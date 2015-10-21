@@ -23,32 +23,11 @@
  */
 package cz.cvut.zuul.oaas.saml.sp
 
-import groovy.util.logging.Slf4j
-import org.springframework.security.core.authority.SimpleGrantedAuthority
-import org.springframework.security.core.userdetails.User
-import org.springframework.security.saml.SAMLCredential
-import org.springframework.security.saml.userdetails.SAMLUserDetailsService
-import org.springframework.stereotype.Service
+final class Saml2Attributes {
 
-// TODO this is just example
-@Slf4j
-@Service
-class SamlUserDetailsServiceImpl implements SAMLUserDetailsService {
-
-    def loadUserBySAML(SAMLCredential credential) {
-
-        // The method is supposed to identify local account of user referenced by
-        // data in the SAML assertion and return UserDetails object describing the user.
-
-        def userID = credential.nameID.value
-
-        log.info("${userID} is logged in")
-
-        def authorities = [new SimpleGrantedAuthority('ROLE_USER')]
-
-        // In a real scenario, this implementation has to locate user in a arbitrary
-        // dataStore based on information present in the SAMLCredential and
-        // returns such a date in a form of application specific UserDetails object.
-        new User(userID, '***', true, true, true, true, authorities)
-    }
+    public static final String \
+        GIVEN_NAME = 'urn:oid:2.5.4.42',
+        MAIL       = 'urn:oid:0.9.2342.19200300.100.1.3',
+        SURNAME    = 'urn:oid:2.5.4.4',
+        UID        = 'urn:oid:0.9.2342.19200300.100.1.1'
 }
