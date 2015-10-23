@@ -22,21 +22,32 @@
         <th:block th:utext="#{login.error.authorization}">You’re not allowed to access this resource.</th:block>
       </div>
 
-      <form th:action="@{/login.do}" method="post" class="form-login">
+      <form th:action="@{/login.do}" method="post" class="form-login well well-lg">
         <input name="j_username"
                type="text"
                autofocus="autofocus"
-               class="form-control input-lg"
+               class="form-control input-lg input-username"
                th:placeholder="#{login.form.name}" placeholder="Username" />
 
         <input name="j_password"
                type="password"
-               class="form-control input-lg"
+               class="form-control input-lg input-password"
                th:placeholder="#{login.form.password}" placeholder="Password" />
-
-        <button type="submit"
-                class="btn btn-lg btn-primary btn-block"
+        <div class="control-submit">
+          <button type="submit"
+                class="btn btn-lg btn-primary btn-submit"
                 th:utext="#{login.form.login}">Log-in</button>
+        </div>
+      </form>
+
+      <form class="form-login form-shibboleth well well-lg">
+        <label class="checkbox control-shibboleth-remember">
+          <input type="checkbox" name="" value="" />
+          Remember my preference
+        </label>
+        <button type="button" class="btn btn-block btn-default btn-shibboleth">
+          Login with Shibboleth
+        </button>
       </form>
     </section>
 
