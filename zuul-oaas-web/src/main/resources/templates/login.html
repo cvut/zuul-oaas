@@ -42,14 +42,15 @@
       </form>
 
       <form class="form-login form-shibboleth well well-lg">
+
         <label class="checkbox control-shibboleth-remember">
           <input type="checkbox" name="shibboleth-remember" />
-          Remember my preference
+          <th:block th:utext="#{login.saml.remember}">Remember my preference</th:block>
         </label>
 
-        <button type="button" class="btn btn-block btn-default btn-shibboleth">
-          Login with Shibboleth
-        </button>
+        <button type="button"
+                class="btn btn-block btn-default btn-shibboleth"
+                th:utext="#{login.saml.login}">Log in with Shibboleth</button>
       </form>
     </section>
 
