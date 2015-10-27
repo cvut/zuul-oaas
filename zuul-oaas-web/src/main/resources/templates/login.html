@@ -41,14 +41,15 @@
         </div>
       </form>
 
-      <form class="form-login form-shibboleth well well-lg">
+      <form th:action="@{${ #env['auth.user.saml.endpoint.login'] }}" method="get"
+            class="form-login form-shibboleth well well-lg">
 
         <label class="checkbox control-shibboleth-remember">
           <input type="checkbox" name="shibboleth-remember" />
           <th:block th:utext="#{login.saml.remember}">Remember my preference</th:block>
         </label>
 
-        <button type="button"
+        <button type="submit"
                 class="btn btn-block btn-default btn-shibboleth"
                 th:utext="#{login.saml.login}">Log in with Shibboleth</button>
       </form>
