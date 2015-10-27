@@ -20,7 +20,9 @@
         <li th:utext="${scope}">Read your timetable</li>
       </ul>
 
-      <form method="post" th:action="@{${authorization_uri}}" class="approval-form">
+      <form method="post" th:action="@{${ #env['oaas.endpoint.authorization.uri'] }}"
+            class="approval-form">
+
         <button name="user_oauth_approval"
                 type="submit"
                 value="true"

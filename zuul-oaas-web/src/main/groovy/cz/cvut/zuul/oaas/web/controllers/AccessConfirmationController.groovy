@@ -41,8 +41,6 @@ class AccessConfirmationController {
 
     ClientsService clientsService
 
-    @Value('${oaas.endpoint.authorization.uri}') authorizationUri
-
 
     @RequestMapping('/oauth/confirm_access')
     def getAccessConfirmation(Map model) {
@@ -52,8 +50,7 @@ class AccessConfirmationController {
 
         model.putAll([
             auth_request: clientAuth,
-            client: client,
-            authorization_uri: authorizationUri
+            client: client
         ])
 
         return new ModelAndView('confirm_access', model)
