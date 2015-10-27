@@ -24,6 +24,7 @@
 package cz.cvut.zuul.oaas.web.config
 
 import cz.cvut.zuul.oaas.common.config.ConfigurationSupport
+import cz.cvut.zuul.oaas.web.support.SpringEnvironmentExpressionDialect
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory
 import org.springframework.beans.factory.config.PlaceholderConfigurerSupport
@@ -78,7 +79,8 @@ class WebContextConfig extends WebMvcConfigurerAdapter implements ConfigurationS
     @Bean templateEngine() {
         new SpringTemplateEngine (
             templateResolver:   templateResolver(),
-            messageSource:      messageSource()
+            messageSource:      messageSource(),
+            additionalDialects: [ new SpringEnvironmentExpressionDialect(env) ]
         )
     }
 
