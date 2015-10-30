@@ -47,6 +47,12 @@
             <artifactId>spring-security-saml2-core</artifactId>
         </dependency>
 
+        <!-- Note: This is also dependency of spring-security-saml2. -->
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk15</artifactId>
+        </dependency>
+
         <!--////// Test //////-->
 
         <dependency>
