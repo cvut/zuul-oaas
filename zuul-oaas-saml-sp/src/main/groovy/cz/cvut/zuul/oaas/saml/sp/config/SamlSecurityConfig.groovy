@@ -24,6 +24,7 @@
 package cz.cvut.zuul.oaas.saml.sp.config
 
 import cz.cvut.zuul.oaas.common.config.ConfigurationSupport
+import cz.cvut.zuul.oaas.saml.sp.support.OpenSSLKeyStoreBuilder
 import cz.cvut.zuul.oaas.saml.sp.SamlAttributesUserDetailsService
 import org.apache.commons.httpclient.HttpClient
 import org.opensaml.saml2.metadata.provider.HTTPMetadataProvider
@@ -338,10 +339,13 @@ class SamlSecurityConfig extends WebSecurityConfigurerAdapter implements Configu
      * Central storage of cryptographic keys.
      */
     @Bean samlKeyManager() {
-        def storeFile = resource( p('auth.user.saml.keystore.path') )
-        def defaultKey = p('auth.user.saml.keystore.sp_key.alias')
-        def passwords = [(defaultKey): p('auth.user.saml.keystore.sp_key.password')]
+        def keyFile = resource( p('auth.user.saml.sp.credentials.key_file') )
+        def certFile = resource( p('auth.user.saml.sp.credentials.cert_file') )
 
-        new JKSKeyManager(storeFile, p('auth.user.saml.keystore.password'), passwords, defaultKey)
+        def keyStore = new OpenSSLKeyStoreBuilder()
+            .addKey('default', keyFile, certFile)
+            .keyStore
+
+        new JKSKeyManager(keyStore, [default: OpenSSLKeyStoreBuilder.KEY_PASSWORD], 'default')
     }
 }
