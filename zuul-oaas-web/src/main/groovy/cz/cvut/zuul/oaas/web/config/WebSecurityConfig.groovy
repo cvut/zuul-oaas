@@ -23,14 +23,18 @@
  */
 package cz.cvut.zuul.oaas.web.config
 
+import cz.cvut.zuul.oaas.common.config.ConfigurationSupport
+import cz.cvut.zuul.oaas.web.support.CookieConditionedForwardFilter
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.annotation.Order
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 
 import static org.springframework.core.Ordered.LOWEST_PRECEDENCE
 
@@ -39,7 +43,7 @@ import static org.springframework.core.Ordered.LOWEST_PRECEDENCE
  */
 @Configuration
 @EnableWebSecurity @Order(LOWEST_PRECEDENCE)
-class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+class WebSecurityConfig extends WebSecurityConfigurerAdapter implements ConfigurationSupport {
 
     // external service
     @Autowired @Qualifier('user')
@@ -67,8 +71,17 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .defaultSuccessUrl('/')
                 .failureUrl('/login.html?authentication_error=true')
                 .and()
+            .addFilterBefore( forwardSamlLogin(), UsernamePasswordAuthenticationFilter )
             .authorizeRequests()
                 .antMatchers('/oauth/**').fullyAuthenticated()
+    }
+
+    @Bean forwardSamlLogin() {
+        new CookieConditionedForwardFilter (
+            filterProcessesUrl: '/login.html',
+            cookieName: 'always-shibboleth',
+            forwardPath: p('auth.user.saml.endpoint.login')
+        )
     }
 }
 

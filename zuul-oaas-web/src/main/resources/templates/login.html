@@ -45,7 +45,7 @@
             class="form-login form-shibboleth well well-lg">
 
         <label class="checkbox control-shibboleth-remember">
-          <input type="checkbox" name="shibboleth-remember" />
+          <input type="checkbox" name="shibboleth-remember" onchange="toggleRememberShibboleth(this)" />
           <th:block th:utext="#{login.saml.remember}">Remember my preference</th:block>
         </label>
 
@@ -56,5 +56,19 @@
     </section>
 
     <footer th:include="_layout::footer"></footer>
+
+    <script th:inline="javascript">
+      function toggleRememberShibboleth(element) {
+
+        var path = /*[[@{/}]]*/ '/'
+        var cookie = 'always-shibboleth=true;Path=' + path
+
+        if (element.checked) {
+          document.cookie = cookie + ';Max-Age=2592000'
+        } else {
+          document.cookie = cookie + ';Max-Age=0'
+        }
+      }
+    </script>
   </body>
 </html>
