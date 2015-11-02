@@ -1,17 +1,25 @@
 ////// Logback configuration //////
 
+import ch.qos.logback.classic.encoder.PatternLayoutEncoder
+import ch.qos.logback.core.*
+import ch.qos.logback.core.rolling.*
+import org.springframework.boot.logging.logback.*
+
+import static ch.qos.logback.classic.Level.*
+
+
 context.name = 'zuul-oaas'
 
-// export MBeans via JMX for monitoring
+// Export MBeans via JMX for monitoring.
 jmxConfigurator()
 
-// conversion rule from Spring Boot
-conversionRule 'wex', org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter
+// Conversion rule from Spring Boot.
+conversionRule 'wex', WhitespaceThrowableProxyConverter
 
-// define alias
+// Define convenient alias.
 def env = System.&getProperty
 
-// variables LOG_FILE and LOG_PATH are set by Spring Boot
+// Variables LOG_FILE and LOG_PATH are set by Spring Boot.
 def logfile = env('LOG_FILE', "${env('LOG_PATH', '/tmp')}/${context.name}.log")
 
 
