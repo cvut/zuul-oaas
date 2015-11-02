@@ -278,6 +278,12 @@
             </dependency>
 
             <dependency>
+                <groupId>net.kencochrane.raven</groupId>
+                <artifactId>raven-logback</artifactId>
+                <version>5.0.2</version>
+            </dependency>
+
+            <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter</artifactId>
                 <version>${spring-boot.version}</version>

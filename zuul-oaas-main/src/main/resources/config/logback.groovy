@@ -1,6 +1,7 @@
 ////// Logback configuration //////
 
 import ch.qos.logback.classic.encoder.PatternLayoutEncoder
+import ch.qos.logback.classic.filter.*
 import ch.qos.logback.core.*
 import ch.qos.logback.core.rolling.*
 import ch.qos.logback.core.status.OnErrorConsoleStatusListener
@@ -26,6 +27,9 @@ def env = System.&getProperty
 // Variables LOG_FILE and LOG_PATH are set by Spring Boot.
 def logfile = env('LOG_FILE', "${env('LOG_PATH', '/tmp')}/${context.name}.log")
 
+// List of root appenders.
+def appenders = ['CONSOLE', 'FILE']
+
 
 ////// Appenders //////
 
@@ -45,10 +49,22 @@ appender 'FILE', RollingFileAppender, {
     }
 }
 
+if (env('sentry.dsn')) {
+
+    appender 'SENTRY', net.kencochrane.raven.logback.SentryAppender, {
+        dsn = env('sentry.dsn')
+        filter ThresholdFilter, {
+            level = env('sentry.level', 'WARN')
+        }
+    }
+    appenders << 'SENTRY'
+}
+
+
 ////// Loggers //////
 
 logger 'ch.qos.logback', WARN
 logger 'cz.cvut.zuul.oaas', INFO
 logger 'org.springframework', INFO
 
-root INFO, ['CONSOLE', 'FILE']
+root INFO, appenders
