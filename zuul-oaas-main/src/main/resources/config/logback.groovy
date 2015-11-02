@@ -3,12 +3,16 @@
 import ch.qos.logback.classic.encoder.PatternLayoutEncoder
 import ch.qos.logback.core.*
 import ch.qos.logback.core.rolling.*
+import ch.qos.logback.core.status.OnErrorConsoleStatusListener
 import org.springframework.boot.logging.logback.*
 
 import static ch.qos.logback.classic.Level.*
 
 
 context.name = 'zuul-oaas'
+
+// Print logback's status messages on stderr.
+statusListener OnErrorConsoleStatusListener
 
 // Export MBeans via JMX for monitoring.
 jmxConfigurator()
