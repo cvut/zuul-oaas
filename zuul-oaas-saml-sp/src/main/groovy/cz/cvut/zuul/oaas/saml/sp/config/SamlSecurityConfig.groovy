@@ -27,7 +27,9 @@ import cz.cvut.zuul.oaas.common.config.ConfigurationSupport
 import cz.cvut.zuul.oaas.saml.sp.support.OpenSSLKeyStoreBuilder
 import cz.cvut.zuul.oaas.saml.sp.SamlAttributesUserDetailsService
 import org.apache.commons.httpclient.HttpClient
+import org.opensaml.saml2.metadata.provider.EntityRoleFilter
 import org.opensaml.saml2.metadata.provider.HTTPMetadataProvider
+import org.opensaml.saml2.metadata.provider.MetadataFilterChain
 import org.opensaml.xml.parse.StaticBasicParserPool
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
@@ -68,6 +70,10 @@ import org.springframework.security.web.access.channel.ChannelProcessingFilter
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher
+
+import javax.xml.namespace.QName
+
+import static org.opensaml.common.xml.SAMLConstants.SAML20MD_NS
 
 // TODO add logout filters
 @Configuration
@@ -166,6 +172,7 @@ class SamlSecurityConfig extends WebSecurityConfigurerAdapter implements Configu
         ).with {
             parserPool = samlXmlParserPool()
             requireValidMetadata = true
+            metadataFilter = samlIdPMetadataFilter()
             minRefreshDelay = ( p('auth.user.saml.idp.metadata.min_refresh_delay') as int ) * 100
             maxRefreshDelay = ( p('auth.user.saml.idp.metadata.max_refresh_delay') as int ) * 100
             it
@@ -177,6 +184,19 @@ class SamlSecurityConfig extends WebSecurityConfigurerAdapter implements Configu
      */
     @Bean(destroyMethod = 'cancel') samlIdpMetadataTimer() {
         new Timer('IDP-metadata-reload', true)
+    }
+
+    /**
+     * Metadata filter chain that removes all SP entity descriptors and keeps only IdP(s).
+     * Note: It must be wrapped in FilterChain, otherwise MetadataManager fails.
+     */
+    @Bean samlIdPMetadataFilter() {
+        new MetadataFilterChain(filters: [
+            new EntityRoleFilter([
+                new QName(SAML20MD_NS, 'IDPSSODescriptor'),
+                new QName(SAML20MD_NS, 'AttributeAuthorityDescriptor')
+            ])
+        ])
     }
 
     /**
