@@ -163,7 +163,9 @@ class SamlSecurityConfig extends WebSecurityConfigurerAdapter implements Configu
 
     @Bean(destroyMethod = 'destroy') samlMetadataManager() {
         new CachingMetadataManager([ samlIdpMetadataProvider() ]).with {
-            it.keyManager = samlKeyManager(); it
+            it.keyManager = samlKeyManager()
+            it.defaultIDP = p('auth.user.saml.idp.metadata.entity_id') ?: null
+            it
         }
     }
 
