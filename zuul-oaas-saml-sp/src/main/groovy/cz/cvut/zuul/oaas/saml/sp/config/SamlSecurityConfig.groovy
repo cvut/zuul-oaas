@@ -209,6 +209,7 @@ class SamlSecurityConfig extends WebSecurityConfigurerAdapter implements Configu
     @Bean @Lazy samlSpMetadataGenerator() {
         new EnhanceableMetadataGenerator (
             entityId: p('auth.user.saml.sp.metadata.entity_id'),
+            entityBaseURL: p('auth.user.saml.sp.metadata.entity_base_url') ?: null,
             extendedMetadata: new ExtendedMetadata(signMetadata: true, local: true),
             samlWebSSOFilter: samlWebSSOProcessingFilter(),
             samlEntryPoint: samlEntryPoint(),
