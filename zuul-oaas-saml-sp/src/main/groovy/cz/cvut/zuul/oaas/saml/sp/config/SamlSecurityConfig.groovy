@@ -24,9 +24,14 @@
 package cz.cvut.zuul.oaas.saml.sp.config
 
 import cz.cvut.zuul.oaas.common.config.ConfigurationSupport
-import cz.cvut.zuul.oaas.saml.sp.support.OpenSSLKeyStoreBuilder
 import cz.cvut.zuul.oaas.saml.sp.SamlAttributesUserDetailsService
+import cz.cvut.zuul.oaas.saml.sp.metadata.ContactPersonBuilder
+import cz.cvut.zuul.oaas.saml.sp.metadata.EnhanceableMetadataGenerator
+import cz.cvut.zuul.oaas.saml.sp.metadata.OrganizationBuilder
+import cz.cvut.zuul.oaas.saml.sp.support.OpenSSLKeyStoreBuilder
+import groovy.transform.Memoized
 import org.apache.commons.httpclient.HttpClient
+import org.opensaml.saml2.metadata.EntityDescriptor
 import org.opensaml.saml2.metadata.provider.EntityRoleFilter
 import org.opensaml.saml2.metadata.provider.HTTPMetadataProvider
 import org.opensaml.saml2.metadata.provider.MetadataFilterChain
@@ -54,7 +59,6 @@ import org.springframework.security.saml.log.SAMLDefaultLogger
 import org.springframework.security.saml.metadata.CachingMetadataManager
 import org.springframework.security.saml.metadata.ExtendedMetadata
 import org.springframework.security.saml.metadata.MetadataDisplayFilter
-import org.springframework.security.saml.metadata.MetadataGenerator
 import org.springframework.security.saml.metadata.MetadataGeneratorFilter
 import org.springframework.security.saml.parser.ParserPoolHolder
 import org.springframework.security.saml.processor.HTTPPostBinding
@@ -203,12 +207,17 @@ class SamlSecurityConfig extends WebSecurityConfigurerAdapter implements Configu
      * Generator of SP metadata describing the application in the current deployment environment.
      */
     @Bean @Lazy samlSpMetadataGenerator() {
-        new MetadataGenerator (
+        new EnhanceableMetadataGenerator (
             entityId: p('auth.user.saml.sp.metadata.entity_id'),
-            extendedMetadata: new ExtendedMetadata(signMetadata: true),
+            extendedMetadata: new ExtendedMetadata(signMetadata: true, local: true),
             samlWebSSOFilter: samlWebSSOProcessingFilter(),
             samlEntryPoint: samlEntryPoint(),
-            keyManager: samlKeyManager()
+            keyManager: samlKeyManager(),
+
+            metadataEnhancer: { EntityDescriptor desc ->
+                desc.contactPersons.addAll( contactPeople )
+                desc.organization = organization
+            }
         )
     }
 
@@ -367,5 +376,25 @@ class SamlSecurityConfig extends WebSecurityConfigurerAdapter implements Configu
             .keyStore
 
         new JKSKeyManager(keyStore, [default: OpenSSLKeyStoreBuilder.KEY_PASSWORD], 'default')
+    }
+
+
+    @Memoized
+    def getContactPeople() {
+        subPropertiesList('auth.user.saml.sp.metadata.contact_person').collect { props ->
+            new ContactPersonBuilder(props).build()
+        }
+    }
+
+    @Memoized
+    def getOrganization() {
+        if (subProperties("auth.user.saml.sp.metadata.organization.").empty) {
+            return null
+        }
+        new OrganizationBuilder (
+            names: subProperties("auth.user.saml.sp.metadata.organization.name."),
+            displayNames: subProperties("auth.user.saml.sp.metadata.organization.display_name."),
+            URLs: subProperties("auth.user.saml.sp.metadata.organization.url.")
+        ).build()
     }
 }
