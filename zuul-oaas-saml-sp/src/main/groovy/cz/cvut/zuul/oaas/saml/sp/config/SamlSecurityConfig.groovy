@@ -29,9 +29,11 @@ import org.apache.commons.httpclient.HttpClient
 import org.opensaml.saml2.metadata.provider.HTTPMetadataProvider
 import org.opensaml.xml.parse.StaticBasicParserPool
 import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Lazy
 import org.springframework.context.annotation.Profile
 import org.springframework.core.annotation.Order
 import org.springframework.security.authentication.AuthenticationManager
@@ -74,6 +76,8 @@ class SamlSecurityConfig extends WebSecurityConfigurerAdapter implements Configu
 
     final velocityEngine = VelocityFactory.getEngine()
 
+    @Value('${auth.user.saml.sp.metadata.generate}') boolean generateSpMetadata
+
 
     void configure(HttpSecurity http) {
         http.requestMatchers()
@@ -87,10 +91,13 @@ class SamlSecurityConfig extends WebSecurityConfigurerAdapter implements Configu
             .httpBasic()
                 .authenticationEntryPoint( samlEntryPoint() )
                 .and()
-            .addFilterBefore( samlMetadataGeneratorFilter(), ChannelProcessingFilter )
             .addFilterAfter( samlFilterChain(), BasicAuthenticationFilter)
             .authorizeRequests()
                 .anyRequest().permitAll()
+
+        if (generateSpMetadata) {
+            http.addFilterBefore( samlMetadataGeneratorFilter(), ChannelProcessingFilter )
+        }
     }
 
     void configure(AuthenticationManagerBuilder auth) {
@@ -162,7 +169,7 @@ class SamlSecurityConfig extends WebSecurityConfigurerAdapter implements Configu
     /**
      * Generator of SP metadata describing the application in the current deployment environment.
      */
-    @Bean samlSpMetadataGenerator() {
+    @Bean @Lazy samlSpMetadataGenerator() {
         new MetadataGenerator (
             entityId: p('auth.user.saml.sp.metadata.entity_id'),
             extendedMetadata: new ExtendedMetadata(signMetadata: true),
@@ -181,9 +188,11 @@ class SamlSecurityConfig extends WebSecurityConfigurerAdapter implements Configu
     @Bean samlFilterChain() {
         def filters = [
             samlEntryPoint(),
-            samlWebSSOProcessingFilter(),
-            samlMetadataDisplayFilter()
+            samlWebSSOProcessingFilter()
         ]
+        if (generateSpMetadata) {
+            filters << samlMetadataDisplayFilter()
+        }
         new FilterChainProxy(filters.collect { filter ->
             new DefaultSecurityFilterChain(new AntPathRequestMatcher(filter.filterProcessesUrl), filter)
         })
@@ -207,7 +216,7 @@ class SamlSecurityConfig extends WebSecurityConfigurerAdapter implements Configu
     /**
      * Filter that automatically generates default SP metadata.
      */
-    @Bean samlMetadataGeneratorFilter() {
+    @Bean @Lazy samlMetadataGeneratorFilter() {
         new MetadataGeneratorFilter( samlSpMetadataGenerator() ).with {
             it.displayFilter = samlMetadataDisplayFilter()
             it.manager = samlMetadataManager(); it
@@ -218,7 +227,7 @@ class SamlSecurityConfig extends WebSecurityConfigurerAdapter implements Configu
      * The filter is waiting for connections on URL suffixed with filterSuffix and presents
      * SP metadata there.
      */
-    @Bean samlMetadataDisplayFilter() {
+    @Bean @Lazy samlMetadataDisplayFilter() {
         new MetadataDisplayFilter (
             filterProcessesUrl: p('auth.user.saml.endpoint.metadata'),
             manager: samlMetadataManager(),
