@@ -23,6 +23,7 @@
  */
 package cz.cvut.zuul.oaas.common.config
 
+import cz.cvut.zuul.oaas.common.PropertySourceUtils
 import cz.cvut.zuul.oaas.common.ext.StringAsBoolean
 import groovy.transform.CompileStatic
 import org.springframework.beans.factory.FactoryBean
@@ -30,7 +31,7 @@ import org.springframework.beans.factory.InitializingBean
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer
-import org.springframework.core.env.Environment
+import org.springframework.core.env.ConfigurableEnvironment
 import org.springframework.core.io.ClassPathResource
 import org.springframework.core.io.Resource
 import org.springframework.core.io.ResourceLoader
@@ -39,7 +40,7 @@ import org.springframework.core.io.ResourceLoader
 trait ConfigurationSupport {
 
     @Autowired ResourceLoader resourceLoader
-    @Autowired Environment env
+    @Autowired ConfigurableEnvironment env
 
     private ConfigurableListableBeanFactory beanFactory
 
@@ -85,6 +86,20 @@ trait ConfigurationSupport {
         value.metaClass.mixin(StringAsBoolean)
 
         return value
+    }
+
+    /**
+     * @see PropertySourceUtils#subProperties(org.springframework.core.env.PropertySources, String)
+     */
+    Map<String, Object> subProperties(String keyPrefix) {
+        PropertySourceUtils.subProperties(env.propertySources, keyPrefix)
+    }
+
+    /**
+     * @see PropertySourceUtils#subPropertiesList(org.springframework.core.env.PropertySources, String)
+     */
+    List<Map<String, Object>> subPropertiesList(String keyPrefix) {
+        PropertySourceUtils.subPropertiesList(env.propertySources, keyPrefix)
     }
 
     boolean isActive(String... profile) {
