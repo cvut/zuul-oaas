@@ -94,6 +94,8 @@
     <properties>
         <bootstrap.version>3.0.0</bootstrap.version>
         <groovy.version>2.4.5</groovy.version>
+        <servlet-api.version>3.1.0</servlet-api.version>
+        <jetty.version>9.2.13.v20150730</jetty.version>
         <spock.version>1.0-groovy-2.4</spock.version>
         <!-- Keep in sync with platform-bom! -->
         <spring-boot.version>1.2.1.RELEASE</spring-boot.version>
@@ -191,6 +193,15 @@
 
     <dependencyManagement>
         <dependencies>
+            <!-- This is needed to override Jetty version defined in platform-bom -->
+            <dependency>
+                <groupId>cz.jirutka.maven</groupId>
+                <artifactId>jetty-bom</artifactId>
+                <version>${jetty.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
             <dependency>
                 <groupId>io.spring.platform</groupId>
                 <artifactId>platform-bom</artifactId>
@@ -282,6 +293,13 @@
                 <groupId>cz.jirutka.validator</groupId>
                 <artifactId>validator-spring</artifactId>
                 <version>1.1.0</version>
+            </dependency>
+
+            <!-- Override version defined in platform-bom (3.0.1) -->
+            <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>javax.servlet-api</artifactId>
+                <version>${servlet-api.version}</version>
             </dependency>
 
             <dependency>
