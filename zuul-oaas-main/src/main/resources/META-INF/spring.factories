@@ -1,1 +1,2 @@
 org.springframework.context.ApplicationListener=cz.cvut.zuul.oaas.support.ExtendedLoggingPropertiesListener
+org.springframework.boot.env.PropertySourceLoader=cz.cvut.zuul.oaas.support.UnicodePropertiesPropertySourceLoader
