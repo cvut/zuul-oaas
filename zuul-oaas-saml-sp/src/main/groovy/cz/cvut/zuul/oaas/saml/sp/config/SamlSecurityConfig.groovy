@@ -27,6 +27,7 @@ import cz.cvut.zuul.oaas.common.config.ConfigurationSupport
 import cz.cvut.zuul.oaas.saml.sp.SamlAttributesUserDetailsService
 import cz.cvut.zuul.oaas.saml.sp.metadata.ContactPersonBuilder
 import cz.cvut.zuul.oaas.saml.sp.metadata.EnhanceableMetadataGenerator
+import cz.cvut.zuul.oaas.saml.sp.metadata.MetadataDisplayFilter
 import cz.cvut.zuul.oaas.saml.sp.metadata.OrganizationBuilder
 import cz.cvut.zuul.oaas.saml.sp.support.OpenSSLKeyStoreBuilder
 import groovy.transform.Memoized
@@ -58,7 +59,6 @@ import org.springframework.security.saml.key.JKSKeyManager
 import org.springframework.security.saml.log.SAMLDefaultLogger
 import org.springframework.security.saml.metadata.CachingMetadataManager
 import org.springframework.security.saml.metadata.ExtendedMetadata
-import org.springframework.security.saml.metadata.MetadataDisplayFilter
 import org.springframework.security.saml.metadata.MetadataGeneratorFilter
 import org.springframework.security.saml.parser.ParserPoolHolder
 import org.springframework.security.saml.processor.HTTPPostBinding
