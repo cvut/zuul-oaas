@@ -25,8 +25,6 @@ package cz.cvut.zuul.oaas
 
 import cz.cvut.zuul.oaas.restapi.config.RestContextConfig
 import cz.cvut.zuul.oaas.web.config.WebContextConfig
-import org.springframework.boot.autoconfigure.web.EmbeddedServletContainerAutoConfiguration
-import org.springframework.boot.autoconfigure.web.ServerPropertiesAutoConfiguration
 import org.springframework.boot.builder.SpringApplicationBuilder
 import org.springframework.boot.context.embedded.RegistrationBean
 import org.springframework.boot.context.web.SpringBootServletInitializer
@@ -35,10 +33,7 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
 
 @Configuration
-@Import([
-    EmbeddedServletContainerAutoConfiguration,
-    ServerPropertiesAutoConfiguration,
-    RootContextConfig])
+@Import(RootContextConfig)
 class Application extends SpringBootServletInitializer {
 
     /**
