@@ -1,6 +1,29 @@
 = Changelog
 
-== not released yet
+This document provides a high-level view of the changes introduced in Zuul OAAS by release.
+For a detailed view of what has changed, refer to the https://github.com/cvut/zuul-oaas/commits/master[commit history] on GitHub.
 
-* Remove no-indy profile, i.e. always compile with http://groovy.codehaus.org/InvokeDynamic+support[invokedynamic] (requires JDK 7u60+).
-* Build executable JAR by default (profile exec-jar).
+
+== 0.6.0 (2015-11-06)
+
+Improvements::
+  * Add optional integration with https://www.getsentry.com[Sentry].
+  * Add new module zuul-oaas-saml-sp for client authentication via SAML 2.0 (e.g. Shibboleth).
+  * Add Shibboleth login to the login page and redesign it a bit.
+  * Improve messages on the Authorize application page.
+
+Bug fixes::
+  * Fix unwanted escaping of HTML entities in Thymeleaf templates.
+  * Avoid loading of external images through HTTP.
+  * Read `application.properties` in UTF-8 instead of obscure ISO 8859-1.
+
+Others::
+  * Remove Maven profile `no-indy` and drop support for JDK older than 7u60; support of http://groovy-lang.org/indy.html[Invoke dynamic] is now required.
+  * Build executable JAR (Spring Boot) by default; add Maven profile `war` for building deployable WAR.
+  * Add https://github.com/thymol/thymol.js[thymol.js] for more comfortable prototyping of Thymeleaf templates.
+  * Update Jetty from 8.1.15 to 9.2.13.
+
+
+== 0.5.0 (2015-09-22)
+
+The first stable release.
