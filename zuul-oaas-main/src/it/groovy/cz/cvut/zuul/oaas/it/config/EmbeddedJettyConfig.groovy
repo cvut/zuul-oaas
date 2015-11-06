@@ -21,14 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package cz.cvut.zuul.oaas.config
+package cz.cvut.zuul.oaas.it.config
 
 import cz.cvut.zuul.oaas.common.config.ConfigurationSupport
-import org.eclipse.jetty.server.ForwardedRequestCustomizer
-import org.eclipse.jetty.server.HttpConfiguration.ConnectionFactory
-import org.eclipse.jetty.server.Server
 import org.springframework.boot.context.embedded.jetty.JettyEmbeddedServletContainerFactory
-import org.springframework.boot.context.embedded.jetty.JettyServerCustomizer
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
@@ -37,25 +33,10 @@ class EmbeddedJettyConfig implements ConfigurationSupport {
 
 
     @Bean JettyEmbeddedServletContainerFactory jettyEmbeddedFactory() {
-
-        def proxyHeadersCustomizer = { Server srv ->
-            def customizer = new ForwardedRequestCustomizer()
-            findHttpConfigurations(srv).each { it.addCustomizer(customizer) }
-        }
-
         new JettyEmbeddedServletContainerFactory (
             port: p('server.port') as int,
             address: InetAddress.getByName( p('server.address') ),
-            contextPath: p('server.context_path'),
-            serverCustomizers: [ proxyHeadersCustomizer as JettyServerCustomizer ]
+            contextPath: p('server.context_path')
         )
-    }
-
-
-    def findHttpConfigurations(Server server) {
-        server.connectors
-            .collectMany { it.connectionFactories }
-            .findAll { it instanceof ConnectionFactory }
-            .collect { ((ConnectionFactory) it).httpConfiguration }
     }
 }
