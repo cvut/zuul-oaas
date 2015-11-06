@@ -13,7 +13,7 @@
       <h1 th:utext="#{confirm_access.notice.title}">Allow access to your data?</h1>
 
       <p th:utext="#{confirm_access.notice.text(${client.displayName})}">
-        Third-party application <strong>FooBar</strong> would like to access your account.
+        Application <strong>Skynet</strong> would like permission to access data from services. Do you want to grant the following permissions?
       </p>
 
       <ul th:each="scope : ${client.scope}">
