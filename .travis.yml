@@ -6,6 +6,7 @@ jdk:
 env:
   - PROFILE=exec-jar
   - PROFILE=exec-jar,saml
+  - PROFILE=war
 
 # Cache local Maven repository, but exclude our artifacts.
 cache:
