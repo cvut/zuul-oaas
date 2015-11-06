@@ -16,13 +16,13 @@
     <packaging>${project.packaging}</packaging>
 
     <name>Zuul OAAS Main</name>
-    <description>The main module that builds a deployable WAR archive or an executable JAR.</description>
+    <description>The main module that builds an executable JAR (Spring Boot) or a deployable WAR.</description>
 
 
     <!--//////////////////// PROPERTIES ////////////////////-->
 
     <properties>
-        <project.packaging>war</project.packaging>
+        <project.packaging>jar</project.packaging>
     </properties>
 
 
@@ -60,6 +60,11 @@
             <artifactId>spring-boot-starter</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jetty</artifactId>
+        </dependency>
+
         <!--//// Test ////-->
 
         <dependency>
@@ -74,12 +79,6 @@
             <scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-jetty</artifactId>
-            <scope>test</scope>
-        </dependency>
-
     </dependencies>
 
 
@@ -87,7 +86,7 @@
 
     <profiles>
         <!--
-            Profile to build an executable JAR (using Spring Boot).
+            Build an executable JAR (using Spring Boot).
         -->
         <profile>
             <id>exec-jar</id>
@@ -96,30 +95,56 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
 
-            <properties>
-                <project.packaging>jar</project.packaging>
-            </properties>
-
-            <dependencies>
-                <dependency>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-starter-jetty</artifactId>
-                </dependency>
-
-                <!-- Rewrite scope to "compile", to be bundled in JAR. -->
-                <dependency>
-                    <groupId>javax.servlet</groupId>
-                    <artifactId>javax.servlet-api</artifactId>
-                    <scope>compile</scope>
-                </dependency>
-            </dependencies>
-
             <build>
                 <plugins>
                     <!-- Repackage as an executable JAR -->
                     <plugin>
                         <groupId>org.springframework.boot</groupId>
                         <artifactId>spring-boot-maven-plugin</artifactId>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!--
+            Build a deployable WAR.
+        -->
+        <profile>
+            <id>war</id>
+
+            <properties>
+                <project.packaging>war</project.packaging>
+            </properties>
+
+            <dependencies>
+                <dependency>
+                    <groupId>javax.servlet</groupId>
+                    <artifactId>javax.servlet-api</artifactId>
+                    <scope>provided</scope>
+                </dependency>
+
+                <dependency>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-jetty</artifactId>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.gmavenplus</groupId>
+                        <artifactId>gmavenplus-plugin</artifactId>
+                        <configuration>
+                            <sources>
+                                <source>
+                                    <directory>${project.basedir}/src/main/groovy</directory>
+                                    <excludes>
+                                        <exclude>**/cz/cvut/zuul/oaas/config/EmbeddedJettyConfig.*</exclude>
+                                    </excludes>
+                                </source>
+                            </sources>
+                        </configuration>
                     </plugin>
                 </plugins>
             </build>

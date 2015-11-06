@@ -31,6 +31,8 @@ import cz.cvut.zuul.oaas.it.support.MyResponseEntity
 import cz.cvut.zuul.oaas.it.support.RestTemplateDSL
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.autoconfigure.web.EmbeddedServletContainerAutoConfiguration
+import org.springframework.boot.autoconfigure.web.ServerPropertiesAutoConfiguration
 import org.springframework.boot.context.embedded.EmbeddedWebApplicationContext
 import org.springframework.boot.test.IntegrationTest
 import org.springframework.boot.test.SpringApplicationContextLoader
@@ -49,7 +51,9 @@ import static cz.cvut.zuul.oaas.it.support.TestUtils.parseCookie
 @WebAppConfiguration
 // pick up randomly selected port
 @IntegrationTest('server.port=0')
-@ContextConfiguration(classes=[Application, TestMongoPersistenceConfig], loader=SpringApplicationContextLoader)
+@ContextConfiguration(loader = SpringApplicationContextLoader, classes = [
+    Application, TestMongoPersistenceConfig,
+    EmbeddedServletContainerAutoConfiguration, ServerPropertiesAutoConfiguration ])
 abstract class AbstractHttpIntegrationTest extends Specification {
 
     @Shared
