@@ -34,6 +34,12 @@
             <artifactId>zuul-oaas-api</artifactId>
         </dependency>
 
+        <!-- TODO: Temporary workaround for User class, this should not be here! -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>zuul-oaas-core</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>

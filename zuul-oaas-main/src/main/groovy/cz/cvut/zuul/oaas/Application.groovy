@@ -23,6 +23,7 @@
  */
 package cz.cvut.zuul.oaas
 
+import cz.cvut.zuul.oaas.oidc.config.OidcContextConfig
 import cz.cvut.zuul.oaas.restapi.config.RestContextConfig
 import cz.cvut.zuul.oaas.web.config.WebContextConfig
 import org.springframework.boot.builder.SpringApplicationBuilder
@@ -72,6 +73,14 @@ class Application extends SpringBootServletInitializer {
             name:          'rest-module',
             urlMappings:   ['/api/*'],
             configClasses: [RestContextConfig]
+        )
+    }
+
+    @Bean RegistrationBean oidcModuleServlet() {
+        new DispatcherServletRegistrationBean(
+            name: 'oidc-module',
+            urlMappings: ['/oauth/userinfo'],  // FIXME!
+            configClasses: [OidcContextConfig]
         )
     }
 }
