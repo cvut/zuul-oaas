@@ -25,6 +25,7 @@ package cz.cvut.zuul.oaas.it
 
 import cz.cvut.zuul.oaas.it.support.Fixtures
 import cz.cvut.zuul.oaas.models.PersistableAccessToken
+import cz.cvut.zuul.oaas.models.PersistableApproval
 import spock.lang.Stepwise
 
 import static cz.cvut.zuul.oaas.it.support.RestTemplateDSL.formatQuery
@@ -70,6 +71,7 @@ class AuthorizationCodeGrantIT extends AbstractHttpIntegrationTest {
             def code = null
         and:
             dropCollection PersistableAccessToken
+            dropCollection PersistableApproval
 
         when: 'request authorization with response_type code'
         send  GET: '/oauth/authorize', query: authzParams
@@ -177,6 +179,7 @@ class AuthorizationCodeGrantIT extends AbstractHttpIntegrationTest {
     def 'request user authorization and reject access'() {
         setup:
             dropCollection PersistableAccessToken
+            dropCollection PersistableApproval
         and:
             authzParams += [state: 'zyx', redirect_uri: client.registeredRedirectUri[1]]
             def cookie = loginUserAndGetCookie()

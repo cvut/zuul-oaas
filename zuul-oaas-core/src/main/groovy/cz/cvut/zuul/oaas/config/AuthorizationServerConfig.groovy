@@ -24,6 +24,7 @@
 package cz.cvut.zuul.oaas.config
 
 import cz.cvut.zuul.oaas.common.config.ConfigurationSupport
+import cz.cvut.zuul.oaas.oauth2.AllOrNothingUserApprovalHandler
 import cz.cvut.zuul.oaas.oauth2.AuthorizationCodeServicesAdapter
 import cz.cvut.zuul.oaas.oauth2.ClientDetailsServiceAdapter
 import cz.cvut.zuul.oaas.oauth2.LockableClientUserApprovalHandler
@@ -36,7 +37,6 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Lazy
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.oauth2.provider.CompositeTokenGranter
-import org.springframework.security.oauth2.provider.approval.TokenStoreUserApprovalHandler
 import org.springframework.security.oauth2.provider.client.ClientCredentialsTokenGranter
 import org.springframework.security.oauth2.provider.code.AuthorizationCodeTokenGranter
 import org.springframework.security.oauth2.provider.endpoint.*
@@ -175,11 +175,9 @@ class AuthorizationServerConfig implements ConfigurationSupport {
     }
 
     @Bean userApprovalHandler() {
-        def handler = new TokenStoreUserApprovalHandler (
-            tokenStore:           tokenStore(),
-            clientDetailsService: clientDetailsService(),
-            requestFactory:       oAuth2RequestFactory()
-        )
+        def handler = new AllOrNothingUserApprovalHandler( repos.approvalsRepo() )
+        handler.approvalValidity = p('oaas.user_approval.validity') as int
+
         new LockableClientUserApprovalHandler(handler, repos.clientsRepo())
     }
 

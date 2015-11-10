@@ -25,6 +25,7 @@ package cz.cvut.zuul.oaas.it
 
 import cz.cvut.zuul.oaas.it.support.Fixtures
 import cz.cvut.zuul.oaas.models.PersistableAccessToken
+import cz.cvut.zuul.oaas.models.PersistableApproval
 import spock.lang.Stepwise
 
 import static org.springframework.http.HttpStatus.FOUND
@@ -56,6 +57,7 @@ class ImplicitGrantIT extends AbstractHttpIntegrationTest {
     def 'request user authorization and approve access'() {
         setup:
             dropCollection PersistableAccessToken
+            dropCollection PersistableApproval
         and:
             def cookie = loginUserAndGetCookie()
 
@@ -108,6 +110,7 @@ class ImplicitGrantIT extends AbstractHttpIntegrationTest {
     def 'request user authorization and reject access'() {
         setup:
             dropCollection PersistableAccessToken
+            dropCollection PersistableApproval
         and:
             authzParams += [redirect_uri: client.registeredRedirectUri[1]]
             def cookie = loginUserAndGetCookie()
