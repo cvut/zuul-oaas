@@ -78,6 +78,12 @@ class PersistableApproval implements Serializable {
         this.scope = scope
     }
 
+    PersistableApproval(String userId, String clientId, String scope, boolean approved, Date expiresAt) {
+        this(userId, clientId, scope)
+        this.approved = approved
+        this.expiresAt = expiresAt
+    }
+
     PersistableApproval(Approval approval) {
         this(approval.userId, approval.clientId, approval.scope)
         approved = approval.status != DENIED
