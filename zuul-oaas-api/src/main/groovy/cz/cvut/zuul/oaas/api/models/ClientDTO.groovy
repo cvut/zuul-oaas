@@ -23,7 +23,6 @@
  */
 package cz.cvut.zuul.oaas.api.models
 
-import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import cz.cvut.zuul.oaas.api.validators.EachValidURI
 import cz.jirutka.validator.collection.constraints.EachPattern
@@ -81,6 +80,8 @@ class ClientDTO implements Serializable {
     String displayName
 
     boolean locked
+
+    boolean userApprovalRequired = true
 
 
     @SuppressWarnings('GroovyUnusedDeclaration')

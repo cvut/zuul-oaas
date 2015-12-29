@@ -39,7 +39,7 @@ import org.springframework.security.oauth2.provider.ClientDetails
 @ToString(includes = ['clientId', 'displayName'], includePackage = false)
 class Client implements ClientDetails {
 
-    private static final long serialVersionUID = 2L
+    private static final long serialVersionUID = 3L
 
     @Id
     String clientId
@@ -74,6 +74,9 @@ class Client implements ClientDetails {
     @Field('locked')
     boolean locked = false
 
+    @Field('approvalRequired')
+    boolean userApprovalRequired = true
+
 
     Client() { }
 
@@ -84,6 +87,7 @@ class Client implements ClientDetails {
         def addl = prototype.additionalInformation ?: [:]
         displayName = addl.display_name
         locked = addl.locked
+        userApprovalRequired = addl.userApprovalRequired
     }
 
 
@@ -115,15 +119,15 @@ class Client implements ClientDetails {
         this.authorities = new LinkedHashSet(authorities ?: [])
     }
 
-    // TODO implement properly
     boolean isAutoApprove(String scope) {
-        false
+        !userApprovalRequired
     }
 
     Map<String, Object> getAdditionalInformation() {
         [
             display_name: displayName,
-            locked: locked
+            locked: locked,
+            userApprovalRequired: userApprovalRequired
         ]
     }
 }
