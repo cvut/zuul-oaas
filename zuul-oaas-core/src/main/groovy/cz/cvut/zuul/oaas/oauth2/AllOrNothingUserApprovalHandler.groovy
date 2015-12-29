@@ -25,6 +25,7 @@ package cz.cvut.zuul.oaas.oauth2
 
 import cz.cvut.zuul.oaas.models.PersistableApproval
 import cz.cvut.zuul.oaas.repos.ApprovalsRepo
+import cz.cvut.zuul.oaas.repos.ClientsRepo
 import groovy.time.TimeCategory
 import groovy.util.logging.Slf4j
 import org.springframework.security.core.Authentication
@@ -34,12 +35,14 @@ import org.springframework.security.oauth2.provider.approval.UserApprovalHandler
 
 /**
  * Simple user approval handler that remembers approval decisions and gives user
- * an option to approve all scopes, or nothing.
+ * an option to approve all scopes, or nothing. Request is automatically approved
+ * if the client's {@code userApprovalRequired} is false.
  */
 @Slf4j
 class AllOrNothingUserApprovalHandler implements UserApprovalHandler {
 
     final ApprovalsRepo approvalsRepo
+    final ClientsRepo clientsRepo
 
     /**
      * Name of form parameter that contains approval decision.
@@ -54,9 +57,12 @@ class AllOrNothingUserApprovalHandler implements UserApprovalHandler {
 
 
 
-    AllOrNothingUserApprovalHandler(ApprovalsRepo approvalsRepo) {
+    AllOrNothingUserApprovalHandler(ApprovalsRepo approvalsRepo, ClientsRepo clientsRepo) {
         assert approvalsRepo != null
+        assert clientsRepo != null
+
         this.approvalsRepo = approvalsRepo
+        this.clientsRepo = clientsRepo
     }
 
 
@@ -66,20 +72,18 @@ class AllOrNothingUserApprovalHandler implements UserApprovalHandler {
 
     AuthorizationRequest checkForPreApproval(AuthorizationRequest authzReq, Authentication userAuth) {
 
-        log.debug 'Looking up user approved authorizations for client_id = {} and user = {}',
+        if (isUserApprovalRequired(authzReq.clientId)) {
+            log.debug 'Looking up user approved authorizations for client_id = {} and user = {}',
                 authzReq.clientId, userAuth.name
 
-        def requestedScopes = authzReq.scope
+            def approvedScopes = approvedScopes(userAuth.name, authzReq.clientId)
 
-        def now = new Date()
-        def approves = approvalsRepo.findByUserIdAndClientId(userAuth.name, authzReq.clientId)
-        def approvedScopes = approves
-                .findAll { it.approved }
-                .findAll { it.expiresAt.after(now) }
-                .collect { it.scope }
-
-        if (approvedScopes.containsAll(requestedScopes)) {
-            log.debug 'User has already approved all requested scopes: {}', requestedScopes
+            if (approvedScopes.containsAll(authzReq.scope)) {
+                log.debug 'User has already approved all requested scopes: {}', authzReq.scope
+                authzReq.approved = true
+            }
+        } else {
+            log.debug 'User approval is not required for client_id = {}', authzReq.clientId
             authzReq.approved = true
         }
 
@@ -113,6 +117,25 @@ class AllOrNothingUserApprovalHandler implements UserApprovalHandler {
         this.approvalValidity = approvalExpiry
     }
 
+
+    // TODO: move to repository
+    private approvedScopes(String userId, String clientId) {
+        def now = new Date()
+
+        approvalsRepo
+            .findByUserIdAndClientId(userId, clientId)
+            .findAll { it.approved }
+            .findAll { it.expiresAt.after(now) }
+            .collect { it.scope }
+    }
+
+    private isUserApprovalRequired(String clientId) {
+
+        def client = clientsRepo.findOne(clientId)
+        assert client != null, "Could not find Client with id = ${clientId}"
+
+        client.userApprovalRequired
+    }
 
     private getExpiresAt() {
         use (TimeCategory) {

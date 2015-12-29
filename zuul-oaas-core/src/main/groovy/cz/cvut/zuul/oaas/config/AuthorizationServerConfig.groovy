@@ -175,7 +175,9 @@ class AuthorizationServerConfig implements ConfigurationSupport {
     }
 
     @Bean userApprovalHandler() {
-        def handler = new AllOrNothingUserApprovalHandler( repos.approvalsRepo() )
+        def handler = new AllOrNothingUserApprovalHandler (
+            repos.approvalsRepo(), repos.clientsRepo()
+        )
         handler.approvalValidity = p('oaas.user_approval.validity') as int
 
         new LockableClientUserApprovalHandler(handler, repos.clientsRepo())

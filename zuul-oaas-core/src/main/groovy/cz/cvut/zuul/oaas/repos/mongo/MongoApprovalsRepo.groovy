@@ -43,6 +43,18 @@ class MongoApprovalsRepo extends AbstractMongoRepository<PersistableApproval, Se
             entityClass)
     }
 
+    Collection<String> findValidApprovedScopes(String userId, String clientId) {
+        def query = query (
+            where('userId').is(userId)
+                .and('clientId').is(clientId)
+                .and('approved').is(true)
+                .and('expiresAt').gt(new Date())
+        )
+        query.fields().include('scope')
+
+        mongo.find(query, entityClass)*.scope
+    }
+
     boolean exists(String userId, String clientId, String scope) {
         mongo.exists( queryById(userId, clientId, scope), entityClass )
     }

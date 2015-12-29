@@ -23,8 +23,10 @@
  */
 package cz.cvut.zuul.oaas.oauth2
 
+import cz.cvut.zuul.oaas.models.Client
 import cz.cvut.zuul.oaas.models.PersistableApproval
 import cz.cvut.zuul.oaas.repos.ApprovalsRepo
+import cz.cvut.zuul.oaas.repos.ClientsRepo
 import cz.cvut.zuul.oaas.test.CoreObjectFactory
 import groovy.time.TimeCategory
 import org.springframework.security.core.Authentication
@@ -44,15 +46,21 @@ class AllOrNothingUserApprovalHandlerTest extends Specification {
     @Shared deniedApproval = this.&approval.curry(false, now + 1)
     @Shared expiredApproval = this.&approval.curry(true, now - 1)
 
+    def client = new Client(clientId: 'client-123', userApprovalRequired: true)
+
     def approvalsRepo = Mock(ApprovalsRepo)
+    def clientsRepo = Mock(ClientsRepo) {
+        findOne(client.clientId) >> client
+    }
+
     def authzReq = new AuthorizationRequest (
-        clientId: 'client-123',
+        clientId: client.clientId,
         approvalParameters: [approved: 'true'],
         scope: ['scope1', 'scope2']
     )
     def userAuth = build(Authentication, [username: 'flynn'])
 
-    def handler = new AllOrNothingUserApprovalHandler(approvalsRepo).with {
+    def handler = new AllOrNothingUserApprovalHandler(approvalsRepo, clientsRepo).with {
         approvalParameter = 'approved';
         approvalValidity = 600; it
     }
@@ -67,6 +75,13 @@ class AllOrNothingUserApprovalHandlerTest extends Specification {
             approved << [true, false]
     }
 
+
+    def 'checkForPreApproval: approves request when client does not require user approval'() {
+        setup:
+            client.userApprovalRequired = false
+        expect:
+            handler.checkForPreApproval(authzReq, userAuth).approved
+    }
 
     def 'checkForPreApproval: approves request when found valid approvals for all requested scopes'() {
         setup:
