@@ -26,6 +26,7 @@ package cz.cvut.zuul.oaas.saml.sp
 import cz.cvut.zuul.oaas.models.User
 import org.opensaml.saml2.core.NameID
 import org.springframework.security.core.authority.SimpleGrantedAuthority
+import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.security.saml.SAMLCredential
 import spock.lang.Specification
 import spock.lang.Unroll
@@ -101,18 +102,21 @@ class SamlAttributesUserDetailsServiceTest extends Specification {
             fieldName << userFields*.method
     }
 
-    def 'returns empty User when no mapped SAML attributes are present in SAML assertion'() {
+    def 'throws UsernameNotFoundException when username attribute is not present in SAML assertion'() {
         when:
-            def actual = service.loadUserBySAML(credential)
+            service.loadUserBySAML(credential)
         then:
-            assertThat( actual ).equalsTo( new User() ).inAllPropertiesExcept( 'authorities' )
+            thrown UsernameNotFoundException
     }
 
 
     def 'sets provided defaultAuthorities to the returned User object'() {
         setup:
             def authorities = [new SimpleGrantedAuthority('ROLE_FOO')]
-            service = new SamlAttributesUserDetailsService(defaultAuthorities: authorities)
+            service = new SamlAttributesUserDetailsService (
+                defaultAuthorities: authorities,
+                usernameAttrNames: ['uid']
+            )
         when:
             def actual = service.loadUserBySAML(credential)
         then:

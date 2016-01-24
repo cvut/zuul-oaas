@@ -27,6 +27,7 @@ import cz.cvut.zuul.oaas.models.User
 import groovy.util.logging.Slf4j
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
+import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.security.saml.SAMLCredential
 import org.springframework.security.saml.userdetails.SAMLUserDetailsService
 
@@ -78,7 +79,11 @@ class SamlAttributesUserDetailsService implements SAMLUserDetailsService {
         def findAttributeValue = { attrNames ->
             attrNames.findResult(credential.&getAttributeAsString)
         }
+
         def username = findAttributeValue(usernameAttrNames)
+        if (!username) {
+            throw new UsernameNotFoundException('Username not found in SAML response')
+        }
 
         log.debug "Authenticated user ${credential.nameID.value} with username ${username}"
 
