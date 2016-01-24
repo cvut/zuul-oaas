@@ -27,6 +27,7 @@ import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
+import org.springframework.util.Assert
 
 import static java.util.Collections.unmodifiableCollection
 
@@ -48,6 +49,11 @@ class User implements UserDetails {
     boolean credentialsNonExpired = true
     boolean enabled = true
 
+
+    void setUsername(String username) {
+        Assert.hasText(username, 'username must not be blank')
+        this.username = username.toLowerCase()
+    }
 
     void setAuthorities(Collection<? extends GrantedAuthority> authorities) {
         this.authorities = unmodifiableCollection(authorities)

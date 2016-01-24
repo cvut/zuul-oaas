@@ -106,12 +106,12 @@ class AccessTokensRepoIT extends AbstractRepoIT<PersistableAccessToken> {
             2.times {
                 def entity = new PersistableAccessToken(
                         build(OAuth2AccessToken),
-                        build(OAuth2Authentication, [clientId: 'someClientId', username: 'myName'])
+                        build(OAuth2Authentication, [clientId: 'someClientId', username: 'myname'])
                 )
                 repo.save(entity)
             }
         when:
-            def result = repo.findByClientIdAndUserName('someClientId', 'myName')
+            def result = repo.findByClientIdAndUserName('someClientId', 'myname')
         then:
             result.size() == 2
     }
