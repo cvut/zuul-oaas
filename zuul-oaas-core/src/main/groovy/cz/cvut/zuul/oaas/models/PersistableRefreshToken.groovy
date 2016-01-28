@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2015 Czech Technical University in Prague.
+ * Copyright 2013-2016 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,6 +28,7 @@ import com.fasterxml.jackson.annotation.JsonValue
 import org.springframework.data.annotation.Id
 import org.springframework.data.annotation.PersistenceConstructor
 import org.springframework.data.annotation.TypeAlias
+import org.springframework.data.domain.Persistable
 import org.springframework.data.mongodb.core.index.Indexed
 import org.springframework.data.mongodb.core.mapping.Document
 import org.springframework.data.mongodb.core.mapping.Field
@@ -37,9 +38,9 @@ import org.springframework.security.oauth2.provider.OAuth2Authentication
 
 @TypeAlias('RefreshToken')
 @Document(collection = "refresh_tokens")
-class PersistableRefreshToken implements ExpiringOAuth2RefreshToken, Serializable {
+class PersistableRefreshToken implements Timestamped, ExpiringOAuth2RefreshToken, Persistable<String> {
 
-    private static final long serialVersionUID = 2L
+    private static final long serialVersionUID = 3L
 
     static final Date NON_EXPIRING_DATE = new Date(Long.MAX_VALUE)
 
@@ -60,7 +61,7 @@ class PersistableRefreshToken implements ExpiringOAuth2RefreshToken, Serializabl
     }
 
     @PersistenceConstructor
-    PersistableRefreshToken(String value, Date expiration, OAuth2Authentication authentication = null) {
+    PersistableRefreshToken(String value, Date expiration, OAuth2Authentication authentication) {
         this.value = value
         this.expiration = expiration
         this.authentication = authentication
@@ -84,6 +85,8 @@ class PersistableRefreshToken implements ExpiringOAuth2RefreshToken, Serializabl
     Date getExpiration() { expiration ?: NON_EXPIRING_DATE }
 
     boolean isExpiring() { expiration != null }
+
+    String getId() { value }
 
     String toString() { value }
 

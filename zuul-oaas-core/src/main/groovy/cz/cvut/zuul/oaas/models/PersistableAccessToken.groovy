@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2015 Czech Technical University in Prague.
+ * Copyright 2013-2016 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,8 +24,8 @@
 package cz.cvut.zuul.oaas.models
 
 import org.springframework.data.annotation.Id
-import org.springframework.data.annotation.PersistenceConstructor
 import org.springframework.data.annotation.TypeAlias
+import org.springframework.data.domain.Persistable
 import org.springframework.data.mongodb.core.index.CompoundIndex
 import org.springframework.data.mongodb.core.index.CompoundIndexes
 import org.springframework.data.mongodb.core.index.Indexed
@@ -47,15 +47,15 @@ import static java.lang.System.currentTimeMillis
 ])
 @TypeAlias('AccessToken')
 @Document(collection = 'access_tokens')
-class PersistableAccessToken implements OAuth2AccessToken, Serializable {
+class PersistableAccessToken implements Timestamped, OAuth2AccessToken, Persistable<String> {
 
-    private static final long serialVersionUID = 4L
+    private static final long serialVersionUID = 5L
 
     private static final AuthenticationKeyGenerator AUTH_KEY_GENERATOR = new DefaultAuthenticationKeyGenerator()
 
 
     @Id
-    final String value
+    String value
 
     @Field('exp')
     @Indexed(expireAfterSeconds = 0)
@@ -82,7 +82,9 @@ class PersistableAccessToken implements OAuth2AccessToken, Serializable {
     OAuth2Authentication authentication
 
 
-    @PersistenceConstructor
+    PersistableAccessToken() {
+    }
+
     PersistableAccessToken(String value) {
         this.value = value
     }
@@ -131,6 +133,8 @@ class PersistableAccessToken implements OAuth2AccessToken, Serializable {
     String getAuthenticatedUsername() {
         authentication?.userAuthentication?.name
     }
+
+    String getId() { value }
 
     String toString() { value }
 

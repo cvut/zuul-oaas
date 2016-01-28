@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2015 Czech Technical University in Prague.
+ * Copyright 2013-2016 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,9 +25,9 @@ package cz.cvut.zuul.oaas.models
 
 import groovy.transform.EqualsAndHashCode
 import org.springframework.data.annotation.Id
-import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.annotation.PersistenceConstructor
 import org.springframework.data.annotation.TypeAlias
+import org.springframework.data.domain.Persistable
 import org.springframework.data.mongodb.core.index.CompoundIndex
 import org.springframework.data.mongodb.core.index.CompoundIndexes
 import org.springframework.data.mongodb.core.mapping.Document
@@ -47,9 +47,9 @@ import static org.springframework.security.oauth2.provider.approval.Approval.App
 @TypeAlias('Approval')
 @Document(collection = 'approvals')
 @EqualsAndHashCode(includes = ['userId', 'clientId', 'scope'])
-class PersistableApproval implements Serializable {
+class PersistableApproval implements Timestamped, Persistable<Serializable> {
 
-    private static final long serialVersionUID = 1L
+    private static final long serialVersionUID = 2L
     private static final SHA1 = MessageDigest.getInstance('SHA-1')
 
     @Id
@@ -65,9 +65,6 @@ class PersistableApproval implements Serializable {
 
     @Field('exp')
     Date expiresAt
-
-    @LastModifiedDate
-    Date lastUpdatedAt
 
 
     @PersistenceConstructor
@@ -88,7 +85,6 @@ class PersistableApproval implements Serializable {
         this(approval.userId, approval.clientId, approval.scope)
         approved = approval.status != DENIED
         expiresAt = approval.expiresAt
-        lastUpdatedAt = approval.lastUpdatedAt
     }
 
     static Collection<PersistableApproval> createFrom(Iterable<Approval> oauthApprovals) {
@@ -102,8 +98,10 @@ class PersistableApproval implements Serializable {
     }
 
     Approval toOAuthApproval() {
-        new Approval(userId, clientId, scope, expiresAt, approved ? APPROVED : DENIED, lastUpdatedAt)
+        new Approval(userId, clientId, scope, expiresAt, approved ? APPROVED : DENIED, updatedAt)
     }
+
+    String getId() { id }
 
     String toString() {
         "{ userId: ${userId}, clientId: ${clientId}, scope: ${scope} }"

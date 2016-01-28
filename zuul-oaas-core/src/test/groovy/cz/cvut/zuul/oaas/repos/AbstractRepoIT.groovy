@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2014 Czech Technical University in Prague.
+ * Copyright 2013-2016 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,9 +24,10 @@
 package cz.cvut.zuul.oaas.repos
 
 import cz.cvut.zuul.oaas.config.TestMongoPersistenceConfig
+import cz.cvut.zuul.oaas.models.Timestamped
 import cz.cvut.zuul.oaas.test.CoreObjectFactory
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.data.annotation.Id
+import org.springframework.data.domain.Persistable
 import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.test.context.ContextConfiguration
 import spock.lang.Shared
@@ -37,7 +38,7 @@ import java.lang.reflect.ParameterizedType
 import static cz.cvut.zuul.oaas.test.Assertions.assertThat
 
 @ContextConfiguration(classes=TestMongoPersistenceConfig)
-abstract class AbstractRepoIT<E> extends Specification {
+abstract class AbstractRepoIT<E extends Persistable> extends Specification {
 
     @Delegate CoreObjectFactory factory = new CoreObjectFactory()
 
@@ -47,7 +48,6 @@ abstract class AbstractRepoIT<E> extends Specification {
     //////// Setup ////////
 
     @Shared Class<E> entityClass = determineEntityClass()
-    @Shared String idPropertyName = findIdProperty()
     @Shared Class[] cleanup = [ entityClass ]
 
 
@@ -82,27 +82,22 @@ abstract class AbstractRepoIT<E> extends Specification {
     }
 
     void assertIt(E actual, E expected) {
-        assertThat(actual).equalsTo(expected).inAllProperties()
-    }
+        def excludedProps = ['new']
 
-    def ID(object) {
-        object[idPropertyName] as Serializable
+        if (Timestamped.isAssignableFrom(entityClass)) {
+            excludedProps += ['createdAt', 'updatedAt']
+        }
+        assertThat( actual ).equalsTo( expected ).inAllPropertiesExcept( *excludedProps )
     }
 
     private determineEntityClass() {
         (getClass().genericSuperclass as ParameterizedType).actualTypeArguments[0] as Class<E>
     }
 
-    private findIdProperty() {
-        getEntityClass().declaredFields.find {
-            it.declaredAnnotations*.annotationType().contains(Id)
-        }?.name
-    }
-
 
     //////// Tests ////////
 
-    def 'save a given entity'() {
+    def 'save a new entity'() {
         given:
             def entity = buildEntity()
         when:
@@ -111,7 +106,7 @@ abstract class AbstractRepoIT<E> extends Specification {
             repo.count() == 1
     }
 
-    def 'save all given entities'() {
+    def 'save all new entities'() {
         given:
             def entities = buildEntities(3)
         when:
@@ -132,7 +127,7 @@ abstract class AbstractRepoIT<E> extends Specification {
             def expected = buildEntity()
             repo.save(expected)
         when:
-            def actual = repo.findOne(ID(expected))
+            def actual = repo.findOne(expected.id)
         then:
             assertIt actual, expected
     }
@@ -143,7 +138,7 @@ abstract class AbstractRepoIT<E> extends Specification {
             repo.saveAll(expected)
             repo.saveAll(seed())
         when:
-            def actual = repo.findAll( expected.collect{ ID(it) } ).toList()
+            def actual = repo.findAll( expected.collect{ it.id } ).toList()
         then:
             actual.size() == expected.size()
     }
@@ -163,7 +158,7 @@ abstract class AbstractRepoIT<E> extends Specification {
             def expected = buildEntity()
             repo.save(expected)
         expect:
-            repo.exists(ID(expected))
+            repo.exists(expected.id)
     }
 
     def 'try to delete entity by non existing id'() {
@@ -178,11 +173,11 @@ abstract class AbstractRepoIT<E> extends Specification {
             def expected = buildEntity()
             repo.save(expected)
 
-            assert repo.findOne( ID(expected) )
+            assert repo.findOne(expected.id)
         when:
-            repo.deleteById(ID(expected))
+            repo.deleteById(expected.id)
         then:
-            ! repo.findOne(ID(expected))
+            ! repo.findOne(expected.id)
     }
 
     def 'delete a given entity'() {
@@ -190,11 +185,11 @@ abstract class AbstractRepoIT<E> extends Specification {
             def expected = buildEntity()
             repo.save(expected)
 
-            assert repo.findOne(ID(expected))
+            assert repo.findOne(expected.id)
         when:
             repo.delete(expected)
         then:
-            ! repo.findOne(ID(expected))
+            ! repo.findOne(expected.id)
     }
 
     def 'delete all given entities'() {
@@ -205,7 +200,7 @@ abstract class AbstractRepoIT<E> extends Specification {
         when:
             repo.deleteAll((Iterable<E>) toDelete)
         then:
-            ! repo.findAll( toDelete.collect { ID(it) } )
-            repo.findAll( toPreserve.collect { ID(it) } )
+            ! repo.findAll( toDelete.collect { it.id } )
+            repo.findAll( toPreserve.collect { it.id } )
     }
 }

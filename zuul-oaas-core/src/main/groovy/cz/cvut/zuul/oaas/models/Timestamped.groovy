@@ -23,39 +23,40 @@
  */
 package cz.cvut.zuul.oaas.models
 
-import org.springframework.data.annotation.Id
-import org.springframework.data.annotation.PersistenceConstructor
-import org.springframework.data.annotation.TypeAlias
-import org.springframework.data.domain.Persistable
-import org.springframework.data.mongodb.core.mapping.Document
-import org.springframework.data.mongodb.core.mapping.Field
-import org.springframework.security.oauth2.provider.OAuth2Authentication
+import org.springframework.data.annotation.CreatedDate
+import org.springframework.data.annotation.LastModifiedDate
 
-@TypeAlias('OAuthCode')
-@Document(collection = 'oauth_codes')
-class PersistableAuthorizationCode implements Timestamped, Persistable<String> {
+/**
+ * Trait for persistable entities that implements createdAt and updatedAt
+ * fields.
+ */
+trait Timestamped {
+    // TODO use JodaTime?
 
-    private static final long serialVersionUID = 2L
+    @CreatedDate
+    private Date createdAt
 
-    @Id
-    final String code
-
-    @Field('auth')
-    final OAuth2Authentication authentication
+    @LastModifiedDate
+    private Date updatedAt
 
 
-    @PersistenceConstructor
-    PersistableAuthorizationCode(String code, OAuth2Authentication authentication) {
-        this.code = code
-        this.authentication = authentication
+    boolean isNew() {
+        createdAt == null
     }
 
+    /**
+     * Timestamp when the entity was inserted into a database.
+     */
+    Date getCreatedAt() {
+        createdAt
+    }
 
-    String getId() { code }
-
-    String toString() { code }
-
-    int hashCode() { code.hashCode() }
-
-    boolean equals(Object that) { toString() == that.toString() }
+    /**
+     * Timestamp when the entity was last modified in a database. If the entity
+     * has not been modified since the insertion, then it's the same as
+     * {@link #getCreatedAt}.
+     */
+    Date getUpdatedAt() {
+        updatedAt ?: createdAt
+    }
 }

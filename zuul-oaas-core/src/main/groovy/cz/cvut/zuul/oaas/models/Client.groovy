@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2015 Czech Technical University in Prague.
+ * Copyright 2013-2016 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,6 +28,7 @@ import groovy.transform.ToString
 import org.codehaus.groovy.runtime.InvokerHelper
 import org.springframework.data.annotation.Id
 import org.springframework.data.annotation.TypeAlias
+import org.springframework.data.domain.Persistable
 import org.springframework.data.mongodb.core.mapping.Document
 import org.springframework.data.mongodb.core.mapping.Field
 import org.springframework.security.core.GrantedAuthority
@@ -37,9 +38,9 @@ import org.springframework.security.oauth2.provider.ClientDetails
 @Document(collection = 'clients')
 @EqualsAndHashCode(includes = 'clientId')
 @ToString(includes = ['clientId', 'displayName'], includePackage = false)
-class Client implements ClientDetails {
+class Client implements Timestamped, ClientDetails, Persistable<String> {
 
-    private static final long serialVersionUID = 3L
+    private static final long serialVersionUID = 4L
 
     @Id
     String clientId
@@ -90,6 +91,10 @@ class Client implements ClientDetails {
         userApprovalRequired = addl.userApprovalRequired
     }
 
+
+    String getId() {
+        clientId
+    }
 
     boolean isSecretRequired() {
         clientSecret != null

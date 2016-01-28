@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2015 Czech Technical University in Prague.
+ * Copyright 2013-2016 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,6 +27,7 @@ import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
 import org.springframework.data.annotation.Id
 import org.springframework.data.annotation.TypeAlias
+import org.springframework.data.domain.Persistable
 import org.springframework.data.mongodb.core.index.Indexed
 import org.springframework.data.mongodb.core.mapping.Document
 import org.springframework.data.mongodb.core.mapping.Field
@@ -35,9 +36,9 @@ import org.springframework.data.mongodb.core.mapping.Field
 @Document(collection = 'resources')
 @EqualsAndHashCode(includes = 'id')
 @ToString(includes = ['id', 'name', 'version'], includeNames = true, includePackage = false)
-class Resource implements Serializable {
+class Resource implements Timestamped, Persistable<String> {
 
-    private static final long serialVersionUID = 3L
+    private static final long serialVersionUID = 4L
 
     @Id
     String id

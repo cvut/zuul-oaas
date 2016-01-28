@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2015 Czech Technical University in Prague.
+ * Copyright 2013-2016 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -36,7 +36,6 @@ class AccessTokensRepoIT extends AbstractRepoIT<PersistableAccessToken> {
 
     @Autowired AccessTokensRepo repo
 
-    String idPropertyName = 'value'
 
     PersistableAccessToken buildEntity() {
         new PersistableAccessToken(
