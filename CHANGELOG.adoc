@@ -4,10 +4,14 @@ This document provides a high-level view of the changes introduced in Zuul OAAS 
 For a detailed view of what has changed, refer to the https://github.com/cvut/zuul-oaas/commits/master[commit history] on GitHub.
 
 
-== unreleased
+== 0.7.0 (2016-01-28)
 
 Improvements::
   * Store user approvals (i.e. authorization of particular scope for specific client) separately to tokens, so user doesn’t need to approve already approved scopes when client doesn’t use refresh token.
+  * Add option to implicitly approve scopes for specific clients without requiring explicit approval from the user.
+
+Bug fixes::
+  * Always convert username to lower case to avoid case-mismatch problems.
 
 
 == 0.6.0 (2015-11-06)
