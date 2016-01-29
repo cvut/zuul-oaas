@@ -39,7 +39,8 @@ import org.springframework.security.oauth2.provider.token.AuthenticationKeyGener
 import org.springframework.security.oauth2.provider.token.DefaultAuthenticationKeyGenerator
 import org.springframework.util.Assert
 
-import static java.lang.System.currentTimeMillis
+import static cz.cvut.zuul.oaas.common.DateUtils.END_OF_TIME
+import static cz.cvut.zuul.oaas.common.DateUtils.secondsFromNow
 
 @CompoundIndexes([
     @CompoundIndex(name = 'clientId', def = '{auth.oauthReq.client: 1}'),
@@ -49,7 +50,7 @@ import static java.lang.System.currentTimeMillis
 @Document(collection = 'access_tokens')
 class PersistableAccessToken implements Timestamped, Authenticated, OAuth2AccessToken, Persistable<String> {
 
-    private static final long serialVersionUID = 5L
+    private static final long serialVersionUID = 6L
 
     private static final AuthenticationKeyGenerator AUTH_KEY_GENERATOR = new DefaultAuthenticationKeyGenerator()
 
@@ -59,7 +60,7 @@ class PersistableAccessToken implements Timestamped, Authenticated, OAuth2Access
 
     @Field('exp')
     @Indexed(expireAfterSeconds = 0)
-    Date expiration
+    Date expiration = END_OF_TIME
 
     @Field('type')
     String tokenType = BEARER_TYPE.toLowerCase()
@@ -92,7 +93,7 @@ class PersistableAccessToken implements Timestamped, Authenticated, OAuth2Access
     PersistableAccessToken(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
         this(accessToken.value)
 
-        this.expiration = accessToken.expiration
+        this.expiration = accessToken.expiration ?: END_OF_TIME
         this.tokenType = accessToken.tokenType
         this.refreshTokenValue = accessToken?.refreshToken?.value
         this.scope = accessToken.scope
@@ -107,13 +108,16 @@ class PersistableAccessToken implements Timestamped, Authenticated, OAuth2Access
         AUTH_KEY_GENERATOR.extractKey(authentication)
     }
 
+    void setExpiration(Date expiration) {
+        this.expiration = expiration ?: END_OF_TIME
+    }
 
     int getExpiresIn() {
-        expiration != null ? ((expiration.time - currentTimeMillis()) / 1000L).intValue() : 0
+        expiration != END_OF_TIME ? secondsFromNow(expiration) : 0
     }
 
     boolean isExpired() {
-        expiration?.before(new Date())
+        expiration.before(new Date())
     }
 
     OAuth2RefreshToken getRefreshToken() {
@@ -126,6 +130,7 @@ class PersistableAccessToken implements Timestamped, Authenticated, OAuth2Access
         this.authenticationKey = extractAuthenticationKey(authentication)
     }
 
+    String getAuthenticationKey() { authenticationKey }
 
     String getId() { value }
 

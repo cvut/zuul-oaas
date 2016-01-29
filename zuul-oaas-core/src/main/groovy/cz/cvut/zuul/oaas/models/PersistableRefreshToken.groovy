@@ -36,14 +36,14 @@ import org.springframework.security.oauth2.common.ExpiringOAuth2RefreshToken
 import org.springframework.security.oauth2.common.OAuth2RefreshToken
 import org.springframework.security.oauth2.provider.OAuth2Authentication
 
+import static cz.cvut.zuul.oaas.common.DateUtils.END_OF_TIME
+
 @TypeAlias('RefreshToken')
 @Document(collection = "refresh_tokens")
 class PersistableRefreshToken
         implements Timestamped, Authenticated, ExpiringOAuth2RefreshToken, Persistable<String> {
 
-    private static final long serialVersionUID = 3L
-
-    static final Date NON_EXPIRING_DATE = new Date(Long.MAX_VALUE)
+    private static final long serialVersionUID = 4L
 
     @Id
     final String value
@@ -58,13 +58,13 @@ class PersistableRefreshToken
 
     @JsonCreator
     PersistableRefreshToken(String value) {
-        this(value, null, null)
+        this(value, END_OF_TIME, null)
     }
 
     @PersistenceConstructor
     PersistableRefreshToken(String value, Date expiration, OAuth2Authentication authentication) {
         this.value = value
-        this.expiration = expiration
+        this.expiration = expiration ?: END_OF_TIME
         this.authentication = authentication
     }
 
@@ -75,18 +75,16 @@ class PersistableRefreshToken
         if (refreshToken instanceof ExpiringOAuth2RefreshToken) {
             this.expiration = refreshToken.expiration
         } else {
-            this.expiration = null
+            this.expiration = END_OF_TIME
         }
     }
 
 
+    boolean isExpiring() {
+        expiration != END_OF_TIME
+    }
+
     @JsonValue
-    String getValue() { value }
-
-    Date getExpiration() { expiration ?: NON_EXPIRING_DATE }
-
-    boolean isExpiring() { expiration != null }
-
     String getId() { value }
 
     String toString() { value }

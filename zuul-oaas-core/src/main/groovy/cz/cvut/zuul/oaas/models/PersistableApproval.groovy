@@ -37,6 +37,7 @@ import org.springframework.util.Base64Utils
 
 import java.security.MessageDigest
 
+import static cz.cvut.zuul.oaas.common.DateUtils.END_OF_TIME
 import static org.springframework.security.oauth2.provider.approval.Approval.ApprovalStatus.APPROVED
 import static org.springframework.security.oauth2.provider.approval.Approval.ApprovalStatus.DENIED
 
@@ -49,7 +50,7 @@ import static org.springframework.security.oauth2.provider.approval.Approval.App
 @EqualsAndHashCode(includes = ['userId', 'clientId', 'scope'])
 class PersistableApproval implements Timestamped, Persistable<Serializable> {
 
-    private static final long serialVersionUID = 2L
+    private static final long serialVersionUID = 3L
     private static final SHA1 = MessageDigest.getInstance('SHA-1')
 
     @Id
@@ -64,7 +65,7 @@ class PersistableApproval implements Timestamped, Persistable<Serializable> {
     boolean approved
 
     @Field('exp')
-    Date expiresAt
+    Date expiresAt = END_OF_TIME
 
 
     @PersistenceConstructor
@@ -78,13 +79,13 @@ class PersistableApproval implements Timestamped, Persistable<Serializable> {
     PersistableApproval(String userId, String clientId, String scope, boolean approved, Date expiresAt) {
         this(userId, clientId, scope)
         this.approved = approved
-        this.expiresAt = expiresAt
+        setExpiresAt expiresAt
     }
 
     PersistableApproval(Approval approval) {
         this(approval.userId, approval.clientId, approval.scope)
         approved = approval.status != DENIED
-        expiresAt = approval.expiresAt
+        setExpiresAt approval.expiresAt
     }
 
     static Collection<PersistableApproval> createFrom(Iterable<Approval> oauthApprovals) {
@@ -95,6 +96,10 @@ class PersistableApproval implements Timestamped, Persistable<Serializable> {
     private static compositeId(userId, clientId, scope) {
         def digest = SHA1.digest([userId, clientId, scope].join(':').bytes)
         Base64Utils.encodeToString(digest)
+    }
+
+    void setExpiresAt(Date expiresAt) {
+        this.expiresAt = expiresAt ?: END_OF_TIME
     }
 
     Approval toOAuthApproval() {
