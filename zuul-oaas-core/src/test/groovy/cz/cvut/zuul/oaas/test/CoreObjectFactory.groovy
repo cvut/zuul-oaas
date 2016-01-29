@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2015 Czech Technical University in Prague.
+ * Copyright 2013-2016 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,17 +25,31 @@ package cz.cvut.zuul.oaas.test
 
 import cz.cvut.zuul.oaas.api.models.ClientDTO
 import cz.cvut.zuul.oaas.api.models.ResourceDTO
-import cz.cvut.zuul.oaas.models.*
+import cz.cvut.zuul.oaas.models.AuthorizationGrant
+import cz.cvut.zuul.oaas.models.Client
+import cz.cvut.zuul.oaas.models.PersistableAccessToken
+import cz.cvut.zuul.oaas.models.PersistableApproval
+import cz.cvut.zuul.oaas.models.PersistableAuthorizationCode
+import cz.cvut.zuul.oaas.models.Resource
+import cz.cvut.zuul.oaas.models.Scope
+import cz.cvut.zuul.oaas.models.User
+import cz.cvut.zuul.oaas.models.Visibility
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
-import org.springframework.security.oauth2.common.*
+import org.springframework.security.oauth2.common.DefaultExpiringOAuth2RefreshToken
+import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken
+import org.springframework.security.oauth2.common.DefaultOAuth2RefreshToken
+import org.springframework.security.oauth2.common.ExpiringOAuth2RefreshToken
+import org.springframework.security.oauth2.common.OAuth2AccessToken
+import org.springframework.security.oauth2.common.OAuth2RefreshToken
 import org.springframework.security.oauth2.provider.OAuth2Authentication
 import org.springframework.security.oauth2.provider.OAuth2Request
 import org.springframework.security.oauth2.provider.approval.Approval
 
 import static cz.cvut.zuul.oaas.test.CustomGeneratorSamples.anyEmail
+import static java.util.UUID.randomUUID
 import static net.java.quickcheck.generator.CombinedGeneratorSamples.anyMap
 import static net.java.quickcheck.generator.CombinedGeneratorSamples.anySet
 import static net.java.quickcheck.generator.PrimitiveGeneratorSamples.*
@@ -53,7 +67,7 @@ class CoreObjectFactory extends ObjectFactory {
         //////// Tokens ////////
 
         registerBuilder(DefaultOAuth2AccessToken) { values ->
-            def value = values['value'] ?: anyLetterString(5, 10)
+            def value = values['value'] ?: randomUUID() as String
 
             def object = new DefaultOAuth2AccessToken(value).with {
                 scope = values['scope'] ?: anySet(letterStrings(5, 10))
@@ -65,11 +79,11 @@ class CoreObjectFactory extends ObjectFactory {
         }
 
         registerBuilder(DefaultOAuth2RefreshToken) {
-            new DefaultOAuth2RefreshToken(anyLetterString(5, 10))
+            new DefaultOAuth2RefreshToken(randomUUID() as String)
         }
 
         registerBuilder(DefaultExpiringOAuth2RefreshToken) {
-            new DefaultExpiringOAuth2RefreshToken(anyLetterString(5, 10), anyDate())
+            new DefaultExpiringOAuth2RefreshToken(randomUUID() as String, anyDate())
         }
 
         registerBuilder(PersistableAccessToken) {
