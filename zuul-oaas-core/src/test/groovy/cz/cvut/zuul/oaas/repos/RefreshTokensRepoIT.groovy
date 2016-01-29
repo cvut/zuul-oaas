@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2014 Czech Technical University in Prague.
+ * Copyright 2013-2016 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,17 +24,15 @@
 package cz.cvut.zuul.oaas.repos
 
 import cz.cvut.zuul.oaas.models.PersistableRefreshToken
-import cz.cvut.zuul.oaas.test.SharedAsserts
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.oauth2.common.ExpiringOAuth2RefreshToken
 import org.springframework.security.oauth2.common.OAuth2RefreshToken
 import org.springframework.security.oauth2.provider.OAuth2Authentication
 
-import static cz.cvut.zuul.oaas.test.Assertions.assertThat
-
 class RefreshTokensRepoIT extends AbstractRepoIT<PersistableRefreshToken> {
 
     @Autowired RefreshTokensRepo repo
+
 
     PersistableRefreshToken buildEntity() {
         new PersistableRefreshToken(
@@ -43,10 +41,6 @@ class RefreshTokensRepoIT extends AbstractRepoIT<PersistableRefreshToken> {
         )
     }
 
-    void assertIt(PersistableRefreshToken actual, PersistableRefreshToken expected) {
-        assertThat (actual) equalsTo (expected) inAllPropertiesExcept ('authentication')
-        SharedAsserts.isEqual actual.authentication, expected.authentication
-    }
 
     def 'return expiring token'() {
         given:

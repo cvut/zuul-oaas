@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2014 Czech Technical University in Prague.
+ * Copyright 2013-2016 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,15 +27,9 @@ import cz.cvut.zuul.oaas.models.Resource
 import cz.cvut.zuul.oaas.models.Visibility
 import org.springframework.beans.factory.annotation.Autowired
 
-import static cz.cvut.zuul.oaas.test.Assertions.assertThat
-
 class ResourcesRepoIT extends AbstractRepoIT<Resource>{
 
     @Autowired ResourcesRepo repo
-
-    void assertIt(Resource actual, Resource expected) {
-        assertThat (actual) equalsTo (expected) inAllProperties()
-    }
 
 
     def 'find all public resources'() {

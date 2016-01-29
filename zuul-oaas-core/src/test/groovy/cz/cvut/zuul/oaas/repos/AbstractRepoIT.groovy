@@ -24,8 +24,10 @@
 package cz.cvut.zuul.oaas.repos
 
 import cz.cvut.zuul.oaas.config.TestMongoPersistenceConfig
+import cz.cvut.zuul.oaas.models.Authenticated
 import cz.cvut.zuul.oaas.models.Timestamped
 import cz.cvut.zuul.oaas.test.CoreObjectFactory
+import cz.cvut.zuul.oaas.test.SharedAsserts
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Persistable
 import org.springframework.data.mongodb.core.MongoTemplate
@@ -86,6 +88,10 @@ abstract class AbstractRepoIT<E extends Persistable> extends Specification {
 
         if (Timestamped.isAssignableFrom(entityClass)) {
             excludedProps += ['createdAt', 'updatedAt']
+        }
+        if (Authenticated.isAssignableFrom(entityClass)) {
+            excludedProps << 'authentication'
+            SharedAsserts.isEqual(actual.authentication, expected.authentication)
         }
         assertThat( actual ).equalsTo( expected ).inAllPropertiesExcept( *excludedProps )
     }

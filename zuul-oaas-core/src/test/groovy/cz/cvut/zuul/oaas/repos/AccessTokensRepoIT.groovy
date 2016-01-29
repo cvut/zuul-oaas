@@ -24,13 +24,10 @@
 package cz.cvut.zuul.oaas.repos
 
 import cz.cvut.zuul.oaas.models.PersistableAccessToken
-import cz.cvut.zuul.oaas.test.SharedAsserts
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.oauth2.common.OAuth2AccessToken
 import org.springframework.security.oauth2.common.OAuth2RefreshToken
 import org.springframework.security.oauth2.provider.OAuth2Authentication
-
-import static cz.cvut.zuul.oaas.test.Assertions.assertThat
 
 class AccessTokensRepoIT extends AbstractRepoIT<PersistableAccessToken> {
 
@@ -42,11 +39,6 @@ class AccessTokensRepoIT extends AbstractRepoIT<PersistableAccessToken> {
                 build(OAuth2AccessToken),
                 build(OAuth2Authentication)
         )
-    }
-
-    void assertIt(PersistableAccessToken actual, PersistableAccessToken expected) {
-        assertThat (actual) equalsTo (expected) inAllPropertiesExcept ('authentication')
-        SharedAsserts.isEqual actual.authentication, expected.authentication
     }
 
 

@@ -38,7 +38,8 @@ import org.springframework.security.oauth2.provider.OAuth2Authentication
 
 @TypeAlias('RefreshToken')
 @Document(collection = "refresh_tokens")
-class PersistableRefreshToken implements Timestamped, ExpiringOAuth2RefreshToken, Persistable<String> {
+class PersistableRefreshToken
+        implements Timestamped, Authenticated, ExpiringOAuth2RefreshToken, Persistable<String> {
 
     private static final long serialVersionUID = 3L
 

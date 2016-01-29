@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2015 Czech Technical University in Prague.
+ * Copyright 2013-2016 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,18 +24,9 @@
 package cz.cvut.zuul.oaas.repos
 
 import cz.cvut.zuul.oaas.models.PersistableAuthorizationCode
-import cz.cvut.zuul.oaas.test.SharedAsserts
 import org.springframework.beans.factory.annotation.Autowired
-
-import static cz.cvut.zuul.oaas.test.Assertions.assertThat
 
 class AuthorizationCodesRepoIT extends AbstractRepoIT<PersistableAuthorizationCode> {
 
     @Autowired AuthorizationCodesRepo repo
-
-
-    void assertIt(PersistableAuthorizationCode actual, PersistableAuthorizationCode expected) {
-        assertThat (actual) equalsTo (expected) inAllPropertiesExcept ('authentication')
-        SharedAsserts.isEqual actual.authentication, expected.authentication
-    }
 }

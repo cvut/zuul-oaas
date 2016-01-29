@@ -47,7 +47,7 @@ import static java.lang.System.currentTimeMillis
 ])
 @TypeAlias('AccessToken')
 @Document(collection = 'access_tokens')
-class PersistableAccessToken implements Timestamped, OAuth2AccessToken, Persistable<String> {
+class PersistableAccessToken implements Timestamped, Authenticated, OAuth2AccessToken, Persistable<String> {
 
     private static final long serialVersionUID = 5L
 
@@ -126,13 +126,6 @@ class PersistableAccessToken implements Timestamped, OAuth2AccessToken, Persista
         this.authenticationKey = extractAuthenticationKey(authentication)
     }
 
-    String getAuthenticatedClientId() {
-        authentication?.getOAuth2Request()?.clientId
-    }
-
-    String getAuthenticatedUsername() {
-        authentication?.userAuthentication?.name
-    }
 
     String getId() { value }
 
