@@ -101,6 +101,13 @@ class PersistableApproval implements Timestamped, Persistable<Serializable> {
         new Approval(userId, clientId, scope, expiresAt, approved ? APPROVED : DENIED, updatedAt)
     }
 
+    def <T> T asType(Class<T> target) {
+        if (target == Approval) {
+            return (T) toOAuthApproval()
+        }
+        super.asType(target)
+    }
+
     String getId() { id }
 
     String toString() {
