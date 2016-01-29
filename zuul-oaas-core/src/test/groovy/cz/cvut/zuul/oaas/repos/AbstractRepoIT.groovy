@@ -24,10 +24,7 @@
 package cz.cvut.zuul.oaas.repos
 
 import cz.cvut.zuul.oaas.config.TestMongoPersistenceConfig
-import cz.cvut.zuul.oaas.models.Authenticated
-import cz.cvut.zuul.oaas.models.Timestamped
 import cz.cvut.zuul.oaas.test.CoreObjectFactory
-import cz.cvut.zuul.oaas.test.SharedAsserts
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Persistable
 import org.springframework.data.mongodb.core.MongoTemplate
@@ -35,12 +32,8 @@ import org.springframework.test.context.ContextConfiguration
 import spock.lang.Shared
 import spock.lang.Specification
 
-import java.lang.reflect.ParameterizedType
-
-import static cz.cvut.zuul.oaas.test.Assertions.assertThat
-
 @ContextConfiguration(classes=TestMongoPersistenceConfig)
-abstract class AbstractRepoIT<E extends Persistable> extends Specification {
+abstract class AbstractRepoIT<E extends Persistable> extends Specification implements EntityTestSupport<E> {
 
     @Delegate CoreObjectFactory factory = new CoreObjectFactory()
 
@@ -49,7 +42,6 @@ abstract class AbstractRepoIT<E extends Persistable> extends Specification {
 
     //////// Setup ////////
 
-    @Shared Class<E> entityClass = determineEntityClass()
     @Shared Class[] cleanup = [ entityClass ]
 
 
@@ -63,42 +55,7 @@ abstract class AbstractRepoIT<E extends Persistable> extends Specification {
         }
     }
 
-
-    //////// Helper methods ////////
-
     abstract BaseRepository<E, ? extends Serializable> getRepo()
-
-
-    def E buildEntity() {
-        build(entityClass)
-    }
-
-    def List<E> buildEntities(count) {
-        new Object[count].collect {
-            buildEntity()
-        }
-    }
-
-    def List<E> seed() {
-        buildEntities(3)
-    }
-
-    void assertIt(E actual, E expected) {
-        def excludedProps = ['new']
-
-        if (Timestamped.isAssignableFrom(entityClass)) {
-            excludedProps += ['createdAt', 'updatedAt']
-        }
-        if (Authenticated.isAssignableFrom(entityClass)) {
-            excludedProps << 'authentication'
-            SharedAsserts.isEqual(actual.authentication, expected.authentication)
-        }
-        assertThat( actual ).equalsTo( expected ).inAllPropertiesExcept( *excludedProps )
-    }
-
-    private determineEntityClass() {
-        (getClass().genericSuperclass as ParameterizedType).actualTypeArguments[0] as Class<E>
-    }
 
 
     //////// Tests ////////
