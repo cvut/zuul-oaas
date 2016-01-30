@@ -132,4 +132,20 @@
 
     </dependencies>
 
+
+    <!--//////////////////// BUILD ////////////////////-->
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>test-jar</id>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
 </project>

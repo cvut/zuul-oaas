@@ -23,42 +23,15 @@
  */
 package cz.cvut.zuul.oaas.repos
 
-import cz.cvut.zuul.oaas.config.TestMongoPersistenceConfig
-import cz.cvut.zuul.oaas.test.CoreObjectFactory
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Persistable
-import org.springframework.data.mongodb.core.MongoTemplate
-import org.springframework.test.context.ContextConfiguration
-import spock.lang.Shared
 import spock.lang.Specification
 
-@ContextConfiguration(classes=TestMongoPersistenceConfig)
-abstract class AbstractRepoIT<E extends Persistable> extends Specification implements EntityTestSupport<E> {
+abstract class BaseRepositoryIT<E extends Persistable>
+        extends Specification implements EntityTestSupport<E> {
 
-    @Delegate CoreObjectFactory factory = new CoreObjectFactory()
-
-    @Autowired MongoTemplate mongoTemplate
-
-
-    //////// Setup ////////
-
-    @Shared Class[] cleanup = [ entityClass ]
-
-
-    def setup() {
-        cleanup()
-    }
-
-    def cleanup() {
-        getCleanup().each { entityClass ->
-            mongoTemplate.dropCollection(entityClass)
-        }
-    }
 
     abstract BaseRepository<E, ? extends Serializable> getRepo()
 
-
-    //////// Tests ////////
 
     def 'save a new entity'() {
         given:

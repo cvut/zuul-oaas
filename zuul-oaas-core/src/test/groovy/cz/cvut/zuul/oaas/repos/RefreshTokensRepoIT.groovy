@@ -29,7 +29,7 @@ import org.springframework.security.oauth2.common.ExpiringOAuth2RefreshToken
 import org.springframework.security.oauth2.common.OAuth2RefreshToken
 import org.springframework.security.oauth2.provider.OAuth2Authentication
 
-class RefreshTokensRepoIT extends AbstractRepoIT<PersistableRefreshToken> {
+abstract class RefreshTokensRepoIT extends BaseRepositoryIT<PersistableRefreshToken> {
 
     @Autowired RefreshTokensRepo repo
 

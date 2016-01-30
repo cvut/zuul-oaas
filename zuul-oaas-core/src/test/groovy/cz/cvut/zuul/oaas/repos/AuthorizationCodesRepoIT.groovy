@@ -26,7 +26,7 @@ package cz.cvut.zuul.oaas.repos
 import cz.cvut.zuul.oaas.models.PersistableAuthorizationCode
 import org.springframework.beans.factory.annotation.Autowired
 
-class AuthorizationCodesRepoIT extends AbstractRepoIT<PersistableAuthorizationCode> {
+abstract class AuthorizationCodesRepoIT extends BaseRepositoryIT<PersistableAuthorizationCode> {
 
     @Autowired AuthorizationCodesRepo repo
 }

@@ -27,7 +27,7 @@ import cz.cvut.zuul.oaas.models.Resource
 import cz.cvut.zuul.oaas.models.Visibility
 import org.springframework.beans.factory.annotation.Autowired
 
-class ResourcesRepoIT extends AbstractRepoIT<Resource>{
+abstract class ResourcesRepoIT extends BaseRepositoryIT<Resource>{
 
     @Autowired ResourcesRepo repo
 

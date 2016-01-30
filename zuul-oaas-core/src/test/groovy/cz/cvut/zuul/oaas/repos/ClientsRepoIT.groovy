@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2014 Czech Technical University in Prague.
+ * Copyright 2013-2016 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,7 +27,7 @@ import cz.cvut.zuul.oaas.models.Client
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.EmptyResultDataAccessException
 
-class ClientsRepoIT extends AbstractRepoIT<Client> {
+abstract class ClientsRepoIT extends BaseRepositoryIT<Client> {
 
     @Autowired ClientsRepo repo
 
