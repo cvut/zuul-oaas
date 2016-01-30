@@ -49,6 +49,7 @@ import org.springframework.security.oauth2.provider.OAuth2Request
 import org.springframework.security.oauth2.provider.approval.Approval
 
 import static cz.cvut.zuul.oaas.test.CustomGeneratorSamples.anyEmail
+import static cz.cvut.zuul.oaas.test.CustomGeneratorSamples.anyFutureDate
 import static java.util.UUID.randomUUID
 import static net.java.quickcheck.generator.CombinedGeneratorSamples.anyMap
 import static net.java.quickcheck.generator.CombinedGeneratorSamples.anySet
@@ -70,6 +71,7 @@ class CoreObjectFactory extends ObjectFactory {
             def value = values['value'] ?: randomUUID() as String
 
             def object = new DefaultOAuth2AccessToken(value).with {
+                expiration = values['expiration'] ?: anyFutureDate()
                 scope = values['scope'] ?: anySet(letterStrings(5, 10))
                 refreshToken = values['refreshToken']
                 additionalInformation = anyMap(letterStrings(5, 10), letterStrings(5, 10))
@@ -83,7 +85,7 @@ class CoreObjectFactory extends ObjectFactory {
         }
 
         registerBuilder(DefaultExpiringOAuth2RefreshToken) {
-            new DefaultExpiringOAuth2RefreshToken(randomUUID() as String, anyDate())
+            new DefaultExpiringOAuth2RefreshToken(randomUUID() as String, anyFutureDate())
         }
 
         registerBuilder(PersistableAccessToken) {
