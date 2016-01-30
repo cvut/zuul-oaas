@@ -40,6 +40,7 @@
         <module>zuul-oaas-common</module>
         <module>zuul-oaas-core</module>
         <module>zuul-oaas-api</module>
+        <module>zuul-oaas-persistence-jdbc</module>
         <module>zuul-oaas-restapi</module>
         <module>zuul-oaas-saml-sp</module>
         <module>zuul-oaas-web</module>
@@ -255,6 +256,12 @@
 
             <dependency>
                 <groupId>${project.groupId}</groupId>
+                <artifactId>zuul-oaas-persistence-jdbc</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>${project.groupId}</groupId>
                 <artifactId>zuul-oaas-restapi</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -272,6 +279,18 @@
             </dependency>
 
             <!--//// Third-party libs ////-->
+
+            <dependency>
+                <groupId>com.nurkiewicz.jdbcrepository</groupId>
+                <artifactId>jdbcrepository</artifactId>
+                <version>0.4.1</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.zaxxer</groupId>
+                <artifactId>HikariCP</artifactId>
+                <version>2.4.3</version>
+            </dependency>
 
             <dependency>
                 <groupId>cz.jirutka.spring</groupId>
@@ -323,6 +342,26 @@
                 <groupId>org.bouncycastle</groupId>
                 <artifactId>bcprov-jdk15</artifactId>
                 <version>1.46</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.impossibl.pgjdbc-ng</groupId>
+                <artifactId>pgjdbc-ng</artifactId>
+                <version>0.6</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.codehaus.groovy</groupId>
+                <artifactId>groovy-sql</artifactId>
+                <version>${groovy.version}</version>
+                <classifier>indy</classifier>
+                <exclusions>
+                    <!-- Transitive dependencies lacks indy classifier. -->
+                    <exclusion>
+                        <groupId>org.codehaus.groovy</groupId>
+                        <artifactId>*</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
             <dependency>

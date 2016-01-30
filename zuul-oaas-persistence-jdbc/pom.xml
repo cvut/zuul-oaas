@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>cz.cvut.zuul.oaas</groupId>
+        <artifactId>zuul-oaas</artifactId>
+        <version>0.8.0-SNAPSHOT</version>
+    </parent>
+
+
+    <!--//////////////////// DESCRIPTION ////////////////////-->
+
+    <artifactId>zuul-oaas-persistence-jdbc</artifactId>
+    <packaging>jar</packaging>
+
+    <name>Zuul OAAS Persistence JDBC</name>
+
+
+    <!--//////////////////// DEPENDENCIES ////////////////////-->
+
+    <dependencies>
+
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>zuul-oaas-common</artifactId>
+        </dependency>
+
+        <!-- TODO: Modules should not depend on zuul-oaas-core. -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>zuul-oaas-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.nurkiewicz.jdbcrepository</groupId>
+            <artifactId>jdbcrepository</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-sql</artifactId>
+            <classifier>indy</classifier>
+        </dependency>
+
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-tx</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security.oauth</groupId>
+            <artifactId>spring-security-oauth2</artifactId>
+        </dependency>
+
+        <!--////// Test //////-->
+
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>zuul-oaas-common</artifactId>
+            <type>test-jar</type>
+        </dependency>
+
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>zuul-oaas-core</artifactId>
+            <type>test-jar</type>
+        </dependency>
+
+        <dependency>
+            <groupId>com.impossibl.pgjdbc-ng</groupId>
+            <artifactId>pgjdbc-ng</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
+</project>
