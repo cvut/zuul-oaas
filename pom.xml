@@ -201,6 +201,8 @@
                 <scope>import</scope>
             </dependency>
 
+            <!--//// Zuul modules ////-->
+
             <dependency>
                 <groupId>io.spring.platform</groupId>
                 <artifactId>platform-bom</artifactId>
@@ -217,8 +219,24 @@
 
             <dependency>
                 <groupId>${project.groupId}</groupId>
+                <artifactId>zuul-oaas-api</artifactId>
+                <version>${project.version}</version>
+                <type>test-jar</type>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>${project.groupId}</groupId>
                 <artifactId>zuul-oaas-common</artifactId>
                 <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>zuul-oaas-common</artifactId>
+                <version>${project.version}</version>
+                <type>test-jar</type>
+                <scope>test</scope>
             </dependency>
 
             <dependency>
@@ -243,7 +261,7 @@
 
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>zuul-oaas-saml</artifactId>
+                <artifactId>zuul-oaas-saml-sp</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
@@ -253,27 +271,7 @@
                 <version>${project.version}</version>
             </dependency>
 
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>zuul-oaas-api</artifactId>
-                <version>${project.version}</version>
-                <type>test-jar</type>
-                <scope>test</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>zuul-oaas-common</artifactId>
-                <version>${project.version}</version>
-                <type>test-jar</type>
-                <scope>test</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>zuul-oaas-saml-sp</artifactId>
-                <version>${project.version}</version>
-            </dependency>
+            <!--//// Third-party libs ////-->
 
             <dependency>
                 <groupId>cz.jirutka.spring</groupId>
