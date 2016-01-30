@@ -143,6 +143,7 @@ class CoreObjectFactory extends ObjectFactory {
         registerBuilder(Client) { values ->
             def client = new Client(
                 clientId: anyLetterString(5, 10),
+                clientSecret: anyLetterString(5, 10),
                 authorizedGrantTypes: anySet(enumValues(AuthorizationGrant), 1, 2),
                 authorities: buildListOf(GrantedAuthority, 1, 3)
             )
@@ -166,7 +167,8 @@ class CoreObjectFactory extends ObjectFactory {
 
         registerBuilder(Resource) { values ->
             def resource = new Resource(
-                    scopes: buildListOf(Scope)
+                id: anyLetterString(5, 10),
+                scopes: buildListOf(Scope)
             )
             values.each { prop, value ->
                 resource[prop] = value
