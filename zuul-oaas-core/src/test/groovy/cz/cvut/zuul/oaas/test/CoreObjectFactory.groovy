@@ -122,7 +122,7 @@ class CoreObjectFactory extends ObjectFactory {
 
         registerBuilder(User) { values ->
             def username = values['username'] ?: anyLetterString(5, 10)
-            def authorities = values['authorities'] != null ? values['authorities'] : buildListOf(GrantedAuthority)
+            def authorities = values['authorities'] ?: buildListOf(GrantedAuthority) as Set
 
             new User(username: username, email: anyEmail(), firstName: anyLetterString(),
                      lastName: anyLetterString(), authorities: authorities)

@@ -38,7 +38,7 @@ import org.springframework.data.mongodb.core.mapping.Field
 @ToString(includes = ['id', 'name', 'version'], includeNames = true, includePackage = false)
 class Resource implements Timestamped, Persistable<String> {
 
-    private static final long serialVersionUID = 4L
+    private static final long serialVersionUID = 5L
 
     @Id
     String id
@@ -52,7 +52,7 @@ class Resource implements Timestamped, Persistable<String> {
 
     String version
 
-    List<Scope> scopes
+    Set<Scope> scopes
 
     @Indexed
     Visibility visibility = Visibility.PUBLIC

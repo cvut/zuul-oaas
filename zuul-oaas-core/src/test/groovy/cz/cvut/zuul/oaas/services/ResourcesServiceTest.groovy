@@ -141,6 +141,8 @@ class ResourcesServiceTest extends Specification {
         assert entity.id == dto.resourceId
         assert entity.visibility.toString() == dto.visibility
 
-        assertThat( entity.scopes ).equalsTo( dto.auth.scopes ).inAllProperties()
+        assertThat( entity.scopes.sort { it.name } )
+            .equalsTo( dto.auth.scopes.sort { it.name } )
+            .inAllProperties()
     }
 }
