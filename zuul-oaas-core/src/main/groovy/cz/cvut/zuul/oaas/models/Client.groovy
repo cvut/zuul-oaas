@@ -120,7 +120,7 @@ class Client implements Timestamped, ClientDetails, Persistable<String> {
         this.registeredRedirectUri = new LinkedHashSet(redirectUris ?: [])
     }
 
-    void setAuthorities(Collection<GrantedAuthority> authorities) {
+    void setAuthorities(Collection<? extends GrantedAuthority> authorities) {
         this.authorities = new LinkedHashSet(authorities ?: [])
     }
 

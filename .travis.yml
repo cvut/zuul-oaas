@@ -1,8 +1,15 @@
-language: java
 sudo: false
+
+language: java
 jdk:
   - openjdk7
   - oraclejdk8
+
+addons:
+  postgresql: "9.4"
+services:
+  - postgresql
+
 env:
   - PROFILE=exec-jar
   - PROFILE=exec-jar,saml
@@ -26,6 +33,7 @@ install:
 # Remove local artifacts of ours from any previous build, just to be sure.
 before_script:
   - rm -Rf $HOME/.m2/repository/cz/cvut/zuul
+  - psql -U postgres -c 'create database zuul_oaas_test;'
 
 # Run unit and integration tests.
 # Also install artifacts to the local repo to be available for after_success task.
