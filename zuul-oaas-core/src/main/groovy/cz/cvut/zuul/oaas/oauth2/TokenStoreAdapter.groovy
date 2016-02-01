@@ -96,6 +96,10 @@ class TokenStoreAdapter implements TokenStore {
     }
 
     OAuth2Authentication readAuthentication(OAuth2AccessToken token) {
+
+        if (token instanceof PersistableAccessToken) {
+            return token.authentication
+        }
         readAuthentication(token.value)
     }
 
@@ -131,6 +135,10 @@ class TokenStoreAdapter implements TokenStore {
     }
 
     OAuth2Authentication readAuthenticationForRefreshToken(OAuth2RefreshToken token) {
+
+        if (token instanceof PersistableRefreshToken) {
+            return token.authentication
+        }
         log.debug 'Reading authentication for refresh token: [{}]', token.value
         refreshTokensRepo.findOne(token.value)?.authentication
     }

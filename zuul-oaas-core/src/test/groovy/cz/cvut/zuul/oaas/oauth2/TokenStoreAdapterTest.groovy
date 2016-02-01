@@ -121,12 +121,27 @@ class TokenStoreAdapterTest extends Specification {
             result == expected
     }
 
-    def "readAuthentication: finds authentication of the access token and returns it"() {
+
+    def "readAuthentication(PersistableAccessToken): returns authentication from PersistableAccessToken"() {
+        setup:
+            0 * accessTokensRepo._
+        expect:
+           store.readAuthentication(persAccessToken) == persAccessToken.authentication
+    }
+
+    def "readAuthentication: finds authentication for OAuth2AccessToken and returns it"() {
         when:
             def result = store.readAuthentication(accessToken)
         then:
             1 * accessTokensRepo.findOne(accessToken.value) >> persAccessToken
             result == persAccessToken.authentication
+    }
+
+    def "readAuthentication: returns null when OAuth2AccessToken or value is not found in the repo"() {
+        setup:
+            accessTokensRepo.findOne(accessToken.value) >> null
+        expect:
+            store.readAuthentication(accessToken) == null
     }
 
 
@@ -152,6 +167,7 @@ class TokenStoreAdapterTest extends Specification {
             })
     }
 
+
     def "readRefreshToken: finds refresh token in the repo by the value and returns it"() {
         when:
             def result = store.readRefreshToken('123')
@@ -160,6 +176,7 @@ class TokenStoreAdapterTest extends Specification {
             result == persRefreshToken
     }
 
+
     def "removeRefreshToken: deletes the refresh token from the repo"() {
         when:
             store.removeRefreshToken(refreshToken)
@@ -167,11 +184,26 @@ class TokenStoreAdapterTest extends Specification {
             1 * refreshTokensRepo.deleteById(refreshToken.value)
     }
 
-    def "readAuthenticationForRefreshToken: finds authentication of the refresh token and returns it"() {
+
+    def "readAuthenticationForRefreshToken(PersistableRefreshToken): returns authentication from PersistableRefreshToken"() {
+        setup:
+            0 * refreshTokensRepo._
+        expect:
+           store.readAuthenticationForRefreshToken(persRefreshToken) == persRefreshToken.authentication
+    }
+
+    def "readAuthenticationForRefreshToken: finds authentication for OAuth2RefreshToken and returns it"() {
         when:
             def result = store.readAuthenticationForRefreshToken(refreshToken)
         then:
             1 * refreshTokensRepo.findOne(refreshToken.value) >> persRefreshToken
             result == persRefreshToken.authentication
+    }
+
+    def "readAuthenticationForRefreshToken: returns null when OAuth2RefreshToken is not found in the repo"() {
+        setup:
+            refreshTokensRepo.findOne(refreshToken) >> null
+        expect:
+            store.readAuthenticationForRefreshToken(refreshToken) == null
     }
 }
