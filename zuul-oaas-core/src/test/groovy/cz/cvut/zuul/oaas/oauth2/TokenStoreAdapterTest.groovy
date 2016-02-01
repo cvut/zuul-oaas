@@ -132,6 +132,17 @@ class TokenStoreAdapterTest extends Specification {
 
     //////// Delegate to RefreshTokens Repository ////////
 
+    def "storeRefreshToken(PersistableRefreshToken, ...): updates authentication and saves token in the repo"() {
+        setup:
+           def expectedAuth = build(OAuth2Authentication)
+        when:
+            store.storeRefreshToken(persRefreshToken, expectedAuth)
+        then:
+            1 * refreshTokensRepo.save({ PersistableRefreshToken it ->
+                it.is(persRefreshToken) && it.authentication == expectedAuth
+            })
+    }
+
     def "storeRefreshToken: creates PersistableRefreshToken and saves it in the repo"() {
         when:
             store.storeRefreshToken(refreshToken, oauthAuth)

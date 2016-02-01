@@ -53,7 +53,7 @@ class PersistableRefreshToken
     final Date expiration
 
     @Field('auth')
-    final OAuth2Authentication authentication
+    OAuth2Authentication authentication
 
 
     @JsonCreator

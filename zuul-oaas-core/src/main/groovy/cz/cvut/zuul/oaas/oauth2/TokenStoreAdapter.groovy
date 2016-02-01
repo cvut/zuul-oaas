@@ -108,8 +108,16 @@ class TokenStoreAdapter implements TokenStore {
     //////// Delegate to RefreshTokens Repository ////////
 
     void storeRefreshToken(OAuth2RefreshToken refreshToken, OAuth2Authentication authentication) {
-        log.debug 'Storing refresh token: [{}]', refreshToken
-        refreshTokensRepo.save(new PersistableRefreshToken(refreshToken, authentication))
+
+        if (refreshToken instanceof PersistableRefreshToken) {
+            log.debug 'Updating refresh token: [{}]', refreshToken
+            refreshToken.authentication = authentication
+            refreshTokensRepo.save(refreshToken)
+
+        } else {
+            log.debug 'Storing refresh token: [{}]', refreshToken
+            refreshTokensRepo.save(new PersistableRefreshToken(refreshToken, authentication))
+        }
     }
 
     OAuth2RefreshToken readRefreshToken(String tokenValue) {
