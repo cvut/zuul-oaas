@@ -53,8 +53,16 @@ class TokenStoreAdapter implements TokenStore {
     //////// Delegate to AccessTokens Repository ////////
 
     void storeAccessToken(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
-        log.debug 'Storing access token: [{}]', accessToken
-        accessTokensRepo.save(new PersistableAccessToken(accessToken, authentication))
+
+        if (accessToken instanceof PersistableAccessToken) {
+            accessToken.authentication = authentication
+            log.debug 'Updating access token: [{}]', accessToken
+            accessTokensRepo.save(accessToken)
+
+        } else {
+            log.debug 'Storing access token: [{}]', accessToken
+            accessTokensRepo.save(new PersistableAccessToken(accessToken, authentication))
+        }
     }
 
     OAuth2AccessToken getAccessToken(OAuth2Authentication authentication) {

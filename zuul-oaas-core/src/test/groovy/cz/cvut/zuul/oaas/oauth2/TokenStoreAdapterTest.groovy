@@ -50,7 +50,18 @@ class TokenStoreAdapterTest extends Specification {
 
     //////// Delegate to AccessTokens Repository ////////
 
-    def "storeAccessToken: creates PersistableAccessToken and saves it to the repo"() {
+    def "storeAccessToken(PersistableAccessToken, ...): updates authentication and saves token in the repo"() {
+        setup:
+            def expectedAuth = build(OAuth2Authentication)
+        when:
+            store.storeAccessToken(persAccessToken, expectedAuth)
+        then:
+            1 * accessTokensRepo.save({ PersistableAccessToken it ->
+                it.is(persAccessToken) && it.authentication == expectedAuth
+            })
+    }
+
+    def "storeAccessToken: creates PersistableAccessToken and saves it in the repo"() {
         when:
             store.storeAccessToken(accessToken, oauthAuth)
         then:
@@ -58,6 +69,7 @@ class TokenStoreAdapterTest extends Specification {
                 it == accessToken && it.authentication == oauthAuth
             })
     }
+
 
     def "getAccessToken: finds access token in the repo by the authentication and returns it"() {
         when:
