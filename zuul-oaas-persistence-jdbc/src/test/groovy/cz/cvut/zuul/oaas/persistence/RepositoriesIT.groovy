@@ -29,17 +29,18 @@ import cz.cvut.zuul.oaas.repos.ApprovalsRepoIT
 import cz.cvut.zuul.oaas.repos.AuthorizationCodesRepoIT
 import cz.cvut.zuul.oaas.repos.ClientsRepoIT
 import cz.cvut.zuul.oaas.repos.RefreshTokensRepoIT
+import cz.cvut.zuul.oaas.repos.RepositoriesCleaner
 import cz.cvut.zuul.oaas.repos.ResourcesRepoIT
 import groovy.transform.AnnotationCollector
-import org.junit.After
+import org.junit.Before
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.TestPropertySource
 import spock.lang.IgnoreIf
 
 import static TestUtils.isPortInUse
+
 
 @JdbcTestContext
 class JdbcAccessTokensRepoIT extends AccessTokensRepoIT implements JdbcTestCleanup {}
@@ -63,14 +64,10 @@ class JdbcResourcesRepoIT extends ResourcesRepoIT implements JdbcTestCleanup {}
 trait JdbcTestCleanup {
 
     @Autowired
-    private JdbcTemplate jdbc
+    private RepositoriesCleaner cleaner
 
-    // TODO use some faster method...
-    @After cleanup() {
-        jdbc.execute """
-            TRUNCATE access_tokens, approvals, authorization_codes, clients,
-                     refresh_tokens, resources CASCADE
-            """
+    @Before cleanup() {
+        cleaner.cleanAllRepositories()
     }
 }
 

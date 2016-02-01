@@ -31,6 +31,7 @@ import cz.cvut.zuul.oaas.persistence.JdbcApprovalsRepo
 import cz.cvut.zuul.oaas.persistence.JdbcAuthorizationCodesRepo
 import cz.cvut.zuul.oaas.persistence.JdbcClientsRepo
 import cz.cvut.zuul.oaas.persistence.JdbcRefreshTokensRepo
+import cz.cvut.zuul.oaas.persistence.JdbcRepositoriesCleaner
 import cz.cvut.zuul.oaas.persistence.JdbcResourcesRepo
 import cz.cvut.zuul.oaas.repos.AccessTokensRepo
 import cz.cvut.zuul.oaas.repos.ApprovalsRepo
@@ -39,9 +40,12 @@ import cz.cvut.zuul.oaas.repos.ClientsRepo
 import cz.cvut.zuul.oaas.repos.RefreshTokensRepo
 import cz.cvut.zuul.oaas.repos.ResourcesRepo
 import org.flywaydb.core.Flyway
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.DependsOn
+import org.springframework.context.annotation.Profile
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.datasource.DataSourceTransactionManager
 import org.springframework.transaction.annotation.EnableTransactionManagement
@@ -49,6 +53,9 @@ import org.springframework.transaction.annotation.EnableTransactionManagement
 @Configuration
 @EnableTransactionManagement(proxyTargetClass = true)
 class JdbcPersistenceConfig implements ConfigurationSupport, PersistenceBeans {
+
+    @Autowired ApplicationContext context
+
 
     @Bean(destroyMethod = 'shutdown')
     def dataSource() {
@@ -91,6 +98,11 @@ class JdbcPersistenceConfig implements ConfigurationSupport, PersistenceBeans {
     @Bean @DependsOn('flyway')
     def jdbcTemplate() {
         new JdbcTemplate( dataSource() )
+    }
+
+    @Bean @Profile('test')
+    def repositoriesCleaner() {
+        new JdbcRepositoriesCleaner( context, jdbcTemplate() )
     }
 
 
