@@ -95,9 +95,23 @@ class AllOrNothingUserApprovalHandler implements UserApprovalHandler {
         if (authzReq.approvalParameters[approvalParameter]?.toBoolean()) {
             log.info 'User {} approved authorization for client {}', userAuth.name, authzReq.clientId
 
-            approvalsRepo.saveAll(authzReq.scope.collect { scope ->
-                new PersistableApproval(userAuth.name, authzReq.clientId, scope, true, expiresAt)
-            })
+            // XXX: The following handling kinda smells and it may theoretically suffer from
+            // race conditions (but I'm quite sure that it won't happen in production).
+
+            def existingApprovals = approvalsRepo
+                .findByUserIdAndClientId(userAuth.name, authzReq.clientId)
+                .groupBy { it.scope }
+
+            authzReq.scope.each { scope ->
+                def approval = existingApprovals[scope]?.first() ?:
+                    new PersistableApproval(userAuth.name, authzReq.clientId, scope)
+
+                approval.approved = true
+                approval.expiresAt = expiresAt
+
+                approvalsRepo.save(approval)
+            }
+
             authzReq.approved = true
 
         } else {

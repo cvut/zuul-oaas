@@ -109,13 +109,16 @@ class AllOrNothingUserApprovalHandlerTest extends Specification {
 
     def 'updateAfterApproval: approves request and saves approvals when approval parameter is true'() {
         setup:
-            Iterable<PersistableApproval> savedApprovals
+            approvalsRepo.findByUserIdAndClientId(userAuth.name, authzReq.clientId) >>
+                [ validApproval('scope2') ]
+        and:
+            Iterable<PersistableApproval> savedApprovals = []
         when:
             def result = handler.updateAfterApproval(authzReq, userAuth)
         then:
             result.approved
         and:
-            1 * approvalsRepo.saveAll({ savedApprovals = it })
+            2 * approvalsRepo.save( { savedApprovals << it } )
             savedApprovals*.scope as Set == authzReq.scope
             savedApprovals.every { it.clientId == authzReq.clientId }
             savedApprovals.every { it.userId == userAuth.name }
