@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2015 Czech Technical University in Prague.
+ * Copyright 2013-2016 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,8 +23,13 @@
  */
 package cz.cvut.zuul.oaas
 
-import org.springframework.context.annotation.*
+import cz.cvut.zuul.oaas.persistence.config.JdbcPersistenceConfig
+import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.ComponentScan.Filter
+import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.EnableMBeanExport
+import org.springframework.context.annotation.Import
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.servlet.configuration.EnableWebMvcSecurity
@@ -46,7 +51,7 @@ import org.springframework.security.config.annotation.web.servlet.configuration.
  * modules into the root context. Spring Security cannot be initialized across
  * more contexts. :(
  */
-@Import(SecurityRootContextConfig)
+@Import([JdbcPersistenceConfig, SecurityRootContextConfig])
 class RootContextConfig {
 
     @Configuration

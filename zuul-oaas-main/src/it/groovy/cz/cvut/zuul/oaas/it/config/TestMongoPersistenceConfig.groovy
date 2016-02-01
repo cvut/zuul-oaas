@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2014 Czech Technical University in Prague.
+ * Copyright 2013-2016 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -32,7 +32,8 @@ import org.springframework.data.authentication.UserCredentials
 
 import javax.annotation.PreDestroy
 
-@Configuration
+//@Configuration
+@Deprecated
 class TestMongoPersistenceConfig extends MongoPersistenceConfig {
 
     String databaseName = 'oaas_it'

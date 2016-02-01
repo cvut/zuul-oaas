@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2015 Czech Technical University in Prague.
+ * Copyright 2013-2016 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,8 +24,8 @@
 package cz.cvut.zuul.oaas.it
 
 import cz.cvut.zuul.oaas.it.support.Fixtures
-import cz.cvut.zuul.oaas.models.PersistableAccessToken
-import cz.cvut.zuul.oaas.models.PersistableApproval
+import cz.cvut.zuul.oaas.repos.AccessTokensRepo
+import cz.cvut.zuul.oaas.repos.ApprovalsRepo
 import spock.lang.Stepwise
 
 import static org.springframework.http.HttpStatus.FOUND
@@ -56,8 +56,7 @@ class ImplicitGrantIT extends AbstractHttpIntegrationTest {
 
     def 'request user authorization and approve access'() {
         setup:
-            dropCollection PersistableAccessToken
-            dropCollection PersistableApproval
+            cleanRepositories AccessTokensRepo, ApprovalsRepo
         and:
             def cookie = loginUserAndGetCookie()
 
@@ -109,8 +108,7 @@ class ImplicitGrantIT extends AbstractHttpIntegrationTest {
 
     def 'request user authorization and reject access'() {
         setup:
-            dropCollection PersistableAccessToken
-            dropCollection PersistableApproval
+            cleanRepositories AccessTokensRepo, ApprovalsRepo
         and:
             authzParams += [redirect_uri: client.registeredRedirectUri[1]]
             def cookie = loginUserAndGetCookie()

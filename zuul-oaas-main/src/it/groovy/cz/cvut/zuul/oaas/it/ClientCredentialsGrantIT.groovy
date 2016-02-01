@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2014 Czech Technical University in Prague.
+ * Copyright 2013-2016 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,7 +24,7 @@
 package cz.cvut.zuul.oaas.it
 
 import cz.cvut.zuul.oaas.it.support.Fixtures
-import cz.cvut.zuul.oaas.models.PersistableAccessToken
+import cz.cvut.zuul.oaas.repos.AccessTokensRepo
 
 import static cz.cvut.zuul.oaas.it.support.TestUtils.base64
 import static java.lang.Math.abs
@@ -39,7 +39,7 @@ class ClientCredentialsGrantIT extends AbstractHttpIntegrationTest {
 
     def 'request access token with grant client_credentials'() {
         setup:
-            dropCollection PersistableAccessToken
+            cleanRepositories AccessTokensRepo
         and:
             def expectedExpires = $('oaas.access_token.validity') as int
             assert expectedExpires > 0

@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2015 Czech Technical University in Prague.
+ * Copyright 2013-2016 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,12 @@
  */
 package cz.cvut.zuul.oaas.config
 
-import com.mongodb.*
+import com.mongodb.Mongo
+import com.mongodb.MongoClient
+import com.mongodb.MongoClientOptions
+import com.mongodb.ReadPreference
+import com.mongodb.ServerAddress
+import com.mongodb.WriteConcern
 import cz.cvut.zuul.oaas.common.config.ConfigurationSupport
 import cz.cvut.zuul.oaas.models.Resource
 import cz.cvut.zuul.oaas.repos.AccessTokensRepo
@@ -42,8 +47,6 @@ import cz.cvut.zuul.oaas.repos.mongo.MongoResourcesRepo
 import cz.cvut.zuul.oaas.support.MongoSeedLoader
 import org.springframework.context.ApplicationListener
 import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
-import org.springframework.context.annotation.Profile
 import org.springframework.context.event.ContextRefreshedEvent
 import org.springframework.data.authentication.UserCredentials
 import org.springframework.data.mongodb.config.AbstractMongoConfiguration
@@ -53,9 +56,9 @@ import org.springframework.util.Assert
 
 import static org.springframework.data.mongodb.core.WriteResultChecking.EXCEPTION
 
-//TODO MongoDB JMX
-@Configuration
-@Profile('!test')
+//@Configuration
+//@Profile('!test')
+@Deprecated
 class MongoPersistenceConfig extends AbstractMongoConfiguration
         implements PersistenceBeans, ApplicationListener<ContextRefreshedEvent>, ConfigurationSupport {
 

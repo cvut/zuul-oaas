@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2015 Czech Technical University in Prague.
+ * Copyright 2013-2016 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,8 +24,8 @@
 package cz.cvut.zuul.oaas.it
 
 import cz.cvut.zuul.oaas.it.support.Fixtures
-import cz.cvut.zuul.oaas.models.PersistableAccessToken
-import cz.cvut.zuul.oaas.models.PersistableApproval
+import cz.cvut.zuul.oaas.repos.AccessTokensRepo
+import cz.cvut.zuul.oaas.repos.ApprovalsRepo
 import spock.lang.Stepwise
 
 import static cz.cvut.zuul.oaas.it.support.RestTemplateDSL.formatQuery
@@ -70,8 +70,7 @@ class AuthorizationCodeGrantIT extends AbstractHttpIntegrationTest {
             def cookie = null
             def code = null
         and:
-            dropCollection PersistableAccessToken
-            dropCollection PersistableApproval
+            cleanRepositories AccessTokensRepo, ApprovalsRepo
 
         when: 'request authorization with response_type code'
         send  GET: '/oauth/authorize', query: authzParams
@@ -178,8 +177,7 @@ class AuthorizationCodeGrantIT extends AbstractHttpIntegrationTest {
 
     def 'request user authorization and reject access'() {
         setup:
-            dropCollection PersistableAccessToken
-            dropCollection PersistableApproval
+            cleanRepositories AccessTokensRepo, ApprovalsRepo
         and:
             authzParams += [state: 'zyx', redirect_uri: client.registeredRedirectUri[1]]
             def cookie = loginUserAndGetCookie()

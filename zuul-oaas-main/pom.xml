@@ -37,6 +37,11 @@
 
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>zuul-oaas-persistence-jdbc</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>zuul-oaas-restapi</artifactId>
         </dependency>
 
@@ -48,6 +53,11 @@
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.impossibl.pgjdbc-ng</groupId>
+            <artifactId>pgjdbc-ng</artifactId>
         </dependency>
 
         <dependency>
@@ -117,6 +127,12 @@
             </properties>
 
             <dependencies>
+                <dependency>
+                    <groupId>com.impossibl.pgjdbc-ng</groupId>
+                    <artifactId>pgjdbc-ng</artifactId>
+                    <scope>provided</scope>
+                </dependency>
+
                 <dependency>
                     <groupId>javax.servlet</groupId>
                     <artifactId>javax.servlet-api</artifactId>

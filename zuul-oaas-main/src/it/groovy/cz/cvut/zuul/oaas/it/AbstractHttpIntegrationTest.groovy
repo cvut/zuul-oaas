@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2014 Czech Technical University in Prague.
+ * Copyright 2013-2016 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,18 +25,18 @@ package cz.cvut.zuul.oaas.it
 
 import cz.cvut.zuul.oaas.Application
 import cz.cvut.zuul.oaas.it.config.EmbeddedJettyConfig
-import cz.cvut.zuul.oaas.it.config.TestMongoPersistenceConfig
 import cz.cvut.zuul.oaas.it.support.Fixtures
 import cz.cvut.zuul.oaas.it.support.HttpResponseAssertDSL
 import cz.cvut.zuul.oaas.it.support.MyResponseEntity
 import cz.cvut.zuul.oaas.it.support.RestTemplateDSL
+import cz.cvut.zuul.oaas.repos.ClientsRepo
+import cz.cvut.zuul.oaas.repos.RepositoriesCleaner
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.context.embedded.EmbeddedWebApplicationContext
 import org.springframework.boot.test.IntegrationTest
 import org.springframework.boot.test.SpringApplicationContextLoader
 import org.springframework.core.env.Environment
-import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.security.oauth2.provider.token.TokenStore
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.web.WebAppConfiguration
@@ -48,21 +48,27 @@ import static cz.cvut.zuul.oaas.it.support.TestUtils.parseCookie
 
 @Slf4j
 @WebAppConfiguration
-// pick up randomly selected port
-@IntegrationTest('server.port=0')
+@IntegrationTest([
+    'server.port=0',  // pick up randomly selected port
+    'persistence.jdbc.dbname=zuul_oaas_test',
+    'persistence.jdbc.username=postgres'
+])
 @ContextConfiguration(
     loader = SpringApplicationContextLoader,
-    classes = [Application, EmbeddedJettyConfig, TestMongoPersistenceConfig])
+    classes = [Application, EmbeddedJettyConfig])
 abstract class AbstractHttpIntegrationTest extends Specification {
 
     @Shared
     private boolean initialized
 
+    @Autowired @Delegate
+    private RepositoriesCleaner repositoriesCleaner
+
     @Shared String serverUri
 
     @Autowired Environment env
 
-    @Autowired MongoTemplate mongoTemplate
+    @Autowired ClientsRepo clientsRepo
 
     @Autowired TokenStore tokenStore
 
@@ -92,8 +98,7 @@ abstract class AbstractHttpIntegrationTest extends Specification {
     }
 
     def prepareSpec() {
-        log.info 'Dropping database'
-        dropDatabase()
+        cleanAllRepositories()
 
         log.info 'Loading seed data'
         loadSeed()
@@ -119,15 +124,7 @@ abstract class AbstractHttpIntegrationTest extends Specification {
     }
 
     def loadSeed() {
-        mongoTemplate.save(Fixtures.allGrantsClient())
-    }
-
-    def dropCollection(Class entityClass) {
-        mongoTemplate.dropCollection(entityClass)
-    }
-
-    def dropDatabase() {
-        mongoTemplate.db.dropDatabase()
+        clientsRepo.save(Fixtures.allGrantsClient())
     }
 
     def loginUserAndGetCookie() {
