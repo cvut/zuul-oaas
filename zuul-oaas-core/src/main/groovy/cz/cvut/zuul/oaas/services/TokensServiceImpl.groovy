@@ -38,6 +38,7 @@ import ma.glasnost.orika.impl.DefaultMapperFactory.Builder
 import org.springframework.security.oauth2.common.exceptions.InvalidTokenException
 import org.springframework.security.oauth2.provider.OAuth2Request
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 import javax.annotation.PostConstruct
 
@@ -113,6 +114,7 @@ public class TokensServiceImpl implements TokensService {
         )
     }
 
+    @Transactional
     void invalidateToken(String tokenValue) {
 
         if (!accessTokensRepo.exists(tokenValue)) {

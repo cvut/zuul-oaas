@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2015 Czech Technical University in Prague.
+ * Copyright 2013-2016 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,6 +28,7 @@ import cz.cvut.zuul.oaas.repos.AuthorizationCodesRepo
 import groovy.util.logging.Slf4j
 import org.springframework.security.oauth2.provider.OAuth2Authentication
 import org.springframework.security.oauth2.provider.code.RandomValueAuthorizationCodeServices
+import org.springframework.transaction.annotation.Transactional
 
 /**
  * This class adapts {@link AuthorizationCodesRepo} to the
@@ -59,5 +60,15 @@ class AuthorizationCodeServicesAdapter extends RandomValueAuthorizationCodeServi
             oauthCodesRepo.deleteById(code)
         }
         result?.authentication
+    }
+
+    @Transactional
+    String createAuthorizationCode(OAuth2Authentication authentication) {
+        super.createAuthorizationCode(authentication)
+    }
+
+    @Transactional
+    OAuth2Authentication consumeAuthorizationCode(String code) {
+        super.consumeAuthorizationCode(code)
     }
 }

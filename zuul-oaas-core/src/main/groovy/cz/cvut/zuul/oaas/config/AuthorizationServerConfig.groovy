@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2015 Czech Technical University in Prague.
+ * Copyright 2013-2016 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -39,7 +39,11 @@ import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.oauth2.provider.CompositeTokenGranter
 import org.springframework.security.oauth2.provider.client.ClientCredentialsTokenGranter
 import org.springframework.security.oauth2.provider.code.AuthorizationCodeTokenGranter
-import org.springframework.security.oauth2.provider.endpoint.*
+import org.springframework.security.oauth2.provider.endpoint.AuthorizationEndpoint
+import org.springframework.security.oauth2.provider.endpoint.CheckTokenEndpoint
+import org.springframework.security.oauth2.provider.endpoint.FrameworkEndpointHandlerMapping
+import org.springframework.security.oauth2.provider.endpoint.TokenEndpoint
+import org.springframework.security.oauth2.provider.endpoint.WhitelabelApprovalEndpoint
 import org.springframework.security.oauth2.provider.implicit.ImplicitTokenGranter
 import org.springframework.security.oauth2.provider.password.ResourceOwnerPasswordTokenGranter
 import org.springframework.security.oauth2.provider.refresh.RefreshTokenGranter
@@ -83,7 +87,7 @@ class AuthorizationServerConfig implements ConfigurationSupport {
                 clientDetailsService:      clientDetailsService(),
                 OAuth2RequestFactory:      oAuth2RequestFactory(),
                 authorizationCodeServices: authorizationCodeServices(),
-                userApprovalHandler:       userApprovalHandler(),
+                userApprovalHandler:       lockableUserApprovalHandler(),
                 userApprovalPage:          'forward:/oauth/confirm_access',
                 errorPage:                 'forward:/oauth/error'
             )
@@ -174,13 +178,17 @@ class AuthorizationServerConfig implements ConfigurationSupport {
         tokenServices()
     }
 
-    @Bean userApprovalHandler() {
-        def handler = new AllOrNothingUserApprovalHandler (
-            repos.approvalsRepo(), repos.clientsRepo()
-        )
-        handler.approvalValidity = p('oaas.user_approval.validity') as int
+    @Bean lockableUserApprovalHandler() {
+        new LockableClientUserApprovalHandler(userApprovalHandler(), repos.clientsRepo())
+    }
 
-        new LockableClientUserApprovalHandler(handler, repos.clientsRepo())
+    // Note: It must be exposed as a bean because of @Transactional.
+    @Bean userApprovalHandler() {
+        new AllOrNothingUserApprovalHandler (
+            repos.approvalsRepo(), repos.clientsRepo()
+        ).with {
+            it.approvalValidity = p('oaas.user_approval.validity') as int; it
+        }
     }
 
     @Bean oAuth2RequestFactory() {

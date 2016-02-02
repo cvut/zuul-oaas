@@ -37,6 +37,7 @@ import ma.glasnost.orika.MapperFacade
 import ma.glasnost.orika.MapperFactory
 import ma.glasnost.orika.impl.DefaultMapperFactory.Builder
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 import javax.annotation.PostConstruct
 
@@ -74,6 +75,7 @@ class ResourcesServiceImpl implements ResourcesService {
         mapper.mapAsList(resourcesRepo.findAllPublic(), ResourceDTO)
     }
 
+    @Transactional
     String createResource(ResourceDTO resourceDTO) {
 
         def resource = mapper.map(resourceDTO, Resource)
@@ -93,6 +95,7 @@ class ResourcesServiceImpl implements ResourcesService {
         resource.id
     }
 
+    @Transactional
     void updateResource(ResourceDTO resourceDTO) {
         log.info 'Updating resource [{}]', resourceDTO
 
@@ -110,6 +113,7 @@ class ResourcesServiceImpl implements ResourcesService {
         mapper.map(resource, ResourceDTO)
     }
 
+    @Transactional
     void deleteResourceById(String id) {
         assertResourceExists id
 

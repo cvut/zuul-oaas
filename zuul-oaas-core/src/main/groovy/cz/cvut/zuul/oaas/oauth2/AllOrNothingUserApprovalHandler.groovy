@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2015 Czech Technical University in Prague.
+ * Copyright 2013-2016 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -32,6 +32,7 @@ import org.springframework.security.core.Authentication
 import org.springframework.security.oauth2.common.util.OAuth2Utils
 import org.springframework.security.oauth2.provider.AuthorizationRequest
 import org.springframework.security.oauth2.provider.approval.UserApprovalHandler
+import org.springframework.transaction.annotation.Transactional
 
 /**
  * Simple user approval handler that remembers approval decisions and gives user
@@ -90,6 +91,7 @@ class AllOrNothingUserApprovalHandler implements UserApprovalHandler {
         authzReq
     }
 
+    @Transactional
     AuthorizationRequest updateAfterApproval(AuthorizationRequest authzReq, Authentication userAuth) {
 
         if (authzReq.approvalParameters[approvalParameter]?.toBoolean()) {

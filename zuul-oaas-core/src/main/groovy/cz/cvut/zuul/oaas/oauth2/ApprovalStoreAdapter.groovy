@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2015 Czech Technical University in Prague.
+ * Copyright 2013-2016 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,6 +28,7 @@ import cz.cvut.zuul.oaas.repos.ApprovalsRepo
 import groovy.util.logging.Slf4j
 import org.springframework.security.oauth2.provider.approval.Approval
 import org.springframework.security.oauth2.provider.approval.ApprovalStore
+import org.springframework.transaction.annotation.Transactional
 
 /**
  * This class adapts {@link ApprovalsRepo} to the {@link ApprovalStore}
@@ -44,6 +45,7 @@ class ApprovalStoreAdapter implements ApprovalStore {
     }
 
 
+    @Transactional
     boolean addApprovals(Collection<Approval> approvals) {
 
         def persistables = PersistableApproval.createFrom(approvals)
@@ -54,6 +56,7 @@ class ApprovalStoreAdapter implements ApprovalStore {
         return true
     }
 
+    @Transactional
     boolean revokeApprovals(Collection<Approval> approvals) {
         log.debug "Revoking approvals: ${-> PersistableApproval.createFrom(approvals) }"
 

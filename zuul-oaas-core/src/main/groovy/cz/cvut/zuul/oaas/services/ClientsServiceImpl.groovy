@@ -39,6 +39,7 @@ import ma.glasnost.orika.impl.DefaultMapperFactory.Builder
 import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.security.crypto.keygen.StringKeyGenerator
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 import javax.annotation.PostConstruct
 
@@ -78,6 +79,7 @@ class ClientsServiceImpl implements ClientsService {
         mapper.map(client, ClientDTO)
     }
 
+    @Transactional
     String createClient(ClientDTO clientDTO) {
 
         def client = mapper.map(clientDTO, Client)
@@ -100,6 +102,7 @@ class ClientsServiceImpl implements ClientsService {
         client.clientId
     }
 
+    @Transactional
     void updateClient(ClientDTO clientDTO) {
         log.info 'Updating client: [{}]', clientDTO
 
@@ -116,6 +119,7 @@ class ClientsServiceImpl implements ClientsService {
         clientsRepo.save(client)
     }
 
+    @Transactional
     void removeClient(String clientId) {
         log.info 'Removing client: [{}]', clientId
 
@@ -128,6 +132,7 @@ class ClientsServiceImpl implements ClientsService {
         clientsRepo.deleteById(clientId)
     }
 
+    @Transactional
     void resetClientSecret(String clientId) {
         log.info 'Resetting secret for client: [{}]', clientId
 

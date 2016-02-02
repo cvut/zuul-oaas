@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2015 Czech Technical University in Prague.
+ * Copyright 2013-2016 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -32,6 +32,7 @@ import org.springframework.security.oauth2.common.OAuth2AccessToken
 import org.springframework.security.oauth2.common.OAuth2RefreshToken
 import org.springframework.security.oauth2.provider.OAuth2Authentication
 import org.springframework.security.oauth2.provider.token.TokenStore
+import org.springframework.transaction.annotation.Transactional
 
 /**
  * This class adapts {@link AccessTokensRepo} and {@link RefreshTokensRepo} to
@@ -52,6 +53,7 @@ class TokenStoreAdapter implements TokenStore {
 
     //////// Delegate to AccessTokens Repository ////////
 
+    @Transactional
     void storeAccessToken(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
 
         if (accessToken instanceof PersistableAccessToken) {
@@ -77,11 +79,13 @@ class TokenStoreAdapter implements TokenStore {
         accessTokensRepo.findOne(tokenValue)
     }
 
+    @Transactional
     void removeAccessToken(OAuth2AccessToken token) {
         log.debug 'Removing access token: [{}]', token
         accessTokensRepo.deleteById(token.value)
     }
 
+    @Transactional
     void removeAccessTokenUsingRefreshToken(OAuth2RefreshToken refreshToken) {
         log.debug 'Removing access token by refresh token: [{}]', refreshToken
         accessTokensRepo.deleteByRefreshToken(refreshToken)
@@ -111,6 +115,7 @@ class TokenStoreAdapter implements TokenStore {
 
     //////// Delegate to RefreshTokens Repository ////////
 
+    @Transactional
     void storeRefreshToken(OAuth2RefreshToken refreshToken, OAuth2Authentication authentication) {
 
         if (refreshToken instanceof PersistableRefreshToken) {
@@ -129,6 +134,7 @@ class TokenStoreAdapter implements TokenStore {
         refreshTokensRepo.findOne(tokenValue)
     }
 
+    @Transactional
     void removeRefreshToken(OAuth2RefreshToken token) {
         log.debug 'Removing refresh token: [{}]', token
         refreshTokensRepo.deleteById(token.value)
