@@ -15,7 +15,7 @@ env:
   - PROFILE=exec-jar,saml
   - PROFILE=war
 
-# Cache local Maven repository, but exclude our artifacts.
+# Cache local Maven repository.
 cache:
   directories:
     - $HOME/.m2
@@ -23,13 +23,14 @@ cache:
 # Travis provides older Maven 3.2.5 that contains some bug causing incorrect
 # dependency resolution when using profiles and alternative dependency types.
 before_install:
-  - script/travis-install-maven 3.3.1
+  - script/travis-install-maven 3.3.9
 
 # Just resolve and install dependencies, don't build or run tests.
 install:
   - mvn dependency:go-offline -P $PROFILE --fail-never --threads 5 -B
 
 # Remove local artifacts of ours from any previous build, just to be sure.
+# And create database for tests.
 before_script:
   - rm -Rf $HOME/.m2/repository/cz/cvut/zuul
   - psql -U postgres -c 'create database zuul_oaas_test;'
@@ -37,7 +38,7 @@ before_script:
 # Run unit and integration tests.
 # Also install artifacts to the local repo to be available for after_success task.
 script:
-  - mvn install verify -P $PROFILE -B
+  - mvn install verify -Dmaven.javadoc.skip=true -P $PROFILE -B
 
 # Analyze code coverage and report it to Coveralls.
 after_success:
