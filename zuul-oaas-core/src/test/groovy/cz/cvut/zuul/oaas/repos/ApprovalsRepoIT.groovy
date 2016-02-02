@@ -87,6 +87,31 @@ abstract class ApprovalsRepoIT extends BaseRepositoryIT<PersistableApproval> {
             ! repo.exists(*compositeId)
     }
 
+    def 'find valid approved scopes'() {
+        setup:
+            def wanted = [
+                new PersistableApproval('flynn', 'abc', 'foo', true, now + 1),
+                new PersistableApproval('flynn', 'abc', 'bar', true, now + 1),
+            ]
+            def others = [
+                new PersistableApproval('flynn', 'abc', 'baz', false, now + 1),
+                new PersistableApproval('flynn', 'abc', 'qux', true, now - 1),
+                new PersistableApproval('flynn', 'fake', 'foo', true, now + 1),
+                new PersistableApproval('clue', 'abc', 'foo', true, now + 1)
+            ]
+        and:
+            repo.saveAll(wanted)
+            repo.saveAll(others)
+        when:
+            def results = repo.findValidApprovedScopes('flynn', 'abc')
+        then:
+            results == wanted*.scope as Set
+    }
+
+
+    def getNow() {
+        new Date()
+    }
 
     private compositeId(PersistableApproval approval) {
         [approval.userId, approval.clientId, approval.scope]

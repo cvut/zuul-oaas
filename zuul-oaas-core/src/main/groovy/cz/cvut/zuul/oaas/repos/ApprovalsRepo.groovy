@@ -34,4 +34,10 @@ interface ApprovalsRepo extends BaseRepository<PersistableApproval, Serializable
     boolean exists(String userId, String clientId, String scope)
 
     void deleteById(String userId, String clientId, String scope)
+
+    /**
+     * Returns a set of scopes that the user approved for the client and are
+     * still valid (i.e. not expired).
+     */
+    Set<String> findValidApprovedScopes(String userId, String clientId)
 }

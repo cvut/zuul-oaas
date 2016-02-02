@@ -77,10 +77,10 @@ class AllOrNothingUserApprovalHandler implements UserApprovalHandler {
             log.debug 'Looking up user approved authorizations for client_id = {} and user = {}',
                 authzReq.clientId, userAuth.name
 
-            def approvedScopes = approvedScopes(userAuth.name, authzReq.clientId)
+            def approvedScopes = approvalsRepo.findValidApprovedScopes(userAuth.name, authzReq.clientId)
 
             if (approvedScopes.containsAll(authzReq.scope)) {
-                log.debug 'User has already approved all requested scopes: {}', authzReq.scope
+                log.debug 'User has already approved all the requested scopes: {}', authzReq.scope
                 authzReq.approved = true
             }
         } else {
@@ -133,17 +133,6 @@ class AllOrNothingUserApprovalHandler implements UserApprovalHandler {
         this.approvalValidity = approvalExpiry
     }
 
-
-    // TODO: move to repository
-    private approvedScopes(String userId, String clientId) {
-        def now = new Date()
-
-        approvalsRepo
-            .findByUserIdAndClientId(userId, clientId)
-            .findAll { it.approved }
-            .findAll { it.expiresAt.after(now) }
-            .collect { it.scope }
-    }
 
     private isUserApprovalRequired(String clientId) {
 

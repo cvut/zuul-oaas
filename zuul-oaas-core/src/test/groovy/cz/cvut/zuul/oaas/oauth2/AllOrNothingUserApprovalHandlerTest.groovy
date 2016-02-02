@@ -85,25 +85,21 @@ class AllOrNothingUserApprovalHandlerTest extends Specification {
 
     def 'checkForPreApproval: approves request when found valid approvals for all requested scopes'() {
         setup:
-            approvalsRepo.findByUserIdAndClientId(userAuth.name, authzReq.clientId) >>
-                [ validApproval('scope1'), validApproval('scope2') ]
+            approvalsRepo.findValidApprovedScopes(userAuth.name, authzReq.clientId) >> [ 'scope1', 'scope2' ]
         expect:
             handler.checkForPreApproval(authzReq, userAuth).approved
     }
 
     def 'checkForPreApproval: does not approve request when found #desc'() {
         setup:
-            approvalsRepo.findByUserIdAndClientId(userAuth.name, authzReq.clientId) >> approvals
+            approvalsRepo.findValidApprovedScopes(userAuth.name, authzReq.clientId) >> scopes
         expect:
             ! handler.checkForPreApproval(authzReq, userAuth).approved
         where:
-            approvals                                                | desc
-            []                                                       | 'no approvals at all'
-            [ validApproval('scope3')                              ] | 'no approvals for requested scopes'
-            [ validApproval('scope1')                              ] | 'valid approvals only for some of scopes'
-            [ expiredApproval('scope1'), expiredApproval('scope2') ] | 'approvals for all scopes, but expired'
-            [ deniedApproval('scope1'),  deniedApproval('scope2')  ] | 'approvals for all scopes, but denied'
-            [ validApproval('scope1'),   expiredApproval('scope2') ] | 'approvals for all scopes, but one is expired'
+            scopes       | desc
+            []           | 'no approvals at all'
+            [ 'scope3' ] | 'no approvals for requested scopes'
+            [ 'scope1' ] | 'valid approvals only for some of scopes'
     }
 
 

@@ -65,6 +65,13 @@ class JdbcApprovalsRepo extends AbstractJdbcRepository<PersistableApproval, Seri
             """, userId, clientId, scope
     }
 
+    Set<String> findValidApprovedScopes(String userId, String clientId) {
+        jdbc.queryForList("""
+            SELECT scope FROM ${tableName}
+            WHERE approved = true AND expires_at > now() AND user_id = ? AND client_id = ?
+            """, String, userId, clientId) as Set
+    }
+
 
     //////// ResultSet Mapping ////////
 
