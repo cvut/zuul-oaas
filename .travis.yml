@@ -19,7 +19,6 @@ env:
 cache:
   directories:
     - $HOME/.m2
-    - $HOME/.embedmongo
 
 # Travis provides older Maven 3.2.5 that contains some bug causing incorrect
 # dependency resolution when using profiles and alternative dependency types.

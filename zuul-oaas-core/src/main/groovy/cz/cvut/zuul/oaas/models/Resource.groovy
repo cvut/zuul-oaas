@@ -26,14 +26,8 @@ package cz.cvut.zuul.oaas.models
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
 import org.springframework.data.annotation.Id
-import org.springframework.data.annotation.TypeAlias
 import org.springframework.data.domain.Persistable
-import org.springframework.data.mongodb.core.index.Indexed
-import org.springframework.data.mongodb.core.mapping.Document
-import org.springframework.data.mongodb.core.mapping.Field
 
-@TypeAlias('Resource')
-@Document(collection = 'resources')
 @EqualsAndHashCode(includes = 'id')
 @ToString(includes = ['id', 'name', 'version'], includeNames = true, includePackage = false)
 class Resource implements Timestamped, Persistable<String> {
@@ -45,7 +39,6 @@ class Resource implements Timestamped, Persistable<String> {
 
     String baseUrl
 
-    @Field('desc')
     String description
 
     String name
@@ -54,6 +47,5 @@ class Resource implements Timestamped, Persistable<String> {
 
     Set<Scope> scopes
 
-    @Indexed
     Visibility visibility = Visibility.PUBLIC
 }

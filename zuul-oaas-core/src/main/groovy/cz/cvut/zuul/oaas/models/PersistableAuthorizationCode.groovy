@@ -25,14 +25,9 @@ package cz.cvut.zuul.oaas.models
 
 import org.springframework.data.annotation.Id
 import org.springframework.data.annotation.PersistenceConstructor
-import org.springframework.data.annotation.TypeAlias
 import org.springframework.data.domain.Persistable
-import org.springframework.data.mongodb.core.mapping.Document
-import org.springframework.data.mongodb.core.mapping.Field
 import org.springframework.security.oauth2.provider.OAuth2Authentication
 
-@TypeAlias('OAuthCode')
-@Document(collection = 'oauth_codes')
 class PersistableAuthorizationCode implements Timestamped, Authenticated, Persistable<String> {
 
     private static final long serialVersionUID = 2L
@@ -40,7 +35,6 @@ class PersistableAuthorizationCode implements Timestamped, Authenticated, Persis
     @Id
     final String code
 
-    @Field('auth')
     final OAuth2Authentication authentication
 
 

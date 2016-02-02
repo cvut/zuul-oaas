@@ -26,12 +26,7 @@ package cz.cvut.zuul.oaas.models
 import groovy.transform.EqualsAndHashCode
 import org.springframework.data.annotation.Id
 import org.springframework.data.annotation.PersistenceConstructor
-import org.springframework.data.annotation.TypeAlias
 import org.springframework.data.domain.Persistable
-import org.springframework.data.mongodb.core.index.CompoundIndex
-import org.springframework.data.mongodb.core.index.CompoundIndexes
-import org.springframework.data.mongodb.core.mapping.Document
-import org.springframework.data.mongodb.core.mapping.Field
 import org.springframework.security.oauth2.provider.approval.Approval
 import org.springframework.util.Base64Utils
 
@@ -41,12 +36,6 @@ import static cz.cvut.zuul.oaas.common.DateUtils.END_OF_TIME
 import static org.springframework.security.oauth2.provider.approval.Approval.ApprovalStatus.APPROVED
 import static org.springframework.security.oauth2.provider.approval.Approval.ApprovalStatus.DENIED
 
-@CompoundIndexes([
-    @CompoundIndex(name = 'compositeId', def = '{ userId: 1, clientId: 1, scope: 1 }', unique = true),
-    @CompoundIndex(name = 'userIdAndClientId', def = '{ userId: 1, clientId: 1 }')
-])
-@TypeAlias('Approval')
-@Document(collection = 'approvals')
 @EqualsAndHashCode(includes = ['userId', 'clientId', 'scope'])
 class PersistableApproval implements Timestamped, Persistable<Serializable> {
 
@@ -64,7 +53,6 @@ class PersistableApproval implements Timestamped, Persistable<Serializable> {
 
     boolean approved
 
-    @Field('exp')
     Date expiresAt = END_OF_TIME
 
 

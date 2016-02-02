@@ -24,13 +24,7 @@
 package cz.cvut.zuul.oaas.models
 
 import org.springframework.data.annotation.Id
-import org.springframework.data.annotation.TypeAlias
 import org.springframework.data.domain.Persistable
-import org.springframework.data.mongodb.core.index.CompoundIndex
-import org.springframework.data.mongodb.core.index.CompoundIndexes
-import org.springframework.data.mongodb.core.index.Indexed
-import org.springframework.data.mongodb.core.mapping.Document
-import org.springframework.data.mongodb.core.mapping.Field
 import org.springframework.security.oauth2.common.DefaultOAuth2RefreshToken
 import org.springframework.security.oauth2.common.OAuth2AccessToken
 import org.springframework.security.oauth2.common.OAuth2RefreshToken
@@ -42,12 +36,6 @@ import org.springframework.util.Assert
 import static cz.cvut.zuul.oaas.common.DateUtils.END_OF_TIME
 import static cz.cvut.zuul.oaas.common.DateUtils.secondsFromNow
 
-@CompoundIndexes([
-    @CompoundIndex(name = 'clientId', def = '{auth.oauthReq.client: 1}'),
-    @CompoundIndex(name = 'username', def = '{auth.userAuth.uname: 1}')
-])
-@TypeAlias('AccessToken')
-@Document(collection = 'access_tokens')
 class PersistableAccessToken implements Timestamped, Authenticated, OAuth2AccessToken, Persistable<String> {
 
     private static final long serialVersionUID = 6L
@@ -58,28 +46,18 @@ class PersistableAccessToken implements Timestamped, Authenticated, OAuth2Access
     @Id
     String value
 
-    @Field('exp')
-    @Indexed(expireAfterSeconds = 0)
     Date expiration = END_OF_TIME
 
-    @Field('type')
     String tokenType = BEARER_TYPE.toLowerCase()
 
-    @Indexed
-    @Field('refToken')
     String refreshTokenValue
 
-    @Field('scopes')
     Set<String> scope
 
-    @Field('addl')
     Map<String, Object> additionalInformation = [:]
 
-    @Indexed
-    @Field('authKey')
     private String authenticationKey
 
-    @Field('auth')
     OAuth2Authentication authentication
 
 

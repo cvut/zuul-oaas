@@ -27,7 +27,7 @@ TODO
 == Requirements
 
 * Java 7u60+ or 8
-* MongoDB 2.6+
+* PostgreSQL 9.3+
 
 
 == Contributing

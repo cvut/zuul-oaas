@@ -27,15 +27,10 @@ import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
 import org.codehaus.groovy.runtime.InvokerHelper
 import org.springframework.data.annotation.Id
-import org.springframework.data.annotation.TypeAlias
 import org.springframework.data.domain.Persistable
-import org.springframework.data.mongodb.core.mapping.Document
-import org.springframework.data.mongodb.core.mapping.Field
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.oauth2.provider.ClientDetails
 
-@TypeAlias('Client')
-@Document(collection = 'clients')
 @EqualsAndHashCode(includes = 'clientId')
 @ToString(includes = ['clientId', 'displayName'], includePackage = false)
 class Client implements Timestamped, ClientDetails, Persistable<String> {
@@ -45,37 +40,26 @@ class Client implements Timestamped, ClientDetails, Persistable<String> {
     @Id
     String clientId
 
-    @Field('secret')
     String clientSecret
 
-    @Field('scopes')
     Set<String> scope = new LinkedHashSet<>(0)
 
-    @Field('resources')
     Set<String> resourceIds = new LinkedHashSet<>(0)
 
-    @Field('grants')
     Set<String> authorizedGrantTypes = new LinkedHashSet<>(0)
 
-    @Field('redirects')
     Set<String> registeredRedirectUri = new LinkedHashSet<>(0)
 
-    @Field('authorities')
     Set<GrantedAuthority> authorities = new LinkedHashSet<>(0)
 
-    @Field('acsTokenExp')
     Integer accessTokenValiditySeconds
 
-    @Field('refTokenExp')
     Integer refreshTokenValiditySeconds
 
-    @Field('name')
     String displayName
 
-    @Field('locked')
     boolean locked = false
 
-    @Field('approvalRequired')
     boolean userApprovalRequired = true
 
 

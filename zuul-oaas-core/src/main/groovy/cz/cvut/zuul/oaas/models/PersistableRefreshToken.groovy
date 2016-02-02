@@ -27,19 +27,13 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonValue
 import org.springframework.data.annotation.Id
 import org.springframework.data.annotation.PersistenceConstructor
-import org.springframework.data.annotation.TypeAlias
 import org.springframework.data.domain.Persistable
-import org.springframework.data.mongodb.core.index.Indexed
-import org.springframework.data.mongodb.core.mapping.Document
-import org.springframework.data.mongodb.core.mapping.Field
 import org.springframework.security.oauth2.common.ExpiringOAuth2RefreshToken
 import org.springframework.security.oauth2.common.OAuth2RefreshToken
 import org.springframework.security.oauth2.provider.OAuth2Authentication
 
 import static cz.cvut.zuul.oaas.common.DateUtils.END_OF_TIME
 
-@TypeAlias('RefreshToken')
-@Document(collection = "refresh_tokens")
 class PersistableRefreshToken
         implements Timestamped, Authenticated, ExpiringOAuth2RefreshToken, Persistable<String> {
 
@@ -48,11 +42,8 @@ class PersistableRefreshToken
     @Id
     final String value
 
-    @Field('exp')
-    @Indexed(expireAfterSeconds = 0)
     final Date expiration
 
-    @Field('auth')
     OAuth2Authentication authentication
 
 

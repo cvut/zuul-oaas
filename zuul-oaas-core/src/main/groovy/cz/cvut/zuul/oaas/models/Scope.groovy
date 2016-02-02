@@ -26,8 +26,6 @@ package cz.cvut.zuul.oaas.models
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
 import groovy.transform.TupleConstructor
-import org.springframework.data.annotation.TypeAlias
-import org.springframework.data.mongodb.core.mapping.Field
 
 /**
  * Represents a scope of the access token issued by authorization server in
@@ -36,7 +34,6 @@ import org.springframework.data.mongodb.core.mapping.Field
  * of space-delimited, case sensitive strings (%x21 / %x23-5B / %x5D-7E). The
  * strings are defined by the authorization server.
  */
-@TypeAlias('Scope')
 @TupleConstructor
 @EqualsAndHashCode(includes = 'name')
 @ToString(includes = 'name', includePackage = false)
@@ -46,7 +43,6 @@ class Scope implements Serializable {
 
     String name
 
-    @Field('desc')
     String description
 
     boolean secured = false

@@ -77,7 +77,7 @@
 
         <dependency>
             <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-mongodb</artifactId>
+            <artifactId>spring-data-commons</artifactId>
         </dependency>
 
         <dependency>
@@ -105,29 +105,12 @@
             <artifactId>spring-security-oauth2</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>org.mongodb</groupId>
-            <artifactId>mongo-java-driver</artifactId>
-        </dependency>
-
         <!--////////// Test Libraries //////////-->
 
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>zuul-oaas-common</artifactId>
             <type>test-jar</type>
-        </dependency>
-
-        <dependency>
-            <groupId>cz.jirutka.spring</groupId>
-            <artifactId>embedmongo-spring</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>de.flapdoodle.embed</groupId>
-            <artifactId>de.flapdoodle.embed.mongo</artifactId>
-            <scope>test</scope>
         </dependency>
 
     </dependencies>
