@@ -69,4 +69,14 @@ trait EntityTestSupport<E extends Persistable> {
         }
         assertThat( actual ).equalsTo( expected ).inAllPropertiesExcept( *excludedProps )
     }
+
+    void assertAll(Collection<E> actualEntities, Collection<E> expectedEntities) {
+
+        assert actualEntities.size() == expectedEntities.size()
+        assert actualEntities*.id as Set == expectedEntities*.id as Set
+
+        [actualEntities, expectedEntities]*.sort{ it.id }.transpose().each { E actual, E expected ->
+            assertIt actual, expected
+        }
+    }
 }

@@ -24,12 +24,20 @@
 package cz.cvut.zuul.oaas.repos
 
 import cz.cvut.zuul.oaas.models.Resource
+import cz.cvut.zuul.oaas.models.Scope
 import cz.cvut.zuul.oaas.models.Visibility
 import org.springframework.beans.factory.annotation.Autowired
 
 abstract class ResourcesRepoIT extends BaseRepositoryIT<Resource>{
 
     @Autowired ResourcesRepo repo
+
+
+    Resource modifyEntity(Resource entity) {
+        entity.name = entity.name?.reverse() ?: 'Awesome API'
+        entity.scopes << build(Scope)
+        entity
+    }
 
 
     def 'find all public resources'() {

@@ -41,6 +41,11 @@ abstract class RefreshTokensRepoIT extends BaseRepositoryIT<PersistableRefreshTo
         )
     }
 
+    PersistableRefreshToken modifyEntity(PersistableRefreshToken entity) {
+        entity.authentication = build(OAuth2Authentication)
+        entity
+    }
+
 
     def 'return expiring token'() {
         given:

@@ -41,6 +41,11 @@ abstract class AccessTokensRepoIT extends BaseRepositoryIT<PersistableAccessToke
         )
     }
 
+    PersistableAccessToken modifyEntity(PersistableAccessToken entity) {
+        entity.authentication = build(OAuth2Authentication)
+        entity
+    }
+
 
     def 'return token with client-only authentication'() {
         given:

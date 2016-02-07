@@ -32,6 +32,13 @@ abstract class ClientsRepoIT extends BaseRepositoryIT<Client> {
     @Autowired ClientsRepo repo
 
 
+    Client modifyEntity(Client entity) {
+        entity.displayName = entity.displayName?.reverse() ?: 'allons-y!'
+        entity.registeredRedirectUri << 'https://sub.example.org'
+        entity
+    }
+
+
     def 'update secret for non existing client'() {
         when:
             repo.updateClientSecret('unknown-id', 'new-secret')

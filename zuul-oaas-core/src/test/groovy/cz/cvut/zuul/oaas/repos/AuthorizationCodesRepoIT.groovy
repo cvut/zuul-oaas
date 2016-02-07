@@ -29,4 +29,10 @@ import org.springframework.beans.factory.annotation.Autowired
 abstract class AuthorizationCodesRepoIT extends BaseRepositoryIT<PersistableAuthorizationCode> {
 
     @Autowired AuthorizationCodesRepo repo
+
+
+    // This entity is never updated.
+    PersistableAuthorizationCode modifyEntity(PersistableAuthorizationCode entity) {
+        entity
+    }
 }

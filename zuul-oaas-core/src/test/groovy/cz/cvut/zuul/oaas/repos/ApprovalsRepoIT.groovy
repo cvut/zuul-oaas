@@ -31,6 +31,12 @@ abstract class ApprovalsRepoIT extends BaseRepositoryIT<PersistableApproval> {
     @Autowired ApprovalsRepo repo
 
 
+    PersistableApproval modifyEntity(PersistableApproval entity) {
+        entity.approved = !entity.approved
+        entity
+    }
+
+
     def 'find one approval by userId, clientId and scope'() {
         setup:
             def expected = buildEntity()
