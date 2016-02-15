@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013-2015 Czech Technical University in Prague.
+ * Copyright 2013-2016 Czech Technical University in Prague.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -34,6 +34,9 @@ package cz.cvut.zuul.oaas.repos
  * methods are quite ambiguous here. This problem can be solved, but I found it
  * cleaner and more reliable to not use it and rather define custom interface
  * (I'm not using Repository support as intended anyway).
+ *
+ * NOTE: This problem should be fixed in 2.4.6, see
+ * https://issues.apache.org/jira/browse/GROOVY-7454.
  * </i></p>
  *
  * @param <T> The domain type the repository manages.
@@ -42,8 +45,12 @@ package cz.cvut.zuul.oaas.repos
 interface BaseRepository<T, ID extends Serializable> {
 
     /**
-     * Saves a given entity. Use the returned instance for further operations
-     * as the save operation might have changed the entity instance completely.
+     * Saves the given entity. If {@link org.springframework.data.domain.Persistable#isNew()
+     * entity.isNew()} returns true, then it creates a new record; otherwise it
+     * updates the existing record.
+     *
+     * Use the returned instance for further operations as the save operation
+     * might have changed the entity instance completely.
      *
      * @param entity
      * @return the saved entity
@@ -51,13 +58,27 @@ interface BaseRepository<T, ID extends Serializable> {
     T save(T entity)
 
     /**
-     * Saves all given entities.
+     * Saves all the given entities.
      *
+     * @see #save
      * @param entities
      * @return the saved entities
      * @throws IllegalArgumentException in case the given entity is {@literal null}.
      */
     List<T> saveAll(Iterable<? extends T> entities)
+
+    /**
+     * Updates the given entity. Use the returned instance for further
+     * operations as the update operation might have changed the entity
+     * instance completely.
+     *
+     * @param entity
+     * @return the updated entity
+     * @throws IllegalArgumentException if the entity's id is null.
+     * @throws org.springframework.dao.IncorrectUpdateSemanticsDataAccessException
+     *         if no row was affected, i.e. the entity doesn't exist.
+     */
+    T update(T entity)
 
     /**
      * Retrieves an entity by its id.

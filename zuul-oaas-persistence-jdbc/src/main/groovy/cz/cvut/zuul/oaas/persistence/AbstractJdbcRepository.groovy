@@ -32,8 +32,10 @@ import cz.cvut.zuul.oaas.persistence.support.TimestampedWriter
 import cz.cvut.zuul.oaas.repos.BaseRepository
 import groovy.transform.CompileStatic
 import org.springframework.data.domain.Persistable
+import org.springframework.jdbc.JdbcUpdateAffectedIncorrectNumberOfRowsException
 import org.springframework.jdbc.core.JdbcOperations
 import org.springframework.jdbc.core.RowMapper
+import org.springframework.util.Assert
 
 import java.sql.ResultSet
 
@@ -124,6 +126,11 @@ abstract class AbstractJdbcRepository<E extends Persistable, ID extends Serializ
         entities.collect { E e -> save(e) }
     }
 
+    E update(E entity) {
+        Assert.notNull(entity.id, 'Could not update entity without id')
+        repository.update(entity)
+    }
+
     E findOne(ID id) {
         repository.findOne(id)
     }
@@ -164,6 +171,14 @@ abstract class AbstractJdbcRepository<E extends Persistable, ID extends Serializ
 
             this.jdbcOperations = parent.jdbc
             this.sqlGenerator = new PostgreSqlGenerator()  // default
+        }
+
+        @Override
+        protected <S extends E> S postUpdate(S entity, int rowsAffected) {
+            if (rowsAffected != 1) {
+                throw new JdbcUpdateAffectedIncorrectNumberOfRowsException('', 1, rowsAffected)
+            }
+            entity
         }
     }
 }

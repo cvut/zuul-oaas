@@ -23,6 +23,7 @@
  */
 package cz.cvut.zuul.oaas.repos
 
+import org.springframework.dao.IncorrectUpdateSemanticsDataAccessException
 import org.springframework.data.domain.Persistable
 import spock.lang.Specification
 
@@ -85,6 +86,17 @@ abstract class BaseRepositoryIT<E extends Persistable>
         then:
             repo.count() == 3
             assertAll repo.findAll(), updatedEntities
+    }
+
+    def 'update entity that does not exist'() {
+        setup:
+            def entity = buildEntity()
+        and:
+            assert !repo.findOne(entity.id), 'precondition not satisfied'
+        when:
+            repo.update(entity)
+        then:
+            thrown IncorrectUpdateSemanticsDataAccessException
     }
 
     def 'retrieve entities by the ids'() {
