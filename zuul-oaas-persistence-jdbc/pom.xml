@@ -36,8 +36,8 @@
         </dependency>
 
         <dependency>
-            <groupId>com.nurkiewicz.jdbcrepository</groupId>
-            <artifactId>jdbcrepository</artifactId>
+            <groupId>cz.jirutka.spring</groupId>
+            <artifactId>spring-data-jdbc-repository</artifactId>
         </dependency>
 
         <dependency>

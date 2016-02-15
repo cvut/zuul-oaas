@@ -281,9 +281,9 @@
             <!--//// Third-party libs ////-->
 
             <dependency>
-                <groupId>com.nurkiewicz.jdbcrepository</groupId>
-                <artifactId>jdbcrepository</artifactId>
-                <version>0.4.1</version>
+                <groupId>cz.jirutka.spring</groupId>
+                <artifactId>spring-data-jdbc-repository</artifactId>
+                <version>0.5.0</version>
             </dependency>
 
             <dependency>
