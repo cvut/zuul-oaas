@@ -29,6 +29,7 @@ import cz.cvut.zuul.oaas.repos.ResourcesRepo
 import cz.cvut.zuul.oaas.services.generators.StringEncoder
 import cz.cvut.zuul.oaas.models.Resource
 import cz.cvut.zuul.oaas.test.CoreObjectFactory
+import org.springframework.dao.IncorrectUpdateSemanticsDataAccessException
 import spock.lang.Specification
 
 import static cz.cvut.zuul.oaas.test.Assertions.assertThat
@@ -83,20 +84,20 @@ class ResourcesServiceTest extends Specification {
 
 
     def 'update existing resource'() {
-        setup:
-            resourcesRepo.exists(_) >> true
         when:
             service.updateResource( build(ResourceDTO) )
         then:
-            1 * resourcesRepo.save(_ as Resource)
+            1 * resourcesRepo.update(_ as Resource)
     }
 
     def 'update non existing resource'() {
         when:
             service.updateResource(build(ResourceDTO))
         then:
-            resourcesRepo.exists(_) >> false
-            thrown(NoSuchResourceException)
+            resourcesRepo.update(_) >> {
+                throw new IncorrectUpdateSemanticsDataAccessException('')
+            }
+            thrown NoSuchResourceException
     }
 
 

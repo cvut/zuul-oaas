@@ -37,6 +37,7 @@ import ma.glasnost.orika.MapperFacade
 import ma.glasnost.orika.MapperFactory
 import ma.glasnost.orika.impl.DefaultMapperFactory.Builder
 import org.springframework.dao.EmptyResultDataAccessException
+import org.springframework.dao.IncorrectUpdateSemanticsDataAccessException
 import org.springframework.security.crypto.keygen.StringKeyGenerator
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -106,8 +107,6 @@ class ClientsServiceImpl implements ClientsService {
     void updateClient(ClientDTO clientDTO) {
         log.info 'Updating client: [{}]', clientDTO
 
-        assertClientExists clientDTO.clientId
-
         def client = mapper.map(clientDTO, Client)
 
         if (!client.clientSecret?.trim()) {
@@ -116,14 +115,21 @@ class ClientsServiceImpl implements ClientsService {
         }
         client.authorities = client.authorities ?: DEFAULT_AUTHORITIES
 
-        clientsRepo.save(client)
+        try {
+            clientsRepo.update(client)
+
+        } catch (IncorrectUpdateSemanticsDataAccessException ex) {
+            throw new NoSuchClientException("No such client with id = ${client.id}", ex)
+        }
     }
 
     @Transactional
     void removeClient(String clientId) {
         log.info 'Removing client: [{}]', clientId
 
-        assertClientExists clientId
+        if (!clientsRepo.exists(clientId)) {
+            throw new NoSuchClientException("No such client with id = ${clientId}")
+        }
 
         //remove associated tokens
         accessTokensRepo.deleteByClientId(clientId)
@@ -146,12 +152,6 @@ class ClientsServiceImpl implements ClientsService {
         }
     }
 
-
-    private assertClientExists(String clientId) {
-        if (!clientsRepo.exists(clientId)) {
-            throw new NoSuchClientException("No such client with id = ${clientId}")
-        }
-    }
 
     @PostConstruct setupMapper() {
         def factory = mapperFactory ?: new Builder().build()

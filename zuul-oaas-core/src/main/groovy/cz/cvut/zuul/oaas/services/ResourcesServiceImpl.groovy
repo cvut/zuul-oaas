@@ -36,6 +36,7 @@ import groovy.util.logging.Slf4j
 import ma.glasnost.orika.MapperFacade
 import ma.glasnost.orika.MapperFactory
 import ma.glasnost.orika.impl.DefaultMapperFactory.Builder
+import org.springframework.dao.IncorrectUpdateSemanticsDataAccessException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -99,9 +100,13 @@ class ResourcesServiceImpl implements ResourcesService {
     void updateResource(ResourceDTO resourceDTO) {
         log.info 'Updating resource [{}]', resourceDTO
 
-        assertResourceExists resourceDTO.resourceId
+        try {
+            resourcesRepo.update(mapper.map(resourceDTO, Resource))
 
-        resourcesRepo.save(mapper.map(resourceDTO, Resource))
+        } catch (IncorrectUpdateSemanticsDataAccessException ex) {
+            throw new NoSuchResourceException(
+                "No such resource with id = ${resourceDTO.resourceId}", ex)
+        }
     }
 
     ResourceDTO findResourceById(String id) {
@@ -115,17 +120,13 @@ class ResourcesServiceImpl implements ResourcesService {
 
     @Transactional
     void deleteResourceById(String id) {
-        assertResourceExists id
 
+        if (!resourcesRepo.exists(id)) {
+            throw new NoSuchResourceException("No such resource with id = ${id}")
+        }
         resourcesRepo.deleteById(id)
     }
 
-
-    private assertResourceExists(String resourceId) {
-        if (!resourcesRepo.exists(resourceId)) {
-            throw new NoSuchResourceException("No such resource with id = ${resourceId}")
-        }
-    }
 
     @PostConstruct setupMapper() {
         def factory = mapperFactory ?: new Builder().build()

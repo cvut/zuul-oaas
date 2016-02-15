@@ -31,6 +31,7 @@ import cz.cvut.zuul.oaas.repos.RefreshTokensRepo
 import cz.cvut.zuul.oaas.models.Client
 import cz.cvut.zuul.oaas.test.CoreObjectFactory
 import org.springframework.dao.EmptyResultDataAccessException
+import org.springframework.dao.IncorrectUpdateSemanticsDataAccessException
 import org.springframework.security.crypto.keygen.StringKeyGenerator
 import spock.lang.Specification
 
@@ -116,14 +117,12 @@ class ClientsServiceTest extends Specification {
 
 
     def 'update existing client given empty secret'() {
-        setup:
-            clientsRepo.exists(_) >> true
         when:
             service.updateClient(client)
         then:
             1 * secretGenerator.generateKey() >> 'new-secret'
 
-            1 * clientsRepo.save({ Client it ->
+            1 * clientsRepo.update({ Client it ->
                 it.clientSecret == 'new-secret'
             })
         where:
@@ -131,12 +130,10 @@ class ClientsServiceTest extends Specification {
     }
 
     def 'update existing client given empty authorities'() {
-        setup:
-            clientsRepo.exists(_) >> true
         when:
             service.updateClient(client)
         then:
-            1 * clientsRepo.save({ Client it ->
+            1 * clientsRepo.update({ Client it ->
                 ! it.authorities?.isEmpty()
             })
         where:
@@ -147,8 +144,10 @@ class ClientsServiceTest extends Specification {
         when:
             service.updateClient( build(ClientDTO) )
         then:
-            clientsRepo.exists(_) >> false
-            thrown(NoSuchClientException)
+            1 * clientsRepo.update(_) >> {
+                throw new IncorrectUpdateSemanticsDataAccessException('')
+            }
+            thrown NoSuchClientException
     }
 
 
