@@ -38,6 +38,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Lazy
 import org.springframework.security.authentication.AuthenticationManager
+import org.springframework.security.oauth2.common.OAuth2RefreshToken
 import org.springframework.security.oauth2.provider.CompositeTokenGranter
 import org.springframework.security.oauth2.provider.client.ClientCredentialsTokenGranter
 import org.springframework.security.oauth2.provider.code.AuthorizationCodeTokenGranter
@@ -211,6 +212,15 @@ class AuthorizationServerConfig implements ConfigurationSupport {
     }
 
     @Bean tokenStore() {
-        new TokenStoreAdapter( repos.accessTokensRepo(), repos.refreshTokensRepo() )
+        new TokenStoreAdapter( repos.accessTokensRepo(), repos.refreshTokensRepo() ) {
+
+            // TODO get rid of this hack!
+            // This is ugly workaround to prevent DefaultTokenServices from removing existing
+            // access tokens when refreshing a token. This is a big deal for applications
+            // using ngx-oauth etc.
+            @Override void removeAccessTokenUsingRefreshToken(OAuth2RefreshToken refreshToken) {
+                // do nothing
+            }
+        }
     }
 }
