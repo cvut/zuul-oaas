@@ -111,7 +111,7 @@ abstract class AbstractHttpIntegrationTest extends Specification {
     // to be overridden in subclasses
     def getDefaultRequestOpts() { [:] }
 
-    def <T> T $(String propertyKey, Class<T> type = String) {
+    def <T> T p(String propertyKey, Class<T> type = String) {
         env.getProperty(propertyKey, type)
     }
 

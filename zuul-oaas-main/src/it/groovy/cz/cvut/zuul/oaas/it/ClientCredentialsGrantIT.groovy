@@ -41,7 +41,7 @@ class ClientCredentialsGrantIT extends AbstractHttpIntegrationTest {
         setup:
             cleanRepositories AccessTokensRepo
         and:
-            def expectedExpires = $('oaas.access_token.validity') as int
+            def expectedExpires = p('oaas.access_token.validity') as int
             assert expectedExpires > 0
 
         when: 'send request to the token endpoint'
