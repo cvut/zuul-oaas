@@ -24,11 +24,13 @@
 package cz.cvut.zuul.oaas.config
 
 import cz.cvut.zuul.oaas.common.config.ConfigurationSupport
+import cz.cvut.zuul.oaas.endpoints.CachingCheckTokenEndpoint
 import cz.cvut.zuul.oaas.oauth2.AllOrNothingUserApprovalHandler
 import cz.cvut.zuul.oaas.oauth2.AuthorizationCodeServicesAdapter
 import cz.cvut.zuul.oaas.oauth2.ClientDetailsServiceAdapter
 import cz.cvut.zuul.oaas.oauth2.LockableClientUserApprovalHandler
 import cz.cvut.zuul.oaas.oauth2.TokenStoreAdapter
+import org.cache2k.CacheBuilder
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
@@ -40,7 +42,6 @@ import org.springframework.security.oauth2.provider.CompositeTokenGranter
 import org.springframework.security.oauth2.provider.client.ClientCredentialsTokenGranter
 import org.springframework.security.oauth2.provider.code.AuthorizationCodeTokenGranter
 import org.springframework.security.oauth2.provider.endpoint.AuthorizationEndpoint
-import org.springframework.security.oauth2.provider.endpoint.CheckTokenEndpoint
 import org.springframework.security.oauth2.provider.endpoint.FrameworkEndpointHandlerMapping
 import org.springframework.security.oauth2.provider.endpoint.TokenEndpoint
 import org.springframework.security.oauth2.provider.endpoint.WhitelabelApprovalEndpoint
@@ -99,7 +100,13 @@ class AuthorizationServerConfig implements ConfigurationSupport {
     }
 
     @Bean checkTokenEndpoint() {
-        new CheckTokenEndpoint( resourceServerTokenServices() )
+        new CachingCheckTokenEndpoint(
+            repos.accessTokensRepo(),
+            CacheBuilder
+                .newCache(String, Map)
+                .name(CachingCheckTokenEndpoint)
+                .maxSize( p('oaas.endpoint.check_token.cache.max_entries') as int )
+        )
     }
 
     @Bean oauth2HandlerMapping() {
