@@ -16,7 +16,7 @@
         Application <strong>Skynet</strong> would like permission to access data from services. Do you want to grant the following permissions?
       </p>
 
-      <ul th:each="scope : ${client.scope}">
+      <ul th:each="scope : ${auth_request.scope}">
         <li th:utext="${scope}">Read your timetable</li>
       </ul>
 
