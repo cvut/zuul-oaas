@@ -24,7 +24,10 @@
 package cz.cvut.zuul.oaas.it.support
 
 import cz.cvut.zuul.oaas.models.Client
+import cz.cvut.zuul.oaas.models.PersistableAccessToken
 import org.springframework.security.core.authority.SimpleGrantedAuthority
+import org.springframework.security.oauth2.provider.OAuth2Authentication
+import org.springframework.security.oauth2.provider.OAuth2Request
 
 import static cz.cvut.zuul.oaas.models.AuthorizationGrant.*
 
@@ -38,6 +41,42 @@ abstract class Fixtures {
             authorizedGrantTypes: [ AUTHORIZATION_CODE, CLIENT_CREDENTIALS, IMPLICIT, REFRESH_TOKEN ],
             registeredRedirectUri: [ 'http://example.org', 'http://fit.cvut.cz' ],
             authorities: [ new SimpleGrantedAuthority('ROLE_CLIENT') ],
+        )
+    }
+
+    static validAccessToken() {
+        new PersistableAccessToken (
+            value: '7fc035d8-b489-47a4-9a78-612494ffbfd0',
+            expiration: new Date() + 1,  // +1 day
+            scope: ['urn:zuul:oauth:test'],
+            authentication: clientOnlyOAuth2Authentication()
+        )
+    }
+
+    static expiredAccessToken() {
+        new PersistableAccessToken (
+            value: '603f3b3d-d918-4226-aadd-ae08563bd9c1',
+            expiration: new Date() - 1,  // -1 day
+            scope: ['urn:zuul:oauth:test'],
+            authentication: clientOnlyOAuth2Authentication()
+        )
+    }
+
+
+    private static clientOnlyOAuth2Authentication() {
+        new OAuth2Authentication(
+            new OAuth2Request(
+                [grant_type: 'client_credentials'], // requestParameters
+                'test-client',                      // clientId
+                [],                                 // authorities
+                true,                               // approved
+                ['urn:zuul:oauth:test'] as Set,     // scope
+                ['test-resource'] as Set,           // resourceIds
+                '',                                 // redirectUri
+                [] as Set,                          // responseTypes
+                [:]                                 // extensionProperties
+            ),
+            null
         )
     }
 }

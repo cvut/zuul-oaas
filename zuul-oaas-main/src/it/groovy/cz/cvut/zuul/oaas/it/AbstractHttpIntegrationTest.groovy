@@ -29,6 +29,7 @@ import cz.cvut.zuul.oaas.it.support.Fixtures
 import cz.cvut.zuul.oaas.it.support.HttpResponseAssertDSL
 import cz.cvut.zuul.oaas.it.support.MyResponseEntity
 import cz.cvut.zuul.oaas.it.support.RestTemplateDSL
+import cz.cvut.zuul.oaas.repos.AccessTokensRepo
 import cz.cvut.zuul.oaas.repos.ClientsRepo
 import cz.cvut.zuul.oaas.repos.RepositoriesCleaner
 import groovy.util.logging.Slf4j
@@ -69,6 +70,8 @@ abstract class AbstractHttpIntegrationTest extends Specification {
     @Autowired Environment env
 
     @Autowired ClientsRepo clientsRepo
+
+    @Autowired AccessTokensRepo accessTokensRepo
 
     @Autowired TokenStore tokenStore
 
@@ -125,6 +128,7 @@ abstract class AbstractHttpIntegrationTest extends Specification {
 
     def loadSeed() {
         clientsRepo.save(Fixtures.allGrantsClient())
+        accessTokensRepo.saveAll([Fixtures.validAccessToken(), Fixtures.expiredAccessToken()])
     }
 
     def loginUserAndGetCookie() {
