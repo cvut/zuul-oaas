@@ -1,13 +1,24 @@
 = Changelog
+:issues-uri: https://github.com/cvut/zuul-oaas/issues
 
 This document provides a high-level view of the changes introduced in Zuul OAAS by release.
 For a detailed view of what has changed, refer to the https://github.com/cvut/zuul-oaas/commits/master[commit history] on GitHub.
 
 
-== not released
+== 0.8.0 (unreleased)
 
-Others::
-  * Replace MongoDB with SQL database via JDBC (currently targeting only to PostgreSQL).
+Improvements::
+  * Keep timestamps of creation and last modification for every entity in DB.
+  * Improve performance of TokenStoreAdapter.
+  * Add response caching for `/oauth/check_token`.
+
+Bug fixes::
+  * Show only the requested scopes instead of all scopes on the user approval page ({issues-uri}/12[#12]).
+  * Fix HTTP 500 when user rejects an authorization request ({issues-uri}/15[#15]).
+
+Infrastructure::
+  * Replace MongoDB with SQL database via JDBC (currently targeting only PostgreSQL).
+  * Extract implementation of persistence layer into a separate module.
 
 
 == 0.7.0 (2016-01-28)

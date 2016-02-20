@@ -6,7 +6,7 @@ indent_size = 4
 insert_final_newline = true
 trim_trailing_whitespace = true
 
-[*.{html,js,json,less,sql,raml}]
+[*.{adoc,html,js,json,less,sql,raml}]
 indent_size = 2
 
 [script/*]
