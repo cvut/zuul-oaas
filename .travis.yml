@@ -4,42 +4,31 @@ language: java
 jdk:
   - openjdk7
   - oraclejdk8
-
 addons:
   postgresql: "9.4"
 services:
   - postgresql
-
 env:
   - PROFILE=exec-jar
   - PROFILE=exec-jar,saml
   - PROFILE=war
 
-# Cache local Maven repository.
+# Cache local Maven repository, but exclude our artifacts.
 cache:
   directories:
     - $HOME/.m2
+before_cache:
+  - rm -Rf $HOME/.m2/repository/cz/cvut/zuul
 
 # Travis provides older Maven 3.2.5 that contains some bug causing incorrect
 # dependency resolution when using profiles and alternative dependency types.
 before_install:
   - script/travis-install-maven 3.3.9
-
-# Just resolve and install dependencies, don't build or run tests.
 install:
-  - mvn dependency:go-offline -P $PROFILE --fail-never --threads 5 -B
-
-# Remove local artifacts of ours from any previous build, just to be sure.
-# And create database for tests.
+  - mvn clean install -P $PROFILE -DskipTests=true --batch-mode
 before_script:
-  - rm -Rf $HOME/.m2/repository/cz/cvut/zuul
   - psql -U postgres -c 'create database zuul_oaas_test;'
-
-# Run unit and integration tests.
-# Also install artifacts to the local repo to be available for after_success task.
 script:
-  - mvn install verify -Dmaven.javadoc.skip=true -P $PROFILE -B
-
-# Analyze code coverage and report it to Coveralls.
+  - mvn verify -P $PROFILE --batch-mode
 after_success:
   - script/travis-code-coverage
