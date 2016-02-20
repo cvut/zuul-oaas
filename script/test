@@ -1,8 +1,9 @@
 #!/bin/sh
 # This script follows the GitHub's normalized pattern
 # http://githubengineering.com/scripts-to-rule-them-all
+set -o errexit
 
 cd "$(dirname "$0")/.."
 
-echo "==> Running unit and integration tests..."
+echo '==> Running unit and integration tests...'
 mvn verify

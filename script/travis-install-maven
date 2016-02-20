@@ -1,21 +1,22 @@
 #!/bin/bash
+set -o errexit -o pipefail -o nounset
 
-APACHE_MIRROR_URL="http://mirror.hosting90.cz/apache"
-
-# Exit if any statement returns a non-true return value.
-set -e
+APACHE_MIRROR_URL='http://mirror.hosting90.cz/apache'
 
 version="$1"
+m2_home="${HOME}/.m2/apache-maven-${version}"
 
-echo "Installing Maven ${version} ..."
+echo "==> Installing Maven $version..."
 
-# Download and extract binary package.
-wget -P ~/.m2/ -nc "${APACHE_MIRROR_URL}/maven/maven-3/${version}/binaries/apache-maven-${version}-bin.tar.gz"
-tar -xzf ~/.m2/apache-maven-${version}-bin.tar.gz -C ~/.m2
+# Download and extract binary package, if doesn't exist yet.
+if [ ! -d "$m2_home" ]; then
+	wget -O - "${APACHE_MIRROR_URL}/maven/maven-3/${version}/binaries/apache-maven-${version}-bin.tar.gz" \
+		| tar -xz -C ~/.m2
+fi
 
-# Setup environment to use this maven version instead of the preinstalled one.
+# Setup environment to use this Maven version instead of the preinstalled one.
 mkdir -p ~/bin
-ln -fs ~/.m2/apache-maven-${version}/bin/mvn ~/bin/mvn
-echo "M2_HOME=$HOME/.m2/apache-maven-${version}" >> ~/.mavenrc
+ln -fs "$m2_home"/bin/mvn ~/bin/mvn
+echo "M2_HOME=$m2_home" >> ~/.mavenrc
 
 mvn --version

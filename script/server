@@ -1,7 +1,7 @@
 #!/bin/bash
 # This script follows the GitHub's normalized pattern
 # http://githubengineering.com/scripts-to-rule-them-all
-set -o errexit -o nounset
+set -o errexit -o pipefail -o nounset
 
 : ${JAVA:=java}
 : ${MAVEN:=mvn}
