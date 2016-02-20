@@ -12,8 +12,8 @@ MVN_HELP_PLUGIN='org.apache.maven.plugins:maven-help-plugin:2.2'
 
 REBUILD='yes'
 if [ "$1" = '--no-rebuild' ]; then
-    REBUILD='no'
-    shift
+	REBUILD='no'
+	shift
 fi
 
 ZUUL_OPTS="--spring.profiles.active=dev $@"
@@ -32,8 +32,8 @@ echo "$version"
 jar_file="${MAIN_MODULE_NAME}/target/${MAIN_MODULE_NAME}-${version}.jar"
 
 if [[ ! -f "$jar_file" || "$REBUILD" == 'yes' ]]; then
-    echo -e "\n==> Building Zuul OAAS $version"
-    "$MAVEN" package -DskipTests=true
+	echo -e "\n==> Building Zuul OAAS $version"
+	"$MAVEN" package -DskipTests=true
 fi
 
 echo -e "\n==> Starting Zuul OAAS $version"

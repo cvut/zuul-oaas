@@ -8,3 +8,6 @@ trim_trailing_whitespace = true
 
 [*.{html,js,json,less,sql,raml}]
 indent_size = 2
+
+[script/*]
+indent_style = tab
