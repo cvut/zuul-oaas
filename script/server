@@ -1,0 +1,40 @@
+#!/bin/bash
+# This script follows the GitHub's normalized pattern
+# http://githubengineering.com/scripts-to-rule-them-all
+set -o errexit -o nounset
+
+: ${JAVA:=java}
+: ${MAVEN:=mvn}
+: ${JAVA_OPTS:="-Xms64M -Xmx64M -XX:PermSize=64m -XX:MaxPermSize=64m"}
+
+MAIN_MODULE_NAME='zuul-oaas-main'
+MVN_HELP_PLUGIN='org.apache.maven.plugins:maven-help-plugin:2.2'
+
+REBUILD='yes'
+if [ "$1" = '--no-rebuild' ]; then
+    REBUILD='no'
+    shift
+fi
+
+ZUUL_OPTS="--spring.profiles.active=dev $@"
+
+
+cd "$(dirname "$0")/.."
+
+script/bootstrap
+
+echo -n 'Resolving project version... '
+
+version="$("$MAVEN" ${MVN_HELP_PLUGIN}:evaluate -Dexpression=project.version | grep -v '^\[')"
+[ -n "$version" ] || { echo 'FAILED'; exit 2; }
+echo "$version"
+
+jar_file="${MAIN_MODULE_NAME}/target/${MAIN_MODULE_NAME}-${version}.jar"
+
+if [[ ! -f "$jar_file" || "$REBUILD" == 'yes' ]]; then
+    echo -e "\n==> Building Zuul OAAS $version"
+    "$MAVEN" package -DskipTests=true
+fi
+
+echo -e "\n==> Starting Zuul OAAS $version"
+"$JAVA" $JAVA_OPTS -jar "$jar_file" $ZUUL_OPTS
