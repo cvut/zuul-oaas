@@ -88,6 +88,10 @@ class JdbcAccessTokensRepo
         deleteBy client_id: clientId
     }
 
+    int deleteAllExpired() {
+        jdbc.update "DELETE FROM ${tableName} WHERE expires_at < now()"
+    }
+
 
     //////// ResultSet Mapping ////////
 

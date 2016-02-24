@@ -28,4 +28,11 @@ import cz.cvut.zuul.oaas.models.PersistableRefreshToken
 interface RefreshTokensRepo extends BaseRepository<PersistableRefreshToken, String> {
 
     void deleteByClientId(String clientId)
+
+    /**
+     * Delete all tokens with the expiration date before the current date/time.
+     *
+     * @return Number of expired tokens deleted.
+     */
+    int deleteAllExpired()
 }

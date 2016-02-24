@@ -39,4 +39,11 @@ interface AccessTokensRepo extends BaseRepository<PersistableAccessToken, String
     void deleteByRefreshToken(OAuth2RefreshToken refreshToken)
 
     void deleteByClientId(String clientId)
+
+    /**
+     * Delete all tokens with the expiration date before the current date/time.
+     *
+     * @return Number of expired tokens deleted.
+     */
+    int deleteAllExpired()
 }

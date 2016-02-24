@@ -89,4 +89,19 @@ abstract class RefreshTokensRepoIT extends BaseRepositoryIT<PersistableRefreshTo
         then:
             ! repo.exists(refreshToken.value)
     }
+
+    def 'delete all expired'() {
+        setup:
+            def expired = buildListOf(PersistableRefreshToken, [expiration: new Date() - 1])
+            def valid = buildListOf(PersistableRefreshToken, [expiration: new Date() + 1])
+        and:
+            repo.saveAll(expired + valid)
+            assert expired.every { repo.exists(it.id) }
+        when:
+            def result = repo.deleteAllExpired()
+        then:
+            result == expired.size()
+            valid.every { repo.exists(it.id) }
+            ! expired.every { repo.exists(it.id) }
+    }
 }

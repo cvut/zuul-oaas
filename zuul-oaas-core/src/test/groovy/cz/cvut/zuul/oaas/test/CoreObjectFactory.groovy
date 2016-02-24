@@ -25,15 +25,7 @@ package cz.cvut.zuul.oaas.test
 
 import cz.cvut.zuul.oaas.api.models.ClientDTO
 import cz.cvut.zuul.oaas.api.models.ResourceDTO
-import cz.cvut.zuul.oaas.models.AuthorizationGrant
-import cz.cvut.zuul.oaas.models.Client
-import cz.cvut.zuul.oaas.models.PersistableAccessToken
-import cz.cvut.zuul.oaas.models.PersistableApproval
-import cz.cvut.zuul.oaas.models.PersistableAuthorizationCode
-import cz.cvut.zuul.oaas.models.Resource
-import cz.cvut.zuul.oaas.models.Scope
-import cz.cvut.zuul.oaas.models.User
-import cz.cvut.zuul.oaas.models.Visibility
+import cz.cvut.zuul.oaas.models.*
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.GrantedAuthority
@@ -84,12 +76,25 @@ class CoreObjectFactory extends ObjectFactory {
             new DefaultOAuth2RefreshToken(randomUUID() as String)
         }
 
-        registerBuilder(DefaultExpiringOAuth2RefreshToken) {
-            new DefaultExpiringOAuth2RefreshToken(randomUUID() as String, anyFutureDate())
+        registerBuilder(DefaultExpiringOAuth2RefreshToken) { values ->
+            new DefaultExpiringOAuth2RefreshToken(
+                (values['value'] ?: randomUUID()) as String,
+                (values['expiration'] ?: anyFutureDate()) as Date
+            )
         }
 
-        registerBuilder(PersistableAccessToken) {
-            new PersistableAccessToken(build(OAuth2AccessToken), build(OAuth2Authentication))
+        registerBuilder(PersistableAccessToken) { values ->
+            new PersistableAccessToken(
+                build(OAuth2AccessToken, values),
+                build(OAuth2Authentication, values)
+            )
+        }
+
+        registerBuilder(PersistableRefreshToken) { values ->
+            new PersistableRefreshToken(
+                build(ExpiringOAuth2RefreshToken, values),
+                build(OAuth2Authentication, values)
+            )
         }
 
 
