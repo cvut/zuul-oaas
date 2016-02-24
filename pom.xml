@@ -99,8 +99,8 @@
         <jetty.version>9.2.13.v20150730</jetty.version>
         <spock.version>1.0-groovy-2.4</spock.version>
         <!-- Keep in sync with platform-bom! -->
-        <spring-boot.version>1.2.1.RELEASE</spring-boot.version>
-        <spring-security-oauth.version>2.0.7.RELEASE</spring-security-oauth.version>
+        <spring-boot.version>1.2.8.RELEASE</spring-boot.version>
+        <spring-security-oauth.version>2.0.8.RELEASE</spring-security-oauth.version>
 
         <!-- This project uses Cobertura instead of JaCoCo, which unfortunately
              doesn't work well for Groovy. :( -->
@@ -207,7 +207,7 @@
             <dependency>
                 <groupId>io.spring.platform</groupId>
                 <artifactId>platform-bom</artifactId>
-                <version>1.1.1.RELEASE</version>
+                <version>1.1.5.RELEASE</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
