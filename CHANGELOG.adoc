@@ -5,7 +5,7 @@ This document provides a high-level view of the changes introduced in Zuul OAAS 
 For a detailed view of what has changed, refer to the https://github.com/cvut/zuul-oaas/commits/master[commit history] on GitHub.
 
 
-== 0.8.0 (unreleased)
+== 0.8.0 (2016-02-25)
 
 Improvements::
   * Keep timestamps of creation and last modification for every entity in DB.
