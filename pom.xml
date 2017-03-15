@@ -96,7 +96,7 @@
         <bootstrap.version>3.0.0</bootstrap.version>
         <groovy.version>2.4.5</groovy.version>
         <servlet-api.version>3.1.0</servlet-api.version>
-        <jetty.version>9.2.15.v20160210</jetty.version>
+        <jetty.version>9.2.20.v20161216</jetty.version>
         <spock.version>1.0-groovy-2.4</spock.version>
         <!-- Keep in sync with platform-bom! -->
         <spring-boot.version>1.2.8.RELEASE</spring-boot.version>
