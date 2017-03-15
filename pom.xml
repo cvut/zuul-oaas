@@ -100,7 +100,7 @@
         <spock.version>1.0-groovy-2.4</spock.version>
         <!-- Keep in sync with platform-bom! -->
         <spring-boot.version>1.2.8.RELEASE</spring-boot.version>
-        <spring-security-oauth.version>2.0.8.RELEASE</spring-security-oauth.version>
+        <spring-security-oauth.version>2.0.10.RELEASE</spring-security-oauth.version>
 
         <!-- This project uses Cobertura instead of JaCoCo, which unfortunately
              doesn't work well for Groovy. :( -->
