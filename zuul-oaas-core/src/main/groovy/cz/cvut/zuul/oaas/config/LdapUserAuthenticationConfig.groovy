@@ -29,6 +29,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
 import org.springframework.security.authentication.AuthenticationManager
+import org.springframework.security.ldap.authentication.NullLdapAuthoritiesPopulator
 
 @Configuration
 @Profile('ldap')
@@ -40,6 +41,7 @@ class LdapUserAuthenticationConfig extends AbstractAuthenticationManagerConfig {
             .contextSource()
                 .url( p('auth.user.ldap.server.uri') +'/'+ p('auth.user.ldap.server.base_dn') )
                 .and()
+            .ldapAuthoritiesPopulator(new NullLdapAuthoritiesPopulator())
             .userDnPatterns( p('auth.user.ldap.user_dn_pattern') )
             .userSearchBase( p('auth.user.ldap.user_search_base') )
             .userSearchFilter( p('auth.user.ldap.user_search_filter') )
