@@ -1,0 +1,45 @@
+image: gitlab.fit.cvut.cz:5000/ict/alpine-docker-images/ci:3.9
+
+stages:
+  - build
+  - test
+
+variables:
+  PROFILE: exec-jar,saml
+
+before_script:
+  - apk add git openjdk8 maven nss
+  # Store local Maven repository inside project's dir to get it cached.
+  # https://gitlab.com/gitlab-org/gitlab-ce/issues/4431
+  - mkdir -p .m2 && ln -sf $(pwd)/.m2 ~/.m2
+cache:
+  key: project  # single cache per-project
+  paths: [ .m2 ]
+
+
+build:
+  stage: build
+  script:
+    # Remove project's artifacts from local repository, just to be sure that
+    # they will not affect the build. Keep them in cache for tests.
+    - mvn build-helper:remove-project-artifact --batch-mode
+    # And finally build all modules.
+    - mvn install -DskipTests=true --batch-mode
+    - mkdir dist && cp -l zuul-oaas-main/target/*.jar dist/ && rm -f dist/*-tests.jar
+  artifacts:
+    paths:
+      - dist/*.jar
+    expire_in: 1 year
+
+test:
+  stage: test
+  variables:
+    POSTGRES_USER: postgres
+    POSTGRES_PASSWORD: ''
+    POSTGRES_HOST_AUTH_METHOD: trust
+    POSTGRES_DB: zuul_oaas_test
+    DB_HOST: postgres
+  services:
+    - postgres:9.6-alpine
+  script:
+    - mvn verify --batch-mode
