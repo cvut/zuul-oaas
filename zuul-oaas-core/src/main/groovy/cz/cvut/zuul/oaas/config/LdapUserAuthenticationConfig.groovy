@@ -24,6 +24,7 @@
 package cz.cvut.zuul.oaas.config
 
 import cz.cvut.zuul.oaas.support.SimpleUserDetailsContextMapper
+import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -39,18 +40,36 @@ class LdapUserAuthenticationConfig extends AbstractAuthenticationManagerConfig {
     AuthenticationManager userAuthManager() {
         builder.ldapAuthentication()
             .contextSource()
-                .url( p('auth.user.ldap.server.uri') +'/'+ p('auth.user.ldap.server.base_dn') )
+                .url( p('auth.user.ldap[0].server.uri') +'/'+ p('auth.user.ldap[0].server.base_dn') )
                 .and()
             .ldapAuthoritiesPopulator(new NullLdapAuthoritiesPopulator())
-            .userDnPatterns( p('auth.user.ldap.user_dn_pattern') )
-            .userSearchBase( p('auth.user.ldap.user_search_base') )
-            .userSearchFilter( p('auth.user.ldap.user_search_filter') )
+            .userDnPatterns( p('auth.user.ldap[0].user_dn_pattern') )
+            .userSearchBase( p('auth.user.ldap[0].user_search_base') )
+            .userSearchFilter( p('auth.user.ldap[0].user_search_filter') )
             .userDetailsContextMapper(new SimpleUserDetailsContextMapper (
-                firstNameAttrName: p('auth.user.ldap.attribute.fist_name'),
-                lastNameAttrName: p('auth.user.ldap.attribute.last_name'),
-                emailAttrName: p('auth.user.ldap.attribute.email'),
+                firstNameAttrName: p('auth.user.ldap[0].attribute.fist_name'),
+                lastNameAttrName: p('auth.user.ldap[0].attribute.last_name'),
+                emailAttrName: p('auth.user.ldap[0].attribute.email'),
                 defaultRoles: ['ROLE_USER']
-            )).and()
-        .build()
+            ))
+
+        if (env.containsProperty('auth.user.ldap[1].server.uri')) {
+            builder.ldapAuthentication()
+                .contextSource()
+                    .url( p('auth.user.ldap[1].server.uri') +'/'+ p('auth.user.ldap[1].server.base_dn') )
+                    .and()
+                .ldapAuthoritiesPopulator(new NullLdapAuthoritiesPopulator())
+                .userDnPatterns( p('auth.user.ldap[1].user_dn_pattern') )
+                .userSearchBase( p('auth.user.ldap[1].user_search_base') )
+                .userSearchFilter( p('auth.user.ldap[1].user_search_filter') )
+                .userDetailsContextMapper(new SimpleUserDetailsContextMapper (
+                    firstNameAttrName: p('auth.user.ldap[1].attribute.fist_name'),
+                    lastNameAttrName: p('auth.user.ldap[1].attribute.last_name'),
+                    emailAttrName: p('auth.user.ldap[1].attribute.email'),
+                    defaultRoles: ['ROLE_USER']
+                ))
+        }
+
+        builder.build()
     }
 }
