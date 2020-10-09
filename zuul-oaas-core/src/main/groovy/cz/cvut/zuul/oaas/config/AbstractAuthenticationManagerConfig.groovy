@@ -32,7 +32,7 @@ abstract class AbstractAuthenticationManagerConfig implements ConfigurationSuppo
 
     @Autowired ObjectPostProcessor<Object> objectPostProcessor
 
-    def getBuilder() {
+    protected builder() {
         new AuthenticationManagerBuilder(objectPostProcessor)
     }
 }

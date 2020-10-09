@@ -37,20 +37,24 @@ class LdapUserAuthenticationConfig extends AbstractAuthenticationManagerConfig {
 
     @Bean @Qualifier('user')
     AuthenticationManager userAuthManager() {
-        builder.ldapAuthentication()
-            .contextSource()
-                .url( p('auth.user.ldap.server.uri') +'/'+ p('auth.user.ldap.server.base_dn') )
-                .and()
-            .ldapAuthoritiesPopulator(new NullLdapAuthoritiesPopulator())
-            .userDnPatterns( p('auth.user.ldap.user_dn_pattern') )
-            .userSearchBase( p('auth.user.ldap.user_search_base') )
-            .userSearchFilter( p('auth.user.ldap.user_search_filter') )
-            .userDetailsContextMapper(new SimpleUserDetailsContextMapper (
-                firstNameAttrName: p('auth.user.ldap.attribute.fist_name'),
-                lastNameAttrName: p('auth.user.ldap.attribute.last_name'),
-                emailAttrName: p('auth.user.ldap.attribute.email'),
-                defaultRoles: ['ROLE_USER']
-            )).and()
-        .build()
+        def builder = builder()
+
+        for (int i = 0; env.containsProperty("auth.user.ldap[${i}].server.uri"); i++) {
+            builder.ldapAuthentication()
+                .contextSource()
+                    .url( p("auth.user.ldap[${i}].server.uri") +'/'+ p("auth.user.ldap[${i}].server.base_dn") )
+                    .and()
+                .ldapAuthoritiesPopulator(new NullLdapAuthoritiesPopulator())
+                .userDnPatterns( p("auth.user.ldap[${i}].user_dn_pattern") )
+                .userSearchBase( p("auth.user.ldap[${i}].user_search_base") )
+                .userSearchFilter( p("auth.user.ldap[${i}].user_search_filter") )
+                .userDetailsContextMapper(new SimpleUserDetailsContextMapper (
+                    firstNameAttrName: p("auth.user.ldap[${i}].attribute.fist_name"),
+                    lastNameAttrName: p("auth.user.ldap[${i}].attribute.last_name"),
+                    emailAttrName: p("auth.user.ldap[${i}].attribute.email"),
+                    defaultRoles: ['ROLE_USER']
+                ))
+        }
+        builder.build()
     }
 }

@@ -37,7 +37,7 @@ class PersistentClientAuthenticationConfig extends AbstractAuthenticationManager
 
     @Bean @Qualifier('client')
     AuthenticationManager clientAuthManager() {
-        builder.userDetailsService (
+        builder().userDetailsService (
             new LockableClientUserDetailsService(repos.clientsRepo())
         ).and().build()
     }
